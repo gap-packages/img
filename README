@@ -1,6 +1,6 @@
-                             The FR package
+                             The IMG package
 
-This is the README file for the GAP package "FR".
+This is the README file for the GAP package "IMG".
 
 This package implements Functionally Recursive and Mealy automata in
 GAP. These objects can be manipulated as group elements, and various
@@ -17,28 +17,28 @@ for complex dynamics, etc.
 The package is distributed in source form, and does not require anything
 else than a running GAP 4.5 or later. For updates, check
 
-     http://www.uni-math.gwdg.de/laurent/FR/ (tar.gz formats)
+     http://www.uni-math.gwdg.de/laurent/IMG/ (tar.gz formats)
 and
-     https://github.com/laurentbartholdi/fr (git)
+     https://github.com/laurentbartholdi/img (git)
 
 To use the package, start GAP and type
 
-LoadPackage("FR");
+LoadPackage("IMG");
 
-The "FR" package banner should appear on the screen.
+The "IMG" package banner should appear on the screen.
 
-For details on how to use the FR package, please consult the documentation.
+For details on how to use the IMG package, please consult the documentation.
 Though this is usually not necessary, it may be recompiled, after the command
-`LoadPackage("FR")', by invoking
+`LoadPackage("IMG")', by invoking
 
-DOC@fr();
+DOC@img();
 
 at the GAP prompt. The documentation will then be available in the `doc'
 subdirectory (view the file `manual.pdf' via a PDF viewer).
 
 An optional external module (DLL) provides floating-point functions used
-by the "iterated monodromy groups" part of FR. Its presence or absence
-does not affect the remainder of FR. To compile it, first make sure that
+by the "iterated monodromy groups" part of IMG. Its presence or absence
+does not affect the remainder of IMG. To compile it, first make sure that
 your system has C and JAVA compilers. You will need some external libraries,
 in particular levmar and libdogleg. To install them:
 
@@ -57,7 +57,7 @@ instructions.
 
 In all cases, then run
 
-'./configure && make' in FR's root directory.
+'./configure && make' in IMG's root directory.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -73,4 +73,4 @@ You should have received a copy of the GNU General Public License
 along with this program, in the file COPYING.  If not, see
 <http://www.gnu.org/licenses/>.
 
-  Laurent Bartholdi, Göttingen, 17 October 2012
+  Laurent Bartholdi, Göttingen, 16 November 2012
