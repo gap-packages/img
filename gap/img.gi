@@ -12,7 +12,7 @@
 ##
 #############################################################################
 
-ReadPackage("fr", "gap/spider.g");
+ReadPackage("img", "gap/spider.g");
 
 #############################################################################
 ##
@@ -46,7 +46,7 @@ InstallMethod(ViewString, "(FR) for an IMG element",
         [IsIMGElement and IsFRElementStdRep],
         function(E)
     local s;
-    s := CONCAT@("<", Size(AlphabetOfFRObject(E)), "#");
+    s := CONCAT@FR("<", Size(AlphabetOfFRObject(E)), "#");
     if IsOne(E![2]) then
         Append(s,"identity ...");
     else
@@ -79,7 +79,7 @@ BindGlobal("IMGISONE@", function(m,relator,w,skip)
             fi;
             AddDictionary(seen,t);
             d := rws.pi(t);
-            if not ISONE@(d[2]) then return false; fi;
+            if not ISONE@FR(d[2]) then return false; fi;
             Append(todo,d[1]);
         fi;
     od;
@@ -329,21 +329,21 @@ end);
 InstallGlobalFunction(NewSemigroupFRMachine,
         function(arg)
     if Length(arg)=1 and IsSemigroupFRMachine(arg[1]) then
-        return COPYFRMACHINE@(arg[1]);
+        return COPYFRMACHINE@FR(arg[1]);
     fi;
     return UnderlyingFRMachine(CallFuncList(FRSemigroup,arg:IsFRElement).1);
 end);
 InstallGlobalFunction(NewMonoidFRMachine,
         function(arg)
     if Length(arg)=1 and IsMonoidFRMachine(arg[1]) then
-        return COPYFRMACHINE@(arg[1]);
+        return COPYFRMACHINE@FR(arg[1]);
     fi;
     return UnderlyingFRMachine(CallFuncList(FRMonoid,arg:IsFRElement).1);
 end);
 InstallGlobalFunction(NewGroupFRMachine,
         function(arg)
     if Length(arg)=1 and IsGroupFRMachine(arg[1]) then
-        return COPYFRMACHINE@(arg[1]);
+        return COPYFRMACHINE@FR(arg[1]);
     fi;
     return UnderlyingFRMachine(CallFuncList(FRGroup,arg:IsFRElement).1);
 end);
@@ -353,7 +353,7 @@ InstallGlobalFunction(NewIMGMachine,
     local relator, args, group, machine, data;
     
     if Length(arg)=1 and IsIMGMachine(arg[1]) then
-        machine := COPYFRMACHINE@(arg[1]);
+        machine := COPYFRMACHINE@FR(arg[1]);
         SetIMGRelator(machine,IMGRelator(arg[1]));
         SetCorrespondence(machine,IdentityMapping(StateSet(machine)));
         return machine;
@@ -370,9 +370,9 @@ InstallGlobalFunction(NewIMGMachine,
     if relator=fail then
         return AsIMGMachine(machine);
     else
-        data := rec(holdername := RANDOMNAME@());
+        data := rec(holdername := RANDOMNAME@FR());
         BindGlobal(data.holdername, StateSet(machine));
-        relator := STRING_WORD2GAP@(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,relator);
+        relator := STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,relator);
         MakeReadWriteGlobal(data.holdername);
         UnbindGlobal(data.holdername);
         return AsIMGMachine(machine,relator);
@@ -382,7 +382,7 @@ end);
 BindGlobal("ISIMGRELATOR@", function(M,w)
     local r;
     r := WreathRecursion(M)(w);
-    return ISONE@(r[2]) and ForAll(r[1],x->IsOne(x) or IsConjugate(M!.free,x,w));
+    return ISONE@FR(r[2]) and ForAll(r[1],x->IsOne(x) or IsConjugate(M!.free,x,w));
 end);
 
 InstallMethod(IMGMachineNC, "(FR) for a group, a list of transitions, a list of outputs, and a relator",
@@ -399,7 +399,7 @@ InstallMethod(AsIMGMachine, "(FR) for a group FR machine and a word",
         function(M,w)
     local f, i, out, trans, r, p, N;
     if ISIMGRELATOR@(M,w) then
-        N := COPYFRMACHINE@(M);
+        N := COPYFRMACHINE@FR(M);
         SetIMGRelator(N,w);
         i := IdentityMapping(StateSet(M));
     else
@@ -413,7 +413,7 @@ InstallMethod(AsIMGMachine, "(FR) for a group FR machine and a word",
         fi;
         r := RankOfFreeGroup(f);
         i := GroupHomomorphismByImagesNC(M!.free,f,GeneratorsOfGroup(M!.free),GeneratorsOfGroup(f){[1..r-1]});
-        p := INVERSE@(Output(M,w));
+        p := INVERSE@FR(Output(M,w));
 
         trans := List(M!.transitions,r->List(r,x->x^i));
         Add(trans,List(AlphabetOfFRObject(M),a->Inverse(Transition(M,w,p[a]))^i));
@@ -536,15 +536,15 @@ end);
 
 InstallMethod(AsGroupFRMachine, "(FR) for an IMG machine",
         [IsIMGMachine],
-        COPYFRMACHINE@);
+        COPYFRMACHINE@FR);
 
 InstallMethod(ViewString, "(FR) for an IMG machine",
         [IsIMGMachine and IsFRMachineStdRep],
-        M->CONCAT@("<FR machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), "/[ ",IMGRelator(M)," ]>"));
+        M->CONCAT@FR("<FR machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), "/[ ",IMGRelator(M)," ]>"));
 
 InstallMethod(DisplayString, "(FR) for an IMG machine",
         [IsIMGMachine and IsFRMachineStdRep],
-        M->CONCAT@(DISPLAYFRMACHINE@(M),"Relator: ",IMGRelator(M),"\n"));
+        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),"Relator: ",IMGRelator(M),"\n"));
 #############################################################################
 
 #############################################################################
@@ -920,19 +920,19 @@ end);
 
 InstallMethod(ViewString, "(FR) for a polynomial FR machine",
         [IsPolynomialFRMachine and IsFRMachineStdRep],
-        M->CONCAT@("<FR machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), ">"));
+        M->CONCAT@FR("<FR machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), ">"));
 
 InstallMethod(DisplayString, "(FR) for a polynomial FR machine",
         [IsPolynomialFRMachine and IsFRMachineStdRep],
-        M->CONCAT@(DISPLAYFRMACHINE@(M),"Adding element: ",AddingElement(M),"\n"));
+        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),"Adding element: ",AddingElement(M),"\n"));
 
 InstallMethod(ViewString, "(FR) for a polynomial IMG machine",
         [IsPolynomialIMGMachine and IsFRMachineStdRep],
-        M->CONCAT@("<FR machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/[ ",IMGRelator(M)," ]>"));
+        M->CONCAT@FR("<FR machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/[ ",IMGRelator(M)," ]>"));
 
 InstallMethod(DisplayString, "(FR) for an IMG machine",
         [IsPolynomialIMGMachine and IsFRMachineStdRep],
-        M->CONCAT@(DISPLAYFRMACHINE@(M),
+        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),
                 "Adding element: ",AddingElement(M),"\n",
                 "Relator: ",IMGRelator(M),"\n"));
 
@@ -1114,7 +1114,7 @@ InstallMethod(AsPolynomialFRMachine, "(FR) for a group FR machine",
     for i in [1..Length(M!.transitions)] do
         g := GeneratorsOfGroup(G)[i];
         if ISADDER@(M,g) then
-            N := COPYFRMACHINE@(M);
+            N := COPYFRMACHINE@FR(M);
             SetAddingElement(N,FRElement(N,g));
             return N;
         fi;
@@ -1127,7 +1127,7 @@ InstallMethod(AsPolynomialFRMachine, "(FR) for a group FR machine and an adder",
         function(M,w)
     local N;
     if not ISADDER@(M,w) then return fail; fi;
-    N := COPYFRMACHINE@(M);
+    N := COPYFRMACHINE@FR(M);
     SetAddingElement(N,FRElement(N,w));
     return N;
 end);
@@ -1136,14 +1136,14 @@ InstallMethod(AsPolynomialFRMachine, "(FR) for a polynomial IMG machine",
         [IsPolynomialIMGMachine],
         function(M)
     local N;
-    N := COPYFRMACHINE@(M);
+    N := COPYFRMACHINE@FR(M);
     COPYADDER@(N,M);
     return N;
 end);
 
 InstallMethod(AsGroupFRMachine, "(FR) for a polynomial FR machine",
         [IsPolynomialFRMachine],
-        COPYFRMACHINE@);
+        COPYFRMACHINE@FR);
 
 InstallMethod(AsPolynomialIMGMachine, "(FR) for an IMG machine",
         [IsIMGMachine],
@@ -1220,7 +1220,7 @@ InstallMethod(AsIMGMachine, "(FR) for a polynomial IMG machine",
         [IsPolynomialIMGMachine],
         function(M)
     local N;
-    N := COPYFRMACHINE@(M);
+    N := COPYFRMACHINE@FR(M);
     SetIMGRelator(N,IMGRelator(M));
     return N;
 end);
@@ -1379,7 +1379,7 @@ InstallMethod(SimplifiedIMGMachine, "(FR) for an IMG machine",
         function(M)
     local N;
     Info(InfoFR,2,"Simplification not yet implemented for general IMG machines");
-    N := COPYFRMACHINE@(M);
+    N := COPYFRMACHINE@FR(M);
     SetIMGRelator(N,IMGRelator(M));
     if HasAddingElement(M) then
         SetAddingElement(N,FRElement(N,InitialState(AddingElement(M))));
@@ -1389,8 +1389,8 @@ InstallMethod(SimplifiedIMGMachine, "(FR) for an IMG machine",
 end);
 #############################################################################
 
-ReadPackage("fr", "gap/triangulations.g");
-ReadPackage("fr", "hurwitz/hurwitz.g");
+ReadPackage("img", "gap/triangulations.g");
+ReadPackage("img", "gap/hurwitz.g");
 
 #############################################################################
 ##
@@ -2247,7 +2247,7 @@ InstallGlobalFunction(Mandel, function(arg)
             Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[2])));
         fi;
     fi;
-    EXECINSHELL@(InputTextNone(),cmd,ValueOption("detach"));
+    EXECINSHELL@FR(InputTextNone(),cmd,ValueOption("detach"));
 end);        
 #############################################################################
 
@@ -2435,7 +2435,7 @@ BindGlobal("NRINTERSECTIONS@", function(free,rel,u,v)
     
     # 1. convert u,v to lists over [1,...,2*rank];
     rank := RankOfFreeGroup(free)-1;
-    iso := ISOMORPHISMSIMPLIFIEDIMGGROUP@FR(free,rel); # removes last generator
+    iso := ISOMORPHISMSIMPLIFIEDIMGGROUP@(free,rel); # removes last generator
     u := CyclicallyReducedWord(u^iso);
     v := CyclicallyReducedWord(v^iso);
     order := [];
@@ -2498,9 +2498,5 @@ BindGlobal("NRINTERSECTIONS@", function(free,rel,u,v)
     
     return Size(EquivalenceClasses(rel,Domain(pairs)));
 end);
-
-if false and IsPackageMarkedForLoading("float","") then
-    ReadPackage("fr","gap/hurwitz.g");
-fi;
 
 #E img.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

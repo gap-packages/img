@@ -2,11 +2,20 @@
 # sets the LEVMAR_CFLAGS, LEVMAR_LDFLAGS and LEVMAR_LIBS appropriately
 
 AC_DEFUN([AC_CHECK_LEVMAR],[
+lm_LIBS="$LIBS"
+
+LEVMAR=yes
+LEVMAR_CFLAGS=""
+LEVMAR_LDFLAGS=""
 
 AC_ARG_WITH(levmar,
  [  --with-levmar=<location>
     Location at which the levmar library, needed for layout, was installed.],
- [LEVMAR_CFLAGS="-I$withval/include"; LEVMAR_LDFLAGS="-L$withval/lib"]
+ [if test "$withval" = extern -o "$withval" = yes -o "$withval" = no; then
+    LEVMAR="$withval"
+  else
+    LEVMAR_CFLAGS="-I$withval/include"; LEVMAR_LDFLAGS="-L$withval/lib"
+  fi]
 )
 
 AC_ARG_WITH(levmar-include,
@@ -24,6 +33,26 @@ AC_ARG_WITH(levmar-lib,
 
 LEVMAR_LIBS="-llevmar -llapack -lblas"
 
+if test "$LEVMAR" = extern; then
+
+AC_MSG_CHECKING([for levmar])
+AC_MSG_RESULT([extern])
+LEVMAR_MAKELIB=`printf 'liblevmar:
+	mkdir -p $(EXTERN)/include $(EXTERN)/lib
+	if [[ ! -f $(EXTERN)/include/levmar.h ]]; then \\
+		cmake $(LEVMAR); \\
+		$(MAKE) -C $(LEVMAR) levmar C_FLAGS=-fPIC; \\
+		cp $(LEVMAR)/liblevmar.a $(EXTERN)/lib/; \\
+		cp $(LEVMAR)/levmar.h $(EXTERN)/include/; \\
+	fi\n'`
+
+MAKE_LIBTARGETS="$MAKE_LIBTARGETS liblevmar"
+
+LEVMAR_CFLAGS='-I$(EXTERN)/include'
+LEVMAR_LDFLAGS='-L$(EXTERN)/lib'
+
+elif test "$LEVMAR" != no; then
+
 AC_LANG_PUSH([C])
 
 lm_CPPFLAGS=$CPPFLAGS
@@ -39,7 +68,12 @@ LDFLAGS=$lm_LDFLAGS
 
 AC_LANG_POP([C])
 
+fi
+
+LIBS="$lm_LIBS"
 AC_SUBST(LEVMAR_CFLAGS)
 AC_SUBST(LEVMAR_LDFLAGS)
 AC_SUBST(LEVMAR_LIBS)
+AC_SUBST(LEVMAR_MAKELIB)
+AC_SUBST(MAKE_LIBTARGETS)
 ])

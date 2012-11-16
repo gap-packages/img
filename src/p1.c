@@ -2,9 +2,7 @@
  *
  * p1.c                                                     Laurent Bartholdi
  *
- *   @(#)$Id$
- *
- * Copyright (c) 2009, 2010, Laurent Bartholdi
+ * Copyright (c) 2009-2012, Laurent Bartholdi
  *
  ****************************************************************************
  *
@@ -20,7 +18,7 @@
 
 #include <math.h>
 #include <complex.h>
-#include "fr_dll.h"
+#include "img_dll.h"
 #define IS_MACFLOAT(obj) (TNUM_OBJ(obj) == T_MACFLOAT)
 
 typedef long double ldouble;

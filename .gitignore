@@ -7,7 +7,7 @@ sandbox
 bin/*
 *.dSYM
 *~
-frbib.xml.bib
+imgbib.xml.bib
 autom4te.cache
 .DS_Store
 doc/chap*
@@ -26,3 +26,4 @@ doc/*.out
 doc/*.toc
 myconfigure
 .version
+src/config.h

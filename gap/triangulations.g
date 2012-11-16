@@ -60,7 +60,7 @@ end);
 
 InstallMethod(ViewString, "(FR) for a triangulation",
         [IsSphereTriangulation],
-        t->CONCAT@("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
+        t->CONCAT@FR("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
 
 InstallMethod(String, "(FR) for a triangulation",
         [IsSphereTriangulation],
@@ -73,18 +73,18 @@ InstallMethod(DisplayString, "(FR) for a triangulation",
     s := "   vertex | position                                 | neighbours\n";
     Append(s,"----------+------------------------------------------+-----------------\n");
     for i in t!.v do
-        Append(s,String(CONCAT@("Vertex ",i.index),9));
+        Append(s,String(CONCAT@FR("Vertex ",i.index),9));
         Append(s," | ");
         Append(s,String(i.pos,-40));
         Append(s," |");
-        for j in i.n do APPEND@(s," ",j.index); od;
+        for j in i.n do APPEND@FR(s," ",j.index); od;
         Append(s,"\n");
     od;
     Append(s,"----------+------------------------------------------+-----------------\n");
     Append(s,"     edge | position                                 |frm to lt rt rev\n");
     Append(s,"----------+------------------------------------------+-----------------\n");
     for i in t!.e do
-        Append(s,String(CONCAT@("Edge ",i.index),9));
+        Append(s,String(CONCAT@FR("Edge ",i.index),9));
         Append(s," | ");
         Append(s,String(i.pos,-40));
         Append(s," |");
@@ -95,7 +95,7 @@ InstallMethod(DisplayString, "(FR) for a triangulation",
     Append(s,"     face | position                                 | radius   | neighbours\n");
     Append(s,"----------+------------------------------------------+----------+-----------\n");
     for i in t!.f do
-        Append(s,String(CONCAT@("Face ",i.index),9));
+        Append(s,String(CONCAT@FR("Face ",i.index),9));
         Append(s," | ");
         Append(s,String(i.pos,-40));
         Append(s," |");
@@ -196,7 +196,7 @@ BindGlobal("CHECKTRIANGULATION@", function(t)
     local x;
     x := Filtered(t!.v,v->not ForAll(v.n,e->IsIdenticalObj(e.from,v)));
     if x<>[] then return [false,1]; fi;
-    x := Filtered(t!.e,e->not INID@FR(e,e.from.n) or not INID@FR(e,e.left.n));
+    x := Filtered(t!.e,e->not INID@(e,e.from.n) or not INID@(e,e.left.n));
     if x<>[] then return [false,2]; fi;
     x := Filtered(t!.f,f->not ForAll(f.n,e->IsIdenticalObj(e.left,f)));
     if x<>[] then return [false,3]; fi;
@@ -500,7 +500,7 @@ InstallMethod(Draw, "(FR) for a triangulation",
         [IsSphereTriangulation],
         function(t)
     local s, f, i;
-    s := ""; f := OUTPUTTEXTSTRING@(s);
+    s := ""; f := OUTPUTTEXTSTRING@FR(s);
     
     if ValueOption("upper")<>fail then
         PrintTo(f,"UPPER");
@@ -536,7 +536,7 @@ InstallMethod(ViewString, "(FR) for a point in Teichmuller space",
 
 InstallMethod(DisplayString, "(FR) for a point in Teichmuller space",
         [IsMarkedSphere],
-        s->CONCAT@(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
+        s->CONCAT@FR(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
 
 InstallMethod(String, "(FR) for a point in Teichmuller space",
         [IsMarkedSphere],
@@ -545,13 +545,13 @@ InstallMethod(String, "(FR) for a point in Teichmuller space",
 INSTALLPRINTERS@(IsMarkedSphere);
 
 BindGlobal("STRINGCOMPLEX@",
-    z->CONCAT@(RealPart(z)," ",ImaginaryPart(z)));
+    z->CONCAT@FR(RealPart(z)," ",ImaginaryPart(z)));
 
 InstallMethod(Draw, "(FR) for a point in Teichmuller space",
         [IsMarkedSphere],
         function(spider)
     local a, i, j, k, s, f, t, points, arcs;
-    s := ""; f := OUTPUTTEXTSTRING@(s);
+    s := ""; f := OUTPUTTEXTSTRING@FR(s);
     
     if ValueOption("upper")<>fail then
         PrintTo(f,"UPPER\n");
@@ -1592,7 +1592,7 @@ BindGlobal("RATIONALMAP@", function(z,spider,perm,oldf,oldlifts)
     local cv, values, p, f, points, deg, i;
     
     values := VERTICES@(spider);
-    cv := Filtered([1..Length(values)],i->not ISONE@(perm[i]));
+    cv := Filtered([1..Length(values)],i->not ISONE@FR(perm[i]));
     deg := Length(perm[1]);
     if Length(cv)=2 then # bicritical
         f := CompositionP1Map(MoebiusMap(values{cv}),z^deg);

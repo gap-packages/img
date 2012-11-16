@@ -1,10 +1,8 @@
 #############################################################################
 ##
-#W Makefile                                                 Laurent Bartholdi
+#W Makefile.in                                              Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
-#Y Copyright (C) 2007, Laurent Bartholdi
+#Y Copyright (C) 2007-2012, Laurent Bartholdi
 ##
 #############################################################################
 ##
@@ -13,39 +11,46 @@
 ##
 #############################################################################
 
-.PHONY: all lib doc clean distribute mrproper wwwdir checkblocks tarballs hurwitz
+.PHONY: all lib doc clean distribute mrproper wwwdir checkblocks tarballs
 
 LOCALBIN=bin/@GAPARCH@
 EXTERN=$(CURDIR)/bin/@GAPARCH@/extern
+LEVMAR=extern/levmar-2.6
+LIBDOGLEG=extern/libdogleg-0.08
 
-MYCC=./libtool --mode=compile @CC@ $(CFLAGS) @CFLAGS@ @GAP_CPPFLAGS@ -std=c99 -g -Wall
-MYLD=./libtool --mode=link @CC@ $(CFLAGS) -g
+MYCC=./libtool --mode=compile --tag=CC $(CC) $(CFLAGS) @CFLAGS@ @GAP_CPPFLAGS@ -std=c99 -g -Wall
+MYLD=./libtool --mode=link --tag=CC $(CC) $(CFLAGS) -g
 JAVAC=@JAVAC@
 
-all: $(LOCALBIN) @LIB_TARGET@ $(LOCALBIN)/fr_dll.so @JAVABUILD@ hurwitz
-
-lib:
-
-hurwitz:
-	$(MAKE) -C $@
+all: $(LOCALBIN) @MAKE_LIBTARGETS@ $(LOCALBIN)/img_dll.so java/javaplot.class $(LOCALBIN)/layout $(LOCALBIN)/hsolve
 
 distribute: wwwdir doc tarballs
+
+@LEVMAR_MAKELIB@
+
+@LIBDOGLEG_MAKELIB@
 
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
+$(LOCALBIN)/layout: src/layout.C
+	$(CXX) @CHOLMOD_CFLAGS@ @LIBDOGLEG_CFLAGS@ @LIBDOGLEG_LDFLAGS@ $< -o $@ @CHOLMOD_LIBS@ @LIBDOGLEG_LIBS@
+
+$(LOCALBIN)/hsolve: src/hsolve.C
+	$(CXX) @LEVMAR_CFLAGS@ @LEVMAR_LDFLAGS@ $< -o $@ @LEVMAR_LIBS@
+
 $(LOCALBIN)/rpoly.lo: src/rpoly.c src/poly.h
 	$(MYCC) -c $< -o $@
 
-$(LOCALBIN)/p1.lo: src/p1.c src/cpoly.C src/fr_dll.h
+$(LOCALBIN)/p1.lo: src/p1.c src/cpoly.C src/img_dll.h
 	$(MYCC) -c $< -o $@ -DCONFIG_H
 
-$(LOCALBIN)/fr_dll.lo: src/fr_dll.c src/cpoly.C src/fr_dll.h
+$(LOCALBIN)/img_dll.lo: src/img_dll.c src/cpoly.C src/img_dll.h
 	$(MYCC) -c $< -o $@ @LEVMAR_CFLAGS@ -DCONFIG_H
 
-$(LOCALBIN)/fr_dll.so: $(LOCALBIN)/fr_dll.lo $(LOCALBIN)/rpoly.lo $(LOCALBIN)/p1.lo
-	$(MYLD) -module -o $(LOCALBIN)/fr_dll.la $+ @LEVMAR_LDFLAGS@ @LEVMAR_LIBS@ -rpath $(PWD)/$(LOCALBIN)
-	cp $(LOCALBIN)/.libs/fr_dll.so $@
+$(LOCALBIN)/img_dll.so: $(LOCALBIN)/img_dll.lo $(LOCALBIN)/rpoly.lo $(LOCALBIN)/p1.lo
+	$(MYLD) -module -o $(LOCALBIN)/img_dll.la $+ @LEVMAR_LDFLAGS@ @LEVMAR_LIBS@ -rpath $(PWD)/$(LOCALBIN)
+	cp $(LOCALBIN)/.libs/img_dll.so $@
 
 java/javaplot.class: src/javaplot.java
 	$(JAVAC) -cp java/javaview.jar $< -d java
@@ -57,37 +62,32 @@ java/javaview.jar:
 
 clean:
 	rm -rf .version config.log $(LOCALBIN) `find doc -type l`
-	make -C hurwitz clean
 
 mrproper: clean
-	rm Makefile
-	make -C hurwitz mrproper
+	rm Makefile config.h
 
 configure: cnf/Makefile.in cnf/configure.ac
 	(cd cnf; aclocal -Im4; autoconf; mv -f configure ..)
-	make -C hurwitz configure
 
 .version: PackageInfo.g
 	grep '^Version :=' $< | awk -F'"' '{print $$2}' > $@
 
 doc: doc/chap0.html
 
-doc/chap0.html: doc/fr.xml doc/frbib.xml gap/algebra.gd gap/frelement.gd \
-	gap/group.gd gap/img.gd gap/perlist.gd gap/vector.gd gap/examples.gd \
-	gap/frmachine.gd gap/helpers.gd gap/mealy.gd gap/trans.gd
-	echo 'LoadPackage("fr"); DOC@FR();' | @GAP_EXEC@ -r -q
+doc/chap0.html: doc/img.xml doc/imgbib.xml gap/helpers.gd gap/complex.gd
+	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q
 	(cd doc; git add *.html manual.pdf manual.css; git commit -m 'New html files'; git push github master:gh-pages)
 
 checkblocks:
 	grep '<#GAPDoc' PackageInfo.g gap/*d | awk -F'"' '{print $$2}' | sort > @@-blocks
-	grep '<#Include' doc/fr.xml | awk -F'"' '{print $$2}' | sort > @@-in
+	grep '<#Include' doc/img.xml | awk -F'"' '{print $$2}' | sort > @@-in
 	comm -3 @@-blocks @@-in
 	@rm @@-blocks @@-in
 
 tarballs: .version doc
 	mkdir -p www
-	tar -c -f - --exclude '*~' --exclude 'config.[ls]*' --exclude 'fr/Makefile*' --exclude .cvsignore --exclude autom4te.cache --exclude sandbox --exclude www --exclude bin --exclude 'extern/[a-z]*' --exclude CVS --exclude .version -C .. fr | (cd www; tar -x -f -)
-	tar -c -f www/fr-`cat .version`.tar.gz -z -C www fr
-	ln -sf fr-`cat .version`.tar.gz www/fr.tar.gz
+	tar -c -f - --exclude '*~' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude .cvsignore --exclude autom4te.cache --exclude sandbox --exclude www --exclude bin --exclude 'extern/[a-z]*' --exclude CVS --exclude .version -C .. img | (cd www; tar -x -f -)
+	tar -c -f www/img-`cat .version`.tar.gz -z -C www img
+	ln -sf img-`cat .version`.tar.gz www/img.tar.gz
 
-#E Makefile . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here
+#E Makefile.in . . . . . . . . . . . . . . . . . . . . . . . . . . ends here
