@@ -57,7 +57,7 @@ cdouble p1distance (cdouble u, cdouble v)
 
 void solvehd_f (cdouble x[], cdouble y[], int m, int n, const hurwitzdata &data)
 {
-  cdouble p[data.numzero+1], c[data.numcv+1];
+  cdouble p[2*MAXDEGREE], c[2*MAXDEGREE];
   int eq = 0;
 
   // the equations we take are:
@@ -118,7 +118,7 @@ int solvehd (const hurwitzdata &data, cdouble p[], cdouble c[], int iter, double
     return -1;
 
   int m = data.numzero + data.numcv;
-  cdouble x0[m];
+  cdouble x0[4*MAXDEGREE];
   for (int i = 0; i < data.numzero; i++)
     x0[i] = p[i];
   for (int i = 0; i < data.numcv; i++)

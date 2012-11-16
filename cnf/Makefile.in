@@ -76,7 +76,7 @@ doc: doc/chap0.html
 
 doc/chap0.html: doc/img.xml doc/imgbib.xml gap/helpers.gd gap/complex.gd
 	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q
-	(cd doc; git add *.html manual.pdf manual.css; git commit -m 'New html files'; git push github master:gh-pages)
+	(cd doc; git add *.html manual.pdf manual.css; git commit -m 'New html files'; git push github master:gh-pages --force)
 
 checkblocks:
 	grep '<#GAPDoc' PackageInfo.g gap/*d | awk -F'"' '{print $$2}' | sort > @@-blocks
@@ -86,6 +86,7 @@ checkblocks:
 
 tarballs: .version doc
 	mkdir -p www
+	rm -rf www/img
 	tar -c -f - --exclude '*~' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude .cvsignore --exclude autom4te.cache --exclude sandbox --exclude www --exclude bin --exclude 'extern/[a-z]*' --exclude CVS --exclude .version -C .. img | (cd www; tar -x -f -)
 	tar -c -f www/img-`cat .version`.tar.gz -z -C www img
 	ln -sf img-`cat .version`.tar.gz www/img.tar.gz

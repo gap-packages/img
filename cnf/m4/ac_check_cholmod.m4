@@ -36,9 +36,20 @@ if test "$CHOLMODLIB" != ""; then
     LDFLAGS="$LDFLAGS -L$CHOLMODLIB"
     CHOLMOD_LDFLAGS="-L$CHOLMODLIB"
 fi
-AC_CHECK_LIB(cholmod,cholmod_allocate_triplet,,AC_MSG_ERROR([libcholmod not found. Specify its location using --with-cholmod.]),[-llapack -lcolamd -lsuitesparseconfig -lamd -lrt])
 
-CHOLMOD_LIBS="-lcholmod -llapack -lcolamd -lsuitesparseconfig -lamd -lrt"
+CHOLMOD_LIBS=""
+
+for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+    CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
+    AC_CHECK_LIB(cholmod,cholmod_allocate_triplet,[cm_found=true],[cm_found=false],[$CHOLMOD_LIBS])
+    if test $cm_found = true; then break; fi
+done
+
+if test $cm_found = false; then
+    AC_MSG_ERROR([libcholmod not found. Specify its location using --with-cholmod.])
+fi
+
+CHOLMOD_LIBS="-lcholmod $CHOLMOD_LIBS"
 
 LIBS="$cm_LIBS"
 AC_SUBST(CHOLMOD_CFLAGS)

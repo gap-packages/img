@@ -592,7 +592,7 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
-ac_unique_file="fr"
+ac_unique_file="img"
 ac_unique_file="src/img_dll.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
@@ -16108,7 +16108,6 @@ fi
 fi
 
 
-
 # Checks for header files.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
 $as_echo_n "checking for ANSI C header files... " >&6; }
@@ -16883,13 +16882,18 @@ if test "$CHOLMODLIB" != ""; then
     LDFLAGS="$LDFLAGS -L$CHOLMODLIB"
     CHOLMOD_LDFLAGS="-L$CHOLMODLIB"
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
+
+CHOLMOD_LIBS=""
+
+for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+    CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
 $as_echo_n "checking for cholmod_allocate_triplet in -lcholmod... " >&6; }
 if ${ac_cv_lib_cholmod_cholmod_allocate_triplet+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lcholmod -llapack -lcolamd -lsuitesparseconfig -lamd -lrt $LIBS"
+LIBS="-lcholmod $CHOLMOD_LIBS $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -16920,18 +16924,19 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_cholmod_cholmod_allocate_triplet" >&5
 $as_echo "$ac_cv_lib_cholmod_cholmod_allocate_triplet" >&6; }
 if test "x$ac_cv_lib_cholmod_cholmod_allocate_triplet" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBCHOLMOD 1
-_ACEOF
-
-  LIBS="-lcholmod $LIBS"
-
+  cm_found=true
 else
-  as_fn_error $? "libcholmod not found. Specify its location using --with-cholmod." "$LINENO" 5
+  cm_found=false
 fi
 
+    if test $cm_found = true; then break; fi
+done
 
-CHOLMOD_LIBS="-lcholmod -llapack -lcolamd -lsuitesparseconfig -lamd -lrt"
+if test $cm_found = false; then
+    as_fn_error $? "libcholmod not found. Specify its location using --with-cholmod." "$LINENO" 5
+fi
+
+CHOLMOD_LIBS="-lcholmod $CHOLMOD_LIBS"
 
 LIBS="$cm_LIBS"
 

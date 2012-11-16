@@ -1,0 +1,125 @@
+#############################################################################
+##
+#W  configure.ac                                            
+##                                                              Jakob Kroeker
+##
+##
+#############################################################################
+AC_PREREQ(2.67)
+LT_PREREQ([2.4.2])
+AC_INIT( [cxsc], 2.5.1 , kroeker@uni-math.gwdg.de )
+AC_CONFIG_SRCDIR([src/cxsc_blas.hpp])
+#AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([cnf])
+#AM_INIT_AUTOMAKE([foreign])
+AM_MAINTAINER_MODE
+#LT_INIT([disable-static dlopen win32-dll])
+
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+
+############################################################################################################ 
+################## detect downloader wget(Linux) / curl(Mac OS)
+
+### todo: check if works as expected
+
+GETBIN=""
+GETBINPARAM=""
+
+AC_PATH_TOOL([GETBIN], [wget] )
+
+
+
+AC_ARG_ENABLE(static,
+ [  --enable-static  Enable static library build]
+ )
+ 
+ AC_ARG_ENABLE(shared,
+ [  --enable-shared  Disable shared library build]
+ )
+
+CONFIGUREPARAMS=" "
+
+if test "$enable_static" = yes; then
+   CONFIGUREPARAMS="$CONFIGUREPARAMS --enable-static "
+   #else
+   #CONFIGUREPARAMS="$CONFIGUREPARAMS --disable-static "
+fi;
+
+if test "$enable_shared" = no; then
+   CONFIGUREPARAMS="$CONFIGUREPARAMS --disable-shared "
+   else
+   CONFIGUREPARAMS="$CONFIGUREPARAMS --enable-shared "
+fi;
+AC_SUBST(CONFIGUREPARAMS)
+######################################################  
+
+
+cxsc_mfpmath_flag="" 
+
+# Check for -mfpmath=sse 
+AC_CACHE_CHECK([whether $CC accepts -mfpmath=sse ],
+    [ns_cv_cc__mfpmath],
+    [save_CFLAGS=$CFLAGS
+     CFLAGS="$CFLAGS -mfpmath=sse"
+     AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
+                    [ns_cv_cc__mfpmath=yes],
+                    [ns_cv_cc__mfpmath=no])
+     CFLAGS=$save_CFLAGS])
+if test $ns_cv_cc__mfpmath = yes; then
+     CFLAGS=" $CFLAGS -mfpmath=sse "
+     cxsc_mfpmath_flag=" -mfpmath=sse "     
+fi
+
+AC_SUBST(cxsc_mfpmath_flag)
+
+######################################################  
+
+
+AC_SUBST(CC)
+AC_SUBST(CXX)
+AC_SUBST(CFLAGS)
+AC_SUBST(GAPDIR)
+AC_SUBST(TARGET)
+AC_SUBST(DLL_TARGET)
+AC_SUBST(LIB_TARGET)
+
+
+CONFIG_STATUS=config.status
+
+
+#AC_CHECK_FUNCS([gethostbyname gettimeofday gmtime localtime getpid getppid kill gethostname ])
+
+
+AC_CYGWIN
+AM_CONDITIONAL([SYS_IS_CYGWIN], [test "$CYGWIN" = "yes"])
+if test "$CYGWIN" = "yes"; then
+  AC_DEFINE(SYS_IS_CYGWIN32, 1, are we on CYGWIN?)
+else
+  AC_DEFINE(SYS_IS_CYGWIN32, 0, are we on CYGWIN?)
+fi
+
+
+
+case "$host" in
+        *-darwin* )
+        AC_DEFINE(SYS_IS_DARWIN, 1, are we on DARWIN?)
+        ;;
+        * )
+        AC_DEFINE(SYS_IS_DARWIN, 0, are we on DARWIN?)
+        ;;
+esac
+     
+AC_CONFIG_FILES([install_cxsc])
+
+
+#AC_CONFIG_FILES([$MAKEFILE:cnf/Makefile.am])
+
+#if test "$MAKEFILE" != Makefile; then
+#   ln -sf "$MAKEFILE" Makefile
+#fi
+
+AC_OUTPUT
