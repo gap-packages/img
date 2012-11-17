@@ -2,13 +2,19 @@
 # sets the CHOLMOD_CFLAGS, CHOLMOD_LDFLAGS and CHOLMOD_LIBS appropriately
 
 AC_DEFUN([AC_CHECK_CHOLMOD],[
-
 cm_LIBS="$LIBS"
+cm_CPPFLAGS="$CPPFLAGS"
+cm_LDFLAGS="$LDFLAGS"
+AC_LANG_PUSH([C])
+
+CHOLMOD=yes
+CHOLMOD_CFLAGS=""
+CHOLMOD_LDFLAGS=""
 
 AC_ARG_WITH(cholmod,
  [  --with-cholmod=<location>
     Location at which the cholmod library, needed for layout, was installed.],
- [CHOLMOD_CFLAGS="-I$withval/include"; CHOLMODLIB="$withval/lib"]
+ [CHOLMOD_CFLAGS="-I$withval/include"; CHOLMOD_LDFLAGS="-L$withval/lib"]
 )
 
 AC_ARG_WITH(cholmod-include,
@@ -21,22 +27,17 @@ AC_ARG_WITH(cholmod-lib,
  [  --with-cholmod-lib=<location>
     Location at which the cholmod library files were installed.
  ],
- [CHOLMODLIB="$withval"]
+ [CHOLMOD_LDFLAGS="-L$withval"]
 )
 
-AC_CHECK_HEADER(suitesparse/cholmod.h,[CHOLMOD_CFLAGS="-I/usr/include/suitesparse"])
-
-if test "$CHOLMOD_CFLAGS" != ""; then
-    CPPFLAGS="$CPPFLAGS $CHOLMOD_CFLAGS"
+if test "$CHOLMOD_CFLAGS" = ""; then
+    AC_CHECK_HEADER(suitesparse/cholmod.h,[CHOLMOD_CFLAGS="-I/usr/include/suitesparse"])
 fi
 
+CPPFLAGS="$CPPFLAGS $CHOLMOD_CFLAGS"
 AC_CHECK_HEADER(cholmod.h,,AC_MSG_ERROR([cholmod.h not found. Specify its location using --with-cholmod.]))
 
-if test "$CHOLMODLIB" != ""; then
-    LDFLAGS="$LDFLAGS -L$CHOLMODLIB"
-    CHOLMOD_LDFLAGS="-L$CHOLMODLIB"
-fi
-
+LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
 for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
@@ -51,6 +52,9 @@ fi
 
 CHOLMOD_LIBS="-lcholmod $CHOLMOD_LIBS"
 
+AC_LANG_POP([C])
+CPPFLAGS="$cm_CPPFLAGS"
+LDFLAGS="$cm_LDFLAGS"
 LIBS="$cm_LIBS"
 AC_SUBST(CHOLMOD_CFLAGS)
 AC_SUBST(CHOLMOD_LDFLAGS)

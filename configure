@@ -16831,13 +16831,24 @@ LIBS="$lm_LIBS"
 
 
 
-
 cm_LIBS="$LIBS"
+cm_CPPFLAGS="$CPPFLAGS"
+cm_LDFLAGS="$LDFLAGS"
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+CHOLMOD=yes
+CHOLMOD_CFLAGS=""
+CHOLMOD_LDFLAGS=""
 
 
 # Check whether --with-cholmod was given.
 if test "${with_cholmod+set}" = set; then :
-  withval=$with_cholmod; CHOLMOD_CFLAGS="-I$withval/include"; CHOLMODLIB="$withval/lib"
+  withval=$with_cholmod; CHOLMOD_CFLAGS="-I$withval/include"; CHOLMOD_LDFLAGS="-L$withval/lib"
 
 fi
 
@@ -16853,22 +16864,21 @@ fi
 
 # Check whether --with-cholmod-lib was given.
 if test "${with_cholmod_lib+set}" = set; then :
-  withval=$with_cholmod_lib; CHOLMODLIB="$withval"
+  withval=$with_cholmod_lib; CHOLMOD_LDFLAGS="-L$withval"
 
 fi
 
 
-ac_fn_c_check_header_mongrel "$LINENO" "suitesparse/cholmod.h" "ac_cv_header_suitesparse_cholmod_h" "$ac_includes_default"
+if test "$CHOLMOD_CFLAGS" = ""; then
+    ac_fn_c_check_header_mongrel "$LINENO" "suitesparse/cholmod.h" "ac_cv_header_suitesparse_cholmod_h" "$ac_includes_default"
 if test "x$ac_cv_header_suitesparse_cholmod_h" = xyes; then :
   CHOLMOD_CFLAGS="-I/usr/include/suitesparse"
 fi
 
 
-
-if test "$CHOLMOD_CFLAGS" != ""; then
-    CPPFLAGS="$CPPFLAGS $CHOLMOD_CFLAGS"
 fi
 
+CPPFLAGS="$CPPFLAGS $CHOLMOD_CFLAGS"
 ac_fn_c_check_header_mongrel "$LINENO" "cholmod.h" "ac_cv_header_cholmod_h" "$ac_includes_default"
 if test "x$ac_cv_header_cholmod_h" = xyes; then :
 
@@ -16878,11 +16888,7 @@ fi
 
 
 
-if test "$CHOLMODLIB" != ""; then
-    LDFLAGS="$LDFLAGS -L$CHOLMODLIB"
-    CHOLMOD_LDFLAGS="-L$CHOLMODLIB"
-fi
-
+LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
 for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
@@ -16938,6 +16944,14 @@ fi
 
 CHOLMOD_LIBS="-lcholmod $CHOLMOD_LIBS"
 
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+CPPFLAGS="$cm_CPPFLAGS"
+LDFLAGS="$cm_LDFLAGS"
 LIBS="$cm_LIBS"
 
 
