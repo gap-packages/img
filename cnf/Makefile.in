@@ -11,7 +11,10 @@
 ##
 #############################################################################
 
-.PHONY: all lib doc clean distribute mrproper wwwdir checkblocks tarballs
+.PHONY: all doc clean distribute mrproper checkblocks tarballs wwwdir
+
+PWDU:=$(shell dirname $(PWD))
+PWDUU:=$(shell dirname $(PWDU))
 
 LOCALBIN=bin/@GAPARCH@
 EXTERN=$(CURDIR)/bin/@GAPARCH@/extern
@@ -70,12 +73,12 @@ configure: cnf/Makefile.in cnf/configure.ac
 	(cd cnf; aclocal -Im4; autoconf; mv -f configure ..)
 
 .version: PackageInfo.g
-	grep '^Version :=' $< | awk -F'"' '{print $$2}' > $@
+	grep '^Version :=' $< | cut -f2 -d'"' | tr -d '\n' > $@
 
 doc: doc/chap0.html
 
 doc/chap0.html: doc/img.xml doc/imgbib.xml gap/helpers.gd gap/complex.gd
-	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q
+	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q -T -l ";$(PWDUU)"
 	(cd doc; git add *.html manual.pdf manual.css; git commit -m 'New html files'; git push github master:gh-pages --force)
 
 checkblocks:
@@ -85,10 +88,14 @@ checkblocks:
 	@rm @@-blocks @@-in
 
 tarballs: .version doc
-	mkdir -p www
-	rm -rf www/img
-	tar -c -f - --exclude '*~' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude .cvsignore --exclude autom4te.cache --exclude sandbox --exclude www --exclude bin --exclude 'extern/[a-z]*' --exclude CVS --exclude .version -C .. img | (cd www; tar -x -f -)
-	tar -c -f www/img-`cat .version`.tar.gz -z -C www img
-	ln -sf img-`cat .version`.tar.gz www/img.tar.gz
+	mkdir -p zips
+	tar -c -f zips/img-`cat .version`.tar.gz -z --exclude '*~' --exclude '.[a-z]*' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude autom4te.cache --exclude sandbox --exclude zips --exclude bin --exclude extern -C .. img
+	ln -sf img-`cat .version`.tar.gz zips/img.tar.gz
 
-#E Makefile.in . . . . . . . . . . . . . . . . . . . . . . . . . . ends here
+wwwdir: doc/chap0.html tarballs
+	cp PackageInfo.g doc/
+	cp README doc/README.img
+	(cd doc; git add *.html manual.pdf manual.css PackageInfo.g README.img; git commit -m 'New html files'; git push github master:gh-pages --force)
+	rm doc/PackageInfo.g doc/README.img
+
+#E Makefile.in . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here
