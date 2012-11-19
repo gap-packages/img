@@ -2,13 +2,15 @@
 
 <?LaTeX ExtraPreamble="\usepackage{graphicx}"?>
 
-<!DOCTYPE Book SYSTEM "gapdoc.dtd"
- [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
-<Book Name="FR">
+<!DOCTYPE Book SYSTEM "gapdoc.dtd" [
+ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>
+ <#Include Label="Version">
+]>
+<Book Name="IMG">
 
 <TitlePage>
   <Title>Iterated monodromy groups</Title>
-  <Version>Version <#Include Label="Version"></Version>
+  <Version>Version &Version;</Version>
   <TitleComment>
     Groups and dynamical systems
   </TitleComment>
@@ -17,7 +19,7 @@
 		 <Alt Not="HTML">laurent.bartholdi@gmail.com</Alt></Email>
 	  <Homepage>http://www.uni-math.gwdg.de/laurent/</Homepage>
   </Author>
-  <Date>16 November 2012</Date>
+  <Date>&Date;</Date>
   <Address>
   Mathematisches Institut<Br/>Bunsenstraße 3-5<Br/>D-37073 Göttingen<Br/>Germany
   </Address>
@@ -35,15 +37,14 @@
   format, and may be accessed online at
   <URL>http://laurentbartholdi.github.com/img/</URL>.
   <P/>
-  The latest source of the package may be downloaded as
+  The latest release of the package may be downloaded as
+  <URL>https://github.com/laurentbartholdi/img/archive/&Version;.tar.gz</URL> (tar, gzipped) and
+  <URL>https://github.com/laurentbartholdi/img/archive/&Version;.zip</URL> (zip).
+  The latest repository version (possibly unstable) may be downloaded as
   <URL>https://github.com/laurentbartholdi/img/tarball/master</URL> (tar, gzipped),
   <URL>https://github.com/laurentbartholdi/img.git</URL> (git repository), or
   explored at <URL>https://github.com/laurentbartholdi/img/tree/master/</URL>.
   </Alt>
-  <P/>
-    !!!Groups defined by a recursive action on a rooted tree can
-    be defined in &GAP; via their recursion. Various algorithms are
-    implemented to manipulate these groups and their elements.
   <P/>
     For comments or questions on <Package>IMG</Package> please contact
     the author; this package is still under development.

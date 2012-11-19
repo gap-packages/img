@@ -6,10 +6,11 @@ SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
 Version := "0.0.0",
-## <#GAPDoc Label="Version">
-## <!ENTITY0.0.0
-## <#/GAPDoc>
 Date := "19/11/2012",
+## <#GAPDoc Label="Version">
+## <!ENTITY Version "0.0.0">
+## <!ENTITY Date "19/11/2012">
+## <#/GAPDoc>
 ArchiveURL := Concatenation("https://github.com/laurentbartholdi/img/archive/",~.Version),
 ArchiveFormats := ".tar.gz",
 Persons := [
@@ -34,11 +35,11 @@ Status := "deposited",
 CommunicatedBy := "Götz Pfeiffer (NUI Galway)",
 AcceptDate := "",
 
-README_URL := "http://www.uni-math.gwdg.de/laurent/IMG/README.img",
-PackageInfoURL := "http://www.uni-math.gwdg.de/laurent/IMG/PackageInfo.g",
+README_URL := "http://laurentbartholdi.github.com/img/README.img",
+PackageInfoURL := "http://laurentbartholdi.github.com/img/PackageInfo.g",
 AbstractHTML := "The <span class=\"pkgname\">IMG</span> package allows \
    GAP to manipulate iterated monodromy groups",
-PackageWWWHome := "http://www.uni-math.gwdg.de/laurent/IMG/",
+PackageWWWHome := "http://laurentbartholdi.github.com/img/",
 
 PackageDoc := rec(
   BookName  := "IMG",
@@ -57,7 +58,7 @@ Dependencies := rec(
   SuggestedOtherPackages := [["Float",">=0.4"]],
 
   # for compilation of the external module, one needs:
-  # gcc, gfortran, libcblas, libgsl, javac, appletviewer.
+  # gcc, libcblas, javac, appletviewer.
   ExternalConditions := []
 ),
 

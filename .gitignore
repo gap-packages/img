@@ -9,7 +9,7 @@ bin/*
 imgbib.xml.bib
 autom4te.cache
 .DS_Store
-doc/chap*
+doc/chap*txt
 doc/manual.*
 doc/*.aux
 doc/*.pnr

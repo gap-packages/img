@@ -1,0 +1,1274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GAP (IMG) - Chapter 3: Iterated monodromy groups</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chap3"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p><a id="X798DE1297EC58F59" name="X798DE1297EC58F59"></a></p>
+<div class="ChapSects"><a href="chap3.html#X798DE1297EC58F59">3 <span class="Heading">Iterated monodromy groups</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X8287B3D98071EBB7">3.1 <span class="Heading">Creators and operations for IMG machines</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X851C12AA87B92799">3.1-1 IsIMGMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X78D75CDE792449A6">3.1-2 IMGMachineNC</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X857CD5C587549F1A">3.1-3 AsIMGMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7BCE03F2827DAA0A">3.1-4 IMGRelator</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8706C13B7D6A1225">3.1-5 CleanedIMGMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7D4A6996874A3DF3">3.1-6 NewSemigroupFRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X80388DDE7F9B41FD">3.1-7 AsIMGElement</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X84C2881D87C1FB74">3.1-8 IsKneadingMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8203D69280D4B64C">3.1-9 AsPolynomialFRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7F67843E83A288AF">3.1-10 AddingElement</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7D71EBDA7D7C3474">3.1-11 PolynomialFRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X814E27317A6213D3">3.1-12 SupportingRays</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X78130FC97C58AFC4">3.1-13 AsGroupFRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7F1FAAF37B54772F">3.1-14 NormalizedPolynomialFRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X85AECB5A7A962200">3.1-15 SimplifiedIMGMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7AB029AE8590964E">3.1-16 Mating</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8410869F8358A1AF">3.1-17 AutomorphismVirtualEndomorphism</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X82F0B23486F2E3AC">3.1-18 DBRationalIMGGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8365719F7E03B7C3">3.1-19 PostCriticalMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E858BE07A7C55B4">3.1-20 Mandel</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X7C73C74D87428A33">3.2 <span class="Heading">Spiders</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X80C530E87B7FA7C4">3.2-1 DelaunayTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X82CA08BD85AA4F4E">3.2-2 LocateInTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X81727B8B7A599605">3.2-3 IsSphereTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7CC0BBAD807D1A45">3.2-4 RationalFunction</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8563CADF7AA37AA4">3.2-5 Draw</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86BD8FD97D3AFA45">3.2-6 FRMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86377DEA7B83E596">3.2-7 FindThurstonObstruction</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E169BC681F9A1DA">3.2-8 HurwitzMap</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X84FC673C7B104194">3.2-9 DessinByPermutations</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86C9E1938159FEE1">3.2-10 KneadingSequence</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X857FCD7678B12A0C">3.2-11 AllInternalAddresses</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86C250907E09F399">3.2-12 ExternalAnglesRelation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X84F962AF7D553DDA">3.2-13 ExternalAngle</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X814F53B97C3F43F5">3.2-14 ChangeFRMachineBasis</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7BE001A0811CD599">3.2-15 ComplexConjugate</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7F56E5F184700C5C">3.2-16 BraidTwists</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E941D2185A1DF3B">3.2-17 RotatedSpider</a></span>
+</div></div>
+</div>
+
+<h3>3 <span class="Heading">Iterated monodromy groups</span></h3>
+
+<p>Iterated monodromy machines are a special class of group FR machines (see Section <span class="RefLink">???</span>) with attribute <code class="func">IMGRelator</code> (<a href="chap3.html#X7BCE03F2827DAA0A"><span class="RefLink">3.1-4</span></a>). This attribute records a cyclic ordering of the generators of the machine whose product is trivial.</p>
+
+<p>The interpretation is the following: the machine encodes a <em>Thurston map</em>, i.e. a post-critically finite topological branched self-covering of the sphere <span class="SimpleMath">S^2</span>. Generators of the machine correspond to loops in the fundamental group of the sphere (punctured at post-critical points), that circle once counter-clockwise around a post-critical point. For more details on the connection between self-similar groups and Thurston maps, see <a href="chapBib.html#biBMR2162164">[Nek05]</a>.</p>
+
+<p>IMG elements are a bit different from group FR elements: while we said a group FR element is trivial if and only if its action on sequences is trivial, we say that an IMG element <span class="SimpleMath">g</span> is trivial if there exists an integer <span class="SimpleMath">N</span> such that unfolding <span class="SimpleMath">N</span> times the recursion for <span class="SimpleMath">g</span> yields only trivial states (as elements of the underlying free group).</p>
+
+<p><a id="X8287B3D98071EBB7" name="X8287B3D98071EBB7"></a></p>
+
+<h4>3.1 <span class="Heading">Creators and operations for IMG machines</span></h4>
+
+<p><a id="X851C12AA87B92799" name="X851C12AA87B92799"></a></p>
+
+<h5>3.1-1 IsIMGMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( filter )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPolynomialFRMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( filter )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPolynomialIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( filter )</td></tr></table></div>
+<p>The categories of <em>IMG</em> and <em>polynomial</em> machines. IMG machines are group FR machines with an additional element, their attribute <code class="func">IMGRelator</code> (<a href="chap3.html#X7BCE03F2827DAA0A"><span class="RefLink">3.1-4</span></a>); see <code class="func">AsIMGMachine</code> (<a href="chap3.html#X857CD5C587549F1A"><span class="RefLink">3.1-3</span></a>).</p>
+
+<p>A polynomial machine is a group FR machine with a distinguished state (which must be a generator of the stateset), stored as the attribute <code class="func">AddingElement</code> (<span class="RefLink">???</span>); see <code class="func">AsPolynomialFRMachine</code> (<a href="chap3.html#X8203D69280D4B64C"><span class="RefLink">3.1-9</span></a>). If it is normalized, in the sense that the wreath recursion of the adding element <code class="code">a</code> is <code class="code">[[a,1,...,1],[d,1,...,d-1]]</code>, then the basepoint is assumed to be at <span class="SimpleMath">+∞</span>; the element <code class="code">a</code> describes a clockwise loop around infinity; the <span class="SimpleMath">k</span>th preimage of the basepoint is at <span class="SimpleMath">exp(2iπ(k-1)/d)∞</span>, for <span class="SimpleMath">k=1,dots,d</span>; and there is a direct connection from basepoint <span class="SimpleMath">k</span> to <span class="SimpleMath">k+1</span> for all <span class="SimpleMath">k=1,dots,d-1</span>.</p>
+
+<p>The last category is the intersection of the first two.</p>
+
+<p><a id="X78D75CDE792449A6" name="X78D75CDE792449A6"></a></p>
+
+<h5>3.1-2 IMGMachineNC</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IMGMachineNC</code>( <var class="Arg">fam</var>, <var class="Arg">group</var>, <var class="Arg">trans</var>, <var class="Arg">out</var>, <var class="Arg">rel</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An IMG FR machine.</p>
+
+<p>This function creates, without checking its arguments, a new IMG machine in family <var class="Arg">fam</var>, stateset <var class="Arg">group</var>, with transitions and output <var class="Arg">trans,out</var>, and IMG relator <var class="Arg">rel</var>.</p>
+
+<p><a id="X857CD5C587549F1A" name="X857CD5C587549F1A"></a></p>
+
+<h5>3.1-3 AsIMGMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsIMGMachine</code>( <var class="Arg">m</var>[, <var class="Arg">w</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An IMG FR machine.</p>
+
+<p>This function creates a new IMG FR machine, starting from a group FR machine <var class="Arg">m</var>. If a state <code class="code">w</code> is specified, and that state defines the trivial FR element, then it is used as <code class="func">IMGRelator</code> (<a href="chap3.html#X7BCE03F2827DAA0A"><span class="RefLink">3.1-4</span></a>); if the state <code class="code">w</code> is non-trivial, then a new generator <code class="code">f</code> is added to <var class="Arg">m</var>, equal to the inverse of <code class="code">w</code>; and the IMG relator is chosen to be <code class="code">w*f</code>. Finally, if no relator is specified, and the product (in some ordering) of the generators is trivial, then that product is used as IMG relator. In other cases, the method returns <code class="keyw">fail</code>.</p>
+
+<p>Note that IMG elements and FR elements are compared differently (see the example below); namely, an FR element is trivial precisely when it acts trivially on sequences. An IMG element is trivial precisely when a finite number of applications of free cancellation, the IMG relator, and the decomposition map, result in trivial elements of the underlying free group.</p>
+
+<p>A standard FR machine can be recovered from an IMG FR machine by <code class="func">AsGroupFRMachine</code> (<span class="RefLink">???</span>), <code class="func">AsMonoidFRMachine</code> (<span class="RefLink">???</span>), and <code class="func">AsSemigroupFRMachine</code> (<span class="RefLink">???</span>).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := UnderlyingFRMachine(BasilicaGroup);</span>
+&lt;Mealy machine on alphabet [ 1 .. 2 ] with 3 states&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">g := AsGroupFRMachine(m);</span>
+&lt;FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2 ] )&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsIMGMachine(g,Product(GeneratorsOfFRMachine(g)));</span>
+&lt;FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2, t ] )/[ f1*f2*t ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(last);</span>
+ G  |              1         2
+----+-----------------+---------+
+ f1 |          &lt;id&gt;,2      f2,1
+ f2 |          &lt;id&gt;,1      f1,2
+  t | f2^-1*f1*f2*t,2   f1^-1,1
+----+-----------------+---------+
+Relator: f1*f2*t
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">g := AsGroupFRMachine(GuptaSidkiMachine);</span>
+&lt;FR machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2 ] )&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := AsIMGMachine(g,GeneratorsOfFRMachine(g)[1]);</span>
+&lt;FR machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2, t ] )/[ f1*t ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">x := FRElement(g,2)^3; IsOne(x);</span>
+&lt;3|identity ...&gt;
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">x := FRElement(m,2)^3; IsOne(x);</span>
+&lt;3#f2^3&gt;
+false
+</pre></div>
+
+<p><a id="X7BCE03F2827DAA0A" name="X7BCE03F2827DAA0A"></a></p>
+
+<h5>3.1-4 IMGRelator</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IMGRelator</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: The relator of the IMG FR machine.</p>
+
+<p>This attribute stores the product of generators that is trivial. In essence, it records an ordering of the generators whose product is trivial in the punctured sphere's fundamental group.</p>
+
+<p><a id="X8706C13B7D6A1225" name="X8706C13B7D6A1225"></a></p>
+
+<h5>3.1-5 CleanedIMGMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CleanedIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A cleaned-up version of <var class="Arg">m</var>.</p>
+
+<p>This command attempts to shorten the length of the transitions in <var class="Arg">m</var>, and ensure (if possible) that the product along every cycle of the states of a generator is a conjugate of a generator. It returns the new machine.</p>
+
+<p><a id="X7D4A6996874A3DF3" name="X7D4A6996874A3DF3"></a></p>
+
+<h5>3.1-6 NewSemigroupFRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewSemigroupFRMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewMonoidFRMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewGroupFRMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewIMGMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A new FR machine, based on string descriptions.</p>
+
+<p>This command constructs a new FR or IMG machine, in a format similar to <code class="func">FRGroup</code> (<span class="RefLink">???</span>); namely, the arguments are strings of the form "gen=&lt;word-1,...,word-d&gt;perm"; each <code class="code">word-i</code> is a word in the generators; and <code class="code">perm</code> is a transformation, either written in disjoint cycle or in images notation.</p>
+
+<p>Except in the semigroup case, <code class="code">word-i</code> is allowed to be the empty string; and the "&lt;...&gt;" may be skipped altogether. In the group or IMG case, each <code class="code">word-i</code> may also contain inverses.</p>
+
+<p>In the IMG case, an extra final argument is allowed, which is a word in the generators, and describes the IMG relation. If absent, <strong class="pkg">FR</strong> will attempt to find such a relation.</p>
+
+<p>The following examples construct realizable foldings of the polynomial <span class="SimpleMath">z^3+i</span>, following Cui's arguments.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">fold1 := NewIMGMachine("a=&lt;,,b,,,B&gt;(1,2,3)(4,5,6)","b=&lt;,,b*a/b,,,B*A/B&gt;",</span>
+     "A=&lt;,,b*a,,,B*A&gt;(3,6)","B=(1,6,5,4,3,2)");
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">&lt;FR machine with alphabet [ 1, 2, 3, 4, 5, 6 ] on Group( [ a, b, A, B ] )/[ a*B*A*b ]&gt;                                </span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">fold2 := NewIMGMachine("a=&lt;,,b,,,B&gt;(1,2,3)(4,5,6)","b=&lt;,,b*a/b,,,B*A/B&gt;",</span>
+     "A=(1,6)(2,5)(3,4)","B=&lt;B*A,,,b*a,,&gt;(1,4)(2,6)(3,5)");;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(fold1); RationalFunction(fold2);</span>
+...
+</pre></div>
+
+<p><a id="X80388DDE7F9B41FD" name="X80388DDE7F9B41FD"></a></p>
+
+<h5>3.1-7 AsIMGElement</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsIMGElement</code>( <var class="Arg">e</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsIMGElement</code>( <var class="Arg">e</var> )</td><td class="tdright">( filter )</td></tr></table></div>
+<p>The category of <em>IMG elements</em>, namely FR elements of an IMG machine. See <code class="func">AsIMGMachine</code> (<a href="chap3.html#X857CD5C587549F1A"><span class="RefLink">3.1-3</span></a>) for details.</p>
+
+<p><a id="X84C2881D87C1FB74" name="X84C2881D87C1FB74"></a></p>
+
+<h5>3.1-8 IsKneadingMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsKneadingMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( property )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPlanarKneadingMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( property )</td></tr></table></div>
+<p>Returns: Whether <var class="Arg">m</var> is a (planar) kneading machine.</p>
+
+<p>A <em>kneading machine</em> is a special kind of Mealy machine, used to describe postcritically finite complex polynomials. It is a machine such that its set of permutations is "treelike" (see <a href="chapBib.html#biBMR2162164">[Nek05, §6.7]</a>) and such that each non-trivial state occurs exactly once among the outputs.</p>
+
+<p>Furthermore, this set of permutations is <em>treelike</em> if there exists an ordering of the states that their product in that order <span class="SimpleMath">t</span> is an adding machine; i.e. such that <span class="SimpleMath">t</span>'s activity is a full cycle, and the product of its states along that cycle is conjugate to <span class="SimpleMath">t</span>. This element <span class="SimpleMath">t</span> represents the Carathéodory loop around infinity.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">M := BinaryKneadingMachine("0");</span>
+BinaryKneadingMachine("0*")
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(M);</span>
+   |  1     2
+---+-----+-----+
+ a | c,2   b,1
+ b | a,1   c,2
+ c | c,1   c,2
+---+-----+-----+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsPlanarKneadingMachine(M);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsPlanarKneadingMachine(GrigorchukMachine);</span>
+false
+</pre></div>
+
+<p><a id="X8203D69280D4B64C" name="X8203D69280D4B64C"></a></p>
+
+<h5>3.1-9 AsPolynomialFRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsPolynomialFRMachine</code>( <var class="Arg">m</var>[, <var class="Arg">adder</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsPolynomialIMGMachine</code>( <var class="Arg">m</var>[, <var class="Arg">adder</var>[, <var class="Arg">relator</var>]] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A polynomial FR machine.</p>
+
+<p>The first function creates a new polynomial FR machine, starting from a group or Mealy machine. A <em>polynomial</em> machine is one that has a distinguished adding element, <code class="func">AddingElement</code> (<span class="RefLink">???</span>).</p>
+
+<p>If the argument is a Mealy machine, it must be planar (see <code class="func">IsPlanarKneadingMachine</code> (<a href="chap3.html#X84C2881D87C1FB74"><span class="RefLink">3.1-8</span></a>)). If the argument is a group machine, its permutations must be treelike, and its outputs must be such that, up to conjugation, each non-trivial state appears exactly once as the product along all cycles of all states.</p>
+
+<p>If a second argument <var class="Arg">adder</var> is supplied, it is checked to represent an adding element, and is used as such.</p>
+
+<p>The second function creates a new polynomial IMG machine, i.e. a polynomial FR machine with an extra relation among the generators. the optional second argument may be an adder (if <var class="Arg">m</var> is an IMG machine) or a relator (if <var class="Arg">m</var> is a polynomial FR machine). Finally, if <var class="Arg">m</var> is a group FR machine, two arguments, an adder and a relator, may be specified.</p>
+
+<p>A machine without the extra polynomial / IMG information may be recovered using <code class="func">AsGroupFRMachine</code> (<span class="RefLink">???</span>).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">M := PolynomialIMGMachine(2,[1/7],[]);; SetName(StateSet(M),"F"); M;</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Mi := AsIMGMachine(M);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on F/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Mp := AsPolynomialFRMachine(M);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Mg := AsGroupFRMachine(M);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on F&gt;
+gap&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsPolynomialIMGMachine(Mg);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsPolynomialIMGMachine(Mi);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsPolynomialIMGMachine(Mp);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsIMGMachine(Mg);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on F4/[ f1*f4*f3*f2 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AsPolynomialFRMachine(Mg);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F4&gt;
+</pre></div>
+
+<p><a id="X7F67843E83A288AF" name="X7F67843E83A288AF"></a></p>
+
+<h5>3.1-10 AddingElement</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AddingElement</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: The relator of the IMG FR machine.</p>
+
+<p>This attribute stores the product of generators that is an adding machine. In essence, it records an ordering of the generators whose product corresponds to the Carathéodory loop around infinity.</p>
+
+<p>The following example illustrates Wittner's shared mating of the airplane and the rabbit. In the machine <code class="code">m</code>, an airplane is represented by <code class="code">Group(a,b,c)</code> and a rabbit is represented by <code class="code">Group(x,y,z)</code>; in the machine <code class="code">newm</code>, it is the other way round. The effect of <code class="code">CleanedIMGMachine</code> was to remove unnecessary instances of the IMG relator from <code class="code">newm</code>'s recursion.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">f := FreeGroup("a","b","c","x","y","z");;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AssignGeneratorVariables(f);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := AsIMGMachine(FRMachine(f,[[a^-1,b*a],[One(f),c],[a,One(f)],[z*y*x,</span>
+       x^-1*y^-1],[One(f),x],[One(f),y]],[(1,2),(),(),(1,2),(),()]));;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(m);</span>
+ G |      1             2   
+---+---------+-------------+
+ a |  a^-1,2         b*a,1  
+ b |  &lt;id&gt;,1           c,2  
+ c |     a,1        &lt;id&gt;,2  
+ x | z*y*x,2   x^-1*y^-1,1  
+ y |  &lt;id&gt;,1           x,2  
+ z |  &lt;id&gt;,1           y,2  
+---+---------+-------------+
+Relator: z*y*x*c*b*a
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">iso := GroupHomomorphismByImages(f,f,[a,b^(y^-1),c^(x^-1*y^-1*a^-1),x^(b*a*z*a^-1),y,z^(a^-1)],[a,b,c,x,y,z]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">newm := CleanedIMGMachine(ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(newm);</span>
+ G |          1         2   
+---+-------------+---------+
+ a | a^-1*c^-1,2   c*a*b,1  
+ b |      &lt;id&gt;,1       c,2  
+ c |         a,1    &lt;id&gt;,2  
+ x |       z*x,2    x^-1,1  
+ y |      &lt;id&gt;,1       x,2  
+ z |         y,1    &lt;id&gt;,2  
+---+-------------+---------+
+Relator: c*a*b*y*z*x
+</pre></div>
+
+<p><a id="X7D71EBDA7D7C3474" name="X7D71EBDA7D7C3474"></a></p>
+
+<h5>3.1-11 PolynomialFRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialFRMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialIMGMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>[, <var class="Arg">formal</var>]] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialMealyMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An IMG FR machine.</p>
+
+<p>This function creates a group, IMG or Mealy machine that describes a topological polynomial. The polynomial is described symbolically in the language of <em>external angles</em>. For more details, see <a href="chapBib.html#biBMR762431">[DH84]</a> and <a href="chapBib.html#biBMR812271">[DH85]</a> (in the quadratic case), <a href="chapBib.html#biBMR1149891">[BFH92]</a> (in the preperiodic case), and <a href="chapBib.html#biBmath.DS/9305207">[Poi]</a> (in the general case).</p>
+
+<p><var class="Arg">d</var> is the degree of the polynomial. <var class="Arg">per</var> and <var class="Arg">pre</var> are lists of angles or preangles. In what follows, angles are rational numbers, considered modulo 1. Each entry in <var class="Arg">per</var> or <var class="Arg">pre</var> is either a rational (interpreted as an angle), or a list of angles <span class="SimpleMath">[a_1,...,a_i]</span> such that <span class="SimpleMath">da_1=...=da_i</span>. The angles in <var class="Arg">per</var> are angles landing at the root of a Fatou component, and the angles in <var class="Arg">pre</var> land on the Julia set.</p>
+
+<p>Note that, for IMG machines, the last generator of the machine produced is an adding machine, representing a loop going counterclockwise around infinity (in the compactification of <span class="SimpleMath">C</span> by a disk, this loop goes <em>clockwise</em> around that disk).</p>
+
+<p>In constructing a polynomial IMG machine, one may specify a boolean flag <var class="Arg">formal</var>, which defaults to <code class="keyw">true</code>. In a <em>formal</em> recursion, distinct angles give distinct generators; while in a non-formal recursion, distinct angles, which land at the same point in the Julia set, give a single generator. The simplest example where this occurs is angle <span class="SimpleMath">5/12</span> in the quadratic family, in which angles <span class="SimpleMath">1/3</span> and <span class="SimpleMath">2/3</span> land at the same point -- see the example below.</p>
+
+<p>The attribute <code class="code">Correspondence(m)</code> records the angles landing on the generators: <code class="code">Correspondence(m)[i]</code> is a list <code class="code">[a,s]</code> where <span class="SimpleMath">a</span> is an angle landing on generator <code class="code">i</code> and <span class="SimpleMath">s</span> is <code class="keyw">"Julia"</code> or <code class="keyw">"Fatou"</code>.</p>
+
+<p>If only one list of angles is supplied, then <strong class="pkg">FR</strong> guesses that all angles with denominator coprime to <var class="Arg">n</var> are Fatou, and all the others are Julia.</p>
+
+<p>The inverse operation, reconstructing the angles from the IMG machine, is <code class="func">SupportingRays</code> (<a href="chap3.html#X814E27317A6213D3"><span class="RefLink">3.1-12</span></a>).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialIMGMachine(2,[0],[]); # the adding machine</span>
+&lt;FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2 ] )/[ f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(last);</span>
+ G  |     1        2
+----+--------+--------+
+ f1 | &lt;id&gt;,2     f1,1
+ f2 |   f2,2   &lt;id&gt;,1
+----+--------+--------+
+Relator: f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(PolynomialIMGMachine(2,[1/3],[])); # the Basilica</span>
+ G  |      1         2
+----+---------+---------+
+ f1 | f1^-1,2   f2*f1,1
+ f2 |    f1,1    &lt;id&gt;,2
+ f3 |    f3,2    &lt;id&gt;,1
+----+---------+---------+
+Relator: f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(PolynomialIMGMachine(2,[],[1/6])); # z^2+I</span>
+ G  |            1         2
+----+---------------+---------+
+ f1 | f1^-1*f2^-1,2   f2*f1,1
+ f2 |          f1,1      f3,2
+ f3 |          f2,1    &lt;id&gt;,2
+ f4 |          f4,2    &lt;id&gt;,1
+----+---------------+---------+
+Relator: f4*f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialIMGMachine(2,[],[5/12]);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialIMGMachine(2,[],[5/12]);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(last);</span>
+[ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialIMGMachine(2,[],[5/12],false);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(last);</span>
+[ [ [ 1/3, 2/3 ], "Julia" ], [ [ 5/12 ], "Julia" ], [ [ 5/6 ], "Julia" ] ]
+</pre></div>
+
+<p>The following construct the examples in Poirier's paper:</p>
+
+
+<div class="example"><pre>
+PoirierExamples := function(arg)
+    if arg=[1] then
+        return PolynomialIMGMachine(2,[1/7],[]);
+    elif arg=[2] then
+        return PolynomialIMGMachine(2,[],[1/2]);
+    elif arg=[3,1] then
+        return PolynomialIMGMachine(2,[],[5/12]);
+    elif arg=[3,2] then
+        return PolynomialIMGMachine(2,[],[7/12]);
+    elif arg=[4,1] then
+        return PolynomialIMGMachine(3,[[3/4,1/12],[1/4,7/12]],[]);
+    elif arg=[4,2] then
+        return PolynomialIMGMachine(3,[[7/8,5/24],[5/8,7/24]],[]);
+    elif arg=[4,3] then
+        return PolynomialIMGMachine(3,[[1/8,19/24],[3/8,17/24]],[]);
+    elif arg=[5] then
+        return PolynomialIMGMachine(3,[[3/4,1/12],[3/8,17/24]],[]);
+    elif arg=[6,1] then
+        return PolynomialIMGMachine(4,[],[[1/4,3/4],[1/16,13/16],[5/16,9/16]]);
+    elif arg=[6,2] then
+        return PolynomialIMGMachine(4,[],[[1/4,3/4],[3/16,15/16],[7/16,11/16]]);
+    elif arg=[7] then
+        return PolynomialIMGMachine(5,[[0,4/5],[1/5,2/5,3/5]],[[1/5,4/5]]);
+    elif arg=[9,1] then
+        return PolynomialIMGMachine(3,[[0,1/3],[5/9,8/9]],[]);
+    elif arg=[9,2] then
+        return PolynomialIMGMachine(3,[[0,1/3]],[[5/9,8/9]]);
+    else
+        Error("Unknown Poirier example ",arg);
+    fi;
+end;
+</pre></div>
+
+<p><a id="X814E27317A6213D3" name="X814E27317A6213D3"></a></p>
+
+<h5>3.1-12 SupportingRays</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SupportingRays</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A <code class="code">[degree,fatou,julia]</code> description of <var class="Arg">m</var>.</p>
+
+<p>This operation is the inverse of <code class="func">PolynomialIMGMachine</code> (<a href="chap3.html#X7D71EBDA7D7C3474"><span class="RefLink">3.1-11</span></a>): it computes a choice of angles, describing landing rays on Fatou/Julia critical points.</p>
+
+<p>If there does not exist a complex realization, namely if the machine is obstructed, then this command returns an obstruction, as a record. The field <code class="keyw">minimal</code> is set to false, and a proper sub-machine is set as the field <code class="keyw">submachine</code>. The field <code class="keyw">homomorphism</code> gives an embedding of the stateset of <code class="keyw">submachine</code> into the original machine, and <code class="keyw">relation</code> is the equivalence relation on the set of generators of <var class="Arg">m</var> that describes the pinching.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := PolynomialIMGMachine(2,[1/7],[]);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">F := StateSet(r);; SetName(F,"F");</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r);</span>
+[ 2, [ [ 1/7, 9/14 ] ], [  ] ] # actually returns the angle 2/7
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># now CallFuncList(PolynomialIMGMachine,last) would return the machine r</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1^(F.2*F.1),F.2^F.1,F.3,F.4])^-1;</span>
+[ f1, f2, f3, f4 ] -&gt; [ f1*f2*f1^-1, f2*f1*f2*f1^-1*f2^-1, f3, f4 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">List([-5..5],i-&gt;2*SupportingRays(r*twist^i)[2][1][1]);</span>
+[ 4/7, 5/7, 4/7, 4/7, 5/7, 2/7, 4/7, 4/7, 2/7, 4/7, 4/7 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := PolynomialIMGMachine(2,[],[1/6]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">F := StateSet(r);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r);</span>
+[ 2, [  ], [ [ 1/12, 7/12 ] ] ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r*twist);</span>
+[ 2, [  ], [ [ 5/12, 11/12 ] ] ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r*twist^2);</span>
+rec(
+  transformation := [ [ f1, f2^-1*f3^-1*f2^-1*f3^-1*f2*f3*f2*f3*f2, f2^-1*f3^-1*f2^-1*f3*f2*f3*f2,
+          f4 ] -&gt; [ f1, f2, f3, f4 ],
+      [ f1^-1*f2^-1*f1^-1*f2^-1*f1*f2*f1*f2*f1, f1^-1*f2^-1*f1^-1*f2*f1*f2*f1, f3, f4 ] -&gt;
+        [ f1, f2, f3, f4 ],
+      [ f1^-1*f2^-1*f3^-1*f2*f1*f2^-1*f3*f2*f1, f2, f2*f1^-1*f2^-1*f3*f2*f1*f2^-1, f4 ] -&gt;
+        [ f1, f2, f3, f4 ], [ f1, f3*f2*f3^-1, f3, f4 ] -&gt; [ f1, f2, f3, f4 ],
+      [ f1, f2, f2*f3*f2^-1, f4 ] -&gt; [ f1, f2, f3, f4 ],
+      [ f1, f3*f2*f3^-1, f3, f4 ] -&gt; [ f1, f2, f3, f4 ],
+      [ f1, f2, f2*f3*f2^-1, f4 ] -&gt; [ f1, f2, f3, f4 ],
+      [ f1, f3*f2*f3^-1, f3, f4 ] -&gt; [ f1, f2, f3, f4 ] ], machine := &lt;FR machine with alphabet
+    [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]&gt;, minimal := false,
+  submachine := &lt;FR machine with alphabet [ 1, 2 ] and adder f3 on Group( [ f1, f2, f3 ] )&gt;,
+  homomorphism := [ f1, f2, f3 ] -&gt; [ f1, f2*f3, f4 ],
+  relation := &lt;equivalence relation on &lt;object&gt; &gt;, niter := 8 )
+</pre></div>
+
+<p><a id="X78130FC97C58AFC4" name="X78130FC97C58AFC4"></a></p>
+
+<h5>3.1-13 AsGroupFRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsGroupFRMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsMonoidFRMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsSemigroupFRMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: An FR machine.</p>
+
+<p>This function creates an FR machine on a 1-letter alphabet, that represents the endomorphism <var class="Arg">f</var>. It is specially useful when combined with products of machines; indeed the usual product of machines corresponds to composition of endomorphisms.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">f := FreeGroup(2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">h := GroupHomomorphismByImages(f,f,[f.1,f.2],[f.2,f.1*f.2]);</span>
+[ f1, f2 ] -&gt; [ f2, f1*f2 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := AsGroupFRMachine(h);</span>
+&lt;FR machine with alphabet [ 1 ] on Group( [ f1, f2 ] )&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">mm := TensorProduct(m,m);</span>
+&lt;FR machine with alphabet [ 1 ] on Group( [ f1, f2 ] )&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(mm);</span>
+ G  |         1
+----+------------+
+ f1 |    f1*f2,1
+ f2 | f2*f1*f2,1
+----+------------+
+</pre></div>
+
+<p><a id="X7F1FAAF37B54772F" name="X7F1FAAF37B54772F"></a></p>
+
+<h5>3.1-14 NormalizedPolynomialFRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NormalizedPolynomialFRMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NormalizedPolynomialIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A polynomial FR machine.</p>
+
+<p>This function returns a new FR machine, in which the adding element has been put into a standard form <span class="SimpleMath">t=[t,1,dots,1]s</span>, where <span class="SimpleMath">s</span> is the long cycle <span class="SimpleMath">i↦ i-1</span>.</p>
+
+<p>For the first command, the machine returned is an FR machine; for the second, it is an IMG machine.</p>
+
+<p><a id="X85AECB5A7A962200" name="X85AECB5A7A962200"></a></p>
+
+<h5>3.1-15 SimplifiedIMGMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SimplifiedIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A simpler IMG machine.</p>
+
+<p>This function returns a new IMG machine, with hopefully simpler transitions. The simplified machine is obtained by applying automorphisms to the stateset. The sequence of automorphisms (in increasing order) is stored as a correspondence; namely, if <code class="code">n=SimplifiedIMGMachine(m)</code>, then <code class="code">m^Product(Correspondence(n))=n</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := PolynomialIMGMachine(2,[1/7],[]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">F := StateSet(r);; SetName(F,"F");</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1^(F.2*F.1),F.2^F.1,F.3,F.4]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := r*twist;; Display(m);</span>
+ G  |                     1            2
+----+------------------------+------------+
+ f1 |          f1^-1*f2^-1,2   f3*f2*f1,1
+ f2 | f1^-1*f2^-1*f1*f2*f1,1       &lt;id&gt;,2
+ f3 |          f1^-1*f2*f1,1       &lt;id&gt;,2
+ f4 |                   f4,2       &lt;id&gt;,1
+----+------------------------+------------+
+Adding element: f4
+Relator: f4*f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">n := SimplifiedIMGMachine(m);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f4 on F&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(n);</span>
+ G  |            1            2
+----+---------------+------------+
+ f1 | f2^-1*f1^-1,2   f1*f2*f3,1
+ f2 |        &lt;id&gt;,1         f1,2
+ f3 |        &lt;id&gt;,1         f2,2
+ f4 |          f4,2       &lt;id&gt;,1
+----+---------------+------------+
+Adding element: f4
+Relator: f4*f1*f2*f3
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">n = m^Product(Correspondence(n));</span>
+true
+</pre></div>
+
+<p><a id="X7AB029AE8590964E" name="X7AB029AE8590964E"></a></p>
+
+<h5>3.1-16 Mating</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Mating</code>( <var class="Arg">m1</var>, <var class="Arg">m2</var>[, <var class="Arg">formal</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An IMG FR machine.</p>
+
+<p>This function "mates" two polynomial IMG machines.</p>
+
+<p>The mating is defined as follows: one removes a disc around the adding machine in <var class="Arg">m1</var> and <var class="Arg">m2</var>; one applies complex conjugation to <var class="Arg">m2</var>; and one glues the hollowed spheres along their boundary circle.</p>
+
+<p>The optional argument <var class="Arg">formal</var>, which defaults to <code class="keyw">true</code>, specifies whether a <em>formal</em> mating should be done; in a non-formal mating, generators of <var class="Arg">m1</var> and <var class="Arg">m2</var> which have identical angle should be treated as a single generator. A non-formal mating is of course possible only if the machines are realizable -- see <code class="func">SupportingRays</code> (<a href="chap3.html#X814E27317A6213D3"><span class="RefLink">3.1-12</span></a>).</p>
+
+<p>The attribute <code class="code">Correspondence</code> is a pair of homomorphisms, from the statesets of <var class="Arg">m1,m2</var> respectively to the stateset of the mating.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the Tan-Shishikura examples</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(MPC_PSEUDOFIELD);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">c := RootsFloat((z^3+z)^3+z);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">am := List(a,a-&gt;IMGMachine((a-1)*(3*z^2-2*z^3)+1));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cm := List(c,c-&gt;IMGMachine(z^3+c));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := ListX(am,cm,Mating);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[2] is realizable</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(m[2]);</span>
+((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z
+  +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2
+  +(1.61715+I*1.50244)*z+1)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[6] is obstructed</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(m[6]);</span>
+rec( matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], machine := &lt;FR machine with alphabet
+    [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] )/[ f2*f3*f1*g1*g3*g2 ]&gt;,
+  obstruction := [ f1^-1*f3^-1*f2^-1*f1*f2*f3*f1*g2^-1*g3^-1*f1^-1*f3^-1*f2^-1,
+      f2*f3*f1*f2*f3*f1*g2*f1^-1*f3^-1*f2^-1*f1^-1*f3^-1 ],
+  spider := &lt;spider on &lt;triangulation with 8 vertices, 36 edges and
+    12 faces&gt; marked by GroupHomomorphismByImages( Group( [ f1, f2, f3, g1, g2, g3
+     ] ), Group( [ f1, f2, f3, f4, f5 ] ), [ f1, f2, f3, g1, g2, g3 ],
+    [ f1*f4*f2^-1*f1*f4^-1*f1^-1, f1*f4*f2^-1*f1*f4*f5^-1*f1^-1*f2*f4^-1*f1^-1,
+      f1*f4*f2^-1*f1*f5*f1^-1*f2*f4^-1*f1^-1, f2*f4^-1*f1^-1*f2*f1*f4*f2^-1,
+      f2*f4^-1*f3*f2^-1, f2*f4^-1*f1^-1*f3^-1*f4*f2^-1 ] )&gt; )
+</pre></div>
+
+<p><a id="X8410869F8358A1AF" name="X8410869F8358A1AF"></a></p>
+
+<h5>3.1-17 AutomorphismVirtualEndomorphism</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AutomorphismVirtualEndomorphism</code>( <var class="Arg">v</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AutomorphismIMGMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: A description of the pullback map on Teichmüller space.</p>
+
+<p>Let <var class="Arg">m</var> be an IMG machine, thought of as a biset for the fundamental group <span class="SimpleMath">G</span> of a punctured sphere. Let <span class="SimpleMath">M</span> denote the automorphism of the surface, seen as a group of outer automorphisms of <span class="SimpleMath">G</span> that fixes the conjugacy classes of punctures.</p>
+
+<p>Choose an alphabet letter <var class="Arg">a</var>, and consider the virtual endomorphism <span class="SimpleMath">v:G_a-&gt; G</span>. Let <span class="SimpleMath">H</span> denote the subgroup of <span class="SimpleMath">M</span> that fixes all conjugacy classes of <span class="SimpleMath">G_a</span>. then there is an induced virtual endomorphism <span class="SimpleMath">α:H-&gt; M</span>, defined by <span class="SimpleMath">t^α=v^-1tv</span>. This is the homomorphism computed by the first command. Its source and range are in fact groups of automorphisms of range of <var class="Arg">v</var>.</p>
+
+<p>The second command constructs an FR machine associated with <var class="Arg">\alpha</var>. Its stateset is a free group generated by elementary Dehn twists of the generators of <var class="Arg">G</var>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(COMPLEX_FIELD);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># a Sierpinski carpet map without multicurves</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := IMGMachine((z^2-z^-2)/2/COMPLEX_I);</span>
+&lt;FR machine with alphabet [ 1, 2, 3, 4 ] on Group( [ f1, f2, f3, f4 ] )/[ f3*f2*f1*f4 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AutomorphismIMGMachine(i);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on Group( [ x1, x2, x3, x4, x5, x6 ] )&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(last);</span>
+ G  |     1        2
+----+--------+--------+
+ x1 | &lt;id&gt;,2   &lt;id&gt;,1  
+ x2 | &lt;id&gt;,1   &lt;id&gt;,2  
+ x3 | &lt;id&gt;,2   &lt;id&gt;,1  
+ x4 | &lt;id&gt;,2   &lt;id&gt;,1  
+ x5 | &lt;id&gt;,1   &lt;id&gt;,2  
+ x6 | &lt;id&gt;,2   &lt;id&gt;,1  
+----+--------+--------+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the original rabbit problem</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PolynomialIMGMachine(2,[1/7],[]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">v := VirtualEndomorphism(m,1);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := AutomorphismVirtualEndomorphism(v);</span>
+MappingByFunction( &lt;group with 20 generators&gt;, &lt;group with 6 generators&gt;, function( a ) ... end )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Source(a).1;</span>
+[ f1, f2, f3, f4 ] -&gt; [ f3*f2*f1*f2^-1*f3^-1, f2, f3, f3*f2*f1^-1*f2^-1*f3^-1*f2^-1*f3^-1 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Image(a,last);</span>
+[ f1, f2, f3, f4 ] -&gt; [ f1, f2, f2*f1*f3*f1^-1*f2^-1, f3^-1*f1^-1*f2^-1 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># so last2*m is equivalent to m*last</span>
+</pre></div>
+
+<p><a id="X82F0B23486F2E3AC" name="X82F0B23486F2E3AC"></a></p>
+
+<h5>3.1-18 DBRationalIMGGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DBRationalIMGGroup</code>( <var class="Arg">sequence/map</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: An IMG group from Dau's database.</p>
+
+<p>This function returns the iterated monodromy group from a database of groups associated to quadratic rational maps. This database has been compiled by Dau Truong Tan <a href="chapBib.html#biBtan:database">[Tan02]</a>.</p>
+
+<p>When called with no arguments, this command returns the database contents in raw form.</p>
+
+<p>The argments can be a sequence; the first integer is the size of the postcritical set, the second argument is an index for the postcritical graph, and sometimes a third argument distinguishes between maps with same post-critical graph.</p>
+
+<p>If the argument is a rational map, the command returns the IMG group of that map, assuming its canonical quadratic rational form form exists in the database.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(z^2-1);</span>
+IMG((z-1)^2)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(z^2+1); # not post-critically finite</span>
+fail
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(4,1,1);</span>
+IMG((z/h+1)^2|2h^3+2h^2+2h+1=0,h~-0.64)
+</pre></div>
+
+<p><a id="X8365719F7E03B7C3" name="X8365719F7E03B7C3"></a></p>
+
+<h5>3.1-19 PostCriticalMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PostCriticalMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The Mealy machine of <var class="Arg">f</var>'s post-critical orbit.</p>
+
+<p>This function constructs a Mealy machine <code class="code">P</code> on the alphabet <code class="code">[1]</code>, which describes the post-critical set of <var class="Arg">f</var>. It is in fact an oriented graph with constant out-degree 1. It is most conveniently passed to <code class="func">Draw</code> (<span class="RefLink">???</span>).</p>
+
+<p>The attribute <code class="code">Correspondence(P)</code> is the list of values associated with the stateset of <code class="code">P</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(Rationals,"z");;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PostCriticalMachine(z^2);</span>
+&lt;Mealy machine on alphabet [ 1 ] with 2 states&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(m);</span>
+   |  1
+---+-----+
+ a | a,1
+ b | b,1
+---+-----+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(m);</span>
+[ 0, infinity ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PostCriticalMachine(z^2-1);; Display(m); Correspondence(m);</span>
+   |  1
+---+-----+
+ a | c,1
+ b | b,1
+ c | a,1
+---+-----+
+[ -1, infinity, 0 ]
+</pre></div>
+
+<p><a id="X7E858BE07A7C55B4" name="X7E858BE07A7C55B4"></a></p>
+
+<h5>3.1-20 Mandel</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Mandel</code>( [<var class="Arg">map</var>] )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: Calls the external program <code class="file">mandel</code>.</p>
+
+<p>This function starts the external program <code class="file">mandel</code>, by Wolf Jung. The program is searched for along the standard PATH; alternatively, its location can be set in the string variable EXEC@FR.mandel.</p>
+
+<p>When called with no arguments, this command returns starts <code class="file">mandel</code> in its default mode. With a rational map as argument, it starts <code class="file">mandel</code> pointing at that rational map.</p>
+
+<p>More information on <code class="file">mandel</code> can be found at <span class="URL"><a href="http://www.mndynamics.com">http://www.mndynamics.com</a></span>.</p>
+
+<p><a id="X7C73C74D87428A33" name="X7C73C74D87428A33"></a></p>
+
+<h4>3.2 <span class="Heading">Spiders</span></h4>
+
+<p><strong class="pkg">FR</strong> contains an implementation of the Thurston-Hubbard-Schleicher "spider algorithm" <a href="chapBib.html#biBMR1315537">[HS94]</a> that constructs a rational map from an IMG recursion. This implementation does not give rigourous results, but relies of floating-point approximation. In particular, various floating-point parameters control the proper functioning of the algorithm. They are stored in a record, <code class="code">EPS@fr</code>. Their meaning and default values are:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">EPS@fr.mesh := 10^-1</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, the triangulation mesh should be refined.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.prec := 10^-6</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, they are considered equal.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.obst := 10^-1</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, they are suspected to form a Thurston obstruction.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.juliaiter := 10^3</code></strong></dt>
+<dd><p>In computing images of the Julia set, never recur deeper than that.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.fast := 10^-1</code></strong></dt>
+<dd><p>If the spider moved less than that amount in the last iteration, try speeding up by only wiggling the spider's legs, without recomputing it.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.ratprec := 10^-10</code></strong></dt>
+<dd><p>The desired precision on the coefficients of the rational function.</p>
+
+</dd>
+</dl>
+<p><a id="X80C530E87B7FA7C4" name="X80C530E87B7FA7C4"></a></p>
+
+<h5>3.2-1 DelaunayTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DelaunayTriangulation</code>( <var class="Arg">points</var>[, <var class="Arg">quality</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A Delaunay triangulation of the sphere.</p>
+
+<p>If <var class="Arg">points</var> is a list of points on the unit sphere, represented by their 3D coordinates, this function creates a triangulation of the sphere with these points as vertices. This triangulation is such that the angles are as equilateral as possible.</p>
+
+<p>This triangulation is a recursive collection of records, one for each vertex, oriented edge or face. Each such object has a <code class="code">pos</code> component giving its coordinates; and an <code class="code">index</code> component identifying it uniquely. Additionally, vertices and faces have a <code class="code">n</code> component which lists their neighbours in CCW order, and edges have <code class="code">from,to,left,right,reverse</code> components.</p>
+
+<p>If all points are aligned on a great circle, or if all points are in a hemisphere, some points are added so as to make the triangulation simplicial with all edges of length <span class="SimpleMath">&lt;π</span>. These vertices additionally have a <code class="code">fake</code> component set to <code class="keyw">true</code>.</p>
+
+<p>A triangulation may be plotted with <code class="code">Draw</code>; this requires <strong class="pkg">appletviewer</strong> to be installed. The command <code class="code">Draw(t:detach)</code> detaches the subprocess after it is started. The extra arguments <code class="code">Draw(t:lower)</code> or <code class="code">Draw(t:upper)</code> stretch the triangulation to the lower, respectively upper, hemisphere.</p>
+
+<p>If the second argument <var class="Arg">quality</var>, which must be a floatean, is present, then all triangles in the resulting triangulation are guaranteed to have circumcircle ratio / minimal edge length at most <var class="Arg">quality</var>. Of course, additional vertices may need to be added to ensure that.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">octagon := Concatenation(IdentityMat(3),-IdentityMat(3))*1.0;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt := DelaunayTriangulation(octagon);</span>
+&lt;triangulation with 6 vertices, 24 edges and 8 faces&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt!.v;</span>
+[ &lt;vertex 1&gt;, &lt;vertex 2&gt;, &lt;vertex 3&gt;, &lt;vertex 4&gt;, &lt;vertex 5&gt;, &lt;vertex 6&gt; ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">last[1].n;</span>
+[ &lt;edge 17&gt;, &lt;edge 1&gt;, &lt;edge 2&gt;, &lt;edge 11&gt; ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">last[1].from;</span>
+&lt;vertex 1&gt;
+</pre></div>
+
+<p><a id="X82CA08BD85AA4F4E" name="X82CA08BD85AA4F4E"></a></p>
+
+<h5>3.2-2 LocateInTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocateInTriangulation</code>( <var class="Arg">t</var>[, <var class="Arg">seed</var>], <var class="Arg">point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The face in <var class="Arg">t</var> containing <var class="Arg">point</var>.</p>
+
+<p>This command locates the face in <var class="Arg">t</var> that contains <var class="Arg">point</var>; or, if <var class="Arg">point</var> lies on an edge or a vertex, it returns that edge or vertex.</p>
+
+<p>The optional second argument specifies a starting vertex, edge, face, or vertex index from which to start the search. Its only effect is to speed up the algorithm.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cube := Tuples([-1,1],3)/Sqrt(3.0);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt := DelaunayTriangulation(cube);</span>
+&lt;triangulation with 8 vertices, 36 edges and 12 faces&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocateInTriangulation(dt,dt!.v[1].pos);</span>
+&lt;vertex 1&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocateInTriangulation(dt,[3/5,0,4/5]*1.0);</span>
+&lt;face 9&gt;
+</pre></div>
+
+<p><a id="X81727B8B7A599605" name="X81727B8B7A599605"></a></p>
+
+<h5>3.2-3 IsSphereTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsSphereTriangulation</code></td><td class="tdright">( filter )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsMarkedSphere</code></td><td class="tdright">( filter )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Spider</code>( <var class="Arg">ratmap</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Spider</code>( <var class="Arg">machine</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>The category of triangulated spheres (points in Moduli space), or of marked, triangulated spheres (points in Teichmüller space).</p>
+
+<p>Various commands have an attribudte <code class="code">Spider</code>, which records this point in Teichmüller space.</p>
+
+<p><a id="X7CC0BBAD807D1A45" name="X7CC0BBAD807D1A45"></a></p>
+
+<h5>3.2-4 RationalFunction</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RationalFunction</code>( [<var class="Arg">z</var>, ]<var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A rational function.</p>
+
+<p>This command runs a modification of Hubbard and Schleicher's "spider algorithm" <a href="chapBib.html#biBMR1315537">[HS94]</a> on the IMG FR machine <var class="Arg">m</var>. It either returns a rational function <code class="code">f</code> whose associated machine is <var class="Arg">m</var>; or a record describing the Thurston obstruction to realizability of <code class="code">f</code>.</p>
+
+<p>This obstruction record <code class="code">r</code> contains a list <code class="code">r.multicurve</code> of conjugacy classes in <code class="code">StateSet(m)</code>, which represent short multicurves; a matrix <code class="code">r.mat</code>, and a spider <code class="code">r.spider</code> on which the obstruction was discovered.</p>
+
+<p>If a rational function is returned, it has preset attributes <code class="code">Spider(f)</code> and <code class="code">IMGMachine(f)</code> which is a simplified version of <var class="Arg">m</var>. This rational function is also normalized so that its post-critical points have barycenter=0 and has two post-critical points at infinity and on the positive real axis. Furthermore, if <var class="Arg">m</var> is polynomial-like, then the returned map is a polynomial.</p>
+
+<p>The command accepts the following options, to return a map in a given normalization:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">RationalFunction(m:param:=IsPolynomial)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=z^d+A_d-2z^d-2+⋯+A_0</span>;</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">RationalFunction(m:param:=IsBicritical)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=((pz+q)/(rz+s)^d</span>, with <span class="SimpleMath">1</span>postcritical;</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">RationalFunction(m:param:=n)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=1+a/z+b/z^2</span> or <span class="SimpleMath">f=a/(z^2+2z)</span> if <code class="code">n=2</code>.</p>
+
+</dd>
+</dl>
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PolynomialIMGMachine(2,[1/3],[]);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(m);</span>
+0.866025*z^2+(-1)*z+(-0.288675)
+</pre></div>
+
+<p><a id="X8563CADF7AA37AA4" name="X8563CADF7AA37AA4"></a></p>
+
+<h5>3.2-5 Draw</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Draw</code>( <var class="Arg">s</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>This command plots the spider <var class="Arg">s</var> in a separate X window. It displays the complex sphere, big dots at the post-critical set (feet of the spider), and the arcs and dual arcs of the triangulation connecting the feet.</p>
+
+<p>If the option <code class="keyw">julia:=&lt;gridsize&gt;</code> (if no grid size is specified, it is 500 by default), then the Julia set of the map associated with the spider is also displayed. Points attracted to attracting cycles are coloured in pastel tones, and unattracted points are coloured black.</p>
+
+<p>If the option <code class="keyw">noarcs</code> is specified, the printing of the arcs and dual arcs is disabled.</p>
+
+<p>The options <code class="keyw">upper</code>, <code class="keyw">lower</code> and <code class="keyw">detach</code> also apply.</p>
+
+<p><a id="X86BD8FD97D3AFA45" name="X86BD8FD97D3AFA45"></a></p>
+
+<h5>3.2-6 FRMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; FRMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IMGMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An IMG FR machine.</p>
+
+<p>This function computes a triangulation of the sphere, on the post-critical set of <var class="Arg">f</var>, and lifts it through the map <var class="Arg">f</var>. the action of the fundamental group of the punctured sphere is then read into an IMG fr machine <code class="code">m</code>, which is returned.</p>
+
+<p>This machine has a preset attribute <code class="code">Spider(m)</code>.</p>
+
+<p>An approximation of the Julia set of <var class="Arg">f</var> can be computed, and plotted on the spider, with the form <code class="code">IMGMachine(f:julia)</code> or <code class="code">IMGMachine(f:julia:=gridsize)</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(COMPLEX_FIELD);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IMGMachine(z^2-1);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f2*f1*f3 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(last);</span>
+ G  |            1        2
+----+---------------+--------+
+ f1 |          f2,2   &lt;id&gt;,1
+ f2 | f3^-1*f1*f3,1   &lt;id&gt;,2
+ f3 |        &lt;id&gt;,2     f3,1
+----+---------------+--------+
+Relator: f2*f1*f3
+</pre></div>
+
+<p><a id="X86377DEA7B83E596" name="X86377DEA7B83E596"></a></p>
+
+<h5>3.2-7 FindThurstonObstruction</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; FindThurstonObstruction</code>( <var class="Arg">list</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A description of the obstruction corresponding to <var class="Arg">list</var>, or <code class="keyw">fail</code>.</p>
+
+<p>This method accepts a list of IMG elements on the same underlying machine, and treats these as representatives of conjugacy classes defining (part of) a multicurve. It computes whether these curves, when supplemented with their lifts under the recursion, constitute a Thurston obstruction, by computing its transition matrix.</p>
+
+<p>The method either returns <code class="keyw">fail</code>, if there is no obstruction, or a record with as fields <code class="code">matrix,machine,obstruction</code> giving respectively the transition matrix, a simplified machine, and the curves that constitute a minimal obstruction.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := PolynomialIMGMachine(2,[],[1/6]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">F := StateSet(r);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r*twist^-1);</span>
+rec( machine := &lt;FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]&gt;,
+     twist := [ f1, f2, f3, f4 ] -&gt; [ f1, f3^-1*f2*f3, f3^-1*f2^-1*f3*f2*f3, f4 ],
+     obstruction := "Dehn twist" )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">FindThurstonObstruction([FRElement(last.machine,[2,3])]);</span>
+rec( matrix := [ [ 1 ] ], machine := &lt;FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]&gt;, obstruction := [ f1^-1*f4^-1 ] )
+</pre></div>
+
+<p><a id="X7E169BC681F9A1DA" name="X7E169BC681F9A1DA"></a></p>
+
+<h5>3.2-8 HurwitzMap</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; HurwitzMap</code>( <var class="Arg">spider</var>, <var class="Arg">monodromy</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A record describing a Hurwitz map.</p>
+
+<p>If <var class="Arg">spider</var> is a spider, marked by a group <span class="SimpleMath">G</span>, and <var class="Arg">monodromy</var> is a homomorphism from <span class="SimpleMath">G</span> to a permutation group, this function computes a rational map whose critical values are the vertices of <var class="Arg">spider</var> and whose monodromy about these critical values is given by <var class="Arg">monodromy</var>.</p>
+
+<p>The returned data are in a record with a field <code class="code">degree</code>, the degree of the map; two fields <code class="code">map</code> and <code class="code">post</code>, describing the desired <span class="SimpleMath">P^1</span>-map --- <code class="code">post</code> is a Möbius transformation, and the composition of <code class="code">map</code> and <code class="code">post</code> is the desired map; and lists <code class="code">zeros</code>, <code class="code">poles</code> and <code class="code">cp</code> describing the zeros, poles and critical points of the map. Each entry in these lists is a record with entries <code class="code">degree</code>, <code class="code">pos</code> and <code class="code">to</code> giving, for each point in the source of <code class="code">map</code>, the local degree and the vertex in <var class="Arg">spider</var> it maps to.</p>
+
+<p>This function requires external programs in the subdirectory "hurwitz" to have been compiled.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># we'll construct 2d-2 points on the equator, and permutations</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># in order (1,2),...,(d-1,d),(d-1,d),...,(1,2) for these points.</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># first, the spider.</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">d := 20;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := List([0..2*d-3], i-&gt;P1Point(Exp(i*PMCOMPLEX.constants.2IPI/(2*d-2))));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">spider := TRIVIALSPIDER@FR(z);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">g := FreeGroup(2*d-2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IMGMARKING@FR(spider,g);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># next, the permutation representation</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">perms := List([1..d-1],i-&gt;(i,i+1));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Append(perms,Reversed(perms));</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">perms := GroupHomomorphismByImages(g,SymmetricGroup(d),GeneratorsOfGroup(g),perms);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># now compute the map</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">HurwitzMap(spider,perms);</span>
+rec( cp := [ rec( degree := 2, pos := &lt;1.0022-0.0099955i&gt;, to := &lt;vertex 19[ 9, 132, 13, 125 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0022-0.0099939i&gt;, to := &lt;vertex 20[ 136, 128, 129, 11 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0039-0.0027487i&gt;, to := &lt;vertex 10[ 73, 74, 16, 82 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0006-0.0027266i&gt;, to := &lt;vertex 29[ 185, 20, 179, 21 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0045-7.772e-05i&gt;, to := &lt;vertex 9[ 24, 77, 17, 72 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.1739+0.33627i&gt;, to := &lt;vertex 2[ 31, 32, 41, 28 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0546+0.12276i&gt;, to := &lt;vertex 3[ 37, 38, 33, 46 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.026+0.061128i&gt;, to := &lt;vertex 4[ 43, 39, 52, 45 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0148+0.03305i&gt;, to := &lt;vertex 5[ 49, 44, 58, 51 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0098+0.018122i&gt;, to := &lt;vertex 6[ 55, 50, 64, 57 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0071+0.0093947i&gt;, to := &lt;vertex 7[ 61, 62, 71, 59 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0055+0.0037559i&gt;, to := &lt;vertex 8[ 67, 68, 63, 69 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0035-0.0047633i&gt;, to := &lt;vertex 11[ 79, 75, 88, 81 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0031-0.0062329i&gt;, to := &lt;vertex 12[ 85, 80, 94, 87 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0029-0.0073311i&gt;, to := &lt;vertex 13[ 91, 86, 100, 93 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0027-0.008187i&gt;, to := &lt;vertex 14[ 97, 92, 106, 99 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0026-0.008824i&gt;, to := &lt;vertex 15[ 103, 98, 112, 105 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0025-0.0092966i&gt;, to := &lt;vertex 16[ 109, 104, 118, 111 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0024-0.0096345i&gt;, to := &lt;vertex 17[ 115, 110, 124, 117 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0023-0.0098698i&gt;, to := &lt;vertex 18[ 121, 116, 122, 123 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0021-0.0098672i&gt;, to := &lt;vertex 21[ 133, 127, 142, 135 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.002-0.0096298i&gt;, to := &lt;vertex 22[ 139, 134, 148, 141 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.002-0.0092884i&gt;, to := &lt;vertex 23[ 145, 140, 154, 147 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0019-0.0088147i&gt;, to := &lt;vertex 24[ 151, 146, 160, 153 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0017-0.008166i&gt;, to := &lt;vertex 25[ 157, 152, 166, 159 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0016-0.0073244i&gt;, to := &lt;vertex 26[ 163, 158, 172, 165 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0014-0.0061985i&gt;, to := &lt;vertex 27[ 169, 164, 178, 171 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0011-0.0047031i&gt;, to := &lt;vertex 28[ 175, 170, 176, 177 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99908+0.0038448i&gt;, to := &lt;vertex 31[ 187, 183, 196, 189 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99759+0.0094326i&gt;, to := &lt;vertex 32[ 193, 188, 202, 195 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99461+0.018114i&gt;, to := &lt;vertex 33[ 199, 194, 208, 201 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.98944+0.032796i&gt;, to := &lt;vertex 34[ 205, 200, 214, 207 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.9772+0.058259i&gt;, to := &lt;vertex 35[ 211, 206, 220, 213 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.94133+0.11243i&gt;, to := &lt;vertex 36[ 217, 212, 226, 219 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.79629+0.23807i&gt;, to := &lt;vertex 37[ 223, 224, 225, 221 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1+0i&gt;, to := &lt;vertex 30[ 181, 182, 6, 190 ]&gt; ) ], degree := 20, 
+  map := &lt;((-0.32271060393507572-4.3599244721894763i_z)*z^20+(3.8941736874493795+78.415744809040405\
+i_z)*z^19+(-16.808157937605603-665.79436908026275i_z)*z^18+(2.6572296014719168+3545.861245383101i_z\
+)*z^17+(316.57668022762243-13273.931613611372i_z)*z^16+(-1801.6631038749117+37090.818733740503i_z)*\
+z^15+(5888.6033008259928-80172.972599556582i_z)*z^14+(-13500.864941314803+137069.10015838256i_z)*z^\
+13+(23251.436304923012-187900.36507913063i_z)*z^12+(-31048.192131502536+208077.63047409133i_z)*z^11\
++(32639.349270133433-186578.17493860485i_z)*z^10+(-27155.791223040047+135145.40893002271i_z)*z^9+(1\
+7836.343164500577-78489.005444299968i_z)*z^8+(-9153.842142530224+36053.895961137248i_z)*z^7+(3598.6\
+408777659944-12810.65497539577i_z)*z^6+(-1047.541279063196+3397.470068169695i_z)*z^5+(212.906725643\
+0024-633.29691376653466i_z)*z^4+(-26.989372105307872+74.040615571896637i_z)*z^3+(1.6073346640110264\
+-4.0860733899027055i_z)*z^2)/(z^18+(-18.034645372692019-0.45671993287358581i_z)*z^17+(153.540499397\
+49956+7.7811506405054889i_z)*z^16+(-819.9344323563339-62.384270590463998i_z)*z^15+(3077.71530771320\
+75+312.59552100187739i_z)*z^14+(-8623.1225834872057-1096.4398001099003i_z)*z^13+(18689.34396825033+\
+2856.8568878158458i_z)*z^12+(-32038.568184053798-5725.9186424029094i_z)*z^11+(44038.148375498437+90\
+17.0162876593004i_z)*z^10+(-48898.555649389084-11295.156285052604i_z)*z^9+(43964.579894637543+11318\
+.997395732025i_z)*z^8+(-31931.403449371515-9074.2344933443364i_z)*z^7+(18595.347261301522+5786.6036\
+424805825i_z)*z^6+(-8565.0823844971637-2899.3353634270734i_z)*z^5+(3051.6919509143086+1117.44496422\
+99487i_z)*z^4+(-811.56293104533825-319.93036282549667i_z)*z^3+(151.69784956523344+64.11787684283315\
+5i_z)*z^2+(-17.785127700028404-8.0311759305108268i_z)*z+(0.98427999507354302+0.47338721325094818i_z\
+))&gt;, poles := [ rec( degree := 1, pos := &lt;0.99517+0.30343i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0021+0.11512i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0028+0.05702i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0026+0.030964i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0025+0.016951i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0024+0.0085784i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0024+0.003208i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.00046905i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0030802i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0049913i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0064163i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0074855i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0082954i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0089048i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0093543i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0096742i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0098869i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0099988i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 2, pos := &lt;P1infinity&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ) ], 
+  post := &lt;((-0.91742065452766763+0.99658449300666985i_z)*z+(0.74087581626192234-1.1339948562200648\
+i_z))/((-0.75451451285920013+0.96940026593933015i_z)*z+(0.75451451285920013-0.96940026593933015i_z)\
+)&gt;, zeros := [ rec( degree := 1, pos := &lt;0.92957+0.28362i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;0.99173+0.11408i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;0.99985+0.056874i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0014+0.030945i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.002+0.016938i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022+0.0085785i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022+0.0032076i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.00046827i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0030802i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0049908i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.006416i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0074855i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0082953i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0089047i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0093542i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0096742i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0098869i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0099988i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0+0i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ) ] )
+</pre></div>
+
+<p><a id="X84FC673C7B104194" name="X84FC673C7B104194"></a></p>
+
+<h5>3.2-9 DessinByPermutations</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DessinByPermutations</code>( <var class="Arg">s0</var>, <var class="Arg">s1</var>[, <var class="Arg">sinf</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A rational map (see <code class="func">HurwitzMap</code> (<a href="chap3.html#X7E169BC681F9A1DA"><span class="RefLink">3.2-8</span></a>)) with monodromies <var class="Arg">s,t</var>.</p>
+
+<p>This command computes the Hurwitz map associated with the spider <span class="SimpleMath">[0,1]∪[1,∞]</span>; the monodromy representation is by the permutation <var class="Arg">s0</var> at <span class="SimpleMath">0</span> and <var class="Arg">s1</var> at <span class="SimpleMath">1</span>. The optional third argument <var class="Arg">sinf</var> is the monodromy at <span class="SimpleMath">∞</span>, and must equal <span class="SimpleMath">s_0^-1s_1^-1</span>.</p>
+
+<p>The data is returned as a record, with entries <code class="code">degree</code>, <code class="code">map</code>, <code class="code">post</code>, and lists <code class="code">poles</code>, <code class="code">zeros</code>, and <code class="code">above1</code>. Each entry in the list is a record with entries <code class="code">pos</code> and <code class="code">degree</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DessinByPermutations((1,2),(2,3));</span>
+rec( above1 := [ rec( degree := 2, pos := &lt;1+0i&gt; ),
+                 rec( degree := 1, pos := &lt;-0.5-1.808e-14i&gt; ) ],
+     degree := 3, 
+     map := &lt;(-1.9999999999946754+2.1696575743432764e-13i_z)*z^3+(2.9999999999946754-2.1696575743432764e-13i_z)*z^2&gt;,
+     poles := [ rec( degree := 3, pos := &lt;P1infinity&gt; ) ],
+     post := &lt;z&gt;, 
+     zeros := [ rec( degree := 1, pos := &lt;1.5+5.4241e-14i&gt; ),
+                rec( degree := 2, pos := &lt;0+0i&gt; ) ] )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the Cui example</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DessinByPermutations((1,3,12,4)(5,9)(6,7)(10,13,11)(2,8),</span>
+           (1,5,13,6)(7,10)(2,3)(8,11,12)(4,9),
+           (1,7,11,2)(3,8)(4,5)(9,12,13)(6,10));
+rec( 
+  above1 := [ rec( degree := 2, pos := &lt;1.9952-0.79619i&gt; ), 
+      rec( degree := 2, pos := &lt;0.43236-0.17254i&gt; ), rec( degree := 2, pos := &lt;-0.9863-0.16498i&gt; ),
+      rec( degree := 3, pos := &lt;-0.12749-0.99184i&gt; ), rec( degree := 4, pos := &lt;1+0i&gt; ) ], 
+  degree := 13, 
+  map := &lt;((-6.9809917616400366e-12+0.13002709490708636i_z)*z^13+(-0.68172329304137969-0.8451761169\
+2062078i_z)*z^12+(4.0903397584184269+0.30979932084028583i_z)*z^11+(-6.3643009040280925+7.5930410215\
+99336i_z)*z^10+(-5.1732765988942884-16.738910009700096i_z)*z^9+(21.528087032174511+6.11354599010482\
+5i_z)*z^8+(-15.258776392407746+13.657687016998921i_z)*z^7+(-1.6403496019814323-13.453316297094229i_\
+z)*z^6+(4.4999999996894351+3.3633290741375781i_z)*z^5+(-0.99999999990279009+2.5538451239904557e-11i\
+_z)*z^4)/(z^9+(-4.4999999999400613+3.3633290744267983i_z)*z^8+(1.6403496020557891-13.45331629745540\
+7i_z)*z^7+(15.258776391831654+13.657687016903173i_z)*z^6+(-21.528087030670253+6.1135459892162567i_z\
+)*z^5+(5.1732765986730511-16.738910007513041i_z)*z^4+(6.3643009027133139+7.593041020468557i_z)*z^3+\
+(-4.0903397575324512+0.30979932067785648i_z)*z^2+(0.68172329288354727-0.8451761166966415i_z)*z+(5.0\
+734454343833585e-12+0.13002709487107747i_z))&gt;, 
+  poles := [ rec( degree := 2, pos := &lt;1.6127-0.49018i&gt; ), 
+      rec( degree := 2, pos := &lt;0.5-0.04153i&gt; ), rec( degree := 2, pos := &lt;-0.61269-0.49018i&gt; ), 
+      rec( degree := 3, pos := &lt;0.5-0.43985i&gt; ), rec( degree := 4, pos := &lt;P1infinity&gt; ) ], 
+  post := &lt;-z+1._z&gt;, 
+  zeros := [ rec( degree := 2, pos := &lt;1.9863-0.16498i&gt; ), 
+      rec( degree := 3, pos := &lt;1.1275-0.99184i&gt; ), rec( degree := 2, pos := &lt;0.56764-0.17254i&gt; ), 
+      rec( degree := 2, pos := &lt;-0.99516-0.79619i&gt; ), rec( degree := 4, pos := &lt;0+0i&gt; ) ] )
+</pre></div>
+
+<p><a id="X86C9E1938159FEE1" name="X86C9E1938159FEE1"></a></p>
+
+<h5>3.2-10 KneadingSequence</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; KneadingSequence</code>( <var class="Arg">angle</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: The kneading sequence associated with <var class="Arg">angle</var>.</p>
+
+<p>This function converts a rational angle to a kneading sequence, to describe a quadratic polynomial.</p>
+
+<p>If <var class="Arg">angle</var> is in <span class="SimpleMath">[1/7,2/7]</span> and the option <code class="code">marked</code> is set, the kneading sequence is decorated with markings in A,B,C.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">KneadingSequence(1/7);</span>
+[ 1, 1 ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">KneadingSequence(1/5:marked);</span>
+[ "A1", "B1", "B0" ]
+</pre></div>
+
+<p><a id="X857FCD7678B12A0C" name="X857FCD7678B12A0C"></a></p>
+
+<h5>3.2-11 AllInternalAddresses</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AllInternalAddresses</code>( <var class="Arg">n</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: Internal addresses of maps with period up to <var class="Arg">n</var>.</p>
+
+<p>This function returns internal addresses for all periodic points of period up to <var class="Arg">n</var> under angle doubling. These internal addresses describe the prominent hyperbolic components along the path from the landing point to the main cardioid in the Mandelbrot set; this is a list of length <code class="code">3k</code>, with at position <code class="code">3i+1,3i+2</code> the left and right angles, respectively, and at position <code class="code">3i+3</code> the period of that component. For example, <code class="code">[ 3/7, 4/7, 3, 1/3, 2/3, 2 ]</code> describes the airplane: a polynomial with landing angles <span class="SimpleMath">[3/7,4/7]</span> of period <span class="SimpleMath">3</span>; and such that there is a polynomial with landing angles <span class="SimpleMath">[1/3,2/3]</span> and period <span class="SimpleMath">2</span>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AllInternalAddresses(3);</span>
+[ [  ], [ [ 1/3, 2/3, 2 ] ], 
+[ [ 1/7, 2/7, 3 ], [ 3/7, 4/7, 3, 1/3, 2/3, 2 ], [ 5/7, 6/7, 3 ] ] ]
+</pre></div>
+
+<p><a id="X86C250907E09F399" name="X86C250907E09F399"></a></p>
+
+<h5>3.2-12 ExternalAnglesRelation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ExternalAnglesRelation</code>( <var class="Arg">degree</var>, <var class="Arg">n</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: An equivalence relation on the rationals.</p>
+
+<p>This function returns the equivalence relation on <code class="code">Rationals</code> identifying all pairs of external angles that land at a common point of period up to <var class="Arg">n</var> under angle multiplication by by <var class="Arg">degree</var>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ExternalAnglesRelation(2,3);</span>
+&lt;equivalence relation on Rationals &gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">EquivalenceRelationPartition(last);</span>
+[ [ 1/7, 2/7 ], [ 1/3, 2/3 ], [ 3/7, 4/7 ], [ 5/7, 6/7 ] ]
+</pre></div>
+
+<p><a id="X84F962AF7D553DDA" name="X84F962AF7D553DDA"></a></p>
+
+<h5>3.2-13 ExternalAngle</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ExternalAngle</code>( <var class="Arg">machine</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The external angle identifying <var class="Arg">machine</var>.</p>
+
+<p>In case <var class="Arg">machine</var> is the IMG machine of a unicritical polynomial, this function computes the external angle landing at the critical value. More precisely, it computes the equivalence class of that external angle under <code class="func">ExternalAnglesRelation</code> (<a href="chap3.html#X86C250907E09F399"><span class="RefLink">3.2-12</span></a>).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ExternalAngle(PolynomialIMGMachine(2,[1/7])); # the rabbit</span>
+{2/7}
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Elements(last);</span>
+[ 1/7, 2/7 ]
+</pre></div>
+
+<p><a id="X814F53B97C3F43F5" name="X814F53B97C3F43F5"></a></p>
+
+<h5>3.2-14 ChangeFRMachineBasis</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ChangeFRMachineBasis</code>( <var class="Arg">m</var>[, <var class="Arg">l</var>][, <var class="Arg">p</var>] )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: An equivalent FR machine, in a new basis.</p>
+
+<p>This function constructs a new group FR machine, given a group FR machine <var class="Arg">m</var> and, optionally, a list of states <var class="Arg">l</var> (as elements of the free object <code class="code">StateSet(m)</code>) and a permutation <var class="Arg">p</var>, which defaults to the identity permutation.</p>
+
+<p>The new machine has the following transitions: if alphabet letter <code class="code">a</code> is mapped to <code class="code">b</code> by state <code class="code">s</code> in <var class="Arg">m</var>, leading to state <code class="code">t</code>, then, in the new machine, the input letter <code class="code">a^p</code> is mapped to <code class="code">b^p</code> by state <code class="code">s</code>, leading to state <code class="code">l[a]^-1*t*l[b]</code>.</p>
+
+<p>The group generated by the new machine is isomorphic to the group generated by <var class="Arg">m</var>. This command amounts to a change of basis of the associated bimodule (see <a href="chapBib.html#biBMR2162164">[Nek05, Section 2.2]</a>). It amounts to conjugation by the automorphism <code class="code">c=FRElement("c",[l[1]*c,...,l[n]*c],[()],1)</code>.</p>
+
+<p>If the second argument is absent, this command attempts to choose a list that makes many entries of the recursion trivial.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">n := FRMachine(["tau","mu"],[[[],[1]],[[],[-2]]],[(1,2),(1,2)]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(n);</span>
+ G   |     1         2
+-----+--------+---------+
+ tau | &lt;id&gt;,2     tau,1
+  mu | &lt;id&gt;,2   mu^-1,1
+-----+--------+---------+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">nt := ChangeFRMachineBasis(n,GeneratorsOfFRMachine(n){[1,1]});;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(nt);</span>
+ G   |     1                    2
+-----+--------+--------------------+
+ tau | &lt;id&gt;,2                tau,1
+  mu | &lt;id&gt;,2   tau^-1*mu^-1*tau,1
+-----+--------+--------------------+
+</pre></div>
+
+<p><a id="X7BE001A0811CD599" name="X7BE001A0811CD599"></a></p>
+
+<h5>3.2-15 ComplexConjugate</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ComplexConjugate</code>( <var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: An FR machine with inverted states.</p>
+
+<p>This function constructs an FR machine whose generating states are the inverses of the original states. If <var class="Arg">m</var> came from a complex rational map <span class="SimpleMath">f(z)</span>, this would construct the machine of the conjugate map <span class="SimpleMath">overlinef(overline z)</span>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := PolynomialIMGMachine(2,[1/7]);</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder FRElement(...,f4) on &lt;object&gt;/[ f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(a);</span>
+ G  |            1            2
+----+---------------+------------+
+ f1 | f1^-1*f2^-1,2   f3*f2*f1,1
+ f2 |          f1,1       &lt;id&gt;,2
+ f3 |          f2,1       &lt;id&gt;,2
+ f4 |          f4,2       &lt;id&gt;,1
+----+---------------+------------+
+Adding element: FRElement(...,f4)
+Relator: f4*f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(ComplexConjugate(a));</span>
+ G  |            1                     2
+----+---------------+---------------------+
+ f1 | f1*f2*f3*f4,2   f4^-1*f2^-1*f1^-1,1
+ f2 |          f1,1      &lt;identity ...&gt;,2
+ f3 |          f2,1      &lt;identity ...&gt;,2
+ f4 |          f4,2      &lt;identity ...&gt;,1
+----+---------------+---------------------+
+Adding element: FRElement(...,f4)
+Relator: f1*f2*f3*f4
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ExternalAngle(a);</span>
+{2/7}
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ExternalAngle(ComplexConjugate(a));</span>
+{6/7}
+</pre></div>
+
+<p><a id="X7F56E5F184700C5C" name="X7F56E5F184700C5C"></a></p>
+
+<h5>3.2-16 BraidTwists</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; BraidTwists</code>( <var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: Automorphisms of <var class="Arg">m</var>'s stateset that preserve its relator.</p>
+
+<p>This function returns a list of (positive and negative) free group automorphisms, that are such that conjugating <var class="Arg">m</var> by these automorphisms preserves its IMG relator.</p>
+
+<p>These are in fact the generators of Artin's braid group.</p>
+
+<p><a id="X7E941D2185A1DF3B" name="X7E941D2185A1DF3B"></a></p>
+
+<h5>3.2-17 RotatedSpider</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RotatedSpider</code>( <var class="Arg">m</var>[, <var class="Arg">p</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A polynomial FR machine with rotated spider at infinity.</p>
+
+<p>This function constructs an isomorphic polynomial FR machine, but with a different numbering of the spider legs at infinity. This rotation is accomplished by conjugating by <code class="code">adder^p</code>, where <code class="code">adder</code> is the adding element of <var class="Arg">m</var>, and <var class="Arg">p</var>, the rotation parameter, is <span class="SimpleMath">1</span> by default.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := PolynomialIMGMachine(3,[1/4]);</span>
+&lt;FR machine with alphabet [ 1, 2, 3 ] and adder FRElement(...,f3) on &lt;object&gt;/[ f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(a);</span>
+ G  |      1        2         3
+----+---------+--------+---------+
+ f1 | f1^-1,2   &lt;id&gt;,3   f2*f1,1
+ f2 |    f1,1   &lt;id&gt;,2    &lt;id&gt;,3
+ f3 |    f3,3   &lt;id&gt;,1    &lt;id&gt;,2
+----+---------+--------+---------+
+Adding element: FRElement(...,f3)
+Relator: f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(RotatedSpider(a));</span>
+ G  |     1            2               3
+----+--------+------------+---------------+
+ f1 | &lt;id&gt;,2   f2*f1*f3,3   f3^-1*f1^-1,1
+ f2 | &lt;id&gt;,1       &lt;id&gt;,2   f3^-1*f1*f3,3
+ f3 |   f3,3       &lt;id&gt;,1          &lt;id&gt;,2
+----+--------+------------+---------------+
+Adding element: FRElement(...,f3)
+Relator: f3*f2*f1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ExternalAngle(a);</span>
+{3/8}
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">List([1..10],i-&gt;ExternalAngle(RotatedSpider(a,i)));</span>
+[ {7/8}, {1/4}, {7/8}, {1/4}, {7/8}, {1/4}, {7/8}, {1/4}, {7/8}, {1/4} ]
+</pre></div>
+
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>

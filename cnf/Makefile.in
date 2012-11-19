@@ -15,6 +15,7 @@
 
 PWDU:=$(shell dirname $(PWD))
 PWDUU:=$(shell dirname $(PWDU))
+VERSION:=$(shell grep '^Version :=' PackageInfo.g | cut -f2 -d'"')
 
 LOCALBIN=bin/@GAPARCH@
 EXTERN=$(CURDIR)/bin/@GAPARCH@/extern
@@ -64,7 +65,7 @@ java/javaview.jar:
 	rm -f javaview.zip
 
 clean:
-	rm -rf .version config.log $(LOCALBIN) `find doc -type l`
+	rm -rf config.log $(LOCALBIN) `find doc -type l`
 
 mrproper: clean
 	rm Makefile config.h
@@ -72,14 +73,10 @@ mrproper: clean
 configure: cnf/Makefile.in cnf/configure.ac
 	(cd cnf; aclocal -Im4; autoconf; mv -f configure ..)
 
-.version: PackageInfo.g
-	grep '^Version :=' $< | cut -f2 -d'"' | tr -d '\n' > $@
-
 doc: doc/chap0.html
 
 doc/chap0.html: doc/img.xml doc/imgbib.xml gap/helpers.gd gap/complex.gd
 	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q -T -l ";$(PWDUU)"
-	(cd doc; git add *.html manual.pdf manual.css; git commit -m 'New html files'; git push github master:gh-pages --force)
 
 checkblocks:
 	grep '<#GAPDoc' PackageInfo.g gap/*d | awk -F'"' '{print $$2}' | sort > @@-blocks
@@ -87,10 +84,10 @@ checkblocks:
 	comm -3 @@-blocks @@-in
 	@rm @@-blocks @@-in
 
-tarballs: .version doc
+tarballs: doc
 	mkdir -p zips
-	tar -c -f zips/img-`cat .version`.tar.gz -z --exclude '*~' --exclude '.[a-z]*' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude autom4te.cache --exclude sandbox --exclude zips --exclude bin --exclude extern -C .. img
-	ln -sf img-`cat .version`.tar.gz zips/img.tar.gz
+	tar -c -f zips/img-$(VERSION).tar.gz -z --exclude '*~' --exclude '.[a-z]*' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude autom4te.cache --exclude sandbox --exclude zips --exclude bin --exclude extern -C .. img
+	ln -sf img-$(VERSION).tar.gz zips/img.tar.gz
 
 wwwdir: doc/chap0.html tarballs
 	cp PackageInfo.g doc/
