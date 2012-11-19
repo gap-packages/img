@@ -2,9 +2,7 @@
 ##
 #W  configure.ac                                            Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
-#Y Copyright (C) 2009, Laurent Bartholdi
+#Y Copyright (C) 2009-2012, Laurent Bartholdi
 ##
 #############################################################################
 

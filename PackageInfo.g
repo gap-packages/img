@@ -7,10 +7,10 @@ PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
 Version := "0.0.0",
 ## <#GAPDoc Label="Version">
-## 0.0.0
+## <!ENTITY0.0.0
 ## <#/GAPDoc>
-Date := "15/11/2012",
-ArchiveURL := Concatenation("http://www.uni-math.gwdg.de/laurent/IMG/img-",~.Version),
+Date := "19/11/2012",
+ArchiveURL := Concatenation("https://github.com/laurentbartholdi/img/archive/",~.Version),
 ArchiveFormats := ".tar.gz",
 Persons := [
   rec(
