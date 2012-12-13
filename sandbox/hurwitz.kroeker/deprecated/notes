@@ -1,0 +1,40 @@
+# Fragen an Laurent: 
+# wo und wann muss "SetFloats(MPC);;" stattfinden?
+
+# Es gibt ein InfoFR-Objekt
+
+MakeReadWriteGlobal
+InstallValue
+NeedsOtherPackage
+DeclareGlobalFunction
+MakeReadWrite
+
+	
+#Notizen:	
+# -Wenn Funktionen nicht ReadOnly definiert werden, können diese Überschrieben werden und es ist nichts mehr korrekt.
+# -kein PrintTo verwenden! (Erzeugt automatisch Umbrüche a la "\<cr>").
+# bindGlobal bindet eine Methode 
+# Example for installing non-global Methods:
+#
+#  rationalMapFinder@.IsIntegerPartition := NewProperty("IsIntegerPartition",IsObject);
+#  InstallMethod(rationalMapFinder@.IsIntegerPartition,"IsIntegerPartition test",[IsObject],IsIntegerPartitionFkt);
+#  ...
+#  rationalMapFinder@ := Immutable(rationalMapFinder@);
+
+#DeclareGlobalFunction( "preRationalMapFromRootDataElem" );
+#InstallGlobalFunction(preRationalMapFromRootDataElem, preRationalMapFromRootDataElemFkt);
+
+# ob Objectify oder nur Rec: man kann immer mit "!." zugreifen! 
+# ausserdem kann man  ja auch eine Methode 'RecNames' installeren?
+
+
+getPackage("VectorFields",Repository=>"http://www.utsc.utoronto.ca/~bpike/software/");
+
+# AppendTo eventuell auch mist:
+
+http://mail.gap-system.org/pipermail/forum/2006/001407.html
+
+SetPrintFormattingStatus
+
+
+
