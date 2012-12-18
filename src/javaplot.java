@@ -190,9 +190,9 @@ public class javaplot extends Applet {
 	if (z.equals(infinity) && w.equals(infinity))
 	    return 0.;
 	if (z.equals(infinity))
-	    return 2./w.abs();
+	    return 2./Math.sqrt(1.+w.sqrAbs());
 	if (w.equals(infinity))
-	    return 2./z.abs();
+	    return 2./Math.sqrt(1.+z.sqrAbs());
 	return 2.*PuComplex.sub(z,w).abs()/Math.sqrt((1.+z.sqrAbs())*(1.+w.sqrAbs()));
     }
 
