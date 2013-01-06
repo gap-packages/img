@@ -153,9 +153,17 @@ end);
 BindGlobal("EDGEMAP@",
         e->P1Path(e.from.pos,e.to.pos));
 
-DeclareGlobalFunction("SWAPTEST@");
-InstallGlobalFunction(SWAPTEST@, function(p,e)
+BindGlobal("YRATIO@", function(a,b,c,d)
+    local z;
+    
+    z := P1XRatio(a,b,c,d);
+    return 2.0*ImaginaryPart(z)/(1.0+Norm(z));
+end);
+
+DeclareGlobalFunction("FLIPEDGE@");
+InstallGlobalFunction(FLIPEDGE@, function(p,e,multi)
     # p is opposite of edge e on face e.left. check if e should be swapped.
+    # multi means: "do as many (>= 0) flips till the triangulation is delaunay"
     local a, b, q, bp, pa, aq, qb, f, pqb, qpa;
     f := e.reverse;
     a := e.from;
@@ -165,7 +173,7 @@ InstallGlobalFunction(SWAPTEST@, function(p,e)
     for aq in e.right.n do if IsIdenticalObj(aq.from,a) then break; fi; od;
     for qb in e.right.n do if IsIdenticalObj(qb.to,b) then break; fi; od;
     q := aq.to;
-    if ImaginaryPart(P1XRatio(p.pos,q.pos,a.pos,b.pos))>@.rz then
+    if not multi or YRATIO@(p.pos,q.pos,a.pos,b.pos)>@.rz then
         Remove(a.n,POSITIONID@(a.n,e));
         Remove(b.n,POSITIONID@(b.n,f));
         e.from := p; e.to := q;
@@ -187,21 +195,23 @@ InstallGlobalFunction(SWAPTEST@, function(p,e)
             qb.gpelement := e.gpelement*qb.gpelement;
             qb.reverse.gpelement := qb.gpelement^-1;
         fi;
-        SWAPTEST@(p,aq);
-        SWAPTEST@(p,qb);
+        if multi then
+            FLIPEDGE@(p,aq,true);
+            FLIPEDGE@(p,qb,true);
+        fi;
     fi;
 end);
 
 BindGlobal("CHECKTRIANGULATION@", function(t)
     local x;
     x := Filtered(t!.v,v->not ForAll(v.n,e->IsIdenticalObj(e.from,v)));
-    if x<>[] then return [false,1]; fi;
+    if x<>[] then return ["v.n[i].from <> v: ",x]; fi;
     x := Filtered(t!.e,e->not INID@(e,e.from.n) or not INID@(e,e.left.n));
-    if x<>[] then return [false,2]; fi;
+    if x<>[] then return ["e.from.n[i]<>e or e.left.[i]<>e: ",x]; fi;
     x := Filtered(t!.f,f->not ForAll(f.n,e->IsIdenticalObj(e.left,f)));
-    if x<>[] then return [false,3]; fi;
+    if x<>[] then return ["f.n[i] <> f: ",x]; fi;
     x := Filtered(t!.f,f->not IsIdenticalObj(LOCATE@(t,f,f.pos)[1],f));
-    if x<>[] then return [false,4]; fi;
+    if x<>[] then return ["Locate(f,f.pos) <> f: ",x]; fi;
     return true;
 end);
 
@@ -209,10 +219,14 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f,p)
     # adds point p, in face f, to triangulation t
     local nv, ne, nf, i, d;
     
+    if f=fail then
+        f := LOCATE@(t,fail,p)[1];
+    fi;
+    
     nv := rec(type := 'v', pos := p, n := [], index := Length(t!.v)+1, operations := t!.v[1].operations); Add(t!.v,nv);
     ne := [];
     nf := List([1..2],i->rec(type := 'f', index := Length(t!.f)+i, operations := t!.f[1].operations)); Append(t!.f,nf);
-    nf[3] := f; Unbind(f.radius); # recycle record f
+    nf[3] := f; Unbind(f.pos); Unbind(f.radius); # recycle record f
     for i in [1..3] do
         ne[i] := rec(type := 'e', from := nv, to := f.n[i].from, left := nf[i], right := nf[1+(i+1) mod 3], len := P1Distance(nv.pos,f.n[i].from.pos));
         ne[i+3] := rec(type := 'e', from := ne[i].to, to := nv, left := ne[i].right, right := nf[i], reverse := ne[i], len := ne[i].len);
@@ -225,6 +239,9 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f,p)
         if IsBound(t!.e[1].gpelement) then
             ne[i].gpelement := One(t!.e[1].gpelement);
         fi;
+        if IsBound(ne[i].to.pos) and IsBound(ne[i].from.pos) then
+            ne[i].pos := P1Barycentre(ne[i].from.pos,ne[i].to.pos);
+        fi;
     od;
     Append(t!.e,ne);
     d := f.n; # f.n will get overwritten below
@@ -233,11 +250,61 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f,p)
         f.n[i].left := nf[i];
         f.n[i].reverse.right := nf[i];
         Add(d[i].from.n,ne[i+3],POSITIONID@(d[i].from.n,d[i])+1);
+        if ForAll(nf[i].n,e->IsBound(e.pos)) then
+            nf[i].pos := P1Barycentre(List(nf[i].n,e->e.pos));
+            nf[i].radius := -1.0;
+        fi;
     od;
     nv.n := ne{[1..3]};
     
     # flip diagonals if needed, to preserve Delaunay condition
-    for i in d do SWAPTEST@(nv,i); od;
+    for i in d do FLIPEDGE@(nv,i,true); od;
+end);
+
+BindGlobal("REMOVEFROMTRIANGULATION@", function(t,v)
+    # remove vertex v from triangulation t. flip edges as needed till v becomes
+    # trivalent, then zap it.
+    local yr, num, e1, e2, f, i, j;
+    
+    num := Length(v.n);
+    while num>3 do
+        # compute cross ratios of triplets-of-neighbours wrt v, sort them
+        yr := List([1..num], i->[YRATIO@(v.n[(i+num-2) mod num+1].to.pos, v.n[i].to.pos,v.n[i mod num+1].to.pos,v.pos),i]);
+        Error("rem");
+        yr := Minimum(yr);
+        
+        # flip diagonal of minimal xratio
+        FLIPEDGE@(v.n[yr[2]],v.n[yr[2] mod num+1].to,false);
+    od;
+    
+    # remove two faces and 6 edges, recycle a face.
+    f := v.n[1].left;
+    e1 := First(v.n[2].left.n,e->e<>v.n[2] and e<>v.n[3].reverse);
+    Remove(v.n[2].to.n,POSITIONID@(v.n[2].to.n,e1));
+    e1 := e1.reverse;
+    e2 := v.n[2].reverse;
+    e1.reverse := e2; e1.right := f;
+    e2.reverse := e1; e2.right := e1.left; e2.to := e1.from;
+    
+    e1 := First(v.n[3].left.n,e->e<>v.n[3] and e<>v.n[1].reverse);
+    Remove(v.n[3].to.n,POSITIONID@(v.n[3].to.n,e1));
+    v.n[3].to.n[POSITIONID@(v.n[3].to.n,v.n[3].reverse)] := v.n[1];
+    e1 := e1.reverse;
+    e2 := v.n[1];
+    e1.reverse := e2; e1.right := f;
+    e2.reverse := e1; e2.right := e1.left; e2.from := e1.to;
+        
+    Unbind(t!.v[v.index]);
+    for i in [2..3] do
+        for e1 in v.n[i].left.n do
+            j := e1.index;
+            e2 := Remove(t!.e);
+            if j<=Length(t!.e) then t!.e[j] := e2; t!.e[j].index := j; fi;
+        od;
+        j := v.n[i].left.index;
+        f := Remove(t!.f);
+        if j<=Length(t!.f) then t!.f[j] := f; t!.f[j].index := j; fi;
+    od;
 end);
 
 # these should all be objects, in clean implementation

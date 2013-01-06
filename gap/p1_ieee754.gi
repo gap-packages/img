@@ -187,7 +187,7 @@ InstallMethod(ComplexConjugate, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPCONJ
 
 InstallMethod(Primitive, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPPRIMITIVE);
 
-InstallMethod(Derivative, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPDERIVATIVE);
+InstallMethod(Derivative, "(FR) for a P1 map", [IsIEEE754P1Map], 2, P1MAPDERIVATIVE);
 
 InstallMethod(NumeratorP1Map, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPNUMERATOR);
 
