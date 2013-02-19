@@ -36,6 +36,47 @@ BindGlobal("INSTALLPRINTERS@", function(filter)
 end);
 #############################################################################
 
+################################################################
+
+BindGlobal("POSITIONID@", function(l,x)
+    return PositionProperty(l,y->IsIdenticalObj(x,y));
+end);
+
+BindGlobal("INID@", function(x,l)
+    return ForAny(l,y->IsIdenticalObj(x,y));
+end);
+
+UTIME@ := function()
+    local v;
+    v := ValueGlobal("IO_gettimeofday")();
+    return v.tv_sec+1.e-6_l*v.tv_usec;
+end;
+
+LASTTIME@ := 0; TIMES@ := []; MARKTIME@ := function(n) # crude time profiling
+    local t;
+    t := UTIME@();
+    if n=0 then LASTTIME@ := t; return; fi;
+    if not IsBound(TIMES@[n]) then TIMES@[n] := 0.0_l; fi;
+    TIMES@[n] := TIMES@[n]+t - LASTTIME@;
+    LASTTIME@ := t;
+end;
+
+BindGlobal("MAKEP1EPS@", function()
+    if ValueOption("precision")<>fail then
+        @.p1eps := ValueOption("precision");
+    else
+        @.p1eps := Sqrt(@.reps); # error allowed on P1Map
+    fi;
+    @.maxratio := 100*@.ro; # maximum ratio, in triangulation, of circumradius to edge length
+    if ValueOption("obstruction")<>fail then
+        @.obst := ValueOption("obstruction");
+    else
+        @.obst := 10^-2*@.ro; # points that close are suspected to form an obstruction
+    fi;
+    @.fast := 10^-1*@.ro; # if spider moved that little, just wiggle it
+    @.ratprec := @.reps^(3/4); # quality to achieve in rational fct.
+end);
+
 #############################################################################
 ##
 #F Minimal spanning tree
@@ -113,7 +154,7 @@ BindGlobal("JAVAPLOT@", function(input)
     CHECKEXEC@FR("appletviewer");
 
     s := "";
-    r := [Concatenation("-J-Djava.security.policy=",Filename(DirectoriesPackageLibrary("img","java"),"javaplot.pol")), Filename(DirectoriesPackageLibrary("img","java"),"javaplot.html")];
+    r := [Concatenation("-J-Xmx512m -J-Djava.security.policy=",Filename(DirectoriesPackageLibrary("img","java"),"javaplot.pol")), Filename(DirectoriesPackageLibrary("img","java"),"javaplot.html")];
     if ValueOption("detach")<>fail then
         r := EXECINSHELL@FR(input,Concatenation(EXEC@.appletviewer," ",r[1]," ",r[2]),true);
     else

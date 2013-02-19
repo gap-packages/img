@@ -136,7 +136,7 @@ InstallMethod(Order, "(FR) for an IMG element",
     return recur(e);
 end);
 
-BindGlobal("MAKENFREL@", function(rel)
+BindGlobal("MAKENFREL@@", function(rel)
     rel := LetterRepAssocWord(rel);
     if rel[1]<0 then rel := -Reversed(rel); fi;
     rel := [rel,[],[]];
@@ -721,6 +721,34 @@ BindGlobal("REORDERREC@", function(m,perm)
     od;
 end);
 
+BindGlobal("CHANGEIMGMACHINEBASIS@", function(arg)
+    local m;
+    m := CallFuncList(ApplicableMethod(ChangeFRMachineBasis,arg,2),arg);
+    SetIMGRelator(m,IMGRelator(arg[1]));
+    return m;
+end);
+InstallMethod(ChangeFRMachineBasis, [IsIMGMachine], CHANGEIMGMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsIMGMachine, IsCollection],
+        CHANGEIMGMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsIMGMachine, IsPerm],
+        CHANGEIMGMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsIMGMachine, IsCollection, IsPerm],
+        CHANGEIMGMACHINEBASIS@);
+
+BindGlobal("CHANGEPOLYNOMIALMACHINEBASIS@", function(arg)
+    local m;
+    m := CallFuncList(ApplicableMethod(ChangeFRMachineBasis,arg,2),arg);
+    SetAddingElement(m,FRElement(m,InitialState(AddingElement(arg[1]))));
+    return m;
+end);
+InstallMethod(ChangeFRMachineBasis, [IsPolynomialFRMachine], CHANGEPOLYNOMIALMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsPolynomialFRMachine, IsCollection],
+        CHANGEPOLYNOMIALMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsPolynomialFRMachine, IsPerm],
+        CHANGEPOLYNOMIALMACHINEBASIS@);
+InstallMethod(ChangeFRMachineBasis, [IsPolynomialFRMachine, IsCollection, IsPerm],
+        CHANGEPOLYNOMIALMACHINEBASIS@);
+
 BindGlobal("FLIPSPIDER@", function(m,adder)
     # reverses the marking at infinity, by conjugating by the base change
     # <adder,1,...,1>[1,deg,deg-1,...,2]
@@ -735,86 +763,6 @@ BindGlobal("FLIPSPIDER@", function(m,adder)
     od;
     deg := Length(m[1][1]);
     REORDERREC@(m,PermList(Concatenation([1],[deg,deg-1..2])));
-end);
-
-BindGlobal("CHANGEFRMACHINEBASIS@", function(M,l,p)
-    local trans, i, d, newM;
-    d := Size(AlphabetOfFRObject(M));
-    while Length(l)<>d or not ForAll(l,x->x in StateSet(M)) do
-        Error("Invalid base change ",l,"\n");
-    od;
-    while LargestMovedPoint(p)>d do
-	Error("Invalid permutation ",p,"\n");
-    od;
-    trans := [];
-    for i in [1..Length(M!.transitions)] do
-        Add(trans,Permuted(List(AlphabetOfFRObject(M),a->l[a]^-1*M!.transitions[i][a]*l[M!.output[i][a]]),p));
-    od;
-    newM := FRMachineNC(FamilyObj(M),StateSet(M),trans,List(M!.output,r->ListPerm(PermList(r)^p,d)));
-    if HasIMGRelator(M) then
-        SetIMGRelator(newM,IMGRelator(M));
-    fi;
-    if HasAddingElement(M) then
-        SetAddingElement(newM,FRElement(newM,InitialState(AddingElement(M))));
-    fi;
-    return newM;
-end);
-
-InstallMethod(ChangeFRMachineBasis, "(FR) for a group FR machine and a list",
-        [IsGroupFRMachine, IsCollection],
-        function(M,l)
-    return CHANGEFRMACHINEBASIS@(M,l,());
-end);	
-InstallMethod(ChangeFRMachineBasis, "(FR) for a group FR machine and a permutation",
-        [IsGroupFRMachine, IsPerm],
-        function(M,p)
-    return CHANGEFRMACHINEBASIS@(M,List(AlphabetOfFRObject(M),x->One(StateSet(M))),p);
-end);	
-InstallMethod(ChangeFRMachineBasis, "(FR) for a group FR machine, a list and a permutation",
-        [IsGroupFRMachine, IsCollection, IsPerm],
-    CHANGEFRMACHINEBASIS@);
-
-InstallMethod(ChangeFRMachineBasis, "(FR) for an FR machine",
-        [IsGroupFRMachine],
-        function(M)
-    local S, l, s, t, u, v;
-
-    S := [];
-    for s in GeneratorsOfFRMachine(M) do
-        for t in Cycles(PermList(Output(M,s)),AlphabetOfFRObject(M)) do
-            if Length(t)>1 then
-                Add(S,[s,t]);
-            fi;
-        od;
-    od;
-    l := [];
-    l[1] := One(StateSet(M));
-#    l[Random([1..Length(AlphabetOfFRObject(M))])] := One(StateSet(M));
-    while S<>[] do
-        t := First([1..Length(S)],i->Number(S[i][2],i->IsBound(l[i]))>0);
-        if t=fail then
-            Error("Action is not transitive");
-            return fail;
-        fi;
-        t := Remove(S,t);
-        s := Filtered(t[2],i->IsBound(l[i]));
-        if Length(s)>1 and not IsIMGMachine(M) then
-            Error("Action is not contractible (tree-like)");
-            return fail;
-        fi;
-        s := s[1];
-        u := s;
-        while true do
-            v := Output(M,t[1],u);
-            if v=s then
-                break;
-            else
-                l[v] := LeftQuotient(Transition(M,t[1],u),l[u]);
-                u := v;
-            fi;
-        od;
-    od;
-    return CHANGEFRMACHINEBASIS@(M,l,());
 end);
 
 InstallMethod(BraidTwists, [IsIMGMachine], function(m)
@@ -875,7 +823,7 @@ InstallMethod(RotatedSpider, "(FR) for a polynomial IMG machine",
         function(M,p)
     local adder;
     adder := DecompositionOfFRElement(AddingElement(M)^p);
-    return CHANGEFRMACHINEBASIS@(M,List(adder[1],InitialState),PermList(adder[2]));
+    return CHANGEFRMACHINEBASIS@FR(M,List(adder[1],InitialState),PermList(adder[2]));
 end);
 
 InstallMethod(RotatedSpider, "(FR) for a polynomial IMG machine",
@@ -1388,9 +1336,6 @@ InstallMethod(SimplifiedIMGMachine, "(FR) for an IMG machine",
     return N;
 end);
 #############################################################################
-
-ReadPackage("img", "gap/triangulations.g");
-ReadPackage("img", "gap/hurwitz.g");
 
 #############################################################################
 ##
@@ -2163,38 +2108,6 @@ BindGlobal("CANONICALQUADRATICRATIONAL@", function(f)
     return Set([Value(f,z*m)/m,m/Value(f,1/m/z)]);
 end);
 
-InstallGlobalFunction(PostCriticalMachine, function(f)
-    local states, trans, x, i;
-    trans := [];
-    f := AsP1Map(f);
-    if DegreeOfP1Map(f)<=2 then
-        states := CVQUADRATICRATIONAL@(f);
-        i := 1;
-        while i <= Length(states) do
-            x := VALUERATIONAL@(f,states[i]);
-            if x in states then
-                Add(trans,[Position(states,x)]);
-            else
-                Add(states,x);
-                Add(trans,[Length(states)]);
-            fi;
-            i := i+1;
-            if RemInt(i,10)=0 then
-                Info(InfoFR, 2, "PostCriticalMachine: at least ",i," states");
-            fi;
-        od;
-    else
-        i := POSTCRITICALPOINTS@(f);
-        states := i[3];
-        for i in i[4] do
-            if i[1]>0 then trans[i[1]] := [i[2]]; fi;
-        od;
-    fi;
-    i := MealyMachineNC(FRMFamily([1]),trans,List(trans,x->[1]));
-    SetCorrespondence(i,states);
-    return i;
-end);
-
 InstallGlobalFunction(DBRationalIMGGroup, function(arg)
     local i, f;
     if IsFunction(IMGDB@[1]) then IMGDB@[1](); fi; # bootstrap
@@ -2215,40 +2128,6 @@ InstallGlobalFunction(DBRationalIMGGroup, function(arg)
         Error("Argument should be indices in Dau's table, or a rational function\n");
     fi;
 end);
-
-InstallGlobalFunction(Mandel, function(arg)
-    local f, a, b, c, d, cmd;
-
-    while Length(arg)>1 or not ForAll(arg,IsRationalFunction) do
-        Error("Mandel: argument should be at most one rational function");
-    od;
-    cmd := "mandel";
-    if arg<>[] then
-        f := NORMALIZEV@(arg[1],0,IsBicritical)[1]; # (az^2+b)/(cz^2+d)
-        if IsPolynomial(f) then
-            f := CoefficientsOfUnivariatePolynomial(f);
-            a := f[1]*f[3];
-            Add(cmd,' '); Append(cmd, String(RealPart(a)));
-            Add(cmd,' '); Append(cmd, String(ImaginaryPart(a)));
-        else
-            f := [NumeratorOfRationalFunction(f),DenominatorOfRationalFunction(f)];
-            b := CoefficientsOfUnivariatePolynomial(f[1])[1];
-            c := CoefficientsOfUnivariatePolynomial(f[2])[3];
-            d := CoefficientsOfUnivariatePolynomial(f[2])[1];
-            if DegreeOfP1Map(f[1])<2 then # b/(cz^2+d)
-                f := [c*b^2/d^3,@.z];
-            else # (az^2+b)/(cz^2+d)
-                a := CoefficientsOfUnivariatePolynomial(f[1])[3];
-                f := [c^2*b/a^3,c*d/a^2];
-            fi;
-            Add(cmd,' '); Append(cmd, String(RealPart(f[1])));
-            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[1])));
-            Add(cmd,' '); Append(cmd, String(RealPart(f[2])));
-            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[2])));
-        fi;
-    fi;
-    EXECINSHELL@FR(InputTextNone(),cmd,ValueOption("detach"));
-end);        
 #############################################################################
 
 #############################################################################

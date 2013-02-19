@@ -134,19 +134,6 @@ BindGlobal("REFINETRIANGULATION@", function(triangulation,maxlen)
         od;
         if idle then mult := mult-1; fi;
     until idle and mult<0;
-    
-    # that's a waste of time, we won't use these values
-    for e in triangulation!.e do
-        if not IsBound(e.pos) then
-            e.pos := P1Barycentre(e.from.pos,e.to.pos);
-            e.map := EDGEMAP@(e);
-        fi;
-    od;
-    for f in triangulation!.f do
-        if not IsBound(f.pos) then
-            f.pos := P1Barycentre(List(f.n,e->e.to.pos));
-        fi;
-    od;
 end);
 
 nodup := function(tri)

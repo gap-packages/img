@@ -783,6 +783,6 @@ double dogleg_optimize(double* p, unsigned int Nstate,
   if( returnContext == NULL )
     dogleg_freeContext(&ctx);
 
-  fprintf(stderr, "success! took %d iterations\n", numsteps);
+  if (DOGLEG_DEBUG) fprintf(stderr, "success! took %d iterations\n", numsteps);
   return norm2_x;
 }

@@ -29,6 +29,8 @@ SetInfoLevel(InfoIMG, 1);
 ReadPackage("img", "gap/helpers.gd");
 ReadPackage("img", "gap/complex.gd");
 ReadPackage("img", "gap/p1.gd");
+ReadPackage("img", "gap/sphere.gd");
+ReadPackage("img", "gap/triangulations.gd");
 ReadPackage("img", "gap/img.gd");
 ReadPackage("img", "gap/examples.gd");
 

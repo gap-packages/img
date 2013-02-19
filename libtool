@@ -75,13 +75,13 @@ PATH_SEPARATOR=":"
 
 # The host system.
 host_alias=
-host=x86_64-apple-darwin12.2.0
-host_os=darwin12.2.0
+host=x86_64-apple-darwin12.2.1
+host_os=darwin12.2.1
 
 # The build system.
 build_alias=
-build=x86_64-apple-darwin12.2.0
-build_os=darwin12.2.0
+build=x86_64-apple-darwin12.2.1
+build_os=darwin12.2.1
 
 # A sed program that does not truncate output.
 SED="/usr/local/bin/gsed"
@@ -275,7 +275,7 @@ finish_eval=""
 hardcode_into_libs=no
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/llvm-gcc-4.2/lib/gcc/i686-apple-darwin11/4.2.1/x86_64 /Applications/Xcode.app/Contents/Developer/usr/llvm-gcc-4.2/lib/gcc/i686-apple-darwin11/4.2.1/x86_64 /usr/lib /usr/llvm-gcc-4.2/lib/gcc /usr/llvm-gcc-4.2/lib /Applications/Xcode.app/Contents/Developer/usr/llvm-gcc-4.2/lib  /usr/local/lib"
+sys_lib_search_path_spec="/usr/local/lib/gcc/x86_64-apple-darwin12.2.0/4.8.0 /usr/local/lib /usr/lib  /usr/local/lib"
 
 # Run-time system search path for libraries.
 sys_lib_dlsearch_path_spec="/usr/local/lib /lib /usr/lib"
@@ -295,7 +295,7 @@ striplib="strip -x"
 
 
 # The linker used to build libraries.
-LD="/usr/llvm-gcc-4.2/libexec/gcc/i686-apple-darwin11/4.2.1/ld"
+LD="/usr/bin/ld"
 
 # How to create reloadable object files.
 reload_flag=" -r"
@@ -10093,7 +10093,7 @@ build_old_libs=`case $build_libtool_libs in yes) echo no;; *) echo yes;; esac`
 # ### BEGIN LIBTOOL TAG CONFIG: CXX
 
 # The linker used to build libraries.
-LD="/usr/llvm-gcc-4.2/libexec/gcc/i686-apple-darwin11/4.2.1/ld"
+LD="/usr/bin/ld"
 
 # How to create reloadable object files.
 reload_flag=" -r"

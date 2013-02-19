@@ -5,7 +5,7 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.0.0",
+Version := "0.0.1",
 Date := "19/11/2012",
 ## <#GAPDoc Label="Version">
 ## <!ENTITY Version "0.0.0">
@@ -52,7 +52,7 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">=4.5.0",
+  GAP := ">=4.6.0",
   NeededOtherPackages := [["FR",">=2.0.0"],
                       ["GAPDoc",">=1.0"]],
   SuggestedOtherPackages := [["Float",">=0.4"]],

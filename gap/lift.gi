@@ -1,601 +1,20 @@
 #############################################################################
 ##
-#W triangulations.g                                         Laurent Bartholdi
+#W lift.gi                                                  Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
-#Y Copyright (C) 2011, Laurent Bartholdi
+#Y Copyright (C) 2011-2013, Laurent Bartholdi
 ##
 #############################################################################
 ##
-##  Triangulations of spheres
+##  Lifting triangulations
 ##
 #############################################################################
-
-UTIME@ := function()
-    local v;
-    v := ValueGlobal("IO_gettimeofday")();
-    return v.tv_sec+1.e-6_l*v.tv_usec;
-end;
-
-LASTTIME@ := 0; TIMES@ := []; MARKTIME@ := function(n) # crude time profiling
-    local t;
-    t := UTIME@();
-    if n=0 then LASTTIME@ := t; return; fi;
-    if not IsBound(TIMES@[n]) then TIMES@[n] := 0.0_l; fi;
-    TIMES@[n] := TIMES@[n]+t - LASTTIME@;
-    LASTTIME@ := t;
-end;
-
-BindGlobal("MAKEP1EPS@", function()
-    if ValueOption("precision")<>fail then
-        @.p1eps := ValueOption("precision");
-    else
-        @.p1eps := Sqrt(@.reps); # error allowed on P1Map
-    fi;
-    @.maxratio := 100*@.ro; # maximum ratio, in triangulation, of circumradius to edge length
-    if ValueOption("obstruction")<>fail then
-        @.obst := ValueOption("obstruction");
-    else
-        @.obst := 10^-2*@.ro; # points that close are suspected to form an obstruction
-    fi;
-    @.fast := 10^-1*@.ro; # if spider moved that little, just wiggle it
-    @.ratprec := @.reps^(3/4); # quality to achieve in rational fct.
-end);
 
 InstallMethod(SPIDERRELATOR@, [IsMarkedSphere],
         spider->Product(GeneratorsOfGroup(spider!.model){spider!.ordering}));
 
 InstallMethod(NFFUNCTION@, [IsMarkedSphere],
         spider->NFFUNCTION@(spider!.model, SPIDERRELATOR@(spider)));
-
-
-BindGlobal("POSITIONID@", function(l,x)
-    return PositionProperty(l,y->IsIdenticalObj(x,y));
-end);
-
-BindGlobal("INID@", function(x,l)
-    return ForAny(l,y->IsIdenticalObj(x,y));
-end);
-
-InstallMethod(ViewString, "(FR) for a triangulation",
-        [IsSphereTriangulation],
-        t->CONCAT@FR("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
-
-InstallMethod(String, "(FR) for a triangulation",
-        [IsSphereTriangulation],
-        t->"DelaunayTriangulation(...)");
-
-InstallMethod(DisplayString, "(FR) for a triangulation",
-        [IsSphereTriangulation],
-        function(t)
-    local i, j, s;
-    s := "   vertex | position                                 | neighbours\n";
-    Append(s,"----------+------------------------------------------+-----------------\n");
-    for i in t!.v do
-        Append(s,String(CONCAT@FR("Vertex ",i.index),9));
-        Append(s," | ");
-        Append(s,String(i.pos,-40));
-        Append(s," |");
-        for j in i.n do APPEND@FR(s," ",j.index); od;
-        Append(s,"\n");
-    od;
-    Append(s,"----------+------------------------------------------+-----------------\n");
-    Append(s,"     edge | position                                 |frm to lt rt rev\n");
-    Append(s,"----------+------------------------------------------+-----------------\n");
-    for i in t!.e do
-        Append(s,String(CONCAT@FR("Edge ",i.index),9));
-        Append(s," | ");
-        Append(s,String(i.pos,-40));
-        Append(s," |");
-        for j in [i.from,i.to,i.left,i.right,i.reverse] do Append(s,String(j.index,3)); od;
-        Append(s,"\n");
-    od;
-    Append(s,"----------+------------------------------------------+----------v-----------\n");
-    Append(s,"     face | position                                 | radius   | neighbours\n");
-    Append(s,"----------+------------------------------------------+----------+-----------\n");
-    for i in t!.f do
-        Append(s,String(CONCAT@FR("Face ",i.index),9));
-        Append(s," | ");
-        Append(s,String(i.pos,-40));
-        Append(s," |");
-        Append(s,String(i.radius,-9));
-        Append(s," |");
-        for j in i.n do Append(s," "); Append(s,String(j.index)); od;
-        Append(s,"\n");
-    od;
-    Append(s,"----------+------------------------------------------+----------+-----------\n");
-    return s;
-end);
-INSTALLPRINTERS@(IsSphereTriangulation);
-
-BindGlobal("LOCATE@", function(t,f0,p)
-    # for an initial face f0 and a P1Point p
-    # f0 is allowed to be <fail>, in which case the first face is chosen
-    # returns either [face,barycentric_coords],
-    #             or [face,edge,edge_coord],
-    #             or [face,edge_in,edge_out,vertex]
-    local baryc, yc, i, seen;
-    
-    if f0=fail then f0 := t!.f[1]; fi;
-    # bad, this can cost linear time, and not logarithmic.
-    # we should use a "rho" method to detect loops
-    seen := BlistList([1..Length(t!.f)],[]);
-    repeat
-        baryc := List(f0.n,e->P1Image(InverseP1Map(e.map),p));
-        yc := List(baryc,SphereP1Y);
-        if ForAll(yc,x->x>-@.reps) or seen[f0.index] then
-            if seen[f0.index] then
-                Info(InfoFR,1,"We're stuck in a loop; I'll exit, cross your fingers");
-            fi;
-            break;
-        fi;
-        i := Position(yc,Minimum(yc));
-        seen[f0.index] := true;
-        f0 := f0.n[i].right;
-    until false;
-    
-    i := Filtered([1..3],i->AbsoluteValue(yc[i])<@.reps);
-    if i=[] then # inside face
-        return [f0,yc];
-    elif Size(i)=1 then # on edge
-        i := i[1];
-        baryc := RealPart(P1Coordinate(baryc[i]));
-        return [f0,f0.n[i],baryc];
-    elif Size(i)=2 then # at vertex
-        i := Intersection(i,1+i mod 3)[1];
-        return [f0,f0.n[1+((1+i)mod 3)],f0.n[i],f0.n[i].from];
-    else
-        Error("There is probably a triangle with a flat angle. I'm stuck");
-    fi;
-end);
-
-BindGlobal("EDGEMAP@",
-        e->P1Path(e.from.pos,e.to.pos));
-
-BindGlobal("YRATIO@", function(a,b,c,d)
-    local z;
-    
-    z := P1XRatio(a,b,c,d);
-    return 2.0*ImaginaryPart(z)/(1.0+Norm(z));
-end);
-
-DeclareGlobalFunction("FLIPEDGE@");
-InstallGlobalFunction(FLIPEDGE@, function(p,e,multi)
-    # p is opposite of edge e on face e.left. check if e should be swapped.
-    # multi means: "do as many (>= 0) flips till the triangulation is delaunay"
-    local a, b, q, bp, pa, aq, qb, f, pqb, qpa;
-    f := e.reverse;
-    a := e.from;
-    b := e.to;
-    for pa in e.left.n do if IsIdenticalObj(pa.from,p) then break; fi; od;
-    for bp in e.left.n do if IsIdenticalObj(bp.to,p) then break; fi; od;
-    for aq in e.right.n do if IsIdenticalObj(aq.from,a) then break; fi; od;
-    for qb in e.right.n do if IsIdenticalObj(qb.to,b) then break; fi; od;
-    q := aq.to;
-    if not multi or YRATIO@(p.pos,q.pos,a.pos,b.pos)>@.rz then
-        Remove(a.n,POSITIONID@(a.n,e));
-        Remove(b.n,POSITIONID@(b.n,f));
-        e.from := p; e.to := q;
-        e.map := EDGEMAP@(e); e.len := P1Distance(p.pos,q.pos);
-        f.from := q; f.to := p;
-        f.map := EDGEMAP@(f); f.len := e.len;
-        pqb := e.left; qpa := e.right;
-        pa.left := qpa; pa.reverse.right := qpa;
-        qb.left := pqb; qb.reverse.right := pqb;
-        pqb.n := [e,qb,bp];
-        qpa.n := [f,pa,aq];
-        Add(p.n,e,POSITIONID@(p.n,pa)+1);
-        Add(q.n,f,POSITIONID@(q.n,qb)+1);
-        Unbind(pqb.radius); # make sure the radius gets recomputed
-        Unbind(qpa.radius);
-        if IsBound(e.gpelement) then
-            pa.gpelement := e.gpelement^-1*pa.gpelement;
-            pa.reverse.gpelement := pa.gpelement^-1;
-            qb.gpelement := e.gpelement*qb.gpelement;
-            qb.reverse.gpelement := qb.gpelement^-1;
-        fi;
-        if multi then
-            FLIPEDGE@(p,aq,true);
-            FLIPEDGE@(p,qb,true);
-        fi;
-    fi;
-end);
-
-BindGlobal("CHECKTRIANGULATION@", function(t)
-    local x;
-    x := Filtered(t!.v,v->not ForAll(v.n,e->IsIdenticalObj(e.from,v)));
-    if x<>[] then return ["v.n[i].from <> v: ",x]; fi;
-    x := Filtered(t!.e,e->not INID@(e,e.from.n) or not INID@(e,e.left.n));
-    if x<>[] then return ["e.from.n[i]<>e or e.left.[i]<>e: ",x]; fi;
-    x := Filtered(t!.f,f->not ForAll(f.n,e->IsIdenticalObj(e.left,f)));
-    if x<>[] then return ["f.n[i] <> f: ",x]; fi;
-    x := Filtered(t!.f,f->not IsIdenticalObj(LOCATE@(t,f,f.pos)[1],f));
-    if x<>[] then return ["Locate(f,f.pos) <> f: ",x]; fi;
-    return true;
-end);
-
-BindGlobal("ADDTOTRIANGULATION@", function(t,f,p)
-    # adds point p, in face f, to triangulation t
-    local nv, ne, nf, i, d;
-    
-    if f=fail then
-        f := LOCATE@(t,fail,p)[1];
-    fi;
-    
-    nv := rec(type := 'v', pos := p, n := [], index := Length(t!.v)+1, operations := t!.v[1].operations); Add(t!.v,nv);
-    ne := [];
-    nf := List([1..2],i->rec(type := 'f', index := Length(t!.f)+i, operations := t!.f[1].operations)); Append(t!.f,nf);
-    nf[3] := f; Unbind(f.pos); Unbind(f.radius); # recycle record f
-    for i in [1..3] do
-        ne[i] := rec(type := 'e', from := nv, to := f.n[i].from, left := nf[i], right := nf[1+(i+1) mod 3], len := P1Distance(nv.pos,f.n[i].from.pos));
-        ne[i+3] := rec(type := 'e', from := ne[i].to, to := nv, left := ne[i].right, right := nf[i], reverse := ne[i], len := ne[i].len);
-        ne[i].reverse := ne[i+3];
-    od;
-    for i in [1..6] do
-        ne[i].map := EDGEMAP@(ne[i]);
-        ne[i].index := Length(t!.e)+i;
-        ne[i].operations := t!.e[1].operations;
-        if IsBound(t!.e[1].gpelement) then
-            ne[i].gpelement := One(t!.e[1].gpelement);
-        fi;
-        if IsBound(ne[i].to.pos) and IsBound(ne[i].from.pos) then
-            ne[i].pos := P1Barycentre(ne[i].from.pos,ne[i].to.pos);
-        fi;
-    od;
-    Append(t!.e,ne);
-    d := f.n; # f.n will get overwritten below
-    for i in [1..3] do
-        nf[i].n := [ne[i],d[i],ne[4+i mod 3]];
-        f.n[i].left := nf[i];
-        f.n[i].reverse.right := nf[i];
-        Add(d[i].from.n,ne[i+3],POSITIONID@(d[i].from.n,d[i])+1);
-        if ForAll(nf[i].n,e->IsBound(e.pos)) then
-            nf[i].pos := P1Barycentre(List(nf[i].n,e->e.pos));
-            nf[i].radius := -1.0;
-        fi;
-    od;
-    nv.n := ne{[1..3]};
-    
-    # flip diagonals if needed, to preserve Delaunay condition
-    for i in d do FLIPEDGE@(nv,i,true); od;
-end);
-
-BindGlobal("REMOVEFROMTRIANGULATION@", function(t,v)
-    # remove vertex v from triangulation t. flip edges as needed till v becomes
-    # trivalent, then zap it.
-    local yr, num, e1, e2, v2, f, i, j;
-    
-    num := Length(v.n);
-    while num>3 do
-        # compute cross ratios of triplets-of-neighbours wrt v, sort them
-        yr := List([1..num], i->[YRATIO@(v.n[(i+num-2) mod num+1].to.pos, v.n[i].to.pos,v.n[i mod num+1].to.pos,v.pos),i]);
-        Error("rem");
-        yr := Minimum(yr);
-        
-        # flip diagonal of minimal xratio
-        FLIPEDGE@(v.n[yr[2] mod num+1].to,v.n[yr[2]],false);
-        num := num-1;
-    od;
-    
-    # remove two faces and 6 edges, recycle a face.
-    f := v.n[1].left;
-    e1 := First(v.n[2].left.n,e->e<>v.n[2] and e<>v.n[3].reverse);
-    Remove(v.n[2].to.n,POSITIONID@(v.n[2].to.n,e1));
-    e1 := e1.reverse;
-    e2 := v.n[2].reverse;
-    e1.reverse := e2; e1.right := f;
-    e2.reverse := e1; e2.right := e1.left; e2.to := e1.from;
-    
-    e1 := First(v.n[3].left.n,e->e<>v.n[3] and e<>v.n[1].reverse);
-    Remove(v.n[3].to.n,POSITIONID@(v.n[3].to.n,e1));
-    v.n[3].to.n[POSITIONID@(v.n[3].to.n,v.n[3].reverse)] := v.n[1];
-    e1 := e1.reverse;
-    e2 := v.n[1];
-    e1.reverse := e2; e1.right := f;
-    e2.reverse := e1; e2.right := e1.left; e2.from := e1.to;
-    
-    v2 := Remove(t!.v);
-    j := v.index;
-    if j<= Length(t!.v) then t!.v[j] := v2; t!.v[j].index := j; fi;
-    
-    for i in [2..3] do
-        for e1 in v.n[i].left.n do
-            j := e1.index;
-            e2 := Remove(t!.e);
-            if j<=Length(t!.e) then t!.e[j] := e2; t!.e[j].index := j; fi;
-        od;
-        j := v.n[i].left.index;
-        f := Remove(t!.f);
-        if j<=Length(t!.f) then t!.f[j] := f; t!.f[j].index := j; fi;
-    od;
-end);
-
-# these should all be objects, in clean implementation
-BindGlobal("ISVERTEX@", r->r.type='v');
-BindGlobal("ISEDGE@", r->r.type='e');
-BindGlobal("ISFACE@", r->r.type='f');
-
-InstallMethod(DelaunayTriangulation, "(FR) for a list of points",
-        [IsList], points->DelaunayTriangulation(points,@.rinf));
-
-InstallMethod(DelaunayTriangulation, "(FR) for a list of points and a quality",
-        [IsList, IsFloat],
-        function(points,quality)
-    local t, i, order, n, im, p, d, idle, print;
-    
-    while not ForAll(points,IsP1Point) do
-        Error("DelaunayTriangution: argument should be a list of points on P1");
-    od;
-    
-    print := rec(ViewObj := function(x)
-        if ISVERTEX@(x) then
-            Print("<vertex ",x.index,List(x.n,e->e.index),">");
-        elif ISEDGE@(x) then
-            Print("<edge ",x.index,List([x.from,x.to],v->v.index),">");
-        else
-            Print("<face ",x.index,List(x.n,e->e.index),">");
-        fi;
-    end, PrintObj := ~.ViewObj);
-
-    n := Length(points);
-    if n=0 then points := [P1infinity]; n := 1; fi;    
-    d := List(points,x->P1Distance(points[n],x));
-    order := [n]; # points[order[1]] is last point, presumably infinity
-    im := List(d,v->AbsoluteValue(v-@.pi/2));
-    i := POSITIONID@(im,MinimumList(im));
-
-    if im[i]>=@.pi/6 then # all points are more or less aligned to points[order[1]]
-        points := ShallowCopy(points);
-        i := POSITIONID@(d,MaximumList(d));
-        if d[i]<@.pi/2 then # actually all points are close to points[order[1]]
-            Add(points,P1Antipode(points[n]));
-            Add(order,Length(points));
-        else
-            Add(order,i);
-        fi;
-        for p in [P1one,P1Point(@.i),P1Point(-@.o),P1Point(-@.i)] do
-            t := MoebiusMap(points[n],points[order[2]]);
-            Add(points,P1Image(t,p));
-            Add(order,Length(points));
-        od;
-    else # points[i] is roughly at 90 degrees from points[n]
-        t := MoebiusMap(points[n],points[i],P1Antipode(points[n]));
-        # so t(0)=points[n], t(1)=points[i]. Try to find points close to t^-1(infty,-1,i,-i).
-        i := InverseP1Map(t); im := List(points,x->P1Image(i,x));
-        for p in [P1infinity,P1one,P1Point(@.i),P1Point(-@.o),P1Point(-@.i)] do
-            d := List(im,x->P1Distance(x,p));
-            i := POSITIONID@(d,MinimumList(d));
-            if d[i]>=@.pi/6 then
-                if Length(points)=n then points := ShallowCopy(points); fi;
-                Add(points,P1Image(t,p));
-                Add(order,Length(points));
-            else
-                Add(order,i);
-            fi;
-        od;
-    fi;
-    Assert(1,IsDuplicateFreeList(order),"DelaunayTriangulation couldn't create octahedron");
-
-    Append(order,Difference([1..n],order)); # so now order[1..6] is roughly an octahedron:
-    # points{order{[1..6]}} = [0,infty,1,i,-1,-i]
-
-    # create the octahedron
-    t := rec(v := List([1..6],i->rec(type := 'v', pos := points[order[i]], n := [], index := order[i], operations := print)),
-             e := List([1..24],i->rec(type := 'e', index := i, operations := print)),
-             f := List([1..8],i->rec(type := 'f', index := i, operations := print)));
-    for i in [1..2] do t.v[i].n := t.e{8*i-8+[1,3,5,7]}; od;
-    for i in [1..4] do t.v[i+2].n := t.e{[2*i,24-2*((5-i) mod 4),18-2*i,15+2*i]}; od;
-    for i in [1..4] do t.f[i].n := t.e{[15+2*i,2+2*(i mod 4),2*i-1]}; od;
-    for i in [1..4] do t.f[i+4].n := t.e{[16+2*i,18-2*i,15-2*(i mod 4)]}; od;
-    for p in t.v do for i in p.n do i.from := p; od; od;
-    for p in t.f do for i in p.n do i.left := p; od; od;
-    for i in [1..24] do
-        t.e[i].reverse := t.e[i-(-1)^i];
-        t.e[i].to := t.e[i].reverse.from;
-        t.e[i].right := t.e[i].reverse.left;
-        t.e[i].map := EDGEMAP@(t.e[i]);
-        t.e[i].len := P1Distance(t.e[i].from.pos,t.e[i].to.pos);
-    od;
-
-    # now add the other points
-    for i in [7..Length(points)] do
-        p := points[order[i]];
-        im := LOCATE@(t,fail,points[order[i]]);
-        while Length(im)=4 do # vertex
-            Error("Two vertices coincide: ",p," and ",im[4]);
-        od;
-        ADDTOTRIANGULATION@(t,im[1],p);
-        t.v[i].index := order[i];
-    od;
-    
-    t.v{order} := ShallowCopy(t.v); # reorder the points as they were before
-    
-    repeat
-        idle := true;
-        for i in t.f do
-            if IsBound(i.radius) then continue; fi;
-            p := CallFuncList(P1Circumcentre,List(i.n,e->e.from.pos));
-            i.centre := p[1];
-            i.radius := p[2];
-            p := i.radius / MinimumList(List(i.n,e->e.len));
-            if p > quality then
-                ADDTOTRIANGULATION@(t,i,i.centre);
-                idle := false;
-            fi;
-        od;
-    until idle;
-    
-    for i in [n+1..Length(t.v)] do # remember these are added vertices
-        t.v[i].fake := true;
-    od;
-    for i in t.e do
-        i.pos := P1Barycentre(i.from.pos,i.to.pos);
-    od;
-    for i in t.f do
-        i.pos := P1Barycentre(List(i.n,x->x.from.pos));
-    od;
-    t := Objectify(TYPE_TRIANGULATION,t);
-    return t;
-end);
-
-BindGlobal("COPYTRIANGULATION@", function(t,movement)
-    # movement is either a list of new positions for the vertices
-    # (in which case the vertices, edges etc. should be wiggled to
-    # their new positions), or a Möbius transformation, or true.
-    local r, i, j;
-    r := rec(v := StructuralCopy(t!.v),
-             e := [],
-             f := []);
-    for i in r.v do
-        for j in i.n do r.e[j.index] := j; r.f[j.left.index] := j.left; od;
-    od;
-    if IsList(movement) then
-        r.wiggled := @.rz;
-        for i in [1..Length(r.v)] do
-            if not IsBound(r.v[i].fake) then
-                r.wiggled := r.wiggled + P1Distance(r.v[i].pos, movement[i]);
-                r.v[i].pos := movement[i];
-            fi;
-        od;
-        for i in r.e do
-            i.pos := P1Barycentre(i.from.pos,i.to.pos);
-            i.map := EDGEMAP@(i);
-        od;
-        for i in r.f do
-            i.pos := P1Barycentre(List(i.n,e->e.to.pos));
-        od;
-    elif IsP1Map(movement) then
-        for i in r.v do i.pos := P1Image(movement,i.pos); od;
-        for i in r.e do i.pos := P1Image(movement,i.pos); i.map := movement*i.map; od;
-        for i in r.f do i.pos := P1Image(movement,i.pos); od;
-    fi;
-    return Objectify(TYPE_TRIANGULATION, r);
-end);
-
-BindGlobal("CLOSESTFACES@", function(x)
-    if ISFACE@(x) then
-        return [x];
-    elif ISEDGE@(x) then
-        return [x.left,x.right];
-    else
-        return List(x.n,x->x.to.left);
-    fi;
-end);
-
-BindGlobal("CLOSESTVERTICES@", function(x)
-    if ISFACE@(x) then
-        return List(x.n,x->x.to);
-    elif ISEDGE@(x) then
-        return [x.to,x.from];
-    else
-        return [x];
-    fi;
-end);
-
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation and point",
-        [IsSphereTriangulation, IsP1Point],
-        function(t,p)
-    return LOCATE@(t,fail,p)[1];
-end);
-
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation, face/edge/vertex and point",
-        [IsSphereTriangulation, IsRecord, IsP1Point],
-        function(t,s,p)
-    if ISFACE@(s) then
-        return LOCATE@(t,s,p)[1];
-    elif ISEDGE@(s) then
-        return LOCATE@(t,s.left,p)[1];
-    else
-        return LOCATE@(t,s.n[1].left,p)[1];
-    fi;
-end);
-
-BindGlobal("INTERPOLATE_ARC@", function(l)
-    # interpolate along points of l
-    local r, i, p;
-    r := ShallowCopy(l);
-    i := 1;
-    while i<Length(r) do
-        if P1Distance(r[i],r[i+1])>@.pi/12 then
-            Add(r,P1Barycentre(r[i],r[i+1]),i+1);
-        else
-            i := i+1;
-        fi;
-    od;
-    return r;
-end);
-
-BindGlobal("PRINTPT@", function(f,p1p,sep,s)
-    local p;
-    p := sep*SphereP1(p1p);
-    PrintTo(f, p[1], " ", p[2], " ", p[3], s, "\n");
-end);
-
-BindGlobal("PRINTARC@", function(f,a,col,sep)
-    local j;
-    a := INTERPOLATE_ARC@(a);
-    PrintTo(f, "ARC ",Length(a)," ",String(col[1])," ",String(col[2])," ",String(col[3]),"\n");
-    for j in a do
-        PRINTPT@(f, j, sep, "");
-    od;
-end);
-
-BindGlobal("PRINTPOINTS@", function(f,t,extrapt)
-    local i, x, n, arcs;
-    
-    arcs := ValueOption("noarcs")=fail;
-    
-    if arcs then
-        n := Length(t!.v)+Length(t!.f);
-    else
-        n := Number(t!.v,v->not IsBound(v.fake));
-    fi;
-    PrintTo(f, "POINTS ",n+Length(extrapt),"\n");
-    for i in t!.v do
-        if IsBound(i.fake) and arcs then
-            PRINTPT@(f, i.pos, @.ro, " 0.5");
-        elif not IsBound(i.fake) then
-            x := ViewString(CleanedP1Point(i.pos,@.p1eps));
-            RemoveCharacters(x,"<>");
-            PRINTPT@(f, i.pos, @.ro, Concatenation(" 2.0 ",x));
-        fi;
-    od;
-    if arcs then
-        for i in t!.f do PRINTPT@(f, i.pos, @.ro, " 1.0"); od;
-    fi;
-    for i in extrapt do PRINTPT@(f, i.pos, @.ro, " 0.5"); od;
-end);
-
-InstallMethod(Draw, "(FR) for a triangulation",
-        [IsSphereTriangulation],
-        function(t)
-    local s, f, i;
-    s := ""; f := OUTPUTTEXTSTRING@FR(s);
-    
-    if ValueOption("upper")<>fail then
-        PrintTo(f,"UPPER");
-    fi;
-    if ValueOption("lower")<>fail then
-        PrintTo(f,"LOWER");
-    fi;
-    
-    PRINTPOINTS@(f,t,[]);
-    
-    if ValueOption("noarcs")<>fail then
-        PrintTo(f, "ARCS 0\n");
-    else
-        PrintTo(f, "ARCS ", Length(t!.e),"\n");
-        for i in t!.e do if i.index > i.reverse.index then
-            PRINTARC@(f, [i.from.pos,i.pos,i.to.pos], [255,0,255], @.ro);
-            PRINTARC@(f, [i.left.pos,i.pos,i.right.pos], [0,255,255], @.ro);
-        fi; od;
-    fi;
-    
-    Info(InfoFR,3,"calling javaplot with:\n",s);
-    JAVAPLOT@(InputTextString(s));
-end);
-##############################################################################
 
 ##############################################################################
 ##
@@ -607,7 +26,7 @@ InstallMethod(ViewString, "(FR) for a point in Teichmuller space",
 
 InstallMethod(DisplayString, "(FR) for a point in Teichmuller space",
         [IsMarkedSphere],
-        s->CONCAT@FR(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
+        s->CONCAT@FR(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r!.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
 
 InstallMethod(String, "(FR) for a point in Teichmuller space",
         [IsMarkedSphere],
@@ -671,27 +90,7 @@ InstallMethod(Draw, "(FR) for a point in Teichmuller space",
     
     t := spider!.cut;
     PRINTPOINTS@(f, t, points);
-
-    if ValueOption("noarcs")<>fail then
-        PrintTo(f, "ARCS 0\n");
-    else
-        PrintTo(f, "ARCS ", Length(t!.e)+Length(arcs),"\n");
-        for i in t!.e do
-            if i.from.index>i.to.index then # print only in 1 direction
-                continue;
-            fi;
-            j := [128,64,64];
-            k := [64,128,64];
-            if not IsOne(i.gpelement) then
-                j := [255,64,64];
-            else
-                k := [64,255,64];
-            fi;
-            PRINTARC@(f, [i.from.pos,i.pos,i.to.pos], j, Float(101/100));
-            PRINTARC@(f, [i.left.pos,i.pos,i.right.pos], k, Float(102/100));
-        od;
-        for a in arcs do PRINTARC@(f, a[3], a[1], a[2]); od;
-    fi;
+    PRINTARCS@(f, t!.e, arcs, Float(101/100));
     
     Info(InfoFR,3,"calling javaplot with:\n",s);
     JAVAPLOT@(InputTextString(s));
@@ -746,7 +145,7 @@ BindGlobal("TRIVIALSPIDER@", function(points)
     TzOptions(p).protected := Length(tree);
     TzInitGeneratorImages(p);
     
-    for i in r.cut!.e do i.gpelement := One(g); od;
+    for i in r.cut!.e do SetGroupElement(i, One(g)); od;
     r.intree := ListWithIdenticalEntries(Length(edges),false);
     for i in [1..Length(tree)] do
         e := GeneratorsOfGroup(g)[i];
@@ -758,8 +157,8 @@ BindGlobal("TRIVIALSPIDER@", function(points)
     
     # add relators saying the cycle around a fake vertex is trivial
     for i in r!.cut!.v do
-        if IsBound(i.fake) then
-            AddRelator(p,Product(List(Reversed(i.n),e->e.gpelement)));
+        if IsFake(i) then
+            AddRelator(p,Product(List(Reversed(Neighbours(i)),e->e.gpelement)));
         fi;
     od;
     
@@ -832,7 +231,7 @@ BindGlobal("IMGMARKING@", function(spider,model)
     image := [];
 
     for e in TREEBOUNDARY@(spider) do
-        if not IsBound(e.from.fake) then
+        if not IsFake(e.from) then
             if not IsBound(image[e.from.index]) then
                 image[e.from.index] := One(spider!.group);
                 Add(ordering,e.from.index);
@@ -947,7 +346,7 @@ BindGlobal("LIFTARC@", function(spider,ratmap,from,to,gamma,downcell)
         # now find closest candidate to point p.
         l := 2*@.pi; # bigger than maximal distance between P1 points
         for i in candidates do
-            d := P1Distance(i.pos,p);
+            d := P1Distance(Pos(i),p);
             if d<l then l := d; c := i; fi;
         od;
         return c;
@@ -1308,6 +707,38 @@ BindGlobal("POSTCRITICALPOINTS@", function(f)
     return [poly,cp,pcp,transitions];
 end);
 
+InstallGlobalFunction(PostCriticalMachine, function(f)
+    local states, trans, x, i;
+    trans := [];
+    f := AsP1Map(f);
+    if DegreeOfP1Map(f)<=2 then
+        states := CVQUADRATICRATIONAL@(f);
+        i := 1;
+        while i <= Length(states) do
+            x := VALUERATIONAL@(f,states[i]);
+            if x in states then
+                Add(trans,[Position(states,x)]);
+            else
+                Add(states,x);
+                Add(trans,[Length(states)]);
+            fi;
+            i := i+1;
+            if RemInt(i,10)=0 then
+                Info(InfoFR, 2, "PostCriticalMachine: at least ",i," states");
+            fi;
+        od;
+    else
+        i := POSTCRITICALPOINTS@(f);
+        states := i[3];
+        for i in i[4] do
+            if i[1]>0 then trans[i[1]] := [i[2]]; fi;
+        od;
+    fi;
+    i := MealyMachineNC(FRMFamily([1]),trans,List(trans,x->[1]));
+    SetCorrespondence(i,states);
+    return i;
+end);
+
 BindGlobal("ATTRACTINGCYCLES@", function(pcdata)
     local cycle, period, len, next, i, j, jj, periodic, critical;
     
@@ -1479,7 +910,7 @@ end);
 InstallMethod(VERTICES@, [IsMarkedSphere],
         function(spider)
     # the vertices a spider lies on
-    return List(Filtered(spider!.cut!.v,v->not IsBound(v.fake)),v->v.pos);
+    return List(Filtered(spider!.cut!.v,v->not IsFake(v)),v->v.pos);
 end);
 
 BindGlobal("GENERALHURWITZMAP@", function(z,spider,perm,oldf,oldlifts)
@@ -1497,7 +928,7 @@ BindGlobal("GENERALHURWITZMAP@", function(z,spider,perm,oldf,oldlifts)
     
     pre := [];
     for v in spider!.cut!.v do
-        if IsBound(v.fake) then continue; fi;
+        if IsFake(v) then continue; fi;
         new := P1PreImages(d.map,P1PreImages(d.post,v.pos)[1]);
         old := Filtered(Concatenation(d.cp,d.poles,d.zeros),r->r.to=v);
         for r in old do
@@ -2005,7 +1436,7 @@ BindGlobal("SPIDEROBSTRUCTION@", function(spider,M)
         c := One(spider!.group);
         for j in TREEBOUNDARY@(spider) do
             if (not j.from.index in i) and j.to.index in i then
-                c := c*j.gpelement;
+                c := c*GroupElement(j);
             fi;
         od;
         Add(multicurve,c);
@@ -2144,37 +1575,6 @@ BindGlobal("NORMALIZEV@", function(f,M,param)
         fi;
     fi;
     return [f,mobius];
-end);
-
-BindGlobal("EQUIDISTRIBUTEDPOINTS@", function(N)
-    # creates a list of N points equidistributed on the sphere
-    local t, x, p, r;
-
-    p := [];
-
-    while Length(p)<Minimum(N,10) do # add a little randomness
-        x := List([1..3],i->Random([-10^5..10^5]));
-        if x<>[0,0,0] then # that would be VERY unlucky
-            Add(p,P1Sphere(@.ro*x));
-        fi;
-    od;
-    if Length(p)=N then return p; fi;
-    
-    t := DelaunayTriangulation(p);
-    r := @.pi/2;
-    while Length(t!.v)<N do
-        p := First(t!.f,x->x.radius>=r);
-        if p=fail then r := r*3/4; continue; fi;
-        ADDTOTRIANGULATION@(t,p,p.centre);
-        for x in t!.f do
-            if not IsBound(x.radius) then
-                p := CallFuncList(P1Circumcentre,List(x.n,e->e.from.pos));
-                x.centre := p[1];
-                x.radius := p[2];
-            fi;
-        od;
-    od;
-    return List(t!.v,x->x.pos);
 end);
 
 BindGlobal("SIMPLIFYBYBRAIDTWISTS@", function(m,marking)
@@ -2398,6 +1798,40 @@ InstallMethod(RationalFunction, "(FR) for an indeterminate and an IMG machine",
     SetSpider(f,data[3]);
     return f;
 end);
+
+InstallGlobalFunction(Mandel, function(arg)
+    local f, a, b, c, d, cmd;
+
+    while Length(arg)>1 or not ForAll(arg,IsRationalFunction) do
+        Error("Mandel: argument should be at most one rational function");
+    od;
+    cmd := "mandel";
+    if arg<>[] then
+        f := NORMALIZEV@(arg[1],0,IsBicritical)[1]; # (az^2+b)/(cz^2+d)
+        if IsPolynomial(f) then
+            f := CoefficientsOfUnivariatePolynomial(f);
+            a := f[1]*f[3];
+            Add(cmd,' '); Append(cmd, String(RealPart(a)));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(a)));
+        else
+            f := [NumeratorOfRationalFunction(f),DenominatorOfRationalFunction(f)];
+            b := CoefficientsOfUnivariatePolynomial(f[1])[1];
+            c := CoefficientsOfUnivariatePolynomial(f[2])[3];
+            d := CoefficientsOfUnivariatePolynomial(f[2])[1];
+            if DegreeOfP1Map(f[1])<2 then # b/(cz^2+d)
+                f := [c*b^2/d^3,@.z];
+            else # (az^2+b)/(cz^2+d)
+                a := CoefficientsOfUnivariatePolynomial(f[1])[3];
+                f := [c^2*b/a^3,c*d/a^2];
+            fi;
+            Add(cmd,' '); Append(cmd, String(RealPart(f[1])));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[1])));
+            Add(cmd,' '); Append(cmd, String(RealPart(f[2])));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[2])));
+        fi;
+    fi;
+    EXECINSHELL@FR(InputTextNone(),cmd,ValueOption("detach"));
+end);        
 #############################################################################
 
-#E triangulations.g . . . . . . . . . . . . . . . . . . . . . . . . ends here
+#E lift.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

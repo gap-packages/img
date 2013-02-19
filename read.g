@@ -39,7 +39,11 @@ else
     @.o := NewFloat(IsPMComplex,1);
     @.reps := IEEE754FLOAT.constants.EPSILON;
 fi;
+ReadPackage("img", "gap/sphere.gi");
+ReadPackage("img", "gap/triangulations.gi");
 ReadPackage("img", "gap/img.gi");
+ReadPackage("img", "gap/lift.gi");
+ReadPackage("img", "gap/hurwitz.gi");
 ReadPackage("img", "gap/examples.gi");
 #############################################################################
 

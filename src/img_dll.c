@@ -176,29 +176,37 @@ static Obj REAL_ROOTS (Obj self, Obj coeffs)
       p = INT_INTOBJ(ELM_PLIST(negind,-v));			\
   }
 
-static Obj NFFUNCTION(Obj self, Obj rel, Obj dir, Obj word)
+#define EXP_LETTER(v) (INT_INTOBJ(ELM_PLIST(exp,abs(v))))
+
+#define FIND_MATCH(match,matchlen) {					\
+  matchlen = 1;								\
+  while (resulti > matchlen && ELM_PLIST(result,resulti-matchlen) == ELM_PLIST(rel,match+n-1)) { \
+    matchlen++;								\
+    if (!--match)							\
+      match = n;							\
+  }									\
+}
+
+static Obj NFFUNCTION(Obj self, Obj rel, Obj exp, Obj dir, Obj word)
 {
   /* word is an integer lists. dir is true/false.
      rel is a list of lists: square of positive relator+square of negative
      relator; positions in 1st of letter i; position in 1st of letter -i
+     exp is a list of exponents of the corresponding generators
    * if dir=true, replace all (>=1/2)-cyclic occurrences of rel in word by the shorter half
    * if dir=false, replace all occurrences of the last generator in word by the corresponding bit of rel
    */
 
   Obj posind = ELM_PLIST(rel,2), negind = ELM_PLIST(rel,3);
   rel = ELM_PLIST(rel,1);
-  Int n = LEN_PLIST(posind), allocn = n, i = 0, resulti = 0, match = 0, matchlen = 0, j;
+  Int n = LEN_PLIST(posind), allocn = n, resulti = 0, match = 0, matchlen = 0, j, vlast = 0, power = 0, maxexp = 0;
   Obj result = ALLOC_PLIST(allocn);
 
-  while (i < LEN_PLIST(word)) {
-    /* we produced result[1..resulti] as the compressed version of word[1..i].
-       additionally, matchlen is maximal such that
-       rel[match..match+matchlen-1] = result[resulti-matchlen+1..resulti]
-    */
-    i++;
-    Obj wi = ELM_PLIST(word,i);
-    Int vi = INT_INTOBJ(wi);
-    if (dir == False) {
+  if (dir == False) { /* get rid of last generator */
+    for (Int i = 1; i <= LEN_PLIST(word); i++) {
+      Obj wi = ELM_PLIST(word,i);
+      Int vi = INT_INTOBJ(wi);
+
       if (vi == n) {
 	match = INT_INTOBJ(ELM_PLIST(negind,n));
 	for (j = 1; j < n; j++)
@@ -209,39 +217,89 @@ static Obj NFFUNCTION(Obj self, Obj rel, Obj dir, Obj word)
 	  PUSH_LETTER(INT_INTOBJ(ELM_PLIST(rel,j+match)));
       } else
 	PUSH_LETTER(vi);
-    } else {
-      if (resulti && vi == -INT_INTOBJ(ELM_PLIST(result,resulti))) {
-	/* pop letter, and update match */
-	resulti--;
-	matchlen--;
-	if (matchlen == 0 && resulti) {
-	  MATCH_POS(match,INT_INTOBJ(ELM_PLIST(result,resulti)));
-	  matchlen = 1;
-	  while (resulti > matchlen && ELM_PLIST(result,resulti-matchlen) == ELM_PLIST(rel,match+n-1)) {
-	    matchlen++;
-	    if (!--match)
-	      match = n;
-	  }
-	} else
-	  match = 0;
-      } else {
-	PUSH_LETTER(vi);
-	if (match && wi == ELM_PLIST(rel,match+matchlen)) {
-	  matchlen++;
-	  if (matchlen >= (n+1+(match < 2*n))/2) { /* more than half, or exactly half and negatives */
-	    resulti -= matchlen;
-	    for (j = n-1; j >= matchlen; j--)
-	      PUSH_LETTER(-INT_INTOBJ(ELM_PLIST(rel,j+match)));
-	    matchlen = n-matchlen;
-	    match = 4*n+1 - (match+n-1);
-	  }
-	} else {
-	  matchlen = 1;
-	  MATCH_POS(match,vi);
-	}
-      }
     }
+    SET_LEN_PLIST(result,resulti);
+    return result;
   }
+
+  for (Int i = 1; i <= LEN_PLIST(word); i++) {
+    /* we produced result[1..resulti] as the compressed version of word[1..i].
+       additionally, matchlen is maximal such that
+       rel[match..match+matchlen-1] = result[resulti-matchlen+1..resulti]
+       power is such that the last power letters in result are vlast^power.
+    */
+    Int vi = INT_INTOBJ(ELM_PLIST(word,i));
+    if (EXP_LETTER(vi)==2)
+      vi = abs(vi);
+    Int idle;
+
+    if (vi == -vlast) { /* pop letter */
+      resulti--;
+      matchlen--;
+      power--;
+    } else {
+      PUSH_LETTER(vi);
+      if (vi == vlast)
+	power++;
+      else
+	power = 0; /* force recompute */
+      if (match && vi == INT_INTOBJ(ELM_PLIST(rel,match+matchlen)))
+	matchlen++;
+      else
+	matchlen = 0; /* force recompute */
+    }
+
+    do {
+      idle = 1;
+      if (maxexp && power >= (maxexp+1+(vlast > 0))/2) { /* apply power relation */
+	Int delta = 2*power - maxexp;
+	resulti -= delta;
+	power -= delta;
+	vlast = -vlast;
+	for (Int j=0; j<power; j++)
+	  SET_ELM_PLIST(result,resulti-j,INTOBJ_INT(vlast));
+	matchlen = 0; /* force recompute */
+	idle = 0;
+      }
+
+      if (matchlen >= (n+1+(match < 2*n))/2) { /* more than half a relation */
+	resulti -= matchlen;
+	for (j = n-1; j >= matchlen; j--) {
+	  Int letter = INT_INTOBJ(ELM_PLIST(rel,j+match));
+	  if (EXP_LETTER(letter)!=2) letter = -letter;
+	  PUSH_LETTER(letter);
+	}
+	matchlen = n-matchlen;
+	match = 4*n+1 - (match+n-1);
+	power = 0; /* force recompute */
+	idle = 0;
+      }
+
+      if (power == 0 && resulti) { /* recompute power */
+	vlast = INT_INTOBJ(ELM_PLIST(result,resulti));
+	maxexp = EXP_LETTER(vlast);
+	power = 1;
+	while (resulti > power && INT_INTOBJ(ELM_PLIST(result,resulti-power)) == vlast)
+	  power++;
+      }
+
+      if (matchlen == 0 && resulti) { /* recompute match */
+	Int last = INT_INTOBJ(ELM_PLIST(result,resulti)), match0, matchlen0;
+	MATCH_POS(match,last);
+	FIND_MATCH(match,matchlen);
+	if (EXP_LETTER(last)==2) {
+	  MATCH_POS(match0,-last);
+	  FIND_MATCH(match0,matchlen0);
+	  if (matchlen0 > matchlen) {
+	    matchlen = matchlen0;
+	    match = match0;
+	  }
+	}
+	idle = 0;
+      }
+    } while (!idle);
+  }
+
   SET_LEN_PLIST(result,resulti);
   return result;
 }
@@ -367,13 +425,14 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_init, Obj gap_iter
   int iter, max_iter = INT_INTOBJ(gap_iter);
   double precision = VAL_FLOAT(gap_tol);
   double info[LM_INFO_SZ];
+  double opts[LM_OPTS_SZ] = { LM_INIT_MU, LM_STOP_THRESH, LM_STOP_THRESH, precision, LM_DIFF_DELTA };
 
   Double x[3];
 
   for (i = 0; i < 3; i++) x[i] = VAL_FLOAT(ELM_PLIST(gap_init,i+1));
 
   iter = dlevmar_dif ((void (*)(double*, double*, int, int, void*)) barycenter,
-		      (double*) x, NULL, 3, 3, max_iter, NULL, info, NULL, NULL, (void *) &param);
+		      (double*) x, NULL, 3, 3, max_iter, opts, info, NULL, NULL, (void *) &param);
 
   Obj result = ALLOC_PLIST(3);
   Obj list = ALLOC_PLIST(3); set_elm_plist(result, 1, list);
@@ -401,7 +460,7 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_init, Obj gap_iter
 static StructGVarFunc GVarFuncs [] = {
   { "COMPLEX_ROOTS_FR", 1, "coeffs", COMPLEX_ROOTS, "img_dll.c:COMPLEX_ROOTS" },
   { "REAL_ROOTS_FR", 1, "coeffs", REAL_ROOTS, "img_dll.c:REAL_ROOTS" },
-  { "NFFUNCTION_FR", 3, "rel, dir, word", NFFUNCTION, "img_dll.c:NFFUNCTION" },
+  { "NFFUNCTION_FR", 4, "rel, exp, dir, word", NFFUNCTION, "img_dll.c:NFFUNCTION" },
   { "FIND_BARYCENTER", 4, "points, init, iter, tol", FIND_BARYCENTER, "img_dll.c:FIND_BARYCENTER" },
   { 0 }
 };
