@@ -1,0 +1,73 @@
+
+
+################ functional-style nonverbose example:
+
+	LoadPackage("fr");
+	ReadPackage("fr","hurwitz/rationalMapFinder.gap");
+	finiteFieldSolutionList := rationalMapFinder@FR.SEARCH_HURWITZ_MAP_OVER_FINITE_FIELD( [ [1,2], [2,1], [2,1], [2,1] ], false, [ [0/1, -1/2] ] , 13 );
+	liftedSolution := rationalMapFinder@FR.APPROX_HURWITZ_MAP_CANDIDATES( finiteFieldSolutionList[1] , Immutable(rec ( decimalPrecision := 16, maxLiftDepth  := 10, maxLatticeDim := 100)) );
+	rationalMapFinder@FR.CREATE_PRE_RATIONAL_MAP( liftedSolution.rootData[1], liftedSolution.liftedPolynomialRing );
+	
+
+############### object oriented style nonverbose example  #############################
+
+	LoadPackage("fr");
+	ReadPackage("fr","hurwitz/rationalMapFinder.gap");
+	M2binaryFileName := Filename( DirectoriesSystemPrograms() , "M2");	
+	HurwitzMapFinder := rationalMapFinder@FR.createMacaulay2HurwitzMapFinder( M2binaryFileName );	
+	finiteFieldSolutionList := HurwitzMapFinder.computeFiniteFieldSolutionsFI( [ [1,2], [2,1], [2,1], [2,1] ], false, [ [0/1, -1/2] ] , 13 );
+	liftedSolution := HurwitzMapFinder.approximateComplexSolutions( finiteFieldSolutionList[1] , Immutable(rec ( decimalPrecision := 16, maxLiftDepth  := 10, maxLatticeDim := 100))  );
+	preRationalMapList := rationalMapFinder@FR.preRationalMapFromRootDataElem( liftedSolution.rootData[1], liftedSolution.liftedPolynomialRing);	
+
+
+############### same example more explanatory #############################
+
+#### 0. init  
+
+	LoadPackage("fr");
+	ReadPackage("fr","hurwitz/rationalMapFinder.gap");
+	
+	SetInfoLevel(InfoWarning,2);
+	
+	RecNames(hurwitz);
+	
+	M2BinaryName := "M2";
+	BinarySearchDirectoryList  := DirectoriesSystemPrograms() ;		
+	#BinarySearchDirectoryList := [ Directory("/usr/local/bin/") ];
+
+	M2BinaryAbsoluteFileName := Filename( BinarySearchDirectoryList, M2BinaryName);
+	# create an object with the interface 'computeFiniteFieldSolutions(..)' and 'approximateComplexSolutions(..)':	
+	HurwitzMapFinder := rationalMapFinder@FR.createMacaulay2HurwitzMapFinder( M2BinaryAbsoluteFileName );	
+	 
+	
+#### 1. Brute force search for polynomialSets ([A,B,C,D],...) over given finite field Fp where 
+	##             polynomials A,B C and D matches given shapes, and for all pairs from [A,B,C,D]  gcd  is one ,
+	##	      B - lambda*A = C for some lambda in Fp and
+	##	      B - mue*A    = D with mue = -i*lambda  ( -i is determinated via 'branchValueApproxList'-parameter:
+	##                                                  branchValueApproxList[1][1] := RealPart(-i), branchValueApproxList[1][2] := ImaginaryPart[-i] ).
+ 	## 						    First three branch values are omitted and assumed as normalized to [infinity, 0, 1 ]. 
+	
+	fieldChar := 13;	
+	partitionList := [ [1,2], [2,1], [2,1], [2,1] ]; 
+	branchValueApproxList := [ [0/1, -1/2] ];     # first three branch values ommitted and are assumed [infinity, 0, 1 ].
+	strictNormalization   := false; # if false, the algorithm decides, which factors will be normalized to [infinity, 0, 1 ],
+				       # otherwise first entries of the first three partitions in 'partitionList' determine which factors to normalize.
+	finiteFieldSolutionList := HurwitzMapFinder.computeFiniteFieldSolutionsFI( partitionList, strictNormalization, branchValueApproxList, fieldChar );
+	
+#### 2. Try to compute for a result from step (1) a lift to a polynomial ring over extension of Q and a complex approximation 
+	
+	finiteFieldSolution :=  finiteFieldSolutionList[1];
+		
+	liftOptions := rec ( decimalPrecision := 16 );
+	# following parameters are optional, but for default 'maxLiftDepth' and 'maxLatticeDim' the computation may run forever and/or consume all memory.
+	liftOptions.maxLiftDepth  := 10;  # lift up to    mod fieldChar^(2^maxLiftDepth) ; 
+	liftOptions.maxLatticeDim := 100; 
+		
+	liftedSolution := HurwitzMapFinder.approximateComplexSolutions( finiteFieldSolution, liftOptions );
+	
+	# liftedPolTuple.rootData containts a list  with the preimages of (infty, zero and 1) respectively
+        # the last element of 'rootData' contains the scaling factors [lambda,mue,...] : A-lambda*B=C;  A-mue*B=D; ..
+	
+	preRationalMapList := rationalMapFinder@FR.preRationalMapFromRootDataElem( liftedSolution.rootData[1], liftedSolution.liftedPolynomialRing);	
+	
+	

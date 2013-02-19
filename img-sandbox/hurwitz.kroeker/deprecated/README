@@ -1,0 +1,38 @@
+
+
+Hurwitz package currently requires 
+	-subversion client installation
+	-Macaulay2 installation >=1.4
+	
+
+Usage: see EXAMPLE file.
+
+For debugging I recommend to
+- increase  the Infolevel : SetInfoLevel(InfoWarning,2);
+
+
+
+
+	
+TODO:
+	-check presence of required programs.
+	-connect routines to top-level of package "FR".
+	-sometimes when calling from GAP it seems that the memory of M2 is corrupted (log function of M2 gives wrong answers. very strange...). Debug!
+	
+		
+
+
+-It is currently not possible to host the Macaulay2 packages in the CVS,
+because they are used at two places (in Macaulay2 and in GAP), 
+but linking an external CVS is not possible because even for read permission (?) a user and a password are required.
+
+It would help, if GAP will switch to mercurial or to SVN.
+
+
+
+
+
+
+
+
+

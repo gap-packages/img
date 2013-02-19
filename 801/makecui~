@@ -1,0 +1,43 @@
+A := 1:
+eq := (1-z)^2*(a*z+1-a)^4*(b*z+1-b)^3*(c*z+1-c)^2*(d*z+1-d)^2-A*(z-a)^4*(z-b)^3*(z-c)^2*(z-d)^2+A^2*((1-a)*z-1)^4*((1-b)*z-1)^3*((1-c)*z-1)^2*((1-d)*z-1)^2:
+eqs := [seq(expand(coeff(eq,z,i)),i=0..13)]:
+vars := [a,b,c,d]:
+
+fd := fopen("INPUT",WRITE):
+
+fprintf(fd,"&PROBLEM  NEW_PROBLEM=.TRUE.\n"):
+fprintf(fd,"TITLE='Cui map'\n"):
+fprintf(fd,"\n"):
+fprintf(fd,"TRACKTOL = 1.0D-4  FINALTOL = 1.0D-14  SINGTOL = 0.0  SSPAR(5) = 1.0D0\n"):
+fprintf(fd,"NUMRR = 1\n"):
+fprintf(fd,"N = 4\n"):
+fprintf(fd,"\n"):
+
+for i from 1 to 4 do
+  fprintf(fd,"NUM_TERMS(%d) = %d\n",i,nops(eqs[i]));
+  for j from 1 to nops(eqs[i]) do
+    m := op(j,eqs[i]);
+    
+    fprintf(fd,"COEF(%d,%d) = (%f,%f) ",i,j,Re(coeffs(m)),Im(coeffs(m)));
+    for k from 1 to 4 do if degree(m,vars[k])>0 then
+      fprintf(fd," DEG(%d,%d,%d)=%d",i,j,k,degree(m,vars[k]));
+    fi; od;
+    fprintf(fd,"\n");
+  od;
+od:
+fprintf("/\n\n");
+
+fprintf(fd,"&SYSPARTITION  ROOT_COUNT_ONLY = .FALSE.\n"):
+for i from 1 to 4 do
+  fprintf(fd,"P(%d) = 'all'\n",i);
+od:
+
+#NUM_SETS(1) = 1
+#NUM_INDICES(1,1) = 9
+#INDEX(1,1,1) = 1
+#INDEX(1,1,2) = 2
+#INDEX(1,1,3) = 3
+
+fprintf(fd,"/\n"):
+
+fclose(fd):

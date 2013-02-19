@@ -1,0 +1,18 @@
+
+
+Hurwitz package for algorithmic construction of Hurwitz map approximations.
+
+
+Usage: see examples in 'example- folder
+
+	
+TODO: 
+	
+	-finish documentation
+	-finish cleanup
+	
+
+
+
+Authors:
+ Jakob Kroeker and Laurent Bartholdi

@@ -1,0 +1,104 @@
+/****************************************************************************
+ *
+ * polroots.c                                               Laurent Bartholdi
+ *
+ *   @(#)$Id: polroots.c,v 1.2 2007/05/01 15:57:56 gap Exp $
+ *
+ * Copyright (C) 2007, Laurent Bartholdi
+ *
+ ****************************************************************************
+ *
+ * use pari-gp to compute the roots of a univariate polynomial
+ * 
+ ****************************************************************************/
+
+#include "src/compiled.h"
+
+#define VAL_FLOAT(obj) (*(double *)ADDR_OBJ(obj))
+#define SIZE_FLOAT   sizeof(double)
+static inline Obj NEW_FLOAT( double val )
+{
+  Obj f = NewBag(T_FLOAT,SIZE_FLOAT);
+  *(double *)ADDR_OBJ(f) = val;
+  return f;
+}
+
+#define binomial pari_binomial
+#include <pari/pari.h>
+
+long pari_prec = 4;
+#define PARISTACK 100000
+
+/* handler for function 2 */
+static Obj  COMPLEX_ROOTS (Obj self, Obj mode, Obj coeffs)
+{
+  Obj result, t;
+  int i, degree;
+  GEN poly, x;
+  pari_sp av;
+
+  degree = LEN_PLIST(coeffs)-1;
+
+  av = avma;
+  poly = cgetg(degree+3, t_POL);
+  poly[1] = evalvarn(0);
+  for (i = 0; i <= degree; i++) {
+    x = gel(poly+2,i) = cgetc(pari_prec);
+    gel(x,1) = dbltor(VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),1)));
+    gel(x,2) = dbltor(VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),2)));
+  }
+
+  x = roots0(normalizepol(poly), INT_INTOBJ(mode), pari_prec);
+
+  result = NEW_PLIST(T_PLIST, degree);
+  SET_LEN_PLIST(result, degree);
+  for (i = 1; i <= degree; i++) {
+    t = NEW_PLIST(T_PLIST, 2); SET_LEN_PLIST(t,2);
+    SET_ELM_PLIST(t,1, NEW_FLOAT(gtodouble(gel(gel(x,i),1))));
+    SET_ELM_PLIST(t,2, NEW_FLOAT(gtodouble(gel(gel(x,i),2))));
+    SET_ELM_PLIST(result,i, t);
+  }
+  avma = av;
+
+  return result;
+}
+
+static StructGVarFunc GVarFuncs [] = {
+  { "COMPLEX_ROOTS", 2, "mode, coeffs", COMPLEX_ROOTS, "polroots.c:COMPLEX_ROOTS" },
+  { 0 }
+};
+
+static Int InitKernel ( StructInitInfo * module )
+{
+  InitHdlrFuncsFromTable( GVarFuncs );
+  return 0;
+}
+
+/* 'InitLibrary' sets up gvars, rnams, functions */
+static Int InitLibrary ( StructInitInfo * module )
+{
+  InitGVarFuncsFromTable( GVarFuncs );
+  pari_init_opts(PARISTACK,0,INIT_DFTm);
+  return 0;
+}
+
+static StructInitInfo module = {
+ /* type        = */ MODULE_DYNAMIC,
+ /* name        = */ "polroots.c",
+ /* revision_c  = */ 0,
+ /* revision_h  = */ 0,
+ /* version     = */ 0,
+ /* crc         = */ 0,
+ /* initKernel  = */ InitKernel,
+ /* initLibrary = */ InitLibrary,
+ /* checkInit   = */ 0,
+ /* preSave     = */ 0,
+ /* postSave    = */ 0,
+ /* postRestore = */ 0
+};
+
+StructInitInfo * Init__Dynamic ( void )
+{
+ return &module;
+}
+/* polroots.c . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */

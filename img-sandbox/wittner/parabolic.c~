@@ -1,0 +1,900 @@
+/****************************************************************************
+ *
+ * fr_dll.c                                                 Laurent Bartholdi
+ *
+ *   @(#)$id: fr_dll.c,v 1.18 2010/10/26 05:19:40 gap exp $
+ *
+ * Copyright (c) 2009, 2010, Laurent Bartholdi
+ *
+ ****************************************************************************
+ *
+ * Call cpoly to compute the roots of a univariate polynomial
+ * Call trmesh_ to construct a Delaunay triangulation
+ * Call gsl_solver to normalize barycenter of points on S^2
+ * Call gsl_solver to construct a rational map from its critical values
+ *
+ ****************************************************************************/
+
+#undef DEBUG_DELAUNAY
+#undef DEBUG_COMPLEX_ROOTS
+
+#include "fr_dll.h"
+
+#ifdef MALLOC_HACK
+#include <malloc.h>
+#endif
+
+/****************************************************************************
+ * capture code that exits uncleanly rather than returning error message
+ ****************************************************************************/
+#ifdef CAPTURE_EXITS
+static jmp_buf e_t_go_home;
+
+static void baby_please_dont_go (void) {
+  longjmp(e_t_go_home, 1);
+}
+
+/* in code:
+
+   atexit (baby_please_dont_go);
+   if (setjmp(e_t_go_home))
+     return __result;
+
+   __result = fail;
+
+   __result = call_bad_function();
+   exit(0);
+*/
+
+#endif
+
+/****************************************************************************
+ * complex_roots of polynomial (as increasing-degree list of pairs (real,imag)
+ ****************************************************************************/
+static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
+{
+  Obj result;
+  Int i, numroots, degree = LEN_PLIST(coeffs)-1;
+  Cdouble opr[degree+1], opi[degree+1], zeror[degree], zeroi[degree], heap[10*degree+10];
+
+  if (degree < 1)
+    return Fail;
+
+  for (i = 0; i <= degree; i++) {
+    opr[degree-i] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),1));
+    opi[degree-i] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),2));
+    if (isnan(opr[degree-i]) || isnan(opi[degree-i]))
+      return Fail;
+  }
+
+#ifdef DEBUG_COMPLEX_ROOTS
+  fprintf(stderr,"coeffs");
+  for (i = 0; i <= degree; i++)
+    fprintf(stderr," %g+I*%g",(double)opr[i],(double)opi[i]);
+   /* __asm__ __volatile__ ("int3"); */
+  fprintf(stderr,"\n");
+#endif
+
+  numroots = cpoly (opr, opi, degree, zeror, zeroi, heap);
+
+  if (numroots == -1)
+    return Fail;
+
+#ifdef DEBUG_COMPLEX_ROOTS
+  fprintf(stderr,"roots");
+  for (i = 0; i < numroots; i++)
+    fprintf(stderr," %g+I*%g",(double)zeror[i],(double)zeroi[i]);
+  fprintf(stderr,"\n");
+#endif
+
+  result = ALLOC_PLIST(numroots);
+  for (i = 1; i <= numroots; i++) {
+    Obj t = ALLOC_PLIST(2);
+    set_elm_plist(t,1, NEW_FLOAT(zeror[i-1]));
+    set_elm_plist(t,2, NEW_FLOAT(zeroi[i-1]));
+    set_elm_plist(result,i, t);
+  }
+
+  return result;
+}
+
+/****************************************************************************
+ * DELAUNAY_TRMESH of points on the sphere (as list of (x,y,z))
+ ****************************************************************************/
+#define mesh_maxn (*((Int4 *)CHARS_STRING(meshdata)))
+/* mesh_maxn is at least n, there can be additional points and circumcenters */
+#define mesh_n (*(&mesh_maxn+1))
+#define mesh_lnew (*(&mesh_n+1))
+#define mesh_list (&mesh_lnew+1)
+#define mesh_lptr (mesh_list+6*(mesh_maxn-2))
+#define mesh_lend (mesh_lptr+6*(mesh_maxn-2))
+#define mesh_extrapoints 2
+#define mesh_avg (3*mesh_maxn)
+#define mesh_tmp (3*mesh_maxn+1)
+#define mesh_x ((Fdouble *)(mesh_lend+mesh_maxn))
+#define mesh_y (mesh_x+3*mesh_maxn+mesh_extrapoints)
+#define mesh_z (mesh_y+3*mesh_maxn+mesh_extrapoints)
+#define meshdata_size (3*(3*maxn+mesh_extrapoints)*sizeof(Fdouble)+(13*maxn)*sizeof(Int4))
+
+#define SWAP(x,y) { typeof(x) z; z = x; x = y; y = z; }
+
+#ifndef NOFORTRAN
+static Obj resize_mesh (int maxn, Obj meshdata)
+{
+  int minmaxn = maxn; if (mesh_maxn < minmaxn) minmaxn = mesh_maxn;
+  Int4 tmp_maxn = mesh_maxn, tmp_n = mesh_n, tmp_lnew = mesh_lnew,
+    tmp_list[6*(minmaxn-2)], tmp_lptr[6*(minmaxn-2)], tmp_lend[minmaxn];
+  Fdouble tmp_x[3*minmaxn+mesh_extrapoints], tmp_y[3*minmaxn+mesh_extrapoints], tmp_z[3*minmaxn+mesh_extrapoints];
+  int i;
+  for (i = 0; i < 6*(minmaxn-2); i++)
+    tmp_list[i] = mesh_list[i], tmp_lptr[i] = mesh_lptr[i];
+  for (i = 0; i < minmaxn; i++)
+    tmp_lend[i] = mesh_lend[i];
+  for (i = 0; i < 3*minmaxn+mesh_extrapoints; i++)
+    tmp_x[i] = mesh_x[i], tmp_y[i] = mesh_y[i], tmp_z[i] = mesh_z[i];
+
+  meshdata = NEW_STRING(meshdata_size);
+  mesh_maxn = maxn, mesh_n = tmp_n, mesh_lnew = tmp_lnew;
+  for (i = 0; i < 6*(minmaxn-2); i++)
+    mesh_list[i] = tmp_list[i], mesh_lptr[i] = tmp_lptr[i];
+  for (i = 0; i < minmaxn; i++)
+    mesh_lend[i] = tmp_lend[i];
+  for (i = 0; i < 3*minmaxn; i++)
+    mesh_x[i] = tmp_x[i], mesh_y[i] = tmp_y[i], mesh_z[i] = tmp_z[i];
+  for (i = 3*minmaxn; i < 3*mesh_maxn; i++)
+    mesh_x[i] = mesh_y[i] = mesh_z[i] = 0.0;
+  for (i = 0; i < mesh_extrapoints; i++)
+    mesh_x[3*mesh_maxn+i] = tmp_x[3*tmp_maxn+i],
+      mesh_y[3*mesh_maxn+i] = tmp_y[3*tmp_maxn+i],
+      mesh_z[3*mesh_maxn+i] = tmp_z[3*tmp_maxn+i];
+  return meshdata;
+}
+
+static void setvec (int n, Fdouble x, Fdouble y, Fdouble z, Obj meshdata)
+{
+  mesh_x[n] = x; mesh_y[n] = y; mesh_z[n] = z;
+}
+
+static void copyvec (int m, int n, Obj meshdata)
+{
+  mesh_x[m] = mesh_x[n]; mesh_y[m] = mesh_y[n]; mesh_z[m] = mesh_z[n];
+}
+
+static void swapvec (int m, int n, Obj meshdata)
+{
+  SWAP(mesh_x[m], mesh_x[n]);
+  SWAP(mesh_y[m], mesh_y[n]);
+  SWAP(mesh_z[m], mesh_z[n]);
+}
+
+static void addvec (int m, int n, Obj meshdata)
+{
+  mesh_x[m] += mesh_x[n]; mesh_y[m] += mesh_y[n]; mesh_z[m] += mesh_z[n];
+}
+
+static void scalevec (int m, int n, Fdouble s, Obj meshdata)
+{
+  mesh_x[m] = s*mesh_x[n]; mesh_y[m] = s*mesh_y[n]; mesh_z[m] = s*mesh_z[n];
+}
+
+static void xprodvec (int l, int m, int n, Obj meshdata) /* mesh[l] = mesh[m] ^ mesh[n] */
+{
+  mesh_x[l] = mesh_y[n]*mesh_z[m]-mesh_z[n]*mesh_y[m];
+  mesh_y[l] = mesh_z[n]*mesh_x[m]-mesh_x[n]*mesh_z[m];
+  mesh_z[l] = mesh_x[n]*mesh_y[m]-mesh_y[n]*mesh_x[m];
+}
+
+static Fdouble normvec (int n, Obj meshdata)
+{
+  return sqrtl(mesh_x[n]*mesh_x[n]+mesh_y[n]*mesh_y[n]+mesh_z[n]*mesh_z[n]);
+}
+
+static void normalizevec (int n, Obj meshdata)
+{
+  scalevec (n, n, 1.0/normvec(n, meshdata), meshdata);
+}
+
+static void spherexprodvec (int l, int m, int n, Obj meshdata) /* mesh[l] = a ^ b / |a^b| */
+{
+  xprodvec (l, m, n, meshdata); 
+  normalizevec (l, meshdata);
+}
+
+static Fdouble sprodvec (int m, int n, Obj meshdata)
+{
+  return mesh_x[n]*mesh_x[m]+mesh_y[n]*mesh_y[m]+mesh_z[n]*mesh_z[m];
+}
+
+#if 0
+static Fdouble tprodvec (int l, int m, int n, Obj meshdata)
+{
+  return mesh_x[n]*mesh_y[m]*mesh_z[l]+mesh_y[n]*mesh_z[m]*mesh_x[l]
+    +mesh_z[n]*mesh_x[m]*mesh_y[l]-mesh_z[n]*mesh_y[m]*mesh_x[l]
+    -mesh_y[n]*mesh_x[m]*mesh_z[l]-mesh_x[n]*mesh_z[m]*mesh_y[l];
+}
+#endif
+
+static Fdouble anglevec (int m, int n, Obj meshdata)
+{
+  /* more precise than acos(sprod(a,b)) */
+  xprodvec (mesh_tmp, m, n, meshdata);
+  return fabsl(atan2l(normvec(mesh_tmp, meshdata), sprodvec(m,n,meshdata)));
+}
+
+static void storemesh_list_lptr_lend_xyz (Obj result, int n, int n0, Obj meshdata)
+{
+  int i;
+
+  set_elm_plist(result, 1, ALLOC_PLIST(mesh_lnew-1));
+  for (i = 1; i < mesh_lnew; i++) {
+    set_elm_plist(ELM_PLIST(result,1), i, INTOBJ_INT(mesh_list[i-1]));
+  }
+
+  set_elm_plist(result, 2, ALLOC_PLIST(mesh_lnew-1));
+  for (i = 1; i < mesh_lnew; i++) {
+    set_elm_plist(ELM_PLIST(result,2), i, INTOBJ_INT(mesh_lptr[i-1]));
+  }
+
+  set_elm_plist(result, 3, ALLOC_PLIST(n));
+  for (i = 1; i <= n; i++) {
+    set_elm_plist(ELM_PLIST(result,3), i, INTOBJ_INT(mesh_lend[i-1]));
+  }
+
+  set_elm_plist(result, 4, ALLOC_PLIST(n-n0));
+  for (i = n0; i < n; i++) {
+    Obj t = ALLOC_PLIST(3);
+    set_elm_plist(t, 1, NEW_FLOAT(mesh_x[i]));
+    set_elm_plist(t, 2, NEW_FLOAT(mesh_y[i]));
+    set_elm_plist(t, 3, NEW_FLOAT(mesh_z[i]));
+    set_elm_plist(ELM_PLIST(result,4), 1+i-n0, t);
+  }
+}
+#endif
+
+#ifdef DEBUG_DELAUNAY
+static void printvec (char *s, int n, Obj meshdata)
+{
+  fprintf(stderr, "%s: (%Lg,%Lg,%Lg)\n", s, mesh_x[n], mesh_y[n], mesh_z[n]);
+}
+
+static void checkpts (char *s, Obj meshdata)
+{
+  static Int4 old_maxn, old_n, old_lnew,
+    old_list[2000], old_lptr[2000], old_lend[2000];
+
+  static Fdouble old_x[1000], old_y[1000], old_z[1000];
+
+  int i;
+  if (*s && old_maxn != mesh_maxn)
+    fprintf(stderr, "%s: mesh_maxn changed from %d to %d\n", s, old_maxn, mesh_maxn);
+  old_maxn = mesh_maxn;
+  if (*s && old_n != mesh_n)
+    fprintf(stderr, "%s: mesh_n changed from %d to %d\n", s, old_n, mesh_n);
+  old_n = mesh_n;
+  if (*s && old_lnew != mesh_lnew)
+    fprintf(stderr, "%s: mesh_lnew changed from %d to %d\n", s, old_lnew, mesh_lnew);
+  old_lnew = mesh_lnew;
+
+  for (i = 0; i < 6*(mesh_maxn-2); i++) {
+    if (*s && old_list[i] != mesh_list[i])
+      fprintf(stderr, "%s: mesh_list[%d] changed from %d to %d\n", s, i, old_list[i], mesh_list[i]);
+    old_list[i] = mesh_list[i];
+    if (*s && old_lptr[i] != mesh_lptr[i])
+      fprintf(stderr, "%s: mesh_lptr[%d] changed from %d to %d\n", s, i, old_lptr[i], mesh_lptr[i]);
+    old_lptr[i] = mesh_lptr[i];
+  }
+  for (i = 0; i < mesh_maxn; i++) {
+    if (*s && old_lend[i] != mesh_lend[i])
+      fprintf(stderr, "%s: mesh_lend[%d] changed from %d to %d\n", s, i, old_lend[i], mesh_lend[i]);
+    old_lend[i] = mesh_lend[i];
+  }
+  for (i = 0; i < mesh_maxn*3; i++)
+    if (old_x[i] != mesh_x[i] || old_y[i] != mesh_y[i] || old_z[i] != mesh_z[i]) {
+      if (*s)
+	fprintf(stderr, "%s: vector %i changed from (%Lg,%Lg,%Lg) to (%Lg,%Lg,%Lg)\n", s, i, old_x[i], old_y[i], old_z[i], mesh_x[i], mesh_y[i], mesh_z[i]);
+      old_x[i] = mesh_x[i];
+      old_y[i] = mesh_y[i];
+      old_z[i] = mesh_z[i];
+    }
+}
+#endif
+
+static Obj DELAUNAY_TRIANGULATION (Obj self, Obj gap_maxratio, Obj gap_points)
+/* creates a triangulation on <points>.
+ * if <convex> then add points so as to create a convex triangulation.
+ * returns a list: [[list],[lptr],[lend],[extrapoints],[bdryvertices],
+ *                  [listc],[[xc,yc,zc]],[rc],,"mesh"];
+ * or an integer, in case of error
+ */
+{
+#ifdef NOFORTRAN
+  ErrorQuit("No fortran compiler -- DELAUNAY_TRIANGULATION is disabled",0,0);
+  return Fail;
+#else
+  Int4 ier, nbd, ntri;
+  UInt i, j, npt = LEN_PLIST(gap_points), maxn = npt+5, n0 = npt;
+  Int addpoints;
+  Fdouble maxratio;
+
+  if (npt <= 1)
+    return INTOBJ_INT(-1); /* we can't triangulate on 1 point */
+
+  if (gap_maxratio == False) {
+    addpoints = 0;
+    maxratio = 0.0; /* shut up compiler */
+  } else {
+    addpoints = 1;
+    maxratio = VAL_FLOAT(gap_maxratio);
+  }
+
+  /* put data in string */
+  Obj meshdata = NEW_STRING(meshdata_size);
+  mesh_maxn = maxn;
+
+  setvec (mesh_avg, 0.0, 0.0, 0.0, meshdata);
+  for (i = 0; i < npt; i++) {
+    setvec (i, VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),1)),
+	    VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),2)),
+	    VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),3)), meshdata);
+    addvec (mesh_avg, i, meshdata);
+    }
+  scalevec (mesh_avg, mesh_avg, 1.0/npt, meshdata);
+
+#ifdef DEBUG_DELAUNAY
+  checkpts("",meshdata); /* store initial data in statics */
+
+  fprintf(stderr, "Points received:");
+  for (i = 0; i < npt; i++)
+    fprintf(stderr, " (%Lg,%Lg,%Lg)", mesh_x[i], mesh_y[i], mesh_z[i]);
+  printvec (" barycenter", mesh_avg, meshdata);
+#endif
+
+  /* we'll have to swap gap point 1 with point <pt1>, and 2 with <pt2>
+     before calling the fortran routine; and back. */
+  Int4 pt1 = -1, pt2 = -1;
+
+  if (addpoints) { /* add points to make the mesh nicer */
+    Fdouble angle = M_PI / 6.0; /* 30 degrees */
+    for (i = 1; i < npt; i++) {
+      Fdouble a = anglevec (0, i, meshdata);
+      if (a > M_PI/2.0) a = M_PI - a;
+      if (a > angle) /* find most orthogonal one */
+	angle = a, pt1 = i;
+    }
+
+    if (pt1 == -1) { /* all points are within 30 degrees of points[0].
+			add four points */
+      if (maxn < npt+4)
+	return INTOBJ_INT(-2);
+      setvec (npt, 0.0, 0.0, 0.0, meshdata);
+      if (fabsl(mesh_x[0]) < 0.578) mesh_x[npt] = 1.0;
+      else if (fabsl(mesh_y[0]) < 0.578) mesh_y[npt] = 1.0;
+      else mesh_z[npt] = 1.0;
+      spherexprodvec (npt+1, 0, npt, meshdata); /* mesh[n+1] is orthonormal to mesh[0] */
+      xprodvec (npt, 0, npt+1, meshdata); /* mesh[n] is orthonormal to mesh[0] and mesh[n] */
+
+      scalevec (npt+2, npt, -1.0, meshdata);
+      scalevec (npt+3, npt+1, -1.0, meshdata);
+      pt1 = npt;
+      pt2 = npt+1;
+      npt += 4;
+    } else { /* we found already points[pt1] far apart points[0].
+		see if all points are more or less coplanar. */
+      Fdouble angle = M_PI / 6.0; /* 30 degrees */
+      spherexprodvec (npt, 0, pt1, meshdata);
+
+#ifdef DEBUG_DELAUNAY
+      printvec("Found normal vector", npt, meshdata);
+#endif
+
+      for (i = 1; i < npt; i++) {
+	Fdouble a = fabsl(anglevec (i, npt, meshdata) - M_PI/2.0);
+	if (a > angle)
+	  angle = a, pt2 = i;
+      }
+
+      if (pt2 == -1) { /* all points are almost orthogonal to mesh[n] */
+	if (maxn < npt+2)
+	  return INTOBJ_INT(-2);
+	scalevec (npt+1, npt, -1.0, meshdata);
+	pt2 = npt;
+	npt += 2;
+      }
+    }
+  } else { /* don't do anything special, when addpoints is false */
+    pt1 = 1; pt2 = 2;
+  }
+
+  /* make sure the swaps (1,pt1) and (2,pt2) are disjoint; otherwise,
+     switch pt1 and pt2 */
+  if (pt1 == 2 || pt2 == 1) SWAP(pt1, pt2);
+
+  /* create mesh of convex hull of points */
+  {
+    Int4 delaunay_near[npt], delaunay_next[npt];
+    Fdouble delaunay_dist[npt];
+
+    swapvec (1, pt1, meshdata);
+    swapvec (2, pt2, meshdata);
+#ifdef DEBUG_DELAUNAY
+    fprintf(stderr,"Points passed to trmesh:");
+    for (i = 0; i < npt; i++)
+      fprintf(stderr," (%Lg,%Lg,%Lg)", mesh_x[i], mesh_y[i], mesh_z[i]);
+    fprintf(stderr," swapping points (1,%ld), (2,%ld)\n", pt1, pt2);
+#endif
+    mesh_n = npt;
+    trmesh_ (&mesh_n, mesh_x, mesh_y, mesh_z,
+	     mesh_list, mesh_lptr, mesh_lend, &mesh_lnew,
+	     delaunay_near, delaunay_next, delaunay_dist, &ier);
+    if (ier != 0)
+      return INTOBJ_INT(1000+ier);
+  /* swap back in place */
+    for (i = 0; i < mesh_lnew-1; i++) {
+      j = abs(mesh_list[i])-1;
+      if (j == 1) j = pt1;
+      else if (j == 2) j = pt2;
+      else if (j == pt1) j = 1;
+      else if (j == pt2) j = 2;
+      mesh_list[i] = (mesh_list[i] < 0 ? -(1+j) : (1+j));
+    }
+    swapvec (1, pt1, meshdata);
+    swapvec (2, pt2, meshdata);
+    SWAP(mesh_lend[1], mesh_lend[pt1]);
+    SWAP(mesh_lend[2], mesh_lend[pt2]);
+  }
+
+  /* if there is a boundary, add an opposite point */
+  if (addpoints) {
+    for (i = 0; i < mesh_lnew-1; i++)
+      if (mesh_list[i] < 0) /* something on the boundary */
+	goto foundboundary;
+    goto skipboundary;
+  foundboundary:
+    scalevec (npt, mesh_avg, -1.0, meshdata);
+    normalizevec (npt, meshdata);
+#ifdef DEBUG_DELAUNAY
+    printvec("Adding point to make set convex", npt, meshdata);
+#endif
+    mesh_n++; npt++;
+    Int4 seed = 0;
+    addnod_ (&seed, &mesh_n, mesh_x, mesh_y, mesh_z,
+	     mesh_list, mesh_lptr, mesh_lend, &mesh_lnew, &ier);
+    if (ier != 0)
+      return INTOBJ_INT(3000+ier);
+  skipboundary:;
+  }
+  
+  /* give back the results */
+  Obj result = ALLOC_PLIST(10);
+
+  if (!addpoints) { /* there could be a boundary */
+    Int4 delaunay_bdry[npt], na;
+
+    storemesh_list_lptr_lend_xyz (result, npt, n0, meshdata);
+
+    bnodes_ (&mesh_n, mesh_list, mesh_lptr, mesh_lend, delaunay_bdry, &nbd, &na, &ntri);
+
+    set_elm_plist(result, 5, ALLOC_PLIST(nbd));
+    for (i = 1; i <= nbd; i++) {
+      set_elm_plist(ELM_PLIST(result,5), i, INTOBJ_INT(delaunay_bdry[i-1]));
+    }
+  } else { /* no boundary */
+    nbd = 0;
+    ntri = 2*npt-4;
+  }
+
+  /* additional heap for crlist_ */
+  Int4 *delaunay_ltri = alloca(6*maxn*sizeof(Int4)),
+    *delaunay_listc = alloca(6*maxn*sizeof(Int4));
+  Fdouble *delaunay_rc = alloca(2*maxn*sizeof(Fdouble));
+
+  /* complete mesh to whole sphere, compute cicumcenters and triangles */
+  crlist_ (&mesh_n, &mesh_n, mesh_x, mesh_y, mesh_z,
+	   mesh_list, mesh_lend, mesh_lptr, &mesh_lnew,
+	   delaunay_ltri, delaunay_listc, &nbd,
+	   mesh_x+npt, mesh_y+npt, mesh_z+npt, delaunay_rc, &ier);
+  if (ier != 0)
+    return INTOBJ_INT(2000+ier);
+
+  if (addpoints) {
+    /* now find if, for some triangle, the circumradius is much larger than
+       the minimal edge length. in that case, add the circumcenter. */
+    Int4 v; /* vertex to process */
+  restart:
+    for (v = 0; v < npt; v++) {
+      Int4 edge = mesh_lend[v]-1, edge0 = edge;
+      do {
+	Int4 w = mesh_list[edge]-1; /* other side */
+	Int4 triangle = delaunay_listc[edge]-1;
+	if (maxratio*anglevec (v, w, meshdata) <= delaunay_rc[triangle]) { /* edge much shorter than circumradius */
+	  if (npt >= maxn) {
+#ifdef DEBUG_DELAUNAY
+	    checkpts("before",meshdata);
+#endif
+	    meshdata = resize_mesh (maxn *= 2, meshdata);
+#ifdef DEBUG_DELAUNAY
+	    checkpts("after",meshdata);
+#endif
+	    delaunay_ltri = alloca(6*maxn*sizeof(Int4));
+	    delaunay_listc = alloca(6*maxn*sizeof(Int4));
+	    delaunay_rc = alloca(2*maxn*sizeof(Fdouble));
+	  }
+
+	  copyvec (npt, npt+triangle, meshdata);
+#ifdef DEBUG_DELAUNAY
+	  printvec ("Refine with point ",npt, meshdata);
+#endif
+	  npt++; mesh_n++; ntri += 2;
+	  addnod_ (&v, &mesh_n, mesh_x, mesh_y, mesh_z,
+		   mesh_list, mesh_lptr, mesh_lend, &mesh_lnew, &ier);
+	  if (ier != 0)
+	    return INTOBJ_INT(3000+ier);
+	  
+	  /* inefficient, recompute the whole list */
+	  crlist_ (&mesh_n, &mesh_n, mesh_x, mesh_y, mesh_z,
+		   mesh_list, mesh_lend, mesh_lptr, &mesh_lnew,
+		   delaunay_ltri, delaunay_listc, &nbd,
+		   mesh_x+npt, mesh_y+npt, mesh_z+npt, delaunay_rc, &ier);
+	  if (ier != 0)
+	    return INTOBJ_INT(2000+ier);
+	  goto restart;
+	}
+	edge = mesh_lptr[edge]-1;
+      } while (edge != edge0);
+    }
+
+#ifdef DEBUG_DELAUNAY
+    Fdouble worstratio = 0.0;
+    Int4 worstv = 0, worstw = 0;
+    for (v = 0; v < npt; v++) {
+      Int4 edge = mesh_lend[v]-1, edge0 = edge;
+      do {
+	Int4 w = mesh_list[edge]-1; /* other side */
+	Int4 triangle = delaunay_listc[edge]-1;
+	Fdouble newratio = delaunay_rc[triangle]/anglevec (v, w, meshdata);
+	if (newratio > worstratio)
+	  worstratio = newratio, worstv = v, worstw = w;
+      } while (edge != edge0);
+    }
+    fprintf(stderr,"Worst triangle ratio %Lg, on edge %d-%d\n", worstratio,
+	   (int) worstv, (int) worstw);
+#endif
+
+    storemesh_list_lptr_lend_xyz (result, npt, n0, meshdata);
+  }
+
+  set_elm_plist(result, 6, ALLOC_PLIST(3*ntri));
+  for (i = 1; i <= 3*ntri; i++) {
+    set_elm_plist(ELM_PLIST(result,6), i, INTOBJ_INT(delaunay_listc[i-1]));
+  }
+
+  set_elm_plist(result, 7, ALLOC_PLIST(ntri));
+  for (i = 1; i <= ntri; i++) {
+    Obj t = ALLOC_PLIST(3);
+    set_elm_plist(t, 1, NEW_FLOAT(mesh_x[npt+i-1]));
+    set_elm_plist(t, 2, NEW_FLOAT(mesh_y[npt+i-1]));
+    set_elm_plist(t, 3, NEW_FLOAT(mesh_z[npt+i-1]));
+    set_elm_plist(ELM_PLIST(result,7), i, t);
+  }
+
+  set_elm_plist(result, 8, ALLOC_PLIST(ntri));
+  for (i = 1; i <= ntri; i++) {
+    set_elm_plist(ELM_PLIST(result,8), i, NEW_FLOAT(delaunay_rc[i-1]));
+  }
+
+  set_elm_plist(result, 10, meshdata);
+
+  return result;
+#endif
+}
+
+static Obj DELAUNAY_FIND (Obj self, Obj meshdata, Obj gap_seed, Obj gap_point)
+{
+#ifdef NOFORTRAN
+  ErrorQuit("No fortran compiler -- DELAUNAY_FIND is disabled",0,0);
+  return Fail;
+#else
+  Int4 triangle[3], seed = INT_INTOBJ(gap_seed);
+  Int i;
+  Fdouble point[3], coord[3];
+
+  for (i = 0; i < 3; i++)
+    point[i] = VAL_FLOAT(ELM_PLIST(gap_point,i+1));
+
+  trfind_ (&seed, point, &mesh_n, mesh_x, mesh_y, mesh_z,
+	   mesh_list, mesh_lptr, mesh_lend,
+	   coord, coord+1, coord+2, triangle, triangle+1, triangle+2);
+
+  Obj result = ALLOC_PLIST(2);
+
+  set_elm_plist(result, 1, ALLOC_PLIST(3));
+  for (i = 0; i < 3; i++)
+    set_elm_plist(ELM_PLIST(result,1), i+1, INTOBJ_INT(triangle[i]));
+
+  set_elm_plist(result, 2, ALLOC_PLIST(3));
+  for (i = 0; i < 3; i++)
+    set_elm_plist(ELM_PLIST(result,2), i+1, NEW_FLOAT(coord[i]));
+
+  return result;
+#endif
+}
+
+/****************************************************************************
+ * FIND_BARYCENTER finds a mobius transformation that centers points
+ ****************************************************************************/
+typedef struct {
+  int n;
+  Double (*points)[3];
+} bparams;
+
+#ifdef MALLOC_HACK
+void *old_free_hook, *old_malloc_hook;
+
+static void *
+my_malloc_hook (size_t size, const void *caller)
+{
+  fprintf(stderr,"allocating %d\n", size);
+
+  return NewBag(T_DATOBJ, size + sizeof(Int));
+}
+
+static void
+my_free_hook (void *ptr, const void *caller)
+{
+  fprintf(stderr,"freeing pointer %p\n", ptr);
+}
+#endif
+
+#define bpoints (((bparams *) param)->points)
+
+int barycenter (const gsl_vector *x, void *param, gsl_vector *f)
+{
+  /* x is a "shifting" parameter; it is a vector in R^3, and
+     describes the M\"obius transformation with north-south dynamics.
+     more precisely, let t=|x|. in R^3, the transformation sends
+     P to (2(1-t)P+(2-t+(v*P))v)/(1+(1-t)^2+(2-t)(v*P)).
+     In particular, for t=0 it sends everything to v, and for t=1 it fixes P.
+
+     The M\"obius transformation is 
+  */
+  int i, j;
+  const int n = ((bparams *) param)->n;
+  long double v[3];
+
+  for (i = 0; i < 3; i++) v[i] = gsl_vector_get (x, i);
+  long double t = sqrtl(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  long double sum[3] = { 0.0, 0.0, 0.0 };
+
+  for (j = 0; j < n; j++) {
+    long double x[3], z = 0.0;
+
+    for (i = 0; i < 3; i++) /* z = v*P */
+      z += bpoints[j][i] * v[i];
+
+    long double d = 1.0 + (1.0-t)*(1.0-t) + (2.0 - t)*z;
+    for (i = 0; i < 3; i++)
+      x[i] = (2.0*(1.0-t)*bpoints[j][i] + (2.0-t+z)*v[i]) / d;
+
+    for (i = 0; i < 3; i++) sum[i] += x[i];
+  }
+
+  for (i = 0; i < 3; i++) gsl_vector_set (f, i, sum[i] / n);
+
+  return GSL_SUCCESS;
+}
+
+/* given a set of points on S^2 \subset R^3, there is, up to rotations
+   of the sphere, a unique M\"obius transformation that centers these
+   points, i.e. such that their barycentre is (0,0,0). This follows
+   from GIT, as Burt Totaro told me:
+
+   Dear Laurent,
+
+   Geometric invariant theory (GIT) gives a complete answer to your
+   question. More concretely, the answer follows from the Kempf-Ness
+   theorem in GIT, as I think Frances Kirwan first observed.
+
+   Namely, given a sequence of N points p_1,...,p_N on the 2-sphere,
+   there is a Mobius transformation that moves these points
+   to have center of mass at the origin of R^3 if and only if either
+   (1) fewer than N/2 of the points are equal to any given point
+   in the 2-sphere; or
+   (2) N is even, N/2 of the points are equal to one point
+   in the 2-sphere, and the other N/2 points are equal
+   to a different point in the 2-sphere.
+   (In GIT terminology, condition (1) describes which
+   N-tuples of points in S^2 = CP^1 are "stable",
+   and (2) describes which N-tuples are "polystable"
+   but not stable.) In particular, if p_1,...,p_N are all distinct
+   and N is at least 2, then they can be centered
+   by some Mobius transformation.
+   
+   This result was the beginning of many developments in GIT,
+   such as Donaldson's notion of "balanced" metrics.
+   Here is a good survey (where Theorem 4.13 is the statement
+   above).
+
+   R. P. Thomas. Notes on GIT and symplectic reduction for bundles
+   and varieties. arXiv:math/0512411
+
+   Burt Totaro
+*/
+
+static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_init, Obj gap_iter, Obj gap_tol)
+{
+#ifdef MALLOC_HACK
+  old_malloc_hook = __malloc_hook;
+  old_free_hook = __free_hook;
+  __malloc_hook = my_malloc_hook;
+  __free_hook = my_free_hook;
+#endif
+
+  UInt i, j, n = LEN_PLIST(gap_points);
+
+  Double __points[n][3];
+  bparams bparam = { n, __points };
+  
+  for (i = 0; i < n; i++)
+    for (j = 0; j < 3; j++)
+      bparam.points[i][j] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),j+1));
+
+  const gsl_multiroot_fsolver_type *T;
+  gsl_multiroot_fsolver *s;
+
+  int status;
+  size_t iter = 0, max_iter = INT_INTOBJ(gap_iter);
+  double precision = VAL_FLOAT(gap_tol);
+
+  gsl_multiroot_function f = {&barycenter, 3, &bparam};
+  gsl_vector *x = gsl_vector_alloc (3);
+
+  for (i = 0; i < 3; i++) gsl_vector_set (x, i, VAL_FLOAT(ELM_PLIST(gap_init,i+1)));
+
+  T = gsl_multiroot_fsolver_hybrids;
+  s = gsl_multiroot_fsolver_alloc (T, 3);
+  gsl_multiroot_fsolver_set (s, &f, x);
+
+  do {
+    iter++;
+    status = gsl_multiroot_fsolver_iterate (s);
+
+    if (status)   /* check if solver is stuck */
+      break;
+
+    status = gsl_multiroot_test_residual (s->f, precision);
+  }
+  while (status == GSL_CONTINUE && iter < max_iter);
+
+  Obj result = ALLOC_PLIST(2);
+  Obj list = ALLOC_PLIST(3); set_elm_plist(result, 1, list);
+  for (i = 0; i < 3; i++)
+    set_elm_plist(list, i+1, NEW_FLOAT(gsl_vector_get (s->x, i)));
+  list = ALLOC_PLIST(3); set_elm_plist(result, 2, list);
+  for (i = 0; i < 3; i++)
+    set_elm_plist(list, i+1, NEW_FLOAT(gsl_vector_get (s->f, i)));
+
+  gsl_multiroot_fsolver_free (s);
+  gsl_vector_free (x);
+
+  if (status != 0) {
+    const char *s = gsl_strerror (status);
+    C_NEW_STRING(result, strlen(s), s);
+  }
+
+#ifdef MALLOC_HACK
+  __malloc_hook = old_malloc_hook;
+  __free_hook = old_free_hook;
+#endif
+  return result;
+}
+
+/****************************************************************************
+ * FIND_RATIONALFUNCTION solves the Hurwitz problem
+ ****************************************************************************/
+static Obj FIND_RATIONALFUNCTION (Obj self, Obj gap_degrees, Obj gap_values, Obj gap_c, Obj gap_num, Obj gap_den, Obj params)
+{
+  size_t degree = 2, s;
+
+  s = LEN_PLIST(gap_degrees);
+
+  if (s != LEN_PLIST(gap_values)+3 || s != LEN_PLIST(gap_c)+3)
+    return Fail;
+
+  size_t d[s], i;
+  gsl_complex c[s-3], v[s];
+
+  for (i = 0; i < s; i++) {
+    d[i] = INT_INTOBJ(ELM_PLIST(gap_degrees,i+1));
+    degree += d[i]-1;
+    if (i < s-3) {
+      v[i] = VAL_COMPLEX(ELM_PLIST(gap_values,i+1));
+      c[i] = VAL_COMPLEX(ELM_PLIST(gap_c,i+1));
+    } else if (i == s-3)
+      GSL_SET_COMPLEX(v+i, 1.0, 0.0);
+    else if (i == s-2)
+      GSL_SET_COMPLEX(v+i, 0.0, 0.0);
+    else if (i == s-1)
+      GSL_SET_COMPLEX(v+i, HUGE_VAL, HUGE_VAL);
+  }
+  degree /= 2;
+
+  gsl_complex num_data[degree+1], den_data[degree+1];
+  polynomial num = { LEN_PLIST(gap_num)-1, num_data },
+    den = { LEN_PLIST(gap_den)-1, den_data };
+    
+  for (i = 0; i <= num.degree; i++)
+    num.data[i] = VAL_COMPLEX(ELM_PLIST(gap_num,i+1));
+  for (i = 0; i <= den.degree; i++)
+    den.data[i] = VAL_COMPLEX(ELM_PLIST(gap_den,i+1));
+    
+  int status = solve_hurwitz (degree, s, d, v, c, &num, &den,
+    INT_INTOBJ(ELM_PLIST(params,1)), VAL_FLOAT(ELM_PLIST(params,2)), VAL_FLOAT(ELM_PLIST(params,3)));
+
+  if (status != GSL_SUCCESS)
+    return INTOBJ_INT(status);
+
+  for (i = 0; i < s-3; i++)
+    set_elm_plist(gap_c,i+1, NEW_COMPLEX(c+i));
+
+  GROW_PLIST(gap_num, num.degree+1);
+  SET_LEN_PLIST(gap_num, num.degree+1);
+  for (i = 0; i <= num.degree; i++)
+    set_elm_plist(gap_num,i+1, NEW_COMPLEX(num.data+i));
+
+  GROW_PLIST(gap_den, den.degree+1);
+  SET_LEN_PLIST(gap_den, den.degree+1);
+  for (i = 0; i <= den.degree; i++)
+    set_elm_plist(gap_den,i+1, NEW_COMPLEX(den.data+i));
+
+  return INTOBJ_INT(status);
+}
+
+/****************************************************************************
+ * other
+ ****************************************************************************/
+
+/****************************************************************************
+ * interface to GAP
+ ****************************************************************************/
+static StructGVarFunc GVarFuncs [] = {
+  { "COMPLEX_ROOTS", 1, "coeffs", COMPLEX_ROOTS, "fr_dll.c:COMPLEX_ROOTS" },
+  { "DELAUNAY_TRIANGULATION", 2, "maxratio, points", DELAUNAY_TRIANGULATION, "fr_dll.c:DELAUNAY_TRIANGULATION" },
+  { "DELAUNAY_FIND", 3, "data, seed, point", DELAUNAY_FIND, "fr_dll.c:DELAUNAY_FIND" },
+  { "FIND_BARYCENTER", 4, "points, init, iter, tol", FIND_BARYCENTER, "fr_dll.c:FIND_BARYCENTER" },
+  { "FIND_RATIONALFUNCTION", 6, "degrees, values, points, num, den, params", FIND_RATIONALFUNCTION, "fr_dll.c:FIND_RATIONALFUNCTION" },
+  { 0 }
+};
+
+static Int InitKernel ( StructInitInfo * module )
+{
+  InitHdlrFuncsFromTable( GVarFuncs );
+  return 0;
+}
+
+/* 'InitLibrary' sets up gvars, rnams, functions */
+static Int InitLibrary ( StructInitInfo * module )
+{
+  InitGVarFuncsFromTable( GVarFuncs );
+  return 0;
+}
+
+static StructInitInfo module = {
+ /* type        = */ MODULE_DYNAMIC,
+ /* name        = */ "fr_dll.c",
+ /* revision_c  = */ 0,
+ /* revision_h  = */ 0,
+ /* version     = */ 0,
+ /* crc         = */ 0,
+ /* initKernel  = */ InitKernel,
+ /* initLibrary = */ InitLibrary,
+ /* checkInit   = */ 0,
+ /* preSave     = */ 0,
+ /* postSave    = */ 0,
+ /* postRestore = */ 0
+};
+
+StructInitInfo * Init__Dynamic ( void )
+{
+ return &module;
+}
+/* fr_dll.c . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */
