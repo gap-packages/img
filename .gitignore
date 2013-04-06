@@ -29,3 +29,4 @@ myconfigure
 .version
 src/config.h
 zips
+libtool
