@@ -15,6 +15,7 @@
 InstallMethod(\., [IsTriangulationObject, IsInt], function(x,n)
     n := NameRNam(n);
     Info(InfoIMG,1,"Access to triangulation's ",n);
+    Error("Interrupt -- giving you a chance to clean up the code");
     if n="n" then return Neighbours(x);
     elif n="pos" then return Pos(x);
     elif n="index" then return x!.index;
@@ -134,15 +135,15 @@ end);
 
 ################################################################
 
-InstallMethod(ViewString, "(FR) for a triangulation",
+InstallMethod(ViewString, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         t->CONCAT@FR("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
 
-InstallMethod(String, "(FR) for a triangulation",
+InstallMethod(String, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         t->"DelaunayTriangulation(...)");
 
-InstallMethod(DisplayString, "(FR) for a triangulation",
+InstallMethod(DisplayString, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         function(t)
     local i, j, s;
@@ -230,32 +231,29 @@ BindGlobal("LOCATE@", function(t,f0,p)
         f0 := Right(emin);
     until false;
 end);
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation and point",
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation and point",
         [IsSphereTriangulation, IsP1Point],
         function(t,p)
     return LOCATE@(t,fail,p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation, vertex and point",
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, vertex and point",
         [IsSphereTriangulation, IsVertex, IsP1Point],
         function(t,v,p)
     return LOCATE@(t,Left(Neighbour(v)),p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation, edge and point",
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, edge and point",
         [IsSphereTriangulation, IsEdge, IsP1Point],
         function(t,e,p)
     return LOCATE@(t,Left(e),p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(FR) for a triangulation, face and point",
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, face and point",
         [IsSphereTriangulation, IsFace, IsP1Point],
         function(t,f,p)
     return LOCATE@(t,f,p)[1];
 end);
 
 BindGlobal("YRATIO@", function(a,b,c,d)
-    local z;
-    
-    z := P1XRatio(a,b,c,d);
-    return 2.0*ImaginaryPart(z)/(1.0+Norm(z));
+    return SphereP1Y(P1XRatio(a,b,c,d));
 end);
 
 BindGlobal("RESETVERTEX@", function(v)
@@ -402,6 +400,7 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f0,p,delaunay)
     fi;
     return v;
 end);
+
 InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsP1Point],
         function(t,p)
     return ADDTOTRIANGULATION@(t,LOCATE@(t,fail,p)[1],p,true);
@@ -415,9 +414,7 @@ InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsFace, IsP1Point],
     return ADDTOTRIANGULATION@(t,f,p,true);
 end);
 InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsFace, IsP1Point, IsBool],
-        function(t,f,p,delaunay)
-    return ADDTOTRIANGULATION@(t,f,p,delaunay);
-end);
+        ADDTOTRIANGULATION@);
 
 InstallMethod(RemoveFromTriangulation, [IsSphereTriangulation, IsVertex],
         function(t,v)
@@ -473,10 +470,7 @@ InstallMethod(RemoveFromTriangulation, [IsSphereTriangulation, IsVertex],
     From(e2)!.Neighbour := e2; e2!.Left := f; Opposite(e2)!.Right := f; e2!.Next := e0; e2!.Prevopp := Opposite(e1);
 end);
 
-InstallMethod(DelaunayTriangulation, "(FR) for a list of points",
-        [IsList], points->DelaunayTriangulation(points,@.rinf));
-
-InstallMethod(DelaunayTriangulation, "(FR) for a list of points and a quality",
+InstallMethod(DelaunayTriangulation, "(IMG) for a list of points and a quality",
         [IsList, IsFloat],
         function(points,quality)
     local t, i, order, n, im, p, d, idle, print;
@@ -577,8 +571,10 @@ InstallMethod(DelaunayTriangulation, "(FR) for a list of points and a quality",
     t := Objectify(TYPE_TRIANGULATION,t);
     return t;
 end);
+InstallMethod(DelaunayTriangulation, "(IMG) for a list of points",
+        [IsList], points->DelaunayTriangulation(points,@.rinf));
 
-BindGlobal("EQUIDISTRIBUTEDPOINTS@", function(N)
+InstallGlobalFunction(EquidistributedP1Points, function(N)
     # creates a list of N points equidistributed on the sphere
     local t, x, p, r;
 
@@ -599,10 +595,11 @@ BindGlobal("EQUIDISTRIBUTEDPOINTS@", function(N)
         if p=fail then r := r*3/4; continue; fi;
         AddToTriangulation(t,p,Centre(p));
     od;
-    return List(t!.v,x->x.pos);
+    return List(t!.v,Pos);
 end);
 
-BindGlobal("COPYTRIANGULATION@", function(t,movement)
+InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
+        function(t,movement)
     # movement is either a list of new positions for the vertices
     # (in which case the vertices, edges etc. should be wiggled to
     # their new positions), or a Möbius transformation, or true.
@@ -644,6 +641,9 @@ BindGlobal("COPYTRIANGULATION@", function(t,movement)
     fi;
     return Objectify(TYPE_TRIANGULATION, r);
 end);
+
+InstallMethod(ShallowCopy, [IsSphereTriangulation],
+        t->WiggledTriangulation(t,fail));
 
 InstallMethod(ClosestFaces, [IsVertex], x->List(Neighbours(x),Left));
 InstallMethod(ClosestFaces, [IsEdge], x->[Left(x),Right(x)]);
@@ -708,9 +708,10 @@ BindGlobal("PRINTEDGE@", function(f,e,col,sep)
 end);
 
 BindGlobal("PRINTPOINTS@", function(f,t,extrapt)
-    local i, x, n, arcs;
+    local i, x, n, arcs, labels;
     
     arcs := ValueOption("noarcs")=fail;
+    labels := ValueOption("nolabels")=fail;
     
     if arcs then
         n := Length(t!.v)+Length(t!.f);
@@ -722,9 +723,14 @@ BindGlobal("PRINTPOINTS@", function(f,t,extrapt)
         if IsFake(i) and arcs then
             PRINTPT@(f, Pos(i), @.ro, " 0.5");
         elif not IsFake(i) then
-            x := ViewString(CleanedP1Point(Pos(i),@.p1eps));
-            RemoveCharacters(x,"<>");
-            PRINTPT@(f, Pos(i), @.ro, Concatenation(" 2.0 ",x));
+            if labels then
+                x := ViewString(CleanedP1Point(Pos(i),@.p1eps));
+                RemoveCharacters(x,"<>");
+                x := Concatenation(" 2.0 ",x);
+            else
+                x := " 2.0";
+            fi;
+            PRINTPT@(f, Pos(i), @.ro, x);
         fi;
     od;
     if arcs then
@@ -757,7 +763,7 @@ BindGlobal("PRINTARCS@", function(f, edges, arcs, radius)
     fi;
 end);
 
-InstallMethod(Draw, "(FR) for a triangulation",
+InstallMethod(Draw, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         function(t)
     local s, f;

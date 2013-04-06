@@ -1,39 +1,4 @@
 These are the things I'll get to do when I get to do them:
-$Id$
-
-ALL:
-  * extend alphabet by natural embedding, "skip levels" in tree
-  * quotient alphabets
-  * check alphabets not [1..n]
-  * should stateset be an attribute or an operation?
-
-frmachine:
-  * add or remove generator
-
-frelement:
-  * order and cycles for transformations, with period and preperiod
-  * recognize at least some machines that are not finite-state
-
-mealy:
-
-group:
-  * smarter "branch" detection, with commutators and quotients
-  * find explicit isomorphism between contracting groups, incl. non-trivial
-  * Exponent, IsSolvable, IsNilpotent, IsSimple
-  * smarter IsTorsion, IsTorsionFree, HasCongruenceProperty
-  * SubexponentialGrowth
-  * SEARCH@.BALL should not compute full balls if #gens is large (>100)
-  * complex of groups covering contracting group
-
-vhgroup:
-  * IsLevelTransitiveOnPatterns
-
-examples:
-  * mother groups for polynomial growth, construct embeddings into such group
-
-helpers:
-  * interval arithmetic
-  * maybe use InputOutputLocalProcess
 
 img:
   * blow-ups, tuning of IMG
@@ -44,12 +9,10 @@ img:
   * canonical decompositions
   * recode properly rpoly, maybe have higher precision?
 
-linear, vector:
-  * stategrowth limitmachine nucleus nucleusmachine
-  * Minimize, nice vectors for algebra elements
-  * extend / restrict scalars
-  * "in" method
-  
-algebra:
-  * test membership in an algebra
-  * test nillity of algebra (akin to IsTorsion for groups)
+URGENT:
+- "prenucleus" using just the states, not the action to compare. possibly return also the relations that are needed to make it a nucleus, something like the "triangles".
+
+- polynomialmachine etc. create a biset, or a just a sphere fr machine
+- triangulations more abstract: just work with pairs/triples of conjugacy classes
+- lifting done symbolically
+- an IMGMachine is just a machine with stateset a sphere group!

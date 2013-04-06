@@ -166,4 +166,41 @@ BindGlobal("JAVAPLOT@", function(input)
     fi;
 end);
 
+################################################################
+# call Mandel
+InstallGlobalFunction(Mandel, function(arg)
+    local f, a, b, c, d, cmd;
+
+    while Length(arg)>1 or not ForAll(arg,IsRationalFunction) do
+        Error("Mandel: argument should be at most one rational function");
+    od;
+    cmd := "mandel";
+    if arg<>[] then
+        f := NormalizedQuadraticP1Map(arg[1],0,IsBicritical)[1]; # (az^2+b)/(cz^2+d)
+        if IsPolynomial(f) then
+            f := CoefficientsOfUnivariatePolynomial(f);
+            a := f[1]*f[3];
+            Add(cmd,' '); Append(cmd, String(RealPart(a)));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(a)));
+        else
+            f := [NumeratorOfRationalFunction(f),DenominatorOfRationalFunction(f)];
+            b := CoefficientsOfUnivariatePolynomial(f[1])[1];
+            c := CoefficientsOfUnivariatePolynomial(f[2])[3];
+            d := CoefficientsOfUnivariatePolynomial(f[2])[1];
+            if DegreeOfP1Map(f[1])<2 then # b/(cz^2+d)
+                f := [c*b^2/d^3,@.z];
+            else # (az^2+b)/(cz^2+d)
+                a := CoefficientsOfUnivariatePolynomial(f[1])[3];
+                f := [c^2*b/a^3,c*d/a^2];
+            fi;
+            Add(cmd,' '); Append(cmd, String(RealPart(f[1])));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[1])));
+            Add(cmd,' '); Append(cmd, String(RealPart(f[2])));
+            Add(cmd,' '); Append(cmd, String(ImaginaryPart(f[2])));
+        fi;
+    fi;
+    EXECINSHELL@FR(InputTextNone(),cmd,ValueOption("detach"));
+end);        
+#############################################################################
+
 #E helpers.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

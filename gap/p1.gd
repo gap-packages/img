@@ -83,7 +83,43 @@
 ##
 ## <ManSection>
 ##   <Func Name="P1XRatio" Arg="p q r s"/>
-##   <Returns>The cross ratio of <A>p, q, r, s</A>.</Returns>
+##   <Returns>The cross ratio of <A>p, q, r, s</A>, as a P1 point.</Returns>
+##   <Description>
+##     The cross ratio of four points <A>p,q,r,s</A> is defined as <C>(p-r)(q-s)/(p-s)(q-r)</C>.
+##     The values <C>P1zero,P1one,P1infinity</C> correspond respectively to the special cases
+##     <C>(p=r or q=s)</C>, <C>(p=q or r=s)</C>, <C>(p=s or q=r)</C>.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Func Name="XRatio" Arg="p q r s"/>
+##   <Returns>The cross ratio of <A>p, q, r, s</A>, as a complex number.</Returns>
+##   <Description>
+##     The cross ratio of four points <A>p,q,r,s</A> is defined as <C>(p-r)(q-s)/(p-s)(q-r)</C>.
+##     The values <C>0,1,infinity</C> correspond respectively to the special cases
+##     <C>(p=r or q=s)</C>, <C>(p=q or r=s)</C>, <C>(p=s or q=r)</C>.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="CollectedP1Points" Arg="p1points [,precision]"/>
+##   <Returns>A list of pairs <C>[point,multiplicity]</C>.</Returns>
+##   <Description>
+##     Collects the points in <A>p1points</A>; points at distance at most <A>precision</A>
+##     are considered equal, and the barycentre of the clustered points is returned.
+##     <P/>
+##     If the argument <A>precision</A> is not supplied, <C>@IMG.p1eps</C> is taken.
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="MatchP1Points" Arg="p1pointsA, p1pointsB [,separation]"/>
+##   <Returns>A list of giving closest point in <A>p1pointsB</A> to points in <A>p1pointsA</A>, or <K>fail</K>.</Returns>
+##   <Description>
+##     Finds for each point <A>p1pointsA[i]</A> the closest point <A>p1pointB[p[i]]</A>.
+##     If the next-closest is at least <A>separation</A> further away for all <C>i</C>,
+##     then the list <C>p</C> is returned. Otherwise, <K>fail</K> is returned.
+##     <P/>
+##     If the argument <A>separation</A> is not supplied, <K>2</K> is taken.
 ## </ManSection>
 ##
 ## <ManSection>
@@ -103,12 +139,38 @@
 ##   <Func Name="MoebiusMap" Arg="p, q, r, s, t, u" Label="6"/>
 ##   <Func Name="MoebiusMap" Arg="p, q, r" Label="3"/>
 ##   <Func Name="MoebiusMap" Arg="p, q" Label="2"/>
+##   <Func Name="MoebiusMap" Arg="p" Label="1"/>
+##   <Returns>A new Möbius transformation.</Returns>
 ##   <Description>
-##     These methods create a new P1 map. In the first case,
-##     this is the Möbius transformation sending <A>p,q,r</A> to <A>P,Q,R</A>
-##     respectively; in the second case, the map sending <A>p,q,r</A> to
-##     <C>0,1,P1infinity</C> respectively; in the third case, the map sending
-##     <A>p,q</A> to <C>0,P1infinity</C> respectively, of the form <M>(z-p)/(z-q)</M>.
+##     In the first case, this is the Möbius transformation sending <A>p,q,r</A> to <A>P,Q,R</A>
+##     respectively;
+##     in the second case, the map sending <C>0,1,P1infinity</C> to  <A>p,q,r</A> respectively;
+##     in the third case, the map sending <C>0,P1infinity</C> to <A>p,q</A> respectively,
+##     and of the form <M>(z-p)/(z-q)</M>;
+##     and in the fourth case, a rotation sending <A>P1infinity</A> to <A>p</A>.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="P1MapRotatingP1Points" Arg="points [oldpoints]"/>
+##   <Returns>A Möbius rotation sending the last of <A>points</A> to P1infinity.</Returns>
+##   <Description>
+##     A Möbius rotation is computed that sends the last of <A>points</A> to <K>P1infinity</K> and,
+##     assuming the last point in <A>oldpoints</A> is also <K>P1infinity</K>, matches the points
+##     in <A>points</A> and <A>oldpoints</A> as closely as possible.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="P1MapNormalizingP1Points" Arg="points [oldpoints]"/>
+##   <Returns>A Möbius transformation sending the last of <A>points</A> to P1infinity.</Returns>
+##   <Description>
+##     A Möbius transformation is computed that sends the last of <A>points</A> to
+##     <K>P1infinity</K> and makes the barycentre of the points in <M>\mathbb R^3</M>
+##     as close as possible to the origin.
+##     If a list <A>oldpoints</A> is also given, the Möbius transformation computed rotates
+##     about infinity so as to match the points in <A>points</A> and <A>oldpoints</A> as
+##     closely as possible; this then determines the transformation uniquely.
 ##   </Description>
 ## </ManSection>
 ##
@@ -217,6 +279,8 @@
 DeclareGlobalFunction("SetP1Points");
 
 DeclareCategory("IsP1Point",IsObject);
+DeclareCategoryCollections("IsP1Point");
+DeclareSynonym("IsP1PointList",IsP1PointCollection and IsList);
 DeclareCategory("IsIEEE754P1Point",IsP1Point);
 BindGlobal("P1PointsFamily",NewFamily("P1PointsFamily",IsP1Point));
 BindGlobal("TYPE_P1POINT",NewType(P1PointsFamily,IsP1Point and IsPositionalObjectRep));
@@ -230,7 +294,7 @@ DeclareGlobalVariable("P1infinity");
 DeclareOperation("P1INFINITY@",[IsP1Point]);
 DeclareGlobalVariable("P1one");
 DeclareGlobalVariable("P1zero");
-DeclareOperation("P1Barycentre",[IsList]);
+DeclareOperation("P1Barycentre",[IsP1PointList]);
 DeclareOperation("P1Barycentre",[IsP1Point]);
 DeclareOperation("P1Barycentre",[IsP1Point,IsP1Point]);
 DeclareOperation("P1Barycentre",[IsP1Point,IsP1Point,IsP1Point]);
@@ -240,10 +304,15 @@ DeclareAttribute("P1Sphere",IsList);
 DeclareOperation("P1Distance",[IsP1Point,IsP1Point]);
 DeclareOperation("P1Circumcentre",[IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("P1XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
+DeclareOperation("XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("CleanedP1Point",[IsP1Point,IsFloat]);
 DeclareOperation("P1Midpoint",[IsP1Point,IsP1Point]);
 DeclareAttribute("P1Antipode",IsP1Point);
 DeclareAttribute("P1Coordinate",IsP1Point);
+DeclareOperation("CollectedP1Points",[IsP1PointList]);
+DeclareOperation("CollectedP1Points",[IsP1PointList,IsFloat]);
+DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointList,IsFloat]);
+DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointList]);
 
 ################################################################
 # p1 maps
@@ -258,13 +327,14 @@ DeclareAttribute("CoefficientsOfP1Map",IsP1Map);
 DeclareAttribute("AsP1Map",IsScalar);
 DeclareOperation("P1MapSL2",[IsMatrix]);
 DeclareAttribute("SL2P1Map",IsP1Map);
-DeclareOperation("P1MapByZerosPoles",[IsList,IsList,IsP1Point,IsP1Point]);
+DeclareOperation("P1MapByZerosPoles",[IsP1PointList,IsP1PointList,IsP1Point,IsP1Point]);
 
+DeclareOperation("MoebiusMap",[IsP1Point]);
 DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point]);
 DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
-DeclareOperation("MoebiusMap",[IsList]);
-DeclareOperation("MoebiusMap",[IsList,IsList]);
+DeclareOperation("MoebiusMap",[IsP1PointList]);
+DeclareOperation("MoebiusMap",[IsP1PointList,IsP1PointList]);
 DeclareOperation("P1Path",[IsP1Point,IsP1Point]);
 DeclareGlobalVariable("P1z");
 DeclareGlobalFunction("P1Monomial");
@@ -286,7 +356,10 @@ DeclareOperation("PreImagesElm",[IsP1Map,IsP1Point]);
 DeclareAttribute("CriticalPointsOfP1Map",IsP1Map);
 
 DeclareOperation("P1INTERSECT@",[IsP1Map,IsP1Map,IsP1Map]);
-DeclareOperation("P1ROTATION2@",[IsObject,IsList,IsObject]);
+DeclareOperation("P1ROTATION@",[IsP1Point,IsP1PointList,IsP1PointList]);
+DeclareGlobalFunction("P1MapRotatingP1Points");
+DeclareOperation("P1MapNormalizingP1Points",[IsP1PointList]);
+DeclareOperation("P1MapNormalizingP1Points",[IsP1PointList,IsP1PointList]);
 
 #############################################################################
 

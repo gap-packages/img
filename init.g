@@ -31,7 +31,10 @@ ReadPackage("img", "gap/complex.gd");
 ReadPackage("img", "gap/p1.gd");
 ReadPackage("img", "gap/sphere.gd");
 ReadPackage("img", "gap/triangulations.gd");
-ReadPackage("img", "gap/img.gd");
+ReadPackage("img", "gap/machine.gd");
+ReadPackage("img", "gap/markedsphere.gd");
+ReadPackage("img", "gap/hurwitz.gd");
+ReadPackage("img", "gap/thurston.gd");
 ReadPackage("img", "gap/examples.gd");
 
 CallFuncList(function()

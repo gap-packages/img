@@ -10,27 +10,63 @@
 ##
 #############################################################################
 
-BindGlobal("MAKENFREL@", function(rel,degree)
-    local i, len;
-    len := Length(rel);
-    if rel[1]<0 then rel := -Reversed(rel); fi;
-    rel := [rel,[],[]];
-    rel[2]{rel[1]} := [1..len];
-    rel[3]{rel[1]} := [3*len,3*len-1..2*len+1];
-    Append(rel[1],rel[1]);
-    Append(rel[1],-Reversed(rel[1]));
-    for i in [1..4*len] do
-        if degree[AbsoluteValue(rel[1][i])]=2 then
-            rel[1][i] := AbsoluteValue(rel[1][i]);
-        fi;
-    od;
-    return rel;
-end);
-
-InstallMethod(ElementOfSphereGroup, "(IMG) for a sphere group element",
+InstallMethod(ElementOfSphereGroup, "(IMG) for a sphere element family and a word",
         [IsFamily,IsAssocWordWithInverse],
         function(fam,w)
     return ElementOfFpGroup(fam,FpElementNFFunction(fam)(w));
+end);
+
+InstallMethod(LetterRepAssocWord, "(IMG) for a sphere group element",
+        [IsElementOfSphereGroup],
+        function(g)
+    return LetterRepAssocWord(UnderlyingElement(g));
+end);
+
+InstallMethod(AssocWordByLetterRep, "(IMG) for a sphere group family, and word",
+        [IsElementOfSphereGroupFamily,IsList],
+        function(F,l)
+    return ElementOfSphereGroup(F,AssocWordByLetterRep(FamilyObj(One(F!.freeGroup)),l));
+end);
+
+#!!!! this needs improvement, it's too inefficient
+BindGlobal("BRUTEFORCEFACTORIZATION@", function(w,g)
+    local epi, l, len, newlen, v, neww;
+
+    if not w in g then return fail; fi;
+
+    epi := EpimorphismFromFreeGroup(g);
+    l := [];
+    len := Length(w);
+    while len>0 do
+        for v in Source(epi) do
+            neww := v^epi*w;
+            newlen := Length(neww);
+            if newlen<len then
+                w := neww;
+                len := newlen;
+                Append(l,LetterRepAssocWord(v^-1));
+                break;
+            fi;
+        od;
+    od;
+    return l;
+end);
+
+InstallOtherMethod(AsWordLetterRepInGenerators, "(IMG) for a sphere group element and its sphere group",
+        [IsElementOfSphereGroup, IsGroup],
+        function(w,g)
+    local l;
+    l := AsWordLetterRepInGenerators(UnderlyingElement(w),Group(List(GeneratorsOfGroup(g),UnderlyingElement)));
+    if l<>fail then return l; fi;
+
+    #!!! now complicated and inefficient method
+    return BRUTEFORCEFACTORIZATION@(w,g);
+end);
+
+InstallMethod(Subword, "(IMG) for a sphere group element",
+        [IsElementOfSphereGroup,IsPosInt,IsPosInt],
+        function(g,i,j)
+    return ElementOfSphereGroup(FamilyObj(g),Subword(UnderlyingElement(g),i,j));
 end);
 
 BindGlobal("PREREDUCESPHERERWS@", function (kbrws,n)
@@ -48,6 +84,9 @@ BindGlobal("PREREDUCESPHERERWS@", function (kbrws,n)
     od;
     kbrws!.pairs2check := [];
 end);
+
+# !!!! still doesn't work for [0,2,2,2], [2,2,0,2], [0,3,2,3,3,2], [4x2, 1x0], ...
+# maybe imbed in coxeter system with generators s_i and relations (s_is_{i+1})^power[i]?
 
 BindGlobal("SPHERENFFUNCTION@", function(g,ordering,power)
     local n, mon, id, rws, rules, freemon, freegroupfam, g2m, m2g, gens, weight, special;
@@ -75,6 +114,12 @@ BindGlobal("SPHERENFFUNCTION@", function(g,ordering,power)
             special := ShortLexOrdering(freemon);
             ordering := WeightLexOrdering(freemon,gens{Concatenation(ordering{Concatenation([1,3..n],[2,4..n-1])},[n+1..2*n])},weight);
         fi;
+    elif 0 in power and Set(power)<>[0] then
+        weight := ListWithIdenticalEntries(2*n,1);
+        weight[Position(power,0)] := n;
+        weight[Position(power,0)+n] := n;
+        ordering := WeightLexOrdering(freemon,gens,weight);
+        special := ShortLexOrdering(freemon);
     else
         ordering := ShortLexOrdering(freemon);
     fi;
@@ -103,8 +148,8 @@ end);
 InstallGlobalFunction(SphereGroup, function (arg)
     local  F, G, fam, rel, n, ordering, power;
     
-    while not (Length(arg) in [1,2] and (IsPosInt(arg[1]) or IsList(arg[1])) and (Length(arg)=1 or IsList(arg[2]))) do
-        Error("Usage: SphereGroup(num_points or ordering [, degrees]");
+    while not (Length(arg) in [1..3] and (IsPosInt(arg[1]) or IsList(arg[1])) and (Length(arg)=1 or IsList(arg[2]))) do
+        Error("Usage: SphereGroup(num_points or ordering [, degrees] [,group]");
     od;
     if IsPosInt(arg[1]) then
         n := arg[1];
@@ -124,9 +169,25 @@ InstallGlobalFunction(SphereGroup, function (arg)
             Error("<degrees> must be a list of non-negative integers");
         od;
     fi;    
-    
+
+    # forbid degenerate cases
+    if n<2 then
+        Error("SphereGroup needs at least 2 generators");
+    fi;
+    if n=2 and power[1]<>power[2] then
+        Error("When SphereGroup is called with 2 generators, the orders must be the same");
+    fi;
+
     # create the underlying f.p. group
-    F := FreeGroup(n);
+    if Length(arg)=3 then
+        while not IsFreeGroup(arg[3]) do
+            Error("Spheregroup requires a free group as optional third argument");
+        od;
+        F := arg[3];
+    else
+        F := FreeGroup(n);
+    fi;
+
     rel := List(Filtered([1..n],i->power[i]<>0),i->F.(i)^power[i]);
     Add(rel, Product(GeneratorsOfGroup(F){ordering},One(F)));
     G := F / rel;
@@ -140,16 +201,69 @@ InstallGlobalFunction(SphereGroup, function (arg)
     fam!.ordering := ordering;
     fam!.power := power;
     
-    #rel := MAKENFREL@(ordering,power);
-    #SetFpElementNFFunction(fam,w->AssocWordByLetterRep(FamilyObj(w),NFFUNCTION_FR(rel,power,true,LetterRepAssocWord(w))));
     SetFpElementNFFunction(fam,SPHERENFFUNCTION@(G,ordering,power));
 
     # reset some of the attributes of G that were erroneously computed
     G!.OneImmutable := ElementOfSphereGroup(fam,One(F));
+    fam!.OneImmutable := G!.OneImmutable;
     G!.GeneratorsOfMagmaWithInverses := List(GeneratorsOfGroup(F),x->ElementOfSphereGroup(fam,x));
+
     SetIsSphereGroup(G,true);
     
     return G;
+end);
+
+InstallMethod(OrderingOfSphereGroup, "(IMG) for a sphere group, get family attribute",
+        [IsSphereGroup],
+        g->FamilyObj(One(g))!.ordering);
+
+InstallMethod(ExponentsOfSphereGroup, "(IMG) for a sphere group, get family attribute",
+        [IsSphereGroup],
+        g->FamilyObj(One(g))!.power);
+
+InstallMethod(IsomorphismSphereGroup, "(IMG) for a f.p. group",
+        [IsFpGroup],
+        function(G)
+    local newG;
+    newG := AsSphereGroup(G);
+    if newG=fail then
+        return fail;
+    else
+        return GroupHomomorphismByImages(G,newG);
+    fi;
+end);
+    
+InstallMethod(AsSphereGroup, "(IMG) for a f.p. group",
+        [IsFpGroup],
+        function(G)
+    local power, ordering, gens, r, i, letters;
+
+    gens := GeneratorsOfGroup(G);
+    power := List(gens,x->0);
+    ordering := fail;
+
+    for r in RelatorsOfFpGroup(G) do
+        if IsOne(r) then
+            continue;
+        fi;
+        letters := LetterRepAssocWord(r);
+        if letters[1]<0 then
+            letters := LetterRepAssocWord(r^-1);
+        fi;
+        if ForAll(letters,l->l=letters[1]) then
+            power[letters[1]] := Gcd(power[letters[1]],Length(letters));
+            continue;
+        fi;
+        if AsSortedList(letters)=[1..Length(gens)] then
+            ordering := letters;
+            continue;
+        fi;
+        Error("AsSphereGroup: illegal relator ",r);
+    od;
+    while ordering=fail do
+        Error("AsSphereGroup: no ordering relation");
+    od;
+    return SphereGroup(ordering,power,FreeGroupOfFpGroup(G));
 end);
 
 InstallMethod(EpimorphismFromFreeGroup, "(IMG) for a sphere group",
@@ -158,15 +272,39 @@ InstallMethod(EpimorphismFromFreeGroup, "(IMG) for a sphere group",
     local f, n;
     n := Length(GeneratorsOfGroup(g));
     f := FreeGroup(n-1);
-    return GroupHomomorphismByImages(f,g,GeneratorsOfGroup(f),GeneratorsOfGroup(g){FamilyObj(One(g))!.ordering{[1..n-1]}});
+    return GroupHomomorphismByImages(f,g,GeneratorsOfGroup(f),GeneratorsOfGroup(g){OrderingOfSphereGroup(g){[1..n-1]}});
 end);
+
+InstallMethod(EulerCharacteristic, "(IMG) for a free group",
+        [IsFreeGroup],
+        g->1-RankOfFreeGroup(g));
+
+InstallMethod(EulerCharacteristic, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        function(g)
+    local chi, o;
+    chi := 2;
+    for o in ExponentsOfSphereGroup(g) do
+        if o=0 then
+            chi := chi - 1;
+        else
+            chi := chi - (1 - 1/o);
+        fi;
+    od;
+    if chi>0 then chi := chi/2; fi;
+    return chi;
+end);
+
+InstallMethod(RankOfSphereGroup, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        g->RankOfFreeGroup(FreeGroupOfFpGroup(g)));
 
 InstallOtherMethod(ExponentSums, "(IMG) for a sphere group element",
         [IsElementOfSphereGroup],
         function(g)
     local l, power, i;
     
-    power := FamilyObj(g)!.power;
+    power := ExponentsOfSphereGroup(g);
     l := ExponentSums(UnderlyingElement(g));
     if 0 in power then
         l := l-Minimum(l);
@@ -184,6 +322,12 @@ end);
 ################################################################
 # conjugacy classes
 ################################################################
+InstallMethod(PeripheralClasses, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        function(g)
+    return List(GeneratorsOfGroup(g),x->ConjugacyClass(g,x));
+end);
+
 BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     # returns [m,x] with m minimal representative such that m^x=g
     local w, fam, length, i, m, x, minm, minx;
@@ -204,6 +348,46 @@ end);
 InstallOtherMethod(CyclicallyReducedWord, "(IMG) for a sphere group element",
         [IsElementOfSphereGroup],
         g->MAKECYCLICALLYREDUCED@(g)[1]);
+
+InstallMethod(IsPeripheral, "(IMG) for a sphere group element",
+        [IsElementOfSphereGroup],
+        function(g)
+    g := MAKECYCLICALLYREDUCED@(g)[1];
+    return g=Subword(g,1,1)^Length(g);
+end);
+
+InstallMethod(IsPeripheral, "(IMG) for a sphere conjugacy class",
+        [IsSphereConjugacyClass],
+        function(c)
+    local g;
+    g := MAKECYCLICALLYREDUCED@(Representative(c))[1];
+    return g=Subword(g,1,1)^Length(g);
+end);
+
+InstallMethod(Order, "(IMG) for a sphere group element",
+        [IsElementOfSphereGroup],
+        function(g)
+    local order, w, len;
+
+    if EulerCharacteristic(FamilyObj(g)!.group)>0 then # finite group
+        TryNextMethod();
+    fi;
+
+    g := MAKECYCLICALLYREDUCED@(g)[1];
+    w := LetterRepAssocWord(g);
+    len := Length(w);
+    if len=0 then return 1; fi;
+    if ForAll(w,x->x=w[1]) then
+        order := FamilyObj(g)!.power[AbsoluteValue(w[1])];
+        if order=0 then
+            return infinity;
+        else
+            return order/Gcd(order,len);
+        fi;
+    else
+        return infinity;
+    fi;
+end);
 
 InstallOtherMethod(ConjugacyClass, "(IMG) for a sphere group element",
         [IsElementOfSphereGroup],
@@ -250,12 +434,17 @@ InstallMethod(LT, "(IMG) for sphere conjugacy classes",
     return Representative(c)<Representative(d);
 end);
 
+BindGlobal("ISCYCLICALLYORDERED@",
+        function(arg)
+    return ForAny(CyclicGroup(IsPermGroup,Length(arg)),g->IsSet(Permuted(arg,g)));
+end);
+
 InstallMethod(IntersectionNumber, "(IMG) for sphere conjugacy classes",
         IsIdenticalObj,
         [IsSphereConjugacyClass,IsSphereConjugacyClass],
         function(u,v)
     # returns the geometric intersection number of u and v, following Cohen-Lustig.
-    local rank, epi, order, i, j, U, V, m, n, pairs, rel;
+    local rank, epi, order, i, j, U, V, UV, m, n, pairs, rel;
     
     # A1. convert u,v to lists over [0,...,2*rank-1], following the ordering
     # in which x1 < x1^-1 < x2 < x2^-1 < ...
@@ -267,8 +456,8 @@ InstallMethod(IntersectionNumber, "(IMG) for sphere conjugacy classes",
     order := [];
     order{[rank+2..2*rank+1]} := [0,2..2*rank-2];
     order{[rank,rank-1..1]} := [1,3..2*rank-1];
-    u := order{LetterRepAssocWord(u)+rank+1};
-    v := order{LetterRepAssocWord(v)+rank+1};
+    u := order{LetterRepAssocWord(CyclicallyReducedWord(u))+rank+1};
+    v := order{LetterRepAssocWord(CyclicallyReducedWord(v))+rank+1};
     m := Length(u);
     n := Length(v);
     
@@ -282,48 +471,162 @@ InstallMethod(IntersectionNumber, "(IMG) for sphere conjugacy classes",
     # A3. Put their union in cyclic lexicographic ordering
     order := Concatenation(Cartesian([1],[1..m]),Cartesian([1],[-1,-2..-m]),
                      Cartesian([2],[1..n]),Cartesian([2],[-1,-2..-n]));
-    SortParallel(Concatenation(U,V),order,
-            function(x,y)
-        local l, ix, iy;
+    rel := function(x,y)
+        local l, i;
         if x=y then return false; fi;
-        ix := 1; iy := 1; l := -1;
-        while x[ix]=y[iy] do
-            l := x[ix]; l := l+(-1)^l; # inverse of last letter
-            ix := ix+1; if ix>Length(x) then ix := 1; fi;
-            iy := iy+1; if iy>Length(y) then iy := 1; fi;
+        i := 1; l := -1;
+        while x[i]=y[i] do
+            l := x[i]; l := l+(-1)^l; # inverse of last letter
+            i := i+1;
         od;
-        return AsSortedList([l<=x[ix],y[iy]<l,x[ix]<y[iy]])=[true,true,false];
-    end);
-
+        return AsSortedList([l<=x[i],y[i]<l,x[i]<y[i]])=[true,true,false];
+    end;
+    UV := List(Concatenation(U,V),w->PeriodicList([],w));
+    SortParallel(UV,order,rel);
+    order := List([1..2],x->List([1,-1],s->List([1..ELM_LIST([m,n],x)],i->Position(UV,UV[Position(order,[x,s*i])]))));
+    
     # A4. find linking pairs
     # A5. construct the equivalence relation
     pairs := [];
     rel := [];
     for i in [1..m] do
         for j in [1..n] do
-            if Position(order,[1,i]) < Position(order,[2,j]) and Position(order,[2,j]) < Position(order,[1,-i]) and Position(order,[1,-i]) < Position(order,[2,-j]) then
-                AddSet(pairs,[i,j]);
-            fi;
-            if Position(order,[1,i]) < Position(order,[2,-j]) and Position(order,[2,-j]) < Position(order,[1,-i]) and Position(order,[1,-i]) < Position(order,[2,j]) then
+            if ISCYCLICALLYORDERED@(order[1][1][i],order[2][1][j],order[1][2][i],order[2][2][j]) or
+               ISCYCLICALLYORDERED@(order[1][1][i],order[2][2][j],order[1][2][i],order[2][1][j]) then
                 AddSet(pairs,[i,j]);
             fi;
             if u[i]=v[j] then
                 Add(rel,[[i,j],[1+i mod m,1+j mod n]]);
             fi;
-            if u[i]+(-1)^u[i]=v[1+j mod n] then
+            if u[i]+(-1)^u[i]=v[j] then
                 Add(rel,[[i,1+j mod n],[1+i mod m,j]]);
             fi;
         od;
     od;
-
+    
+    # A6. Count the equivalence classes
     rel := EquivalenceRelationByPairs(Domain(Cartesian([1..m],[1..n])),rel);
     pairs := Set(pairs,p->EquivalenceClassOfElement(rel,p));
     return Size(pairs);
 end);
 
+InstallMethod(SelfIntersectionNumber, "(IMG) for sphere conjugacy classes",
+        [IsSphereConjugacyClass],
+        function(u)
+    return IntersectionNumber(u,u)/2;
+end);
+
 ################################################################
 # automorphism groups
 ################################################################
+InstallMethod(AutomorphismGroup, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        function(g)
+    local r, i, j, m, ni, nj, gens, img, aut, relator, ordering, a, inner;
+
+    ordering := OrderingOfSphereGroup(g);
+    gens := GeneratorsOfGroup(g);
+        
+    aut := [];
+    inner := [];
+    for ni in [1..Length(ordering)] do
+        for nj in [ni+1..Length(ordering)] do
+            m := Product(gens{ordering{[ni+1..nj-1]}},One(g));
+            i := ordering[ni];
+            j := ordering[nj];
+            img := ShallowCopy(gens);
+            img[i] := gens[i]^(m*gens[j]/m);
+            img[j] := gens[j]^(m^-1*gens[i]*m*gens[j]);
+            Add(aut,GroupHomomorphismByImages(g,g,gens,img));
+        od;
+        Add(inner,InnerAutomorphism(g,gens[ordering[ni]]));
+    od;
+    a := Group(Concatenation(aut,inner));
+    inner := Group(inner);
+    SetIsAutomorphismGroupOfSphereGroup(a,true);
+    SetInnerAutomorphismsAutomorphismGroup(a,inner);
+    SetParent(inner,a);
+    SetIsNormalInParent(inner,true);
+    return a;
+end);
+
+BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertible)
+    local epi, out;
+
+    epi := EpimorphismFromFreeGroup(a);
+    out := GroupHomomorphismByFunction(a,fp,function(x)
+        local w, n, newx, newn, g;
+        w := One(Source(epi));
+        n := infinity;
+        while n>0 do
+            for g in Source(epi) do
+                newx := x*g^epi;
+                newn := Sum(ggens,s->Length(s^newx)-1);
+                if newn < n then x := newx; w := g^-1*w; n := newn; break; fi;
+            od;
+        od;
+        return MappedWord(w,GeneratorsOfGroup(Source(epi)),extgens);
+    end,invertible,w->MappedWord(w,gens,outergens));
+
+    return out;
+end);
+
+InstallMethod(IsomorphismFpGroup, "(IMG) for a sphere automorphism group",
+        [IsAutomorphismGroupOfSphereGroup],
+        function(a)
+    local g, ordering, i, j, fp, gens;
+
+    g := Source(One(a));
+    ordering := OrderingOfSphereGroup(g);
+    gens := [];
+    for i in [1..Length(ordering)] do
+        for j in [i+1..Length(ordering)] do
+            Add(gens,Concatenation("t",String(ordering[i]),String(ordering[j])));
+        od;
+    od;
+    for i in [1..Length(ordering)] do
+        Add(gens,Concatenation("i",String(ordering[i])));
+    od;
+    fp := FreeGroup(gens);
+    gens := GeneratorsOfGroup(fp);
+# add relations!!!
+
+# special cases: if #ggens<=3 then fp=g.
+
+    return FACTORIZEAUT@(GeneratorsOfGroup(g),a,fp,gens,gens,GeneratorsOfGroup(a),true);
+end);
+
+InstallMethod(EpimorphismToOut, "(IMG) for a sphere automorphism group",
+        [IsAutomorphismGroupOfSphereGroup],
+        function(a)
+    local g, ordering, i, j, fp, gens;
+
+    g := Source(One(a));
+    ordering := OrderingOfSphereGroup(g);
+    gens := [];
+    for i in [1..Length(ordering)] do
+        for j in [i+1..Length(ordering)] do
+            Add(gens,Concatenation("t",String(ordering[i]),String(ordering[j])));
+        od;
+    od;
+    fp := FreeGroup(gens);
+    gens := GeneratorsOfGroup(fp);
+# add relations!!!
+
+# special cases: if #ggens<=3 then fp is trivial. if #ggens=4 then fp is a sphere group
+
+    return FACTORIZEAUT@(GeneratorsOfGroup(g),a,fp,gens,Concatenation(gens,List(ordering,x->One(fp))),GeneratorsOfGroup(a){[1..Length(gens)]},false);
+end);
+
+InstallMethod(NaturalHomomorphismByNormalSubgroupOp, "(IMG) for a sphere automorphism group",
+        [IsAutomorphismGroupOfSphereGroup,IsGroup],
+        function(a,i)
+    if not IsIdenticalObj(i,InnerAutomorphismsAutomorphismGroup(a)) then
+        TryNextMethod();
+    fi;
+
+    return EpimorphismToOut(a);
+end);
 
 ################################################################
 # graphs of groups

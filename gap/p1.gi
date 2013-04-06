@@ -2,13 +2,11 @@
 ##
 #W p1.gi                                                    Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
-#Y Copyright (C) 2012, Laurent Bartholdi
+#Y Copyright (C) 2012-2013, Laurent Bartholdi
 ##
 #############################################################################
 ##
-##  This file contains helper code for P1 points, using generic floats
+##  This file contains code for P1 points, using generic floats
 ##
 #############################################################################
 
@@ -87,18 +85,18 @@ end);
 ################################################################
 # p1 points, using package Floats
 ################################################################
-InstallMethod(P1Point, "(FR) generic P1 point", [IsRat],
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsRat],
         z->P1Point(@.o*z));
 
-InstallMethod(P1Point, "(FR) generic P1 point", [IsInfinity],
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsInfinity],
         z->P1Point(@.o,@.z));
 
-InstallMethod(P1Point, "(FR) generic P1 point", [IsFloat],
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsFloat],
         function(z)
     return Objectify(TYPE_P1POINT,[z]);
 end);
 
-InstallMethod(P1Point, "(FR) generic P1 point", [IsFloat,IsFloat],
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsFloat,IsFloat],
         function(n,d)
     if IsZero(d) then
         return P1infinity;
@@ -106,29 +104,29 @@ InstallMethod(P1Point, "(FR) generic P1 point", [IsFloat,IsFloat],
     return Objectify(TYPE_P1POINT,[n/d]);
 end);
 
-InstallMethod(P1INFINITY@, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(P1INFINITY@, "(IMG) generic P1 point", [IsP1Point],
         x->P1Point(@.o/@.z));
 
-InstallMethod(P1Coordinate, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(P1Coordinate, "(IMG) generic P1 point", [IsP1Point],
         x->x![1]);
 
-InstallMethod(DisplayString, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(DisplayString, "(IMG) generic P1 point", [IsP1Point],
         x->DisplayString(x![1]));
 
-InstallMethod(ViewString, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(ViewString, "(IMG) generic P1 point", [IsP1Point],
         x->Concatenation("<",ViewString(x![1]),">"));
 
-InstallMethod(String, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(String, "(IMG) generic P1 point", [IsP1Point],
         x->Concatenation("P1Point(",String(x![1]),")"));
 
 INSTALLPRINTERS@(IsP1Point);
 
-InstallMethod(EQ, "(FR) generic P1 point", [IsP1Point,IsP1Point],
+InstallMethod(EQ, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     return p![1]=q![1];
 end);
 
-InstallMethod(LT, "(FR) generic P1 point", [IsP1Point,IsP1Point],
+InstallMethod(LT, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     return p![1]<q![1];
 end);
@@ -144,7 +142,7 @@ BindGlobal("C2_P1POINT@", function(p)
     fi;
 end);
 
-InstallMethod(P1Sphere, "(FR) generic coordinate list", [IsList],
+InstallMethod(P1Sphere, "(IMG) generic coordinate list", [IsList],
         function(v)
     v := v / Sqrt(v*v);
     if v[3]>@.rz then
@@ -156,7 +154,7 @@ InstallMethod(P1Sphere, "(FR) generic coordinate list", [IsList],
     fi;
 end);
 
-InstallMethod(SphereP1, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(SphereP1, "(IMG) generic P1 point", [IsP1Point],
         function(p)
     local n;
     p := p![1];
@@ -168,7 +166,7 @@ InstallMethod(SphereP1, "(FR) generic P1 point", [IsP1Point],
     fi;
 end);
 
-InstallMethod(SphereP1Y, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(SphereP1Y, "(IMG) generic P1 point", [IsP1Point],
         function(p)
     p := p![1];
     if IsXInfinity(p) then
@@ -178,7 +176,7 @@ InstallMethod(SphereP1Y, "(FR) generic P1 point", [IsP1Point],
     fi;
 end);
 
-InstallMethod(P1Antipode, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(P1Antipode, "(IMG) generic P1 point", [IsP1Point],
         function(p)
     p := p![1];
     if p=@.z then
@@ -221,7 +219,7 @@ BindGlobal("CLEAN_CX@", function(z,prec)
     fi;
 end);
 
-InstallMethod(CleanedP1Point, "(FR) generic P1 point", [IsP1Point,IsFloat],
+InstallMethod(CleanedP1Point, "(IMG) generic P1 point", [IsP1Point,IsFloat],
         function(p,prec)
     local z, w, n;
     z := p![1];
@@ -238,19 +236,19 @@ InstallMethod(CleanedP1Point, "(FR) generic P1 point", [IsP1Point,IsFloat],
     fi;
 end);
 
-InstallMethod(P1Barycentre, "(FR) generic list of P1 points", [IsList],
+InstallMethod(P1Barycentre, "(IMG) generic list of P1 points", [IsP1PointList],
         list->P1Sphere(Sum(list,SphereP1)));
 
-InstallMethod(P1Barycentre, "(FR) generic P1 point", [IsP1Point],
+InstallMethod(P1Barycentre, "(IMG) generic P1 point", [IsP1Point],
         p->p);
 
-InstallMethod(P1Barycentre, "(FR) generic P1 point", [IsP1Point,IsP1Point],
+InstallMethod(P1Barycentre, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         P1Midpoint);
 
-InstallMethod(P1Barycentre, "(FR) generic P1 point", [IsP1Point,IsP1Point,IsP1Point],
+InstallMethod(P1Barycentre, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1Point],
         function(arg) return P1Barycentre(arg); end);
         
-InstallMethod(P1Midpoint, "(FR) generic P1 point", [IsP1Point,IsP1Point],
+InstallMethod(P1Midpoint, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     local a, d;
     p := p![1];
@@ -270,7 +268,7 @@ InstallMethod(P1Midpoint, "(FR) generic P1 point", [IsP1Point,IsP1Point],
     return P1Point(a*q+d*p,a+d);
 end);
 
-InstallMethod(P1Distance, "(FR) generic P1 point", [IsP1Point,IsP1Point],
+InstallMethod(P1Distance, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     local v, d;
     p := p![1];
@@ -292,7 +290,53 @@ InstallMethod(P1Distance, "(FR) generic P1 point", [IsP1Point,IsP1Point],
     return 2*Atan(v);
 end);
 
-InstallMethod(P1XRatio, "(FR) generic P1 point", [IsP1Point,IsP1Point,IsP1Point,IsP1Point],
+InstallMethod(CollectedP1Points, "(IMG) list of p1points, precision",
+        [IsP1PointList,IsFloat],
+        function(points,precision)
+    local n, rel;
+
+    n := Length(points);
+    rel := BinaryRelationOnPoints(List([1..n],i->Filtered([1..n],j->P1Distance(points[i],points[j])<=precision)));
+    rel := EquivalenceRelationByRelation(rel);
+    rel := EquivalenceClasses(rel);
+    return List(rel,c->[P1Barycentre(points{AsList(c)}),Size(c)]);
+end);
+InstallMethod(CollectedP1Points, "(IMG) list of p1points",
+        [IsP1PointList],
+        list->CollectedP1Points(list,@.p1eps));
+
+InstallMethod(MatchP1Points, "(IMG) for two lists of points and a real",
+        [IsP1PointList,IsP1PointList,IsFloat],
+        function(ptA, ptB, separation)
+    # ptA is a list of n points; ptB[i] is a list of neighbours of ptA[i]
+    # each ptB[i][j] is a sphere point
+    # returns: a list i|->j(i), [1..n]->[1..n] such that
+    # ptA is at least separationx closer to ptB[i][j(i)] as to other neighbours;
+    # or return fail if no such matching exists.
+    local i, j, dists, perm;
+
+    dists := [];
+    for i in [1..Length(ptA)] do
+        dists[i] := List(ptB[i],v->P1Distance(ptA[i],v));
+    od;
+    perm := List(dists, l->Position(l,Minimum(l)));
+
+    for i in [1..Length(dists)] do
+        for j in [1..Length(dists[i])] do
+            if j<>perm[i] and dists[i][j]<dists[i][perm[i]]*separation then
+                return fail;
+            fi;
+        od;
+    od;
+    return perm;
+end);
+InstallMethod(MatchP1Points, "(IMG) for two lists of points",
+        [IsP1PointList,IsP1PointList],
+        function(ptA,ptB)
+    return MatchP1Points(ptA,ptB,2*@.ro);
+end);
+
+InstallMethod(XRatio, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1Point,IsP1Point],
         function(p1,p2,p3,p4)
     p1 := C2_P1POINT@(p1);
     p2 := C2_P1POINT@(p2);
@@ -303,8 +347,12 @@ InstallMethod(P1XRatio, "(FR) generic P1 point", [IsP1Point,IsP1Point,IsP1Point,
            * (p2[1]*p4[2]-p4[1]*p2[2])
            / (p1[1]*p4[2]-p4[1]*p1[2]);
 end);
+InstallMethod(P1XRatio, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1Point,IsP1Point],
+        function(p1,p2,p3,p4)
+    return P1Point(XRatio(p1,p2,p3,p4));
+end);
 
-InstallMethod(P1Circumcentre, "(FR) generic P1 point", [IsP1Point,IsP1Point,IsP1Point],
+InstallMethod(P1Circumcentre, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1Point],
         function(a,b,c)
     local p, q, v, i, d, centre;
     v := [C2_P1POINT@(a),C2_P1POINT@(b),C2_P1POINT@(c)];
@@ -361,12 +409,12 @@ InstallMethod(AsP1Map, [IsP1Map], function(rat)
     fi;
 end);
 
-InstallMethod(P1MAPBYCOEFFICIENTS2@, "(FR) generic P1 map", [IsFloat,IsList,IsList],
+InstallMethod(P1MAPBYCOEFFICIENTS2@, "(IMG) generic P1 map", [IsFloat,IsList,IsList],
         function(dummy,numer,denom)
     return UnivariateRationalFunctionByCoefficients(@.field,numer*@.o,denom*@.o,0,1);
 end);
 
-InstallMethod(CoefficientsOfP1Map, "(FR) generic P1 map", [IsP1Map],
+InstallMethod(CoefficientsOfP1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
     local c;
     map := CoefficientsOfUnivariateRationalFunction(map);
@@ -378,7 +426,7 @@ InstallMethod(CoefficientsOfP1Map, "(FR) generic P1 map", [IsP1Map],
     return c;
 end);
 
-InstallMethod(MoebiusMap, "(FR) for generic images of 0,1,infinity",
+InstallMethod(MoebiusMap, "(IMG) for generic images of 0,1,infinity",
         [IsP1Point,IsP1Point,IsP1Point],
         function(p,q,r)
     local pq, qr;
@@ -390,7 +438,7 @@ InstallMethod(MoebiusMap, "(FR) for generic images of 0,1,infinity",
     return P1MapByCoefficients([p[1]*qr,r[1]*pq],[p[2]*qr,r[2]*pq]);
 end);
 
-InstallMethod(MoebiusMap, "(FR) for generic images of 0,infinity",
+InstallMethod(MoebiusMap, "(IMG) for generic images of 0,infinity",
         [IsP1Point,IsP1Point],
         function(p,q)
     p := C2_P1POINT@(p);
@@ -398,7 +446,14 @@ InstallMethod(MoebiusMap, "(FR) for generic images of 0,infinity",
     return P1MapByCoefficients([p[1],q[1]],[p[2],q[2]]);
 end);
 
-InstallMethod(P1Path, "(FR) Möbius transformation 0->p, 1->q, infty->P1Antipode(p)",
+InstallMethod(MoebiusMap, "(IMG) for generic image of infinity",
+        [IsP1Point],
+        function(p)
+    p := C2_P1POINT@(p);
+    return P1MapByCoefficients([ComplexConjugate(p[1]),ComplexConjugate(p[2])],[p[2],-p[1]]);
+end);
+
+InstallMethod(P1Path, "(IMG) Möbius transformation 0->p, 1->q, infty->P1Antipode(p)",
         [IsP1Point,IsP1Point],
         function(p,q)
     local r, pq, qr;
@@ -410,24 +465,24 @@ InstallMethod(P1Path, "(FR) Möbius transformation 0->p, 1->q, infty->P1Antipode
     return P1MapByCoefficients([p[1]*qr,r[1]*pq],[p[2]*qr,r[2]*pq]);
 end);
 
-InstallMethod(MoebiusMap, "(FR) for 3 points in a list",
-        [IsHomogeneousList],
+InstallMethod(MoebiusMap, "(IMG) for 3 points in a list",
+        [IsP1PointList],
         l->CallFuncList(MoebiusMap,l));
 
-InstallMethod(MoebiusMap, "(FR) for 3 source points and 3 target points",
-        [IsHomogeneousList,IsHomogeneousList],
+InstallMethod(MoebiusMap, "(IMG) for 3 source points and 3 target points",
+        [IsP1PointList,IsP1PointList],
         function(src,dst)
     return CompositionP1Map(CallFuncList(MoebiusMap,dst),
                    InverseP1Map(CallFuncList(MoebiusMap,src)));
 end);
 
-InstallMethod(MoebiusMap, "(FR) for 3 source points and 3 target points",
+InstallMethod(MoebiusMap, "(IMG) for 3 source points and 3 target points",
         [IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point],
         function(a,b,c,d,e,f)
     return CompositionP1Map(MoebiusMap(d,e,f),InverseP1Map(MoebiusMap(a,b,c)));
 end);
 
-InstallMethod(P1MapSL2, "(FR) for a matrix", [IsMatrix],
+InstallMethod(P1MapSL2, "(IMG) for a matrix", [IsMatrix],
         function(mat)
     while not Length(mat)=2 and ForAll(mat,x->Length(x)=2) do
         Error("Argument ",mat," should be a 2x2 matrix");
@@ -435,7 +490,7 @@ InstallMethod(P1MapSL2, "(FR) for a matrix", [IsMatrix],
     return P1MapByCoefficients(mat[1]{[2,1]},mat[2]{[2,1]});
 end);
 
-InstallMethod(SL2P1Map, "(FR) generic P1 map", [IsP1Map],
+InstallMethod(SL2P1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
     while DegreeOfP1Map(map)<>1 do
         Error("Argument ",map," should be a degree-1 P1 map");
@@ -451,12 +506,21 @@ InstallGlobalFunction(P1Monomial, function(d)
     else
         m[1][1] := 1; m[2][-d+1] := 1;
     fi;
+    m := m*@.o;
     m := P1MapByCoefficients(m[1],m[2]);
     if d>=0 then IsPolynomial(m); else IsLaurentPolynomial(m); fi; # force true
     return m;
 end);
 
-InstallMethod(CleanedP1Map, "(FR) generic P1 map", [IsP1Map,IsFloat],
+InstallMethod(IsPolynomial, "(IMG) for a generic P1 map",
+        [IsP1Map],
+        function(map)
+    local d;
+    d := CoefficientsOfP1Map(map)[2];
+    return ForAll([2..Length(d)],i->IsZero(d[i]));
+end);
+
+InstallMethod(CleanedP1Map, "(IMG) generic P1 map", [IsP1Map,IsFloat],
         function(map,prec)
     local norm, maxnorm, i, j, deg;
     
@@ -479,7 +543,7 @@ InstallMethod(CleanedP1Map, "(FR) generic P1 map", [IsP1Map,IsFloat],
     return P1MapByCoefficients(map[1],map[2]);
 end);
 
-InstallOtherMethod(InverseP1Map, "(FR) generic P1 map", [IsP1Map],
+InstallOtherMethod(InverseP1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
     local c;
     while DegreeOfP1Map(map)<>1 do
@@ -489,7 +553,7 @@ InstallOtherMethod(InverseP1Map, "(FR) generic P1 map", [IsP1Map],
     return P1MapByCoefficients([-c[1][1],c[2][1]],[c[1][2],-c[2][2]]);
 end);
 
-InstallMethod(ConjugatedP1Map, "(FR) generic P1 map", [IsP1Map,IsP1Map],
+InstallMethod(ConjugatedP1Map, "(IMG) generic P1 map", [IsP1Map,IsP1Map],
         function(map,mobius)
     return CompositionP1Map(InverseP1Map(mobius),map,mobius);
 end);
@@ -596,18 +660,18 @@ BindGlobal("P1MAP_EVAL@", function(num,den,x)
     fi;
 end);
 
-InstallMethod(P1Image, "(FR) generic P1 map", [IsP1Map,IsP1Point],
+InstallMethod(P1Image, "(IMG) generic P1 map", [IsP1Map,IsP1Point],
         function(map,z)
     map := CoefficientsOfP1Map(map);
     return P1Point(P1MAP_EVAL@(map[1],map[2],z![1]));
 end);
 
-InstallOtherMethod(POW, "(FR) generic P1 map", [IsP1Point,IsP1Map],
+InstallOtherMethod(POW, "(IMG) generic P1 map", [IsP1Point,IsP1Map],
         function(z,map)
     return P1Image(map,z);
 end);
 
-InstallOtherMethod(CallFuncList, "(FR) generic P1 map", [IsP1Map,IsList],
+InstallOtherMethod(CallFuncList, "(IMG) generic P1 map", [IsP1Map,IsList],
         function(map,zs)
     zs := List(zs,z->P1Image(map,z));
     if Length(zs)=1 then
@@ -617,7 +681,7 @@ InstallOtherMethod(CallFuncList, "(FR) generic P1 map", [IsP1Map,IsList],
     fi;
 end);
 
-InstallMethod(P1PreImages, "(FR) generic P1 map", [IsP1Map,IsP1Point],
+InstallMethod(P1PreImages, "(IMG) generic P1 map", [IsP1Map,IsP1Point],
         function(map,z)
     local roots;
     map := CoefficientsOfP1Map(map);
@@ -629,7 +693,7 @@ InstallMethod(P1PreImages, "(FR) generic P1 map", [IsP1Map,IsP1Point],
     return roots;
 end);
 
-InstallMethod(CriticalPointsOfP1Map, "(FR) generic P1 map", [IsP1Map],
+InstallMethod(CriticalPointsOfP1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
     local roots;
     map := CoefficientsOfP1Map(map);
@@ -640,7 +704,7 @@ InstallMethod(CriticalPointsOfP1Map, "(FR) generic P1 map", [IsP1Map],
     return roots;
 end);
 
-InstallMethod(P1MapByZerosPoles, "(FR) generic P1 map", [IsList,IsList,IsP1Point,IsP1Point],
+InstallMethod(P1MapByZerosPoles, "(IMG) generic P1 map", [IsP1PointList,IsP1PointList,IsP1Point,IsP1Point],
         function(zeros,poles,src,dst)
     # construct a rational map with specified zeros and poles, and sending
     # src to dst
@@ -662,7 +726,7 @@ InstallMethod(P1MapByZerosPoles, "(FR) generic P1 map", [IsList,IsList,IsP1Point
     return P1MapByCoefficients(num,den);
 end);
 
-InstallMethod(P1INTERSECT@, "(FR) generic P1 map", [IsP1Map,IsP1Map,IsP1Map],
+InstallMethod(P1INTERSECT@, "(IMG) generic P1 map", [IsP1Map,IsP1Map,IsP1Map],
         function(gamma,ratmap,delta)
     # compute the (t,u) in [t0,1]x[0,1] such that gamma(t) = ratmap(delta(u)).
     # returns a list of [t,u,Im(gamma^-1*ratmap*delta)'(u),gamma(t),delta(u)]
@@ -704,87 +768,19 @@ InstallMethod(P1INTERSECT@, "(FR) generic P1 map", [IsP1Map,IsP1Map,IsP1Map],
     return intersect;
 end);
 
-InstallMethod(P1ROTATION2@, "(FR) generic P1 points", [IsP1Point,IsList,IsObject],
-        function(dummy,points,extra)
-    # find a Möbius transformation that sends the last of points to
-    # P1infinity, and either
-    # - matches points and extra as well as possible, if extra is a list;
-    # - does a dilatation around infinity of amplitude extra, if extra is real,
-    #   and is only a rotation, otherwise.
-    local i, p, moeb, proj, oldproj, theta, n;
-    
-    p := points[Length(points)]![1];
-    if IsXInfinity(p) then
-        moeb := [[@.z,@.o],[@.o,@.z]];
-    elif Norm(p) <= @.ro then
-        moeb := [[@.o,ComplexConjugate(p)],[-p,@.o]];
-    else
-        p := @.o/p;
-        moeb := [[ComplexConjugate(p),@.o],[@.o,-p]];
-    fi;
-
-    proj := [];
-    for p in points do
-        p := P1MAP_EVAL@(moeb[1],moeb[2], p![1]);
-        if IsXInfinity(p) then
-            Add(proj,@.z);
-        else
-            Add(proj,2*p / (@.o + Norm(p)));
-        fi;
-    od;
-    
-    theta := @.z;
-    
-    if IsList(extra) then
-        n := @.z;
-        for i in [1..Length(points)] do
-            p := extra[i]![1];
-            if IsXInfinity(p) then
-                oldproj := @.z;
-            else
-                oldproj := 2*p / (@.o + Norm(p));
-            fi;
-            theta := theta + ComplexConjugate(proj[i])*oldproj;
-            n := n + Norm(proj[i]);
-        od;
-        theta := theta / n;
-        if n=@.z or Norm(theta) < 7/10*@.ro then # no good rotation
-            theta := @.z;
-        fi;
-    fi;
-    
-    if theta=@.z then
-        # hard... as last resort, just force the point of largest
-        # projection to be on the positive real axis
-        p := @.ro/10;
-        theta := @.o;
-        for i in [1..Length(points)] do
-            n := Norm(proj[i]);
-            if n > p then p := n; theta := ComplexConjugate(proj[i]); fi;
-        od;
-    fi;
-    theta := theta / AbsoluteValue(theta); # make it of norm 1
-    
-    if IsFloat(extra) then
-        theta := theta * extra;
-    fi;
-    
-    return P1MapByCoefficients(theta*moeb[1],moeb[2]);
-end);
-
-InstallMethod(NumeratorP1Map, "(FR) generic P1 map", [IsP1Map],
+InstallMethod(NumeratorP1Map, "(IMG) generic P1 map", [IsP1Map],
         NumeratorOfRationalFunction);
 
-InstallMethod(DenominatorP1Map, "(FR) generic P1 map", [IsP1Map],
+InstallMethod(DenominatorP1Map, "(IMG) generic P1 map", [IsP1Map],
         DenominatorOfRationalFunction);
 
-InstallMethod(DegreeOfP1Map, "(FR) for a rational function", [IsP1Map],
+InstallMethod(DegreeOfP1Map, "(IMG) for a rational function", [IsP1Map],
         f->Maximum(DegreeOfUnivariateLaurentPolynomial(
                 NumeratorOfRationalFunction(f)),
                 DegreeOfUnivariateLaurentPolynomial(
                         DenominatorOfRationalFunction(f))));
 
-InstallOtherMethod(ComplexConjugate, "(FR) for a univariate rational function",
+InstallOtherMethod(ComplexConjugate, "(IMG) for a univariate rational function",
         [IsP1Map],
         function(f)
     local c;
@@ -792,7 +788,7 @@ InstallOtherMethod(ComplexConjugate, "(FR) for a univariate rational function",
     return UnivariateRationalFunctionByExtRepNC(FamilyObj(f),List(c[1],ComplexConjugate),List(c[2],ComplexConjugate),c[3],IndeterminateNumberOfUnivariateRationalFunction(f));
 end);
 
-InstallMethod(Primitive, "(FR) for a univariate polynomial",
+InstallMethod(Primitive, "(IMG) for a univariate polynomial",
         [IsP1Map and IsLaurentPolynomial],
         function(f)
     local d, i, c;
@@ -814,6 +810,152 @@ InstallMethod(Primitive, "(FR) for a univariate polynomial",
                    d[2]+1,IndeterminateNumberOfUnivariateRationalFunction(f));
 end);
 
+InstallGlobalFunction(P1MapRotatingP1Points,
+        function(arg)
+    local moeb, points;
+
+    while not (Length(arg) in [1,2] and ForAll(arg,IsP1PointList)) do
+        Error("P1MapRotatingP1Points: expected 1 or 2 lists of P1 points, not ",arg);
+    od;
+
+    points := arg[1];
+    moeb := InverseP1Map(MoebiusMap(points[Length(points)]));
+
+    if Length(arg)=2 then
+        points := List(points,x->P1Image(moeb,x));
+        moeb := CompositionP1Map(P1ROTATION@(points[1],points,arg[2]),moeb);
+    fi;
+    return moeb;
+end);
+
+InstallMethod(P1ROTATION@, "(IMG) generic P1 points",
+        [IsP1Point,IsP1PointList,IsP1PointList],
+        function(dummy,points,extra)
+    # find a Möbius transformation that sends the last of points to
+    # P1infinity, and either
+    # - matches points and extra as well as possible, if extra is a list;
+    # - does a dilatation around infinity of amplitude extra, if extra is real,
+    #   and is only a rotation, otherwise.
+    local i, p, moeb, proj, oldproj, theta, n;
+    
+    proj := [];
+    for p in points do
+        p := P1Coordinate(p);
+        if IsXInfinity(p) then
+            Add(proj,@.z);
+        else
+            Add(proj,2*p / (@.o + Norm(p)));
+        fi;
+    od;
+    
+    theta := @.z;    
+    n := @.z;
+    for i in [1..Length(points)] do
+        p := extra[i]![1];
+        if IsXInfinity(p) then
+            oldproj := @.z;
+        else
+            oldproj := 2*p / (@.o + Norm(p));
+        fi;
+        theta := theta + ComplexConjugate(proj[i])*oldproj;
+        n := n + Norm(proj[i]);
+    od;
+    theta := theta / n;
+    if n=@.z or Norm(theta) < 7/10*@.ro then # no good rotation
+        theta := @.z;
+    fi;
+    
+    if theta=@.z then
+        # hard... as last resort, just force the point of largest
+        # projection to be on the positive real axis
+        p := @.ro/10;
+        theta := @.o;
+        for i in [1..Length(points)] do
+            n := Norm(proj[i]);
+            if n > p then p := n; theta := ComplexConjugate(proj[i]); fi;
+        od;
+    fi;
+    theta := theta / AbsoluteValue(theta); # make it of norm 1
+    
+    return P1MapByCoefficients([@.rz,theta],[@.ro]);
+end);
+
+BindGlobal("FINDTHREEPOINTS@", function(points)
+    # returns indices [i,j,n] such that
+    # n = Length(points)
+    # points{[i,n]} are furthest apart
+    # points[j] has maximal distance to points{[i,n]}
+    local s, n, i, l, d, maxd;
+    
+    n := Length(points);
+    s := [n];
+    d := List([1..n],i->10*@.ro);
+    for l in [2..3] do
+        maxd := @.rz;
+        for i in [1..n] do
+            d[i] := Minimum(d[i],P1Distance(points[i],points[s[l-1]]));
+            if d[i]>maxd then
+                s[l] := i;
+                maxd := d[i];
+            fi;
+        od;
+    od;
+    return s;
+end);    
+
+BindGlobal("P1NORMALIZINGMAP@", function(points)
+    local map, barycenter, dilate, rpoints;
+
+    rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
+    barycenter := FIND_BARYCENTER(rpoints,100);
+    Info(InfoFR,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");
+    
+    barycenter := List(barycenter[1],x->NewFloat(@.isr,x));
+    
+    dilate := Sqrt(barycenter^2);
+    if dilate = @.rz then
+        map := P1z;
+    else
+        map := InverseP1Map(MoebiusMap(P1Sphere(-barycenter/dilate)))*(@.ro-dilate);
+    fi;
+    return map;
+end);
+    
+InstallOtherMethod(P1MapNormalizingP1Points, "(IMG) for two lists of points",
+        [IsP1PointList,IsP1PointList],
+        function(points,oldpoints)
+    # returns the (matrix of) Möbius transformation that sends v[n] to infinity,
+    # the barycenter to 0, and makes the new points as close as possible
+    # to oldpoints by a rotation fixing 0-infinity.
+    # oldpoints is allowed to be 'fail', in which case we just return a good
+    # möbius transformation.
+    local map;
+    
+    # assuming oldpoints[n]=infinity and there are l,m such that
+    # oldpoints[l] is not far from 0 and oldpoints[m] is not far from 1,
+    # returns the Möbius transformation that sends points[n] to infinity,
+    # points[l] to 0 and points[m] to 1.
+    map := FINDTHREEPOINTS@(oldpoints);
+    map := MoebiusMap(points{map},oldpoints{map});
+    if Sum([1..Length(points)],i->P1Distance(P1Image(map,points[i]),oldpoints[i]))<Length(points)*@.fast then
+        return map;
+    fi;
+
+    map := P1NORMALIZINGMAP@(points);
+
+    points := List(points,p->P1Image(map,p));
+    return CompositionP1Map(P1MapRotatingP1Points(points,oldpoints),map);
+end);
+
+InstallMethod(P1MapNormalizingP1Points, "(IMG) for a list of points",
+        [IsP1PointList],
+        function(points)
+    local map;
+
+    map := P1NORMALIZINGMAP@(points);
+    return CompositionP1Map(P1MapRotatingP1Points([P1Image(map,points[Length(points)])]),map);
+end);
+
 ###########################################################################
 
-#E p1_mpc.gi . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here
+#E p1.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

@@ -41,9 +41,11 @@ else
 fi;
 ReadPackage("img", "gap/sphere.gi");
 ReadPackage("img", "gap/triangulations.gi");
-ReadPackage("img", "gap/img.gi");
-ReadPackage("img", "gap/lift.gi");
+ReadPackage("img", "gap/spider.gi");
+ReadPackage("img", "gap/machine.gi");
+ReadPackage("img", "gap/markedsphere.gi");
 ReadPackage("img", "gap/hurwitz.gi");
+#ReadPackage("img", "gap/thurston.gi");
 ReadPackage("img", "gap/examples.gi");
 #############################################################################
 
@@ -58,5 +60,7 @@ else
     fi;
     Add(IO_PkgThingsToRead, ["img","gap/pickle.g"]);
 fi;
+
+MAKEP1EPS@();
 
 #E read.g . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

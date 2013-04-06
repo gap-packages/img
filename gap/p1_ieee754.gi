@@ -55,7 +55,7 @@ InstallMethod(SphereP1Y, [IsIEEE754P1Point], SPHEREP1Y);
 InstallMethod(P1Antipode, [IsIEEE754P1Point], P1ANTIPODE);
 InstallMethod(CleanedP1Point, [IsIEEE754P1Point,IsFloat], CLEANEDP1POINT);
 
-InstallMethod(P1Barycentre, [IsList], 1, # higher method than generic
+InstallMethod(P1Barycentre, [IsP1PointList], 1, # higher method than generic
         function(list)
     if ForAll(list,IsIEEE754P1Point) then
         return P1BARYCENTRE(list);
@@ -68,6 +68,8 @@ InstallMethod(P1Barycentre, [IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point]
 InstallMethod(P1Midpoint, [IsIEEE754P1Point,IsIEEE754P1Point], P1MIDPOINT);
 
 InstallMethod(P1Distance, [IsIEEE754P1Point,IsIEEE754P1Point], P1DISTANCE);
+
+InstallMethod(XRatio, [IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point], XRATIO);
 
 InstallMethod(P1XRatio, [IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point], P1XRATIO);
 
@@ -94,8 +96,6 @@ InstallMethod(AsP1Map, [IsPMComplex], x->MAT2P1MAP([[x],[One(x)]]));
 InstallMethod(AsP1Map, [IsIEEE754P1Map], x->x);
 
 InstallMethod(CoefficientsOfP1Map, [IsIEEE754P1Map], P1MAP2MAT);
-
-InstallMethod(IsPolynomial, [IsIEEE754P1Map], P1MAPISPOLYNOMIAL);
 
 InstallOtherMethod(CoefficientsOfUnivariateLaurentPolynomial, [IsIEEE754P1Map],
         function(map)
@@ -148,17 +148,25 @@ InstallMethod(IndeterminateNumberOfUnivariateRationalFunction, [IsIEEE754P1Map],
 InstallMethod(IndeterminateOfUnivariateRationalFunction, [IsIEEE754P1Map],
         map->P1z);
 
-InstallMethod(MoebiusMap, "(FR) for images of 0,1,infinity",
+InstallMethod(MoebiusMap, "(IMG) for images of 0,1,infinity",
         [IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Point],
         P1MAP3);
 
-InstallMethod(MoebiusMap, "(FR) for images of 0,infinity",
+InstallMethod(MoebiusMap, "(IMG) for images of 0,infinity",
         [IsIEEE754P1Point,IsIEEE754P1Point],
         P1MAP2);
 
-InstallMethod(P1Path, "(FR) Möbius transformation 0->p, 1->q, infty->P1Antipode(p)",
+InstallMethod(MoebiusMap, "(IMG) for image of infinity",
+        [IsIEEE754P1Point],
+        P1MAP1);
+
+InstallMethod(P1Path, "(IMG) Möbius transformation 0->p, 1->q, infty->P1Antipode(p)",
         [IsIEEE754P1Point,IsIEEE754P1Point],
         P1PATH);
+
+InstallMethod(IsPolynomial, "(IMG) for a P1 map",
+        [IsIEEE754P1Map],
+        P1ISPOLYNOMIAL);
 
 InstallMethod(DegreeOfP1Map, [IsIEEE754P1Map], DEGREEOFP1MAP);
         
@@ -180,18 +188,18 @@ InstallMethod(P1PreImages, [IsIEEE754P1Map,IsIEEE754P1Point], P1PREIMAGES);
 
 InstallMethod(CriticalPointsOfP1Map, [IsIEEE754P1Map], P1MAPCRITICALPOINTS);
 
-InstallMethod(P1MapByZerosPoles, [IsList,IsList,IsIEEE754P1Point,IsIEEE754P1Point],
+InstallMethod(P1MapByZerosPoles, [IsP1PointList,IsP1PointList,IsIEEE754P1Point,IsIEEE754P1Point],
         P1MAPBYZEROSPOLES);
 
-InstallMethod(ComplexConjugate, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPCONJUGATE);
+InstallMethod(ComplexConjugate, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPCONJUGATE);
 
-InstallMethod(Primitive, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPPRIMITIVE);
+InstallMethod(Primitive, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPPRIMITIVE);
 
-InstallMethod(Derivative, "(FR) for a P1 map", [IsIEEE754P1Map], 2, P1MAPDERIVATIVE);
+InstallMethod(Derivative, "(IMG) for a P1 map", [IsIEEE754P1Map], 2, P1MAPDERIVATIVE);
 
-InstallMethod(NumeratorP1Map, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPNUMERATOR);
+InstallMethod(NumeratorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPNUMERATOR);
 
-InstallMethod(DenominatorP1Map, "(FR) for a P1 map", [IsIEEE754P1Map], P1MAPDENOMINATOR);
+InstallMethod(DenominatorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPDENOMINATOR);
 
 InstallMethod(One, [IsIEEE754P1Map], f->P1MapByCoefficients([1.0_z],[1.0_z]));
 InstallMethod(Zero, [IsIEEE754P1Map], f->P1MapByCoefficients([0.0_z],[1.0_z]));
@@ -220,11 +228,7 @@ end);
 InstallMethod(P1INTERSECT@, [IsIEEE754P1Map,IsIEEE754P1Map,IsIEEE754P1Map],
         P1INTERSECT_IEEE754);
     
-BindGlobal("P1ROTATION@", function(pts,obj)
-    return P1ROTATION2@(pts[1],pts,obj);
-end);
-
-InstallMethod(P1ROTATION2@, [IsIEEE754P1Point,IsList,IsObject],
+InstallMethod(P1ROTATION@, [IsIEEE754P1Point,IsP1PointList,IsP1PointList],
         function(dummy,points,extra)
     return P1ROTATION_IEEE754(points,extra);
 end);

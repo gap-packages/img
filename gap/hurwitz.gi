@@ -1,8 +1,8 @@
 #############################################################################
 ##
-#W hurwitz.g                                                Laurent Bartholdi
+#W hurwitz.gi                                               Laurent Bartholdi
 ##
-#Y Copyright (C) 2011-2012, Laurent Bartholdi
+#Y Copyright (C) 2011-2013, Laurent Bartholdi
 ##
 #############################################################################
 ##
@@ -178,20 +178,20 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     od;
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
-PrintTo("data-layout",sin);    
+
     stdin := InputTextString(sin);
     sout := "";
     stdout := OutputTextString(sout,false);
     Process(DirectoryCurrent(),Filename(DirectoriesPackagePrograms("img"),"layout"),stdin,stdout,[]);
     CloseStream(stdin);
     CloseStream(stdout);
-PrintTo("result-layout",sout);    
+
     m := EvalString(sout);
     Remove(m); # there's a trailing "fail" in the file, to simplify printing
     m := 1.0*m; # make sure all entries are floats
     
     v := List(m,P1Sphere);
-    m := NORMALIZINGMAP@(v,fail);
+    m := P1MapNormalizingP1Points(v);
     v := List(v,v->P1Image(m,v));
     
     for i in [1..Length(v)] do
@@ -320,7 +320,7 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     return data;
 end);
 
-InstallMethod(HurwitzMap, "(FR) for a spider and a homomorphism",
+InstallMethod(HurwitzMap, "(IMG) for a spider and a homomorphism",
         [IsMarkedSphere,IsGroupHomomorphism],
         function(spider,monodromy)
     # compute the critical points, zeros and poles of a map whose
@@ -347,7 +347,7 @@ InstallMethod(HurwitzMap, "(FR) for a spider and a homomorphism",
     return d;
 end);
 
-InstallMethod(DessinByPermutations, "(FR) for three permutations",
+InstallMethod(DessinByPermutations, "(IMG) for three permutations",
         [IsPerm,IsPerm,IsPerm],
         function(s0,s1,sinf)
     local permrep, f, g, spider, d, i, above1, p, dist, distmin;
@@ -383,10 +383,221 @@ InstallMethod(DessinByPermutations, "(FR) for three permutations",
     return d;
 end);
 
-InstallMethod(DessinByPermutations, "(FR) for two permutations",
+InstallMethod(DessinByPermutations, "(IMG) for two permutations",
         [IsPerm,IsPerm],
         function(s0,s1)
     return DessinByPermutations(s0,s1,(s0*s1)^-1);
 end);
+
+BindGlobal("GENERALHURWITZMAP@", function(z,spider,perm,oldf,oldlifts)
+    # returns [f,full preimage of Vertices(spider)]
+    local d, r, v, pre, new, old, i, dist, mindist, permrep;
     
-#E hurwitz.g . . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here
+    #!! should create a new spider with only the critical values, not the
+    # whole post-critical set.
+    
+    permrep := GroupHomomorphismByImages(Source(spider!.marking),
+                       SymmetricGroup(Length(perm[1])),
+                       GeneratorsOfGroup(Source(spider!.marking)),
+                       List(perm,PermList));
+    d := HurwitzMap(spider,permrep);
+    
+    pre := [];
+    for v in spider!.cut!.v do
+        if IsFake(v) then continue; fi;
+        new := P1PreImages(d.map,P1PreImages(d.post,v.pos)[1]);
+        old := Filtered(Concatenation(d.cp,d.poles,d.zeros),r->r.to=v);
+        for r in old do
+            Add(pre,r.pos);
+            for i in [1..r.degree] do
+                dist := List(new,p->P1Distance(r.pos,p));
+                mindist := Minimum(dist);
+                Remove(new,Position(dist,mindist));
+            od;
+        od;
+        Append(pre,new);
+    od;
+    
+    return [CompositionP1Map(d.map,d.post),pre];
+end);
+
+BindGlobal("TRICRITICAL@", function(z,perm)
+    # find a rational function with critical values 0,1,infinity
+    # with monodromy actions perm[1],perm[2],perm[3]
+    # return fail if it's too hard to do;
+    # otherwise, return [map, critical points (on sphere),order],
+    # where order is a permutation of the critical values:
+    # ELM_LIST([0,1,infinity],order[i]) has permutation perm[i]
+    
+    # the cases covered are:
+    # [[a],[b],[c]], degree=(a+b+c-1)/2
+    # [[m,n],[m,n],[3]], degree=m+n
+    # [[2,3],[2,3],[2,2]], degree=5
+    # [[n,n],[2,...,2],[2,...,2]], degree=2n
+    # [[degree],[m,degree-m+1]]
+    # [[degree],[m,degree-m],[2]]
+    local deg, cl, i, j, k, m, points, f, order, p;
+    
+    deg := Length(perm[1]);
+    perm := List(perm,PermList);
+    cl := List(perm,x->SortedList(CycleLengths(x,[1..deg])));
+    
+    points := [P1zero, P1one, P1infinity];
+    
+    if ForAll(cl,x->Length(DifferenceLists(x,[1]))=1) then # [[a],[b],[c]]
+        cl := List(cl,x->DifferenceLists(x,[1])[1]);
+
+        m := List([0..deg-cl[2]],row->List([0..deg],col->(-1)^(col-row)*Binomial(cl[2],col-row)));
+        p := NullspaceMat(m{1+[0..deg-cl[2]]}{1+[deg-cl[3]+1..cl[1]-1]})[1];
+        p := [,p*Lcm(List(p,DenominatorRat))];
+        j := p[2]*m;
+        j := j / Gcd(j);
+        p[3] := -j{1+[0..deg-cl[3]]};
+        p[1] := j{1+[cl[1]..deg]};
+        for j in [1..3] do
+            p[j] := P1MapByCoefficients(@.o*p[j]{[1..deg+1-cl[j]]});
+        od;
+        f := z^cl[1]*p[1]/p[3];
+        for j in [1..3] do
+            Append(points,List(RootsFloat(p[j]),P1Point));
+        od;
+        return [f,points,[1,2,3]];
+    fi;
+    
+    if Size(Set(cl))<=2 and ForAll(cl,x->DifferenceLists(x,[1])=[3] or Length(x)=2) then # [m+n,m+n,3]
+        i := PositionProperty(cl,x->DifferenceLists(x,[1])=[3]);
+        m := cl[1+(i mod 3)];
+        f := z^m[2]*((m[1]-m[2])*z+(m[1]+m[2]))^m[1]/((m[1]+m[2])*z+(m[1]-m[2]))^m[1];
+        Add(points,P1Point((m[1]+m[2])/(m[2]-m[1])));
+        k := P1PreImages(f,P1one);
+        SortParallel(List(k,x->P1Distance(x,P1one)),k);
+        Append(points,k{[4..deg]});
+        if i=2 then order := [1,2,3]; else order := ListPerm((i,2),3); fi;
+        return [f,points,order];
+    fi;
+    
+    if deg=5 and IsEqualSet(cl,[[2,3],[1,2,2]]) then # (1,2)(3,4,5),(1,3)(2,5,4),(1,5)(2,3)
+        f := z^3*((4*z+5)/(5*z+4))^2;
+        Add(points,P1Point(-4/5)); # to infinity
+        Add(points,P1Point(-5/4)); # to 0
+        Add(points,P1Point((-7+Sqrt(-15*@.o))/8)); # to 1
+        Add(points,P1Point((-7-Sqrt(-15*@.o))/8)); # to 1
+        order := Permuted([1,3,2],(1,2,3)^Position(cl,[1,2,2]));
+        return [f,points,order];
+    fi;
+    
+    i := First([1..3],i->cl[i]=[deg/2,deg/2]);
+    if i<>fail and ForAll([1..3],j->i=j or Set(cl[j])=[2]) then
+        # deg = 2n; shapes [n,n],[2,...,2],[2,...,2]
+        f := 4*z^(deg/2)/(1+z^(deg/2))^2;
+        order := Permuted([3,2,1],(1,2,3)^i);
+        Remove(points,2); # remove 1
+        Append(points,List([0..deg-1],i->P1Point(Exp(@.2ipi*i/deg))));
+        return [f,points,order];
+    fi;
+    
+    i := First([1..3],i->cl[i]=[deg]); # max. cycle
+    if i=fail then return fail; fi; # now only accept polynomials
+    if Product(perm)=() then
+        j := i mod 3+1; k := j mod 3+1;
+    else
+        k := i mod 3+1; j := k mod 3+1;
+    fi;
+    
+    m := First([j,k],i->Length(cl[i])=2);
+    if m<>fail then # [d],[m,d-m], [2,1,...,1]
+        order := [m,j+k-m,i];
+        m := cl[m][1];
+        f := (z*deg/m)^m*((1-z)*deg/(deg-m))^(deg-m);
+        points := points{order};
+        Add(points,P1Point(m/deg));
+        i := P1PreImages(f,P1one);
+        SortParallel(List(i,z->P1Distance(z,P1Point(m/deg))),i);
+        Append(points,i{[3..deg]});
+        return [f,points,order];
+    fi;
+    
+    m := Maximum(cl[j]);
+    if Set(cl[j])=[1,m] and Set(cl[k])=[1,deg-m+1] then
+        # so we know the action around i is (1,...,deg), at infinity
+        # the action around j is (m,m-1,...,1), at 0
+        # the action around k in (deg,deg-1...,m), at 1
+        f := m*Binomial(deg,m)*Primitive(z^(m-1)*(1-z)^(deg-m));
+        order := [j,k,i];
+        points := points{order};
+        for i in [P1zero,P1one] do
+            j := P1PreImages(f,i);
+            k := List(j,x->P1Distance(x,i));
+            SortParallel(k,j);
+            if i=P1zero then
+                j := j{[m+1..deg]};
+            else
+                j := j{[deg+2-m..deg]};
+            fi;
+            Append(points,j);
+        od;
+        return [f,points,order];
+    fi;
+    
+    return fail;
+end);
+
+BindGlobal("QUADRICRITICAL@", function(z,perm,values)
+    local c, w, f, m, id, aut;
+    
+    # normalize values to be 0,1,infty,w
+    aut := MoebiusMap(values{[1..3]});
+    w := P1Coordinate(P1Image(InverseP1Map(aut),values[4]));
+    
+    # which two values have same deck transformation?
+    id := First(Combinations(4,2),p->perm[p[1]]=perm[p[2]]);
+    
+    c := RootsFloat((z-2)^3*z-w*(z+1)^3*(z-1));
+    
+    # find appropriate c
+    f := List(c,c->z^2*(c*(z-1)+2-c)/(c*(z+1)-c));
+    m := List(f,f->IMGMachine(z,f));
+    
+    f := CompositionP1Map(aut,f[First([1..Length(c)],i->Output(m[i],id[1])=Output(m[i],id[2]))]);
+    
+    return [f, [P1zero, P1one, P1infinity, P1Point(c*(c-2)/(c^2-1))]];
+end);
+
+BindGlobal("RATIONALMAP@", function(spider,perm,oldf,oldlifts)
+    # find a rational map that has critical values at <feet(spider)>, with
+    # monodromy action given by <perm>, a list of permutations (as lists).
+    # returns [map,points] where <points> is the full preimage of <values>
+    local cv, values, p, f, points, deg, i;
+    
+    values := Vertices(spider);
+    cv := Filtered([1..Length(values)],i->not ISONE@FR(perm[i]));
+    deg := Length(perm[1]);
+    if Length(cv)=2 then # bicritical
+        f := CompositionP1Map(MoebiusMap(values{cv}),P1Monomial(deg));
+        points := [P1zero,P1infinity];
+    elif Length(cv)=3 then # tricritical
+        p := TRICRITICAL@(perm{cv});
+        if p<>fail then
+            f := CompositionP1Map(MoebiusMap(ELMS_LIST(values{cv},p[3])),p[1]);
+            points := p[2];
+        fi;
+    elif deg=3 then # quadricritical, but degree 3
+        p := QUADRICRITICAL@(perm{cv},values{cv});
+        f := p[1];
+        points := p[2];
+    fi;
+
+    if not IsBound(points) then # run hurwitz specialized code
+        return GENERALHURWITZMAP@(spider,perm,oldf,oldlifts);
+    fi;
+
+    for i in [1..Length(values)] do if not i in cv then
+        Append(points,P1PreImages(f,values[i]));
+    fi; od;
+
+    return [f,points];
+end);
+
+#!!! call it "LiftSpiderByPermutations" or something
+    
+#E hurwitz.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

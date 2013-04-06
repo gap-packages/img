@@ -340,7 +340,7 @@ static Obj P1Distance(Obj self, Obj objp, Obj objq)
   return NEW_FLOAT((Double)2.0*atan(v));
 }
 
-static Obj P1XRatio(Obj self, Obj p1, Obj p2, Obj p3, Obj p4)
+static Obj XRatio(Obj self, Obj p1, Obj p2, Obj p3, Obj p4)
 {
   ldcomplex x[4][2];
   p1point_c2 (x[0], GET_P1POINT(p1));
@@ -349,6 +349,20 @@ static Obj P1XRatio(Obj self, Obj p1, Obj p2, Obj p3, Obj p4)
   p1point_c2 (x[3], GET_P1POINT(p4));
 
   return NEW_COMPLEX ((x[0][0]*x[2][1]-x[2][0]*x[0][1])
+		      / (x[1][0]*x[2][1]-x[2][0]*x[1][1])
+		      * (x[1][0]*x[3][1]-x[3][0]*x[1][1])
+		      / (x[0][0]*x[3][1]-x[3][0]*x[0][1]));
+}
+
+static Obj P1XRatio(Obj self, Obj p1, Obj p2, Obj p3, Obj p4)
+{
+  ldcomplex x[4][2];
+  p1point_c2 (x[0], GET_P1POINT(p1));
+  p1point_c2 (x[1], GET_P1POINT(p2));
+  p1point_c2 (x[2], GET_P1POINT(p3));
+  p1point_c2 (x[3], GET_P1POINT(p4));
+
+  return NEW_P1POINT ((x[0][0]*x[2][1]-x[2][0]*x[0][1])
 		      / (x[1][0]*x[2][1]-x[2][0]*x[1][1])
 		      * (x[1][0]*x[3][1]-x[3][0]*x[1][1])
 		      / (x[0][0]*x[3][1]-x[3][0]*x[0][1]));
@@ -497,6 +511,24 @@ static Obj P1MAP2(Obj self, Obj objp, Obj objq)
   p1point_c2 (q, GET_P1POINT(objq));
   ldcomplex numer[2] = { p[0], q[0] }, denom[2] = { p[1], q[1] };
   return NEW_P1MAP(1, numer, denom);
+}
+
+static Obj P1MAP1(Obj self, Obj objp)
+{ /* Möbius transformation infty->p */
+  ldcomplex p[2];
+  p1point_c2 (p, GET_P1POINT(objp));
+  ldcomplex numer[2] = { -~p[1], p[0] }, denom[2] = { p[0], p[1] };
+  return NEW_P1MAP(1, numer, denom);
+}
+
+static Obj P1ISPOLYNOMIAL(Obj self, Obj map)
+{
+  int deg = p1map_degree(map);
+  ldcomplex *denom = p1map_denom(map);
+
+  for (int i = 1; i <= deg; i++)
+    if (denom[i] != 0.) return False;
+  return True;
 }
 
 static void copy_poly (int deg, ldcomplex *coeff, int dega, ldcomplex *coeffa)
@@ -751,17 +783,6 @@ static Obj P1CRITICAL(Obj self, Obj map)
   return obj;
 }
 
-static Obj P1_ISPOLYNOMIAL(Obj self, Obj map)
-{
-  int deg = p1map_degree(map), i;
-  ldcomplex *d = p1map_denom(map);
-
-  for (i = 1; i <= deg; i++)
-    if (d[i] != 0.)
-      return False;
-  return True;
-}
-
 static Obj P1CONJUGATE(Obj self, Obj map)
 {
   int deg = p1map_degree(map), i;
@@ -1013,29 +1034,15 @@ static Obj P1INTERSECT(Obj self, Obj gamma, Obj ratmap, Obj delta)
   return res;
 }
 
-static Obj P1ROTATION(Obj self, Obj points, Obj extra)
-{ /* find a Möbius transformation that sends the last of points to
-   * P1infinity, and either
-   * - matches points and extra as well as possible, if extra is a list;
-   * - does a dilatation around infinity of amplitude extra, if it is a real.
+static Obj P1ROTATION(Obj self, Obj points, Obj oldpoints)
+{ /* find a Möbius transformation that matches points and oldpoints as well as possible.
+   * points and oldpoints are normalized in that the last element is P1infinity.
    */
   int len = LEN_PLIST(points), i;
-  p1point p = GET_P1POINT(ELM_PLIST(points,len));
-  p1point mat[2][2];
-
-  if (cisfinite(p)) {
-    if (cnorm(p) <= 1.0)
-      mat[0][0] = mat[1][1] = 1.0, mat[0][1] = ~p, mat[1][0] = -p;
-    else {
-      p = 1.0/p;
-      mat[0][1] = mat[1][0] = 1.0, mat[0][0] = ~p, mat[1][1] = -p;
-    }
-  } else
-    mat[0][1] = mat[1][0] = 1.0, mat[0][0] = mat[1][1] = 0.0;
 
   ldcomplex proj[len];
   for (i = 0; i < len; i++) {
-    ldcomplex p = p1map_eval (1, mat[0], mat[1], GET_P1POINT(ELM_PLIST(points,i+1)));
+    ldcomplex p = GET_P1POINT(ELM_PLIST(points,i+1));
     if (cisfinite(p))
       proj[i] = 2.0*p / (1.0 + cnorm(p));
     else
@@ -1044,23 +1051,21 @@ static Obj P1ROTATION(Obj self, Obj points, Obj extra)
 
   ldcomplex theta = 0.0;
 
-  if (IS_PLIST(extra)) {
-    ldcomplex oldproj[len];
-    for (i = 0; i < len; i++) {
-      ldcomplex p = GET_P1POINT(ELM_PLIST(extra,i+1));
-      if (cisfinite(p))
-	oldproj[i] = 2.0*p / (1.0 + cnorm(p));
-      else
-	oldproj[i] = 0.0;
-    }
-    ldouble n = 0.0;
-    for (i = 0; i < len; i++)
-      theta += ~proj[i]*oldproj[i], n += cnorm(proj[i]);
-    theta /= n;
-
-    if (n == 0.0 || cnorm(theta) < 0.7) /* no good rotation */
-      theta = 0.0;
+  ldcomplex oldproj[len];
+  for (i = 0; i < len; i++) {
+    ldcomplex p = GET_P1POINT(ELM_PLIST(oldpoints,i+1));
+    if (cisfinite(p))
+      oldproj[i] = 2.0*p / (1.0 + cnorm(p));
+    else
+      oldproj[i] = 0.0;
   }
+  ldouble n = 0.0;
+  for (i = 0; i < len; i++)
+    theta += ~proj[i]*oldproj[i], n += cnorm(proj[i]);
+  theta /= n;
+  
+  if (n == 0.0 || cnorm(theta) < 0.7) /* no good rotation */
+    theta = 0.0;
 
   if (theta == 0.0) { /* now just force the point of largest projection to be
 			 on the positive real axis */
@@ -1074,12 +1079,8 @@ static Obj P1ROTATION(Obj self, Obj points, Obj extra)
   }    
   theta /= cabsl(theta); /* make it of norm 1 */
 
-  if (TNUM_OBJ(extra) == T_MACFLOAT)
-    theta *= VAL_FLOAT(extra);
-
-  mat[0][0] *= theta;
-  mat[0][1] *= theta;
-  return NEW_P1MAP(1, mat[0], mat[1]);
+  ldcomplex numer[2] = { 0., theta }, denom[2] = { 1., 0. };
+  return NEW_P1MAP(1, numer, denom);
 }
 
 /* data to be passed to fr_dll */
@@ -1098,15 +1099,18 @@ static StructGVarFunc GVarFuncs[] = {
   { "P1BARYCENTRE", 1, "list", P1BARYCENTRE, "p1.c:P1BARYCENTRE" },
   { "P1MIDPOINT", 2, "p1point, p1point", P1Midpoint, "p1.c:P1Midpoint" },
   { "P1DISTANCE", 2, "p1point, p1point", P1Distance, "p1.c:P1Distance" },
+  { "XRATIO", 4, "p1point, p1point, p1point, p1point", XRatio, "p1.c:XRatio" },
   { "P1XRATIO", 4, "p1point, p1point, p1point, p1point", P1XRatio, "p1.c:P1XRatio" },
   { "P1CIRCUMCENTRE", 3, "p1point, p1point, p1point", P1Circumcentre, "p1.c:P1Circumcentre" },
 
   { "MAT2P1MAP", 1, "matrix", MAT2P1MAP, "p1.c:MAT2P1MAP" },
   { "P1MAP2MAT", 1, "p1map", P1MAP2MAT, "p1.c:P1MAP2MAT" },
   { "DEGREEOFP1MAP", 1, "p1map", P1MAPDEGREE, "p1.c:P1MAPDEGREE" },
-  { "P1MAP2", 2, "p1point, p1point", P1MAP2, "p1.c:P1MAP2" },
   { "P1PATH", 2, "p1point, p1point", P1PATH, "p1.c:P1PATH" },
+  { "P1MAP1", 1, "p1point", P1MAP1, "p1.c:P1MAP1" },
+  { "P1MAP2", 2, "p1point, p1point", P1MAP2, "p1.c:P1MAP2" },
   { "P1MAP3", 3, "p1point, p1point, p1point", P1MAP3, "p1.c:P1MAP3" },
+  { "P1ISPOLYNOMIAL", 1, "p1map", P1ISPOLYNOMIAL, "p1.c:P1ISPOLYNOMIAL" },
   { "CLEANEDP1MAP", 2, "p1map, float", CLEANUPP1MAP, "p1.c:CLEANUPP1MAP" },
   { "COMPOSEP1MAP", 2, "p1map, p1map", COMPOSEP1MAP, "p1.c:COMPOSEP1MAP" },
   { "INVERSEP1MAP", 1, "p1map", INVERTP1MAP, "p1.c:INVERTP1MAP" },
@@ -1114,7 +1118,6 @@ static StructGVarFunc GVarFuncs[] = {
   { "P1PREIMAGES", 2, "p1map, p1point", P1PREIMAGES, "p1.c:P1PREIMAGES" },
   { "P1MAPCRITICALPOINTS", 1, "p1map", P1CRITICAL, "p1.c:P1CRITICAL" },
   { "P1MAPBYZEROSPOLES", 4, "zeros, poles, src, dst", P1MAPBYZEROSPOLES, "p1.c:P1MAPBYZEROSPOLES" },
-  { "P1MAPISPOLYNOMIAL", 1, "p1map", P1_ISPOLYNOMIAL, "p1.c:P1_ISPOLYNOMIAL" },
   { "P1MAPCONJUGATE", 1, "p1map", P1CONJUGATE, "p1.c:P1CONJUGATE" },
   { "P1MAPPRIMITIVE", 1, "p1map", P1PRIMITIVE, "p1.c:P1PRIMITIVE" },
   { "P1MAPDERIVATIVE", 1, "p1map", P1DERIVATIVE, "p1.c:P1DERIVATIVE" },

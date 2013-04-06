@@ -116,6 +116,7 @@ DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point,IsBool])
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsFace,IsP1Point]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsFace,IsP1Point,IsBool]);
 DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsVertex]);
+DeclareOperation("WiggledTriangulation", [IsSphereTriangulation,IsObject]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
 DeclareOperation("Draw", [IsSphereTriangulation]);
@@ -139,7 +140,7 @@ DeclareAttribute("FromPos", IsEdge);
 DeclareAttribute("ToPos", IsEdge);
 DeclareAttribute("Length", IsEdge);
 DeclareAttribute("Map", IsEdge);
-DeclareAttribute("GroupElement", IsEdge);
+DeclareAttribute("GroupElement", IsEdge, "mutable");
 
 DeclareAttribute("Neighbour", IsFace);
 DeclareOperation("Neighbours", [IsFace]);
@@ -151,5 +152,7 @@ DeclareOperation("Valency", [IsFace]);
 
 DeclareOperation("ClosestFaces", [IsTriangulationObject]);
 DeclareOperation("ClosestVertices", [IsTriangulationObject]);
+
+DeclareGlobalFunction("EquidistributedP1Points");
 
 #E triangulations.gd . . . . . . . . . . . . . . . . . . . . . . . .ends here

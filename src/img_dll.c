@@ -404,7 +404,7 @@ static void barycenter (const double x[], double y[], int m, int n, const bparam
 
 #include <levmar.h>
 
-static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_init, Obj gap_iter, Obj gap_tol)
+static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_iter)
 {
 #ifdef MALLOC_HACK
   old_malloc_hook = __malloc_hook;
@@ -413,33 +413,36 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_init, Obj gap_iter
   __free_hook = my_free_hook;
 #endif
 
-  UInt i, j, n = LEN_PLIST(gap_points);
+  UInt n = LEN_PLIST(gap_points);
+
+  Double x[3];
+  for (int j = 0; j < 3; j++)
+    x[j] = 0.0;
 
   Double __points[n][3];
   bparams param = { n, __points };
   
-  for (i = 0; i < n; i++)
-    for (j = 0; j < 3; j++)
+  for (int i = 0; i < n; i++)
+    for (int j = 0; j < 3; j++)
       param.points[i][j] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),j+1));
 
   int iter, max_iter = INT_INTOBJ(gap_iter);
-  double precision = VAL_FLOAT(gap_tol);
   double info[LM_INFO_SZ];
-  double opts[LM_OPTS_SZ] = { LM_INIT_MU, LM_STOP_THRESH, LM_STOP_THRESH, precision, LM_DIFF_DELTA };
+  double opts[LM_OPTS_SZ] = { LM_INIT_MU, 1.e-33, 1.e-33, 0., LM_DIFF_DELTA };
 
-  Double x[3];
-
-  for (i = 0; i < 3; i++) x[i] = VAL_FLOAT(ELM_PLIST(gap_init,i+1));
+  for (int i = 0; i < n; i++)
+    for (int j = 0; j < 3; j++)
+      x[j] += param.points[i][j];
 
   iter = dlevmar_dif ((void (*)(double*, double*, int, int, void*)) barycenter,
 		      (double*) x, NULL, 3, 3, max_iter, opts, info, NULL, NULL, (void *) &param);
 
   Obj result = ALLOC_PLIST(3);
   Obj list = ALLOC_PLIST(3); set_elm_plist(result, 1, list);
-  for (i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
     set_elm_plist(list, i+1, NEW_FLOAT(x[i]));
   list = ALLOC_PLIST(LM_INFO_SZ); set_elm_plist(result, 2, list);
-  for (i = 0; i < LM_INFO_SZ; i++)
+  for (int i = 0; i < LM_INFO_SZ; i++)
     set_elm_plist(list, i+1, NEW_FLOAT(info[i]));
   set_elm_plist(result, 3, INTOBJ_INT(iter));
 
@@ -461,7 +464,7 @@ static StructGVarFunc GVarFuncs [] = {
   { "COMPLEX_ROOTS_FR", 1, "coeffs", COMPLEX_ROOTS, "img_dll.c:COMPLEX_ROOTS" },
   { "REAL_ROOTS_FR", 1, "coeffs", REAL_ROOTS, "img_dll.c:REAL_ROOTS" },
   { "NFFUNCTION_FR", 4, "rel, exp, dir, word", NFFUNCTION, "img_dll.c:NFFUNCTION" },
-  { "FIND_BARYCENTER", 4, "points, init, iter, tol", FIND_BARYCENTER, "img_dll.c:FIND_BARYCENTER" },
+  { "FIND_BARYCENTER", 2, "points, iter", FIND_BARYCENTER, "img_dll.c:FIND_BARYCENTER" },
   { 0 }
 };
 

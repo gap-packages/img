@@ -6,6 +6,7 @@ www
 bin/*
 *.dSYM
 *~
+*.dylib
 sandbox
 imgbib.xml.bib
 autom4te.cache
