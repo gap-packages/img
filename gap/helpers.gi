@@ -75,6 +75,7 @@ BindGlobal("MAKEP1EPS@", function()
     fi;
     @.fast := 10^-1*@.ro; # if spider moved that little, just wiggle it
     @.ratprec := @.reps^(3/4); # quality to achieve in rational fct.
+    @.hurwitzmesh := 1/2*@.ro; # mesh size in the computation of hurwitz maps
 end);
 
 #############################################################################

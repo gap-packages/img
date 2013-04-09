@@ -517,7 +517,7 @@ static Obj P1MAP1(Obj self, Obj objp)
 { /* Möbius transformation infty->p */
   ldcomplex p[2];
   p1point_c2 (p, GET_P1POINT(objp));
-  ldcomplex numer[2] = { -~p[1], p[0] }, denom[2] = { p[0], p[1] };
+  ldcomplex numer[2] = { -~p[1], p[0] }, denom[2] = { ~p[0], p[1] };
   return NEW_P1MAP(1, numer, denom);
 }
 

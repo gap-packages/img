@@ -154,7 +154,7 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     od;
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
-PrintTo("layout-in",sin);
+PrintTo("layout-in",sin);#!!!
     stdin := InputTextString(sin);
     sout := "";
     stdout := OutputTextString(sout,false);
@@ -162,10 +162,9 @@ PrintTo("layout-in",sin);
     CloseStream(stdin);
     CloseStream(stdout);
 
-PrintTo("layout-out",sout);
+PrintTo("layout-out",sout);#!!!
     m := EvalString(sout);
     m := 1.0*m; # make sure all entries are floats
-Error("xx");
     v := List(m,P1Sphere);
     map := P1MapNormalizingP1Points(v);
     v := List(v,v->P1Image(map,v));
@@ -204,45 +203,45 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     sin := "";
     stdin := OutputTextString(sin,false);
 
-    cp := Filtered(lift!.v,x->IsBound(x.degree) and IsBound(x.cover));
-    max := Maximum(List(cp,x->x.degree));
-    linf := First(cp,x->x.degree=max);
-    max := Maximum(List(Filtered(cp,x->x.cover<>linf.cover),x->x.degree));
-    l0 := First(cp,x->x.cover<>linf.cover and x.degree=max);
-    max := Maximum(List(Filtered(cp,x->x.cover<>linf.cover and x.cover<>l0.cover),x->x.degree));
-    l1 := First(cp,x->x.cover<>linf.cover and x.cover<>l0.cover and x.degree=max);
+    cp := Filtered(lift!.v,x->IsBound(x!.degree) and IsBound(x!.below));
+    max := Maximum(List(cp,x->x!.degree));
+    linf := First(cp,x->x!.degree=max);
+    max := Maximum(List(Filtered(cp,x->x!.below<>linf!.below),x->x!.degree));
+    l0 := First(cp,x->x!.below<>linf!.below and x!.degree=max);
+    max := Maximum(List(Filtered(cp,x->x!.below<>linf!.below and x!.below<>l0!.below),x->x!.degree));
+    l1 := First(cp,x->x!.below<>linf!.below and x!.below<>l0!.below and x!.degree=max);
     
-    post := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->x.cover.pos)));
-    pre := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->x.pos)));
+    post := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->Pos(x!.below))));
+    pre := InverseP1Map(MoebiusMap(List([l0,l1,linf],Pos)));
     
-    PrintTo(stdin,"DEGREE ",(Sum(cp,x->x.degree-1)+2)/2,"\n");
-    numzero := Number(cp,x->x.cover=l0.cover or x.cover=linf.cover)-2;
+    PrintTo(stdin,"DEGREE ",(Sum(cp,x->x!.degree-1)+2)/2,"\n");
+    numzero := Number(cp,x->x!.below=l0!.below or x!.below=linf!.below)-2;
     PrintTo(stdin,"ZEROS/POLES ",numzero,"\n");
     for x in cp do
-        if (x.cover=l0.cover or x.cover=linf.cover) and x<>l0 and x<>linf then
-            if x.cover=l0.cover then
-                PrintTo(stdin,x.degree); # zero
+        if (x!.below=l0!.below or x!.below=linf!.below) and x<>l0 and x<>linf then
+            if x!.below=l0!.below then
+                PrintTo(stdin,x!.degree); # zero
             else
-                PrintTo(stdin,-x.degree); # pole
+                PrintTo(stdin,-x!.degree); # pole
             fi;
-            PrintTo(stdin," "); printp1(stdin,x.pos^pre); PrintTo(stdin,"\n");
+            PrintTo(stdin," "); printp1(stdin,Pos(x)^pre); PrintTo(stdin,"\n");
         fi;
     od;
-    PrintTo(stdin,l0.degree,"\n");
-    numcv := Number(cp,x->x.cover<>l0.cover and x.cover<>linf.cover and x.degree>1)-1;
+    PrintTo(stdin,l0!.degree,"\n");
+    numcv := Number(cp,x->x!.below<>l0!.below and x!.below<>linf!.below and x!.degree>1)-1;
     cv := [];
     PrintTo(stdin,"CRITICAL ",numcv,"\n");
     for x in cp do
-        if x.cover<>l0.cover and x.cover<>linf.cover and x.degree>1 and x<>l1 then
-            PrintTo(stdin,x.degree);
-            PrintTo(stdin," "); printp1(stdin,x.pos^pre);
-            PrintTo(stdin," "); printp1(stdin,x.cover.pos^post);
+        if x!.below<>l0!.below and x!.below<>linf!.below and x!.degree>1 and x<>l1 then
+            PrintTo(stdin,x!.degree);
+            PrintTo(stdin," "); printp1(stdin,Pos(x)^pre);
+            PrintTo(stdin," "); printp1(stdin,Pos(x!.below)^post);
             PrintTo(stdin,"\n");
-            Add(cv,x.cover);
+            Add(cv,x!.below);
         fi;
     od;
-    Add(cv,l1.cover);
-    PrintTo(stdin,l1.degree,"\n");
+    Add(cv,l1!.below);
+    PrintTo(stdin,l1!.degree,"\n");
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
     
@@ -255,7 +254,7 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     CloseStream(stdout);
     
     sout := SplitString(sout,WHITESPACE);
-    Assert(0,sout[1]="DEGREE" and Int(sout[2])=(Sum(cp,x->x.degree-1)+2)/2);
+    Assert(0,sout[1]="DEGREE" and Int(sout[2])=(Sum(cp,x->x!.degree-1)+2)/2);
     data := rec(degree := Int(sout[2]),
                 zeros := [],
                 poles := [],
@@ -270,9 +269,9 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
             y := scanp1(sout[6+2*i]);
         fi;
         if x>0 then
-            Add(data.zeros,rec(degree := x, pos := y, to := l0.cover));
+            Add(data.zeros,rec(degree := x, pos := y, to := l0!.below));
         else
-            Add(data.poles,rec(degree := -x, pos := y, to := linf.cover));
+            Add(data.poles,rec(degree := -x, pos := y, to := linf!.below));
         fi;
     od;
     Assert(0,sout[2*numzero+6]="CRITICAL" and Int(sout[2*numzero+7])=numcv);
@@ -288,7 +287,7 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     if numcv >= 0 then
         Assert(0,sout[2*numzero+3*numcv+9]="END");
     fi;
-    Add(data.poles,rec(degree := 2*data.degree-1-Sum(Concatenation(data.cp,data.zeros,data.poles),x->x.degree-1), pos := P1infinity, to := linf.cover));
+    Add(data.poles,rec(degree := 2*data.degree-1-Sum(Concatenation(data.cp,data.zeros,data.poles),x->x.degree-1), pos := P1infinity, to := linf!.below));
     
     return data;
 end);
@@ -307,7 +306,7 @@ InstallMethod(HurwitzMap, "(IMG) for a spider and a homomorphism",
     Assert(0,IsTransitive(Image(monodromy),[1..d]));
 
     t := LIFTBYMONODROMY@(spider,monodromy,d);
-    REFINETRIANGULATION@(t,0.3);
+    REFINETRIANGULATION@(t,@.hurwitzmesh);
     LAYOUTTRIANGULATION@(t);
     d := OPTIMIZELAYOUT@(spider,t);
     
@@ -324,13 +323,11 @@ InstallMethod(DessinByPermutations, "(IMG) for three permutations",
         function(s0,s1,sinf)
     local permrep, f, g, spider, d, i, above1, p, dist, distmin;
     
-    Assert(0,s0*s1*sinf=());
-    f := FreeGroup(3);
+    f := SphereGroup([1,2,3]);
     g := Group(s0,s1,sinf);
-    
-    spider := NewMarkedSphere([P1zero,P1one,P1infinity],f);
     permrep := GroupHomomorphismByImages(f,g,GeneratorsOfGroup(f),GeneratorsOfGroup(g));
     
+    spider := NewMarkedSphere([P1zero,P1one,P1infinity],f);    
     d := HurwitzMap(spider,permrep);
     
     for i in d.zeros do Unbind(i.to); od;

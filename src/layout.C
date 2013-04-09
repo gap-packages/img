@@ -1,9 +1,21 @@
-// solve Hurwitz problem by laying out triangulation
+/////////////////////////////////////////////////////////////////////////////
+//
+//W hurwitz.c                                               Laurent Bartholdi
+//
+//Y Copyright (C) 2013, Laurent Bartholdi
+//
+/////////////////////////////////////////////////////////////////////////////
+//
+//   solve Hurwitz problem by laying out triangulation
+//
+/////////////////////////////////////////////////////////////////////////////
+///!!!!! MAKE POSITIVE DEFINITE !!!
 
 #undef PRINT_DOGLEG
-#define PRINT_U
-#define PRINT_XY
-#define PRINT_STATS
+#undef PRINT_U
+#undef PRINT_XY
+#undef PRINT_STATS
+#define PRINT_OPTIMUM
 
 #include "config.h"
 #include <iostream>
@@ -188,7 +200,9 @@ void computelengths (void)
     }
   jac_nnz = 9*numfaces;
 
+#ifdef PRINT_STATS
   cerr << "infty = " << ivertex << ", " << numvertices-innervertices << " boundary vertices, " << innervertices << " interior vertices." << endl;
+#endif
 
   double inneru[innervertices];
   for (int i = 0; i < innervertices; i++)
@@ -213,7 +227,7 @@ void computelengths (void)
  
   double optimum = dogleg_optimize(inneru, innervertices, innervertices, jac_nnz, layout_fdf, NULL, NULL);
 
-#ifdef PRINT_DOGLEG
+#ifdef PRINT_OPTIMUM
   cerr << "Achieved norm " << optimum << endl;
 #endif
 
@@ -254,8 +268,13 @@ void layoutfaces (void)
   vtag[ivertex] = true;
 
   for (int i = 0; i < numfaces; i++)
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < 3; j++) {
       length[i][j] = exp(loglength[i][j] + u[vertex[i][(j+1)%3]] + u[vertex[i][(j+2)%3]]);
+      if (vertex[i][j] == ivertex)
+	ftag[i] = true;
+    }
+
+  x[ivertex] = y[ivertex] = 0./0.;
 
   int rootface;
   for (rootface = 0;; rootface++) {
@@ -275,14 +294,12 @@ void layoutfaces (void)
     for (int j = 0; j < 3; j++) {
       q.push(face[f][j]);
 
-      int v0 = vertex[f][j];
+      int v0 = vertex[f][j], v1 = vertex[f][(j+1)%3], v2 = vertex[f][(j+2)%3];
       if (vtag[v0])
 	continue;
 
       // v0 has not been laid. Lay it now.
-
       vtag[v0] = true;
-      int v1 = vertex[f][(j+1)%3], v2 = vertex[f][(j+2)%3];
 
       if (!vtag[v1] && !vtag[v2]) { // very first vertex
 	x[v0] = y[v0] = 0.;
@@ -321,8 +338,13 @@ void layoutfaces (void)
       if (v0 == ivertex || v1 == ivertex)
 	continue;
       double newlength = hypot(x[v0]-x[v1],y[v0]-y[v1]);
-      if (relerror(newlength,length[i][j]) > 1.e-4)
+      double error = relerror(newlength,length[i][j]);
+      if (error > 1.e-4)
 	cerr << "face " << i << " edge " << j << ": length " << newlength << " (expected " << length[i][j] << ")\n";
+      if (error > 1.e-1) {
+	cerr << "Repent.\n";
+	exit(-1);
+      }
     }
 #endif
 
@@ -408,22 +430,26 @@ int main(int argc, char *argv[])
   // center the points
   double sx = 0., sy = 0., s = 0.;
   for (int i = 0; i < numvertices; i++)
-    sx += x[i], sy += y[i];
+    if (i != ivertex)
+      sx += x[i], sy += y[i];
   sx /= numvertices; sy /= numvertices;
   for (int i = 0; i < numvertices; i++)
     x[i] -= sx, y[i] -= sy;
 
   // spread them out
   for (int i = 0; i < numvertices; i++)
-    s += x[i]*x[i]+y[i]*y[i];
+    if (i != ivertex)
+      s += x[i]*x[i]+y[i]*y[i];
   s = sqrt(s / numvertices);
 
   for (int i = 0; i < numvertices; i++)
     x[i] /= s, y[i] /= s;
 
-  if (s != s) // we got NaN, because one of the values is invalid
+  if (s != s) { // we got NaN, because one of the values is invalid
+    cerr << "Something failed in the calculations, we got NaN.\n";
     return -1;
-    
+  }
+
   // print stereographic projection
   cout.precision(20);
   cout << "[";
@@ -432,10 +458,10 @@ int main(int argc, char *argv[])
 
     if (i == ivertex) {
       x[i] = y[i] = 0.;
-      n = 1.e300; // just as good as infinity, if we don't have 300 sig.digits
+      n = -1.e300; // just as good as infinity, if we don't have 300 sig.digits
     }
 
-    cout << "[" << 2.*x[i]/n << "," << 2.*y[i]/n << "," << (n-2.)/n << "]";
+    cout << "[" << 2.*x[i]/n << "," << 2.*y[i]/n << "," << (2.-n)/n << "]";
   } 
   cout << "];" << endl;
 
