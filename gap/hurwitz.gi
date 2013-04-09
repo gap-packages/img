@@ -21,31 +21,37 @@ BindGlobal("LIFTBYMONODROMY@", function(spider,monodromy,d)
     # the local degree of the map, and "cover", which points to the vertex
     # of "spider" that is being covered.
 
-    local e, f, v, i, j, edgeperm, reverse,
+    local e, f, v, i, j, left, from, edgeperm, reverse,
           edges, faces, lift;
     
     # make d copies of the faces and edges, renumber their indices
-    faces := [];
-    edges := List([1..d],i->StructuralCopy(spider!.cut!.e));
-    for i in [1..d] do
-        faces[i] := [];
-        for e in edges[i] do
-            e.index := e.index + (i-1)*Length(spider!.cut!.e);
-            j := e.left.index;
-            if j<=Length(spider!.cut!.f) and not IsBound(faces[i][j]) then
-                faces[i][j] := e.left;
-                e.left.index := j + (i-1)*Length(spider!.cut!.f);
-            fi;
+    faces := List([1..d],i->List(spider!.cut!.f,f->Objectify(TYPE_FACE,
+                     rec(index := f!.index+(i-1)*Length(spider!.cut!.f), sheet := i, below := f))));
+    edges := List([1..d],i->List(spider!.cut!.e,e->Objectify(TYPE_EDGE,
+                     rec(index := e!.index+(i-1)*Length(spider!.cut!.e), sheet := i, below := e))));
+
+    # reattach the faces
+    for f in spider!.cut!.f do
+        j := Neighbour(f)!.index;
+        for i in [1..d] do
+            SetNeighbour(faces[i][f!.index],edges[i][j]);
         od;
     od;
-    
-    # reattach the edges according to the monodromy action
-    reverse := List(edges[1],e->e.reverse.index);
-    edgeperm := List(edges[1],e->PreImagesRepresentative(spider!.marking,e.gpelement)^monodromy);
-    for i in [1..d] do
-        for j in [1..Length(edges[i])] do
-            edges[i][j].reverse := edges[i^edgeperm[j]][reverse[j]];
-            edges[i][j].right := edges[i][j].reverse.left;
+
+    # reattach the edges according to the monodromy
+    for e in spider!.cut!.e do
+        j := Left(e)!.index;
+        for i in [1..d] do
+            SetLeft(edges[i][e!.index],faces[i][j]);
+        od;
+        j := Next(e)!.index;
+        for i in [1..d] do
+            SetNext(edges[i][e!.index],edges[i][j]);
+        od;
+        j := Prevopp(e)!.index;
+        edgeperm := (GroupElement(Opposite(Prevopp(e)))^spider!.marking)^monodromy;
+        for i in [1..d] do
+            SetPrevopp(edges[i][e!.index],edges[i^edgeperm][j]);
         od;
     od;
 
@@ -56,46 +62,30 @@ BindGlobal("LIFTBYMONODROMY@", function(spider,monodromy,d)
 
     # create new vertices, attach the edges to them
     for e in lift.e do
-        if e.from.type='v' then # old vertex, replace it simply
-            v := rec(type := 'w',
-                     n := [],
-                     pos := e.from.pos, # keep old positions for a moment
-                     degree := 1/Length(e.from.n),
-                     #!TODO
-                     # we'd like to keep track of the cycle corresponding
-                     # to v, not just its length; for this, we have to
-                     # consider the first edge (in the boundarytree of spider)
-                     # that starts at v, and keep track of the sheets
-                     # above that edge. Since we subdivided spider, we lost
-                     # the relation between spider's boundarytree and what
-                     # we cover.
-                     cover := spider!.cut!.v[e.from.index],
-                     index := Length(lift.v)+1,
-                     operations := edges[1][1].operations);
+        if not HasFrom(e) then
+            from := From(e!.below);
+            v := Objectify(TYPE_VERTEX, rec(index := Length(lift.v)+1, below := from));
+            SetNeighbour(v,e);
+            SetFrom(e,v);
+            v!.degree := Valency(v) / Valency(from);
+            v!.sheet := List(Neighbours(v),x->x!.sheet);
+            SetPos(v,Pos(from));
+            SetIsFake(v,IsFake(from));
+            for e in Neighbours(v) do
+                SetFrom(e,v);
+            od;
             Add(lift.v,v);
-            if IsBound(e.from.fake) then
-                v.fake := true;
-            fi;
-            repeat
-                e.from := v;
-                Add(v.n,e);
-                i := POSITIONID@(e.left.n,e)-1;
-                if i=0 then i := Length(e.left.n); fi;
-                e := e.left.n[i].reverse;
-            until IsIdenticalObj(e,v.n[1]);
-            v.degree := v.degree * Length(v.n);
         fi;
     od;
+    #!TODO
+    # we'd like to keep track of the cycle corresponding
+    # to v, not just its length; for this, we have to
+    # consider the first edge (in the boundarytree of spider)
+    # that starts at v, and keep track of the sheets
+    # above that edge. Since we subdivided spider, we lost
+    # the relation between spider's boundarytree and what
+    # we cover.
 
-    for v in lift.v do
-        v.type := 'v';
-    od;
-    
-    # correct to pointers
-    for e in lift.e do
-        e.to := e.reverse.from;
-    od;
-    
     return Objectify(TYPE_TRIANGULATION,lift);
 end);
 
@@ -106,44 +96,30 @@ BindGlobal("REFINETRIANGULATION@", function(triangulation,maxlen)
     local idle, e, f, maxdegree, len, mult, p;
 
     for e in triangulation!.e do
-        if e.from.degree>1 and e.to.degree>1 then
-            ADDTOTRIANGULATION@(triangulation,e.left,P1Midpoint(e.from.pos,e.to.pos));
-            triangulation!.v[Length(triangulation!.v)].degree := 1;
-            triangulation!.v[Length(triangulation!.v)].fake := true;
+        if From(e)!.degree>1 and To(e)!.degree>1 then
+            AddToTriangulation(triangulation,Left(e),Pos(e));
+            triangulation!.v[Length(triangulation!.v)]!.degree := 1;
+            SetIsFake(triangulation!.v[Length(triangulation!.v)],true);
         fi;
     od;
     
-    maxdegree := Maximum(List(triangulation!.v,v->v.degree));
+    maxdegree := Maximum(List(triangulation!.v,v->v!.degree));
     mult := Int(Log(7./maxlen)/Log(1.5));
     repeat
         len := List([1..maxdegree],i->(maxlen*1.5^mult)^i);
         idle := true;
         for e in triangulation!.e do
-            if P1Distance(e.from.pos,e.to.pos) > len[Maximum(e.from.degree,e.to.degree)] then
+            if Length(e) > len[Maximum(From(e)!.degree,To(e)!.degree)] then
                 idle := false;
-                f := e.left;
-                if not IsBound(f.radius) then
-                    p := CallFuncList(P1Circumcentre,List(f.n,e->e.from.pos));
-                    f.centre := p[1];
-                    f.radius := p[2];
-                fi;
-                ADDTOTRIANGULATION@(triangulation,f,f.centre);
-                triangulation!.v[Length(triangulation!.v)].degree := 1;
-                triangulation!.v[Length(triangulation!.v)].fake := true;
+                f := Left(e);
+                AddToTriangulation(triangulation,f,Centre(f));
+                triangulation!.v[Length(triangulation!.v)]!.degree := 1;
+                SetIsFake(triangulation!.v[Length(triangulation!.v)],true);
             fi;
         od;
         if idle then mult := mult-1; fi;
     until idle and mult<0;
 end);
-
-nodup := function(tri)
-    local l;
-    l := List(tri!.e,x->[x.from.index,x.to.index]);
-    l := Filtered(Collected(l),x->x[2]>1);
-    if l<>[] then
-        Error(l);
-    fi;
-end;
 
 BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     # run C code to optimize point placement.
@@ -151,16 +127,16 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     # lengths should be adjusted, by multiplying each edge (say from v to w)
     # by u[v]*u[w] for some scaling function u defined on the vertices;
     # in such a way that the resulting metric object is a conformal sphere.
-    local i, e, f, v, m, max, infty, sin, sout, stdin, stdout;
+    local i, e, f, v, m, map, max, infty, sin, sout, stdin, stdout;
 
     sin := "";
     stdin := OutputTextString(sin,false);
     
     max := 0;
     for v in triangulation!.v do
-        m := Length(v.n);
+        m := Valency(v);
         if m>max then
-            infty := v.index;
+            infty := v!.index;
             max := m;
         fi;
     od;
@@ -168,17 +144,17 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     
     PrintTo(stdin,"FACES ",Length(triangulation!.f),"\n");
     for f in triangulation!.f do
-        for e in f.n do
-            PrintTo(stdin,e.from.index," ");
+        for e in Neighbours(f) do
+            PrintTo(stdin,From(e)!.index," ");
         od;
-        for e in f.n{[2,3,1]} do
-            PrintTo(stdin,P1Distance(e.from.pos,e.to.pos)," ");
+        for e in Neighbours(f) do
+            PrintTo(stdin,Length(Next(e))," ");
         od;
         PrintTo(stdin,"\n");
     od;
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
-
+PrintTo("layout-in",sin);
     stdin := InputTextString(sin);
     sout := "";
     stdout := OutputTextString(sout,false);
@@ -186,25 +162,22 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     CloseStream(stdin);
     CloseStream(stdout);
 
+PrintTo("layout-out",sout);
     m := EvalString(sout);
-    Remove(m); # there's a trailing "fail" in the file, to simplify printing
     m := 1.0*m; # make sure all entries are floats
-    
+Error("xx");
     v := List(m,P1Sphere);
-    m := P1MapNormalizingP1Points(v);
-    v := List(v,v->P1Image(m,v));
+    map := P1MapNormalizingP1Points(v);
+    v := List(v,v->P1Image(map,v));
     
     for i in [1..Length(v)] do
-        triangulation!.v[i].pos := v[i];
+        triangulation!.v[i]!.Pos := v[i];
     od;
-    for e in triangulation!.e do
-        e.pos := P1Midpoint(e.from.pos,e.to.pos);
+    for e in triangulation!.e do # reset the length and position of the edge
+        RESETEDGE@(e);
     od;
     for f in triangulation!.f do
-        f.pos := P1Barycentre(List(f.n,x->x.from.pos));
-        i := CallFuncList(P1Circumcentre,List(f.n,e->e.from.pos));
-        f.centre := i[1];
-        f.radius := i[2];
+        RESETFACE@(f);
     od;
 end);
 
@@ -328,11 +301,10 @@ InstallMethod(HurwitzMap, "(IMG) for a spider and a homomorphism",
     # by the homomorphism "monodromy".
     local t, d;
 
-    Assert(0,Source(spider!.marking)=Source(monodromy));
+    Assert(0,Range(spider!.marking)=Source(monodromy));
     
     d := Maximum(LargestMovedPoint(Range(monodromy)),1);
     Assert(0,IsTransitive(Image(monodromy),[1..d]));
-    Assert(0,SPIDERRELATOR@(spider)^monodromy=());
 
     t := LIFTBYMONODROMY@(spider,monodromy,d);
     REFINETRIANGULATION@(t,0.3);
@@ -356,8 +328,7 @@ InstallMethod(DessinByPermutations, "(IMG) for three permutations",
     f := FreeGroup(3);
     g := Group(s0,s1,sinf);
     
-    spider := TRIVIALSPIDER@([P1zero,P1one,P1infinity]);
-    IMGMARKING@(spider,f);
+    spider := NewMarkedSphere([P1zero,P1one,P1infinity],f);
     permrep := GroupHomomorphismByImages(f,g,GeneratorsOfGroup(f),GeneratorsOfGroup(g));
     
     d := HurwitzMap(spider,permrep);
@@ -556,7 +527,7 @@ BindGlobal("QUADRICRITICAL@", function(z,perm,values)
     
     # find appropriate c
     f := List(c,c->z^2*(c*(z-1)+2-c)/(c*(z+1)-c));
-    m := List(f,f->IMGMachine(z,f));
+    m := List(f,FRMachine);
     
     f := CompositionP1Map(aut,f[First([1..Length(c)],i->Output(m[i],id[1])=Output(m[i],id[2]))]);
     

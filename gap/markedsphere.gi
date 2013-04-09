@@ -122,7 +122,7 @@ end);
 InstallMethod(SpanningTreeBoundary, [IsMarkedSphere],
         function(spider)
     # return a list of edges traversed when one surrounds the tree with
-    # it on our left. visit vertex n first.
+    # it on our right. visit vertex n first.
     local i, e, edges, n;
 
     n := Length(Vertices(spider));
@@ -132,7 +132,7 @@ InstallMethod(SpanningTreeBoundary, [IsMarkedSphere],
         Add(edges,e);
         e := Opposite(e);
         repeat
-            e := Prevopp(e);
+            e := Next(Opposite(e));
         until spider!.intree[e!.index];
     until IsIdenticalObj(e,edges[1]);
     return edges;
@@ -172,7 +172,7 @@ InstallMethod(NewMarkedSphere, "(IMG) for a list of points and a group",
     p := PresentationFpGroup(g,0);
     TzOptions(p).protected := Length(tree);
     TzInitGeneratorImages(p);
-    
+
     for i in r.cut!.e do SetGroupElement(i, One(g)); od;
     r.intree := ListWithIdenticalEntries(Length(edges),false);
     for i in [1..Length(tree)] do
@@ -227,7 +227,7 @@ InstallMethod(NewMarkedSphere, "(IMG) for a list of points and a group",
     ordering := FamilyObj(One(model))!.ordering;
     image := image*GroupHomomorphismByImages(f,f,List([1..n],i->g[ordering[i]]^Inverse(Product(g{Difference([1..ordering[i]],ordering{[1..i]})}))),g{ordering});
 
-    r!.marking := GroupHomomorphismByImages(r!.group,model,source,List(g,x->ElementOfSphereGroup(FamilyObj(One(model)),x^image)));
+    r!.marking := NORMALIZEHOMOMORPHISM@(GroupHomomorphismByImages(r!.group,model,source,List(g,x->ElementOfSphereGroup(FamilyObj(One(model)),x^image))));
     
     return r;
 end);

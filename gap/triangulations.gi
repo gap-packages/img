@@ -75,7 +75,7 @@ InstallMethod(Valency, [IsVertex], function(v)
 end);
 
 InstallMethod(IsFake, [IsVertex], ReturnFalse);
-    
+
 InstallMethod(To, [IsEdge], e->From(Opposite(e)));
 InstallMethod(Right, [IsEdge], e->Left(Opposite(e)));
 InstallMethod(Map, [IsEdge], e->P1Path(FromPos(e),ToPos(e)));
@@ -96,14 +96,14 @@ InstallMethod(Opposite, [IsEdge and HasNext], e->Prevopp(Next(e)));
 InstallMethod(Radius, [IsFace], function(f)
     local p;
     p := CallFuncList(P1Circumcentre,List(Neighbours(f),FromPos));
-    SetCentre(f, p[1]);
+    SetCentre(f, p[1]); # we computed it for free
     return p[2];
 end);
 
 InstallMethod(Centre, [IsFace], function(f)
     local p;
     p := CallFuncList(P1Circumcentre,List(Neighbours(f),FromPos));
-    SetRadius(f, p[2]);
+    SetRadius(f, p[2]); # we computed it for free
     return p[1];
 end);
     
@@ -119,6 +119,7 @@ InstallMethod(Neighbours, [IsFace, IsEdge], function(f,e)
     until e=n[1];
     return n;
 end);
+
 InstallMethod(Valency, [IsFace], function(f)
     local n, e0, e;
     n := 0;
@@ -274,29 +275,33 @@ BindGlobal("RESETFACE@", function(f)
     ResetFilterObj(f, HasRadius);
 end);
 
-DeclareGlobalFunction("FLIPEDGE@");
+DeclareGlobalFunction("FLIPEDGE@"); # since it calls itself recursively, first declare it
 InstallGlobalFunction(FLIPEDGE@, function(e,multi)
     # flip the edge e
-    # multi means: "do as many (>= 0) flips till the triangulation is Delaunay"
-    local a, b, p, q, bp, pa, aq, qb, f, paq, qbp;
+    # if multi, then do as many (>= 0) flips till the triangulation is Delaunay; otherwise,
+    # do exactly one flip
+    local a, b, p, q, bp, pa, aq, qb, f, paq, qbp, opa, oqb;
+
     f := Opposite(e);
     a := From(e); b := From(f);
     bp := Next(e); pa := Next(bp);
     aq := Next(f); qb := Next(aq);
     p := From(pa); q := From(qb);
+
     if not multi or YRATIO@(Pos(p),Pos(q),Pos(a),Pos(b))>@.rz then
         paq := Left(f); RESETFACE@(paq);
         qbp := Left(e); RESETFACE@(qbp);
+        opa := Opposite(pa); oqb := Opposite(qb);
         e!.From := p; e!.To := q; e!.Next := qb; e!.Prevopp := Opposite(bp); RESETEDGE@(e);
         f!.From := q; f!.To := p; f!.Next := pa; f!.Prevopp := Opposite(aq); RESETEDGE@(f);
         qbp!.Neighbour := e;
         paq!.Neighbour := f;
         a!.Neighbour := aq;
         b!.Neighbour := bp;
-        pa!.Prevopp := e; pa!.Next := aq; pa!.Left := paq; Opposite(pa)!.Right := paq;
-        qb!.Prevopp := f; qb!.Next := bp; qb!.Left := qbp; Opposite(qb)!.Right := qbp;
-        aq!.Prevopp := Opposite(pa); aq!.Next := f;
-        bp!.Prevopp := Opposite(qb); bp!.Next := e;
+        pa!.Prevopp := e; pa!.Next := aq; pa!.Left := paq; opa!.Right := paq;
+        qb!.Prevopp := f; qb!.Next := bp; qb!.Left := qbp; oqb!.Right := qbp;
+        aq!.Prevopp := opa; aq!.Next := f;
+        bp!.Prevopp := oqb; bp!.Next := e;
 
         if HasGroupElement(e) then
             pa!.GroupElement := GroupElement(e)^-1*GroupElement(pa);
@@ -304,6 +309,7 @@ InstallGlobalFunction(FLIPEDGE@, function(e,multi)
             qb!.GroupElement := GroupElement(e)*GroupElement(qb);
             Opposite(qb)!.GroupElement := qb!.GroupElement^-1;
         fi;
+
         if multi then
             FLIPEDGE@(aq,true);
             FLIPEDGE@(qb,true);
@@ -331,10 +337,12 @@ BindGlobal("CHECKTRIANGULATION@", function(t)
     if x<>[] then return ["From(e) <> To(Opposite(e)): ",x]; fi;
     x := Filtered(t!.f,f->not IsIdenticalObj(Left(Neighbour(f)),f));
     if x<>[] then return ["Left(Neighbour(f)) <> f: ",x]; fi;
-    x := Filtered(t!.e,e->YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.rz);
-    if x<>[] then return ["Delaunay condition fails: ",x]; fi;
-    x := Filtered(t!.f,f->not IsIdenticalObj(LocateInTriangulation(t,f,Pos(f)),f));
-    if x<>[] then return ["Locate(f,Pos(f)) <> f: ",x]; fi;
+    if ValueOption("nodelaunay")=fail then
+        x := Filtered(t!.e,e->YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.rz);
+        if x<>[] then return ["Delaunay condition fails: ",x]; fi;
+        x := Filtered(t!.f,f->not IsIdenticalObj(LocateInTriangulation(t,f,Pos(f)),f));
+        if x<>[] then return ["Locate(f,Pos(f)) <> f: ",x]; fi;
+    fi;
     return true;
 end);
 

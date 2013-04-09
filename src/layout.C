@@ -1,8 +1,8 @@
 // solve Hurwitz problem by laying out triangulation
 
 #undef PRINT_DOGLEG
-#undef PRINT_U
-#undef PRINT_XY
+#define PRINT_U
+#define PRINT_XY
 #define PRINT_STATS
 
 #include "config.h"
@@ -236,6 +236,11 @@ void makefaces (void)
       face[i][j] = edge2triangle[edge(vertex[i][(j+2)%3],vertex[i][(j+1)%3])];
 }
 
+double relerror (double x, double y)
+{
+  return fabs(x-y) / (fabs(x)+fabs(y));
+}
+
 void layoutfaces (void)
 {
   queue<int> q;
@@ -309,11 +314,15 @@ void layoutfaces (void)
       y[v0] = y[v1] + e2*dy;
     }
   }
-#if 0 // sanity check
+#if 1 // sanity check
   for (int i = 0; i < numfaces; i++)
     for (int j = 0; j < 3; j++) {
       int v0 = vertex[i][(j+1)%3], v1 = vertex[i][(j+2)%3];
-      cerr << "face " << i << " edge " << j << ": length " << hypot(x[v0]-x[v1],y[v0]-y[v1]) << " (expected " << length[i][j] << ")\n";
+      if (v0 == ivertex || v1 == ivertex)
+	continue;
+      double newlength = hypot(x[v0]-x[v1],y[v0]-y[v1]);
+      if (relerror(newlength,length[i][j]) > 1.e-4)
+	cerr << "face " << i << " edge " << j << ": length " << newlength << " (expected " << length[i][j] << ")\n";
     }
 #endif
 
@@ -331,7 +340,7 @@ int main(int argc, char *argv[])
   for (;;) {
     char s[100];
     if (scanf("%s", s) != 1)
-      strcpy(s,"EOF");
+      strcpy(s,"EOF"); // cause error
     if (!strcmp(s,"END"))
       break;
     else if (!strcmp(s,"VERTICES")) {
@@ -418,7 +427,7 @@ int main(int argc, char *argv[])
   // print stereographic projection
   cout.precision(20);
   cout << "[";
-  for (int i = 0; i < numvertices; i++) {
+  for (int i = 0; i < numvertices; cout << "," << endl, i++) {
     double n = x[i]*x[i] + y[i]*y[i] + 1.;
 
     if (i == ivertex) {
@@ -426,9 +435,9 @@ int main(int argc, char *argv[])
       n = 1.e300; // just as good as infinity, if we don't have 300 sig.digits
     }
 
-    cout << "[" << 2.*x[i]/n << "," << 2.*y[i]/n << "," << (n-2.)/n << "]," << endl;
+    cout << "[" << 2.*x[i]/n << "," << 2.*y[i]/n << "," << (n-2.)/n << "]";
   } 
-  cout << "fail];" << endl;
+  cout << "];" << endl;
 
   return 0;
 }
