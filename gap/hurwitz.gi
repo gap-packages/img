@@ -148,7 +148,8 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
             PrintTo(stdin,From(e)!.index," ");
         od;
         for e in Neighbours(f) do
-            PrintTo(stdin,Length(Next(e))," ");
+            e := Next(e);
+            PrintTo(stdin,Length(e)^(1/Maximum(To(e)!.degree,From(e)!.degree))," ");
         od;
         PrintTo(stdin,"\n");
     od;

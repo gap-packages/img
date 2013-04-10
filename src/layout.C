@@ -11,10 +11,11 @@
 /////////////////////////////////////////////////////////////////////////////
 ///!!!!! MAKE POSITIVE DEFINITE !!!
 
-#undef PRINT_DOGLEG
-#undef PRINT_U
+#undef CHECK_GRADIENT
+#define PRINT_DOGLEG
+#define PRINT_U
 #undef PRINT_XY
-#undef PRINT_STATS
+#define PRINT_STATS
 #define PRINT_OPTIMUM
 
 #include "config.h"
@@ -274,7 +275,7 @@ void layoutfaces (void)
 	ftag[i] = true;
     }
 
-  x[ivertex] = y[ivertex] = 0./0.;
+  x[ivertex] = y[ivertex] = 0./0.; // paranoia
 
   int rootface;
   for (rootface = 0;; rootface++) {

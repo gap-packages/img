@@ -115,14 +115,15 @@ BindGlobal("NFFUNCTION_FR", function(rel,dir,word)
 end);
 fi;
 
-BindGlobal("REMOVEADDER@", function(g,rel,adder)
-    # get rid of generator adder in g/[rel]
-    local gens, img, i, w;
+BindGlobal("REMOVEADDER@", function(g,adder)
+    # get rid of generator adder in g
+    local gens, rel, img, i, j
     gens := GeneratorsOfGroup(g);
+    rel := OrderingOfSphereGroup(g);
+    i := Position(gens,adder);
+    j := Position(rel,i);
     img := ShallowCopy(gens);
-    i := PositionWord(rel,adder);
-    if i=fail then rel := rel^-1; i := PositionWord(rel,adder); fi;
-    img[Position(gens,adder)] := (Subword(rel,i+1,Length(rel))*Subword(rel,1,i-1))^-1;
+    img[j] := Product(gens{Concatenation(rel{[j+1..Length(rel)]},rel{[1..j-1]})},One(g));
     return x->MappedWord(x,gens,img);
 end);
 
