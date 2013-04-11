@@ -390,7 +390,7 @@ BindGlobal("GENERALHURWITZMAP@", function(z,spider,perm,oldf,oldlifts)
     return [CompositionP1Map(d.map,d.post),pre];
 end);
 
-BindGlobal("TRICRITICAL@", function(z,perm)
+BindGlobal("TRICRITICAL@", function(perm)
     # find a rational function with critical values 0,1,infinity
     # with monodromy actions perm[1],perm[2],perm[3]
     # return fail if it's too hard to do;
@@ -426,7 +426,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
         for j in [1..3] do
             p[j] := P1MapByCoefficients(@.o*p[j]{[1..deg+1-cl[j]]});
         od;
-        f := z^cl[1]*p[1]/p[3];
+        f := P1Monomial(cl[1])*p[1]/p[3];
         for j in [1..3] do
             Append(points,List(RootsFloat(p[j]),P1Point));
         od;
@@ -436,7 +436,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
     if Size(Set(cl))<=2 and ForAll(cl,x->DifferenceLists(x,[1])=[3] or Length(x)=2) then # [m+n,m+n,3]
         i := PositionProperty(cl,x->DifferenceLists(x,[1])=[3]);
         m := cl[1+(i mod 3)];
-        f := z^m[2]*((m[1]-m[2])*z+(m[1]+m[2]))^m[1]/((m[1]+m[2])*z+(m[1]-m[2]))^m[1];
+        f := P1z^m[2]*((m[1]-m[2])*P1z+(m[1]+m[2]))^m[1]/((m[1]+m[2])*P1z+(m[1]-m[2]))^m[1];
         Add(points,P1Point((m[1]+m[2])/(m[2]-m[1])));
         k := P1PreImages(f,P1one);
         SortParallel(List(k,x->P1Distance(x,P1one)),k);
@@ -446,7 +446,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
     fi;
     
     if deg=5 and IsEqualSet(cl,[[2,3],[1,2,2]]) then # (1,2)(3,4,5),(1,3)(2,5,4),(1,5)(2,3)
-        f := z^3*((4*z+5)/(5*z+4))^2;
+        f := P1z^3*((4*P1z+5)/(5*P1z+4))^2;
         Add(points,P1Point(-4/5)); # to infinity
         Add(points,P1Point(-5/4)); # to 0
         Add(points,P1Point((-7+Sqrt(-15*@.o))/8)); # to 1
@@ -458,7 +458,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
     i := First([1..3],i->cl[i]=[deg/2,deg/2]);
     if i<>fail and ForAll([1..3],j->i=j or Set(cl[j])=[2]) then
         # deg = 2n; shapes [n,n],[2,...,2],[2,...,2]
-        f := 4*z^(deg/2)/(1+z^(deg/2))^2;
+        f := 4*P1z^(deg/2)/(1+P1z^(deg/2))^2;
         order := Permuted([3,2,1],(1,2,3)^i);
         Remove(points,2); # remove 1
         Append(points,List([0..deg-1],i->P1Point(Exp(@.2ipi*i/deg))));
@@ -477,7 +477,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
     if m<>fail then # [d],[m,d-m], [2,1,...,1]
         order := [m,j+k-m,i];
         m := cl[m][1];
-        f := (z*deg/m)^m*((1-z)*deg/(deg-m))^(deg-m);
+        f := (P1z*deg/m)^m*((1-z)*deg/(deg-m))^(deg-m);
         points := points{order};
         Add(points,P1Point(m/deg));
         i := P1PreImages(f,P1one);
@@ -491,7 +491,7 @@ BindGlobal("TRICRITICAL@", function(z,perm)
         # so we know the action around i is (1,...,deg), at infinity
         # the action around j is (m,m-1,...,1), at 0
         # the action around k in (deg,deg-1...,m), at 1
-        f := m*Binomial(deg,m)*Primitive(z^(m-1)*(1-z)^(deg-m));
+        f := m*Binomial(deg,m)*Primitive(P1z^(m-1)*(1-P1z)^(deg-m));
         order := [j,k,i];
         points := points{order};
         for i in [P1zero,P1one] do
@@ -511,8 +511,8 @@ BindGlobal("TRICRITICAL@", function(z,perm)
     return fail;
 end);
 
-BindGlobal("QUADRICRITICAL@", function(z,perm,values)
-    local c, w, f, m, id, aut;
+BindGlobal("QUADRICRITICAL@", function(perm,values)
+    local c, w, f, m, id, aut, z;
     
     # normalize values to be 0,1,infty,w
     aut := MoebiusMap(values{[1..3]});
@@ -521,10 +521,11 @@ BindGlobal("QUADRICRITICAL@", function(z,perm,values)
     # which two values have same deck transformation?
     id := First(Combinations(4,2),p->perm[p[1]]=perm[p[2]]);
     
+    z := Indeterminate(@.isc);
     c := RootsFloat((z-2)^3*z-w*(z+1)^3*(z-1));
     
     # find appropriate c
-    f := List(c,c->z^2*(c*(z-1)+2-c)/(c*(z+1)-c));
+    f := List(c,c->P1z^2*(c*(P1z-1)+2-c)/(c*(P1z+1)-c));
     m := List(f,FRMachine);
     
     f := CompositionP1Map(aut,f[First([1..Length(c)],i->Output(m[i],id[1])=Output(m[i],id[2]))]);
@@ -532,10 +533,15 @@ BindGlobal("QUADRICRITICAL@", function(z,perm,values)
     return [f, [P1zero, P1one, P1infinity, P1Point(c*(c-2)/(c^2-1))]];
 end);
 
-BindGlobal("RATIONALMAP@", function(spider,perm,oldf,oldlifts)
+InstallMethod(LiftMarkedSphereByMonodromy, "(FR) for a marked sphere",
+        [IsMarkedSphere,IsGroupHomomorphism],
+        function(spider,monodromy)
     # find a rational map that has critical values at <feet(spider)>, with
-    # monodromy action given by <perm>, a list of permutations (as lists).
-    # returns [map,points] where <points> is the full preimage of <values>
+    # monodromy action given by <monodromy>.
+    # returns [map,lifted_sphere] where <lifted_sphere> has as vertex set the full preimage
+    # of <values>
+
+    #!!! that's really HURWITZMAP + RETURN THE UPPER SPHERE
     local cv, values, p, f, points, deg, i;
     
     values := Vertices(spider);

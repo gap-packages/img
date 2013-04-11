@@ -9,11 +9,10 @@
 //   solve Hurwitz problem by laying out triangulation
 //
 /////////////////////////////////////////////////////////////////////////////
-///!!!!! MAKE POSITIVE DEFINITE !!!
 
 #undef CHECK_GRADIENT
-#define PRINT_DOGLEG
-#define PRINT_U
+#undef PRINT_DOGLEG
+#undef PRINT_U
 #undef PRINT_XY
 #define PRINT_STATS
 #define PRINT_OPTIMUM
