@@ -30,7 +30,7 @@
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Func Name="CleanedP1Point" Arg="p, prec"/>
+##   <Func Name="CleanedP1Point" Arg="p, [prec]"/>
 ##   <Returns><A>p</A>, rounded towards 0/1/infinity/reals at precision <A>prec</A>.</Returns>
 ## </ManSection>
 ##
@@ -180,7 +180,7 @@
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="CleanedP1Map" Arg="map, prec"/>
+##   <Oper Name="CleanedP1Map" Arg="map, [prec]"/>
 ##   <Returns><A>map</A>, with coefficients rounded using <A>prec</A>.</Returns>
 ## </ManSection>
 ##
@@ -222,6 +222,11 @@
 ## <ManSection>
 ##   <Oper Name="P1Image" Arg="map, p1point"/>
 ##   <Returns>The image of <A>p1point</A> under <A>map</A>.</Returns>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="P1PreImage" Arg="map, p1point"/>
+##   <Returns>The preimage of <A>p1point</A> under <A>map</A>.</Returns>
 ## </ManSection>
 ##
 ## <ManSection>
@@ -306,6 +311,7 @@ DeclareOperation("P1Circumcentre",[IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("P1XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
 DeclareOperation("CleanedP1Point",[IsP1Point,IsFloat]);
+DeclareOperation("CleanedP1Point",[IsP1Point]);
 DeclareOperation("P1Midpoint",[IsP1Point,IsP1Point]);
 DeclareAttribute("P1Antipode",IsP1Point);
 DeclareAttribute("P1Coordinate",IsP1Point);
@@ -339,6 +345,7 @@ DeclareOperation("P1Path",[IsP1Point,IsP1Point]);
 DeclareGlobalVariable("P1z");
 DeclareGlobalFunction("P1Monomial");
 DeclareOperation("CleanedP1Map",[IsP1Map,IsFloat]);
+DeclareOperation("CleanedP1Map",[IsP1Map]);
 
 DeclareAttribute("Primitive",IsP1Map);
 #DeclareAttribute("Derivative",IsP1Map);
@@ -347,11 +354,13 @@ DeclareAttribute("NumeratorP1Map",IsP1Map);
 DeclareAttribute("DenominatorP1Map",IsP1Map);
 DeclareSynonym("P1Image",ImageElm);
 DeclareSynonym("P1PreImages",PreImagesElm);
+DeclareSynonym("P1PreImage",PreImageElm);
 DeclareAttribute("DegreeOfP1Map",IsP1Map);
 DeclareSynonym("InverseP1Map",InverseGeneralMapping);
 DeclareSynonym("CompositionP1Map",CompositionMapping2);
 DeclareOperation("ConjugatedP1Map",[IsP1Map,IsP1Map]);
 DeclareOperation("ImageElm",[IsP1Map,IsP1Point]);
+DeclareOperation("PreImageElm",[IsP1Map,IsP1Point]);
 DeclareOperation("PreImagesElm",[IsP1Map,IsP1Point]);
 DeclareAttribute("CriticalPointsOfP1Map",IsP1Map);
 

@@ -16,7 +16,7 @@
 ##
 ## <#GAPDoc Label="Hurwitz">
 ## <ManSection>
-##   <Oper Name="HurwitzMap" Arg="spider, monodromy"/>
+##   <Oper Name="BranchedCoveringByMonodromy" Arg="spider, monodromy [, last]"/>
 ##   <Returns>A record describing a Hurwitz map.</Returns>
 ##   <Description>
 ##     If <A>spider</A> is a spider, marked by a group <M>G</M>, and
@@ -38,6 +38,7 @@
 ##     <P/> This function requires external programs in the subdirectory
 ##     "hurwitz" to have been compiled.
 ## <Example><![CDATA[
+## !!!! rewrite example
 ## gap> # we'll construct 2d-2 points on the equator, and permutations
 ## gap> # in order (1,2),...,(d-1,d),(d-1,d),...,(1,2) for these points.
 ## gap> # first, the spider.
@@ -205,7 +206,8 @@
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-DeclareOperation("HurwitzMap", [IsMarkedSphere,IsGroupHomomorphism]);
+DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism]);
+DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism,IsRecord]);
 DeclareOperation("DessinByPermutations", [IsPerm,IsPerm]);
 DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
 #############################################################################

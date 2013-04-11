@@ -235,6 +235,8 @@ InstallMethod(CleanedP1Point, "(IMG) generic P1 point", [IsP1Point,IsFloat],
         return P1Point(w);
     fi;
 end);
+InstallMethod(CleanedP1Point, "(IMG) generic P1 point", [IsP1Point],
+        p->CleanedP1Point(p,@.p1eps));
 
 InstallMethod(P1Barycentre, "(IMG) generic list of P1 points", [IsP1PointList],
         list->P1Sphere(Sum(list,SphereP1)));
@@ -542,6 +544,8 @@ InstallMethod(CleanedP1Map, "(IMG) generic P1 map", [IsP1Map,IsFloat],
     od;
     return P1MapByCoefficients(map[1],map[2]);
 end);
+InstallMethod(CleanedP1Map, "(IMG) generic P1 map", [IsP1Map],
+        map->CleanedP1Map(map,@.p1eps));
 
 InstallOtherMethod(InverseP1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
@@ -679,6 +683,17 @@ InstallOtherMethod(CallFuncList, "(IMG) generic P1 map", [IsP1Map,IsList],
     else
         return zs;
     fi;
+end);
+
+InstallMethod(P1PreImage, "(IMG) generic P1 map", [IsP1Map,IsP1Point],
+        function(map,z)
+    local c;
+    while DegreeOfP1Map(map)<>1 do
+        Error("I don't know how to invert a map of degree >1");
+    od;
+    c := CoefficientsOfP1Map(map);
+    z := C2_P1POINT@(z);
+    return P1Point(z[1]*c[2][1]-z[2]*c[1][1],z[2]*c[1][2]-z[1]*c[2][2]);
 end);
 
 InstallMethod(P1PreImages, "(IMG) generic P1 map", [IsP1Map,IsP1Point],

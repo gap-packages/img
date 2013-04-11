@@ -741,6 +741,17 @@ static int roots_rpoly (int degree, ldouble *coeff, ldcomplex *zero)
   return degree;
 }
 
+static Obj P1PREIMAGE(Obj self, Obj map, Obj objp)
+{
+  while (p1map_degree(map) != 1)
+    ErrorQuit("P1PREIMAGE: map must have degree 1, not %d", p1map_degree(map), 0);
+
+  ldcomplex numer[2], denom[2];
+  invert_rat (numer, denom, p1map_numer(map), p1map_denom(map));
+  return NEW_P1POINT(p1map_eval(p1map_degree(map), p1map_numer(map), p1map_denom(map),
+				GET_P1POINT(objp)));
+}
+
 static Obj P1PREIMAGES(Obj self, Obj map, Obj objp)
 {
   ldcomplex p[2];
@@ -1115,6 +1126,7 @@ static StructGVarFunc GVarFuncs[] = {
   { "COMPOSEP1MAP", 2, "p1map, p1map", COMPOSEP1MAP, "p1.c:COMPOSEP1MAP" },
   { "INVERSEP1MAP", 1, "p1map", INVERTP1MAP, "p1.c:INVERTP1MAP" },
   { "P1IMAGE", 2, "p1map, p1point", P1IMAGE, "p1.c:P1IMAGE" },
+  { "P1PREIMAGE", 2, "p1map, p1point", P1PREIMAGE, "p1.c:P1PREIMAGE" },
   { "P1PREIMAGES", 2, "p1map, p1point", P1PREIMAGES, "p1.c:P1PREIMAGES" },
   { "P1MAPCRITICALPOINTS", 1, "p1map", P1CRITICAL, "p1.c:P1CRITICAL" },
   { "P1MAPBYZEROSPOLES", 4, "zeros, poles, src, dst", P1MAPBYZEROSPOLES, "p1.c:P1MAPBYZEROSPOLES" },

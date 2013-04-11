@@ -184,6 +184,8 @@ end);
 
 InstallMethod(P1Image, [IsIEEE754P1Map,IsIEEE754P1Point], P1IMAGE);
 
+InstallMethod(P1PreImage, [IsIEEE754P1Map,IsIEEE754P1Point], P1PREIMAGE);
+
 InstallMethod(P1PreImages, [IsIEEE754P1Map,IsIEEE754P1Point], P1PREIMAGES);
 
 InstallMethod(CriticalPointsOfP1Map, [IsIEEE754P1Map], P1MAPCRITICALPOINTS);

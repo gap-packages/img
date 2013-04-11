@@ -516,6 +516,7 @@ BindGlobal("SPIDERALGORITHM@", function(machine)
     markedaddress := List([1..m], i-> false);
     oldaddress := [];
     extraniter := 0;
+Error("xx");
     
     repeat
 
@@ -557,7 +558,7 @@ BindGlobal("SPIDERALGORITHM@", function(machine)
                 if markedaddress[j]<>false then extraniter := 0; fi;
             fi;
         od;
-        Info(InfoFR, 2, "Symbolic spider: selected addresses ", address);
+        Info(InfoIMG, 2, "Symbolic spider: selected addresses ", address);
 
         # step 4: do the lifting
         tau := LIFT_MACHINE@(machine,image,address);
@@ -626,7 +627,7 @@ BindGlobal("SPIDERALGORITHM@", function(machine)
         od;
         niter := niter + 1;
 
-        Info(InfoFR, 2, "Symbolic spider: new machine ", machine); 
+        Info(InfoIMG, 2, "Symbolic spider: new machine ", machine); 
         # step 5: adjust pass
         for i in [1..numcycles] do
             if pass[i] = 3 then continue; fi;

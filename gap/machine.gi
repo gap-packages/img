@@ -117,7 +117,7 @@ fi;
 
 BindGlobal("REMOVEADDER@", function(g,adder)
     # get rid of generator adder in g
-    local gens, rel, img, i, j
+    local gens, rel, img, i, j;
     gens := GeneratorsOfGroup(g);
     rel := OrderingOfSphereGroup(g);
     i := Position(gens,adder);
