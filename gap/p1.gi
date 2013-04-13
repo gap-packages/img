@@ -923,7 +923,7 @@ BindGlobal("P1NORMALIZINGMAP@", function(points)
 
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
     barycenter := FIND_BARYCENTER(rpoints,100);
-    Info(InfoFR,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");
+    Info(InfoIMG,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");
     
     barycenter := List(barycenter[1],x->NewFloat(@.isr,x));
     

@@ -88,7 +88,7 @@ InstallMethod(Draw, "(IMG) for a point in Teichmuller space",
     PRINTPOINTS@(f, t, points);
     PRINTARCS@(f, t!.e, arcs, Float(101/100));
     
-    Info(InfoFR,3,"calling javaplot with:\n",s);
+    Info(InfoIMG,3,"calling javaplot with:\n",s);
     JAVAPLOT@(InputTextString(s));
 end);
 
@@ -310,7 +310,7 @@ BindGlobal("POSTCRITICALPOINTS@", function(f)
                     Add(pcp,cp[j][1]);
                 fi;
                 if RemInt(Length(pcp),100)=0 then
-                    Info(InfoFR,2,"Post-critical set contains at least ",Length(pcp)," points");
+                    Info(InfoIMG,2,"Post-critical set contains at least ",Length(pcp)," points");
                 fi;
                 dst := Length(pcp);
                 Add(transitions,[src,dst,deg]);
@@ -655,7 +655,7 @@ BindGlobal("LIFTEDGE@", function(spider,ratmap,from,to,edge)
     #     to[i].elt = from[i].elt * (product of edges crossed along the lift)
     local mid;
     
-    Info(InfoFR,3,"Lifting edge ",edge);
+    Info(InfoIMG,3,"Lifting edge ",edge);
 
     mid := List(P1PreImages(ratmap,Pos(edge)),y->rec(pos := y, cell := LocateInTriangulation(spider!.cut,y)));
     
@@ -695,7 +695,7 @@ BindGlobal("NORMALIZEADDINGMACHINE@", function(srcmodel,liftmodel,trans,out,srca
     od;
 end);
 
-InstallMethod(FRMachineOfBranchedCovering, "(IMG) for two marked spheres, a rational map, and a boolean",
+InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a rational map, and a boolean",
         [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool],
         function(src,lift,ratmap,poly)
     # lifts all dual arcs in <src> through <ratmap>; rounds their endpoints
@@ -780,13 +780,13 @@ InstallMethod(FRMachineOfBranchedCovering, "(IMG) for two marked spheres, a rati
 
     return machine;
 end);
-InstallMethod(FRMachineOfBranchedCovering, "(IMG) for two marked spheres, and a rational map",
+InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, and a rational map",
         [IsMarkedSphere,IsMarkedSphere,IsP1Map],
         function(src,lift,ratmap)
-    return FRMachineOfBranchedCovering(src,lift,ratmap,IsPolynomial(ratmap));
+    return SphereMachineOfBranchedCovering(src,lift,ratmap,IsPolynomial(ratmap));
 end);
 
-InstallMethod(FRMachineAndSphereOfBranchedCovering, "(IMG) for a marked spheres, a rational map and a bool",
+InstallMethod(SphereMachineAndSphereOfBranchedCovering, "(IMG) for a marked spheres, a rational map and a bool",
         [IsMarkedSphere,IsP1Map,IsBool],
         function(src,ratmap,poly)
     local lift, v, w;
@@ -799,19 +799,19 @@ InstallMethod(FRMachineAndSphereOfBranchedCovering, "(IMG) for a marked spheres,
         od;
     od;
     lift := NewMarkedSphere(lift);
-    return [FRMachineOfBranchedCovering(src,lift,ratmap,poly),src];
+    return [SphereMachineOfBranchedCovering(src,lift,ratmap,poly),src];
 end);
-InstallMethod(FRMachineAndSphereOfBranchedCovering, "(IMG) for a marked sphere, and a rational map",
+InstallMethod(SphereMachineAndSphereOfBranchedCovering, "(IMG) for a marked sphere, and a rational map",
         [IsMarkedSphere,IsP1Map],
         function(src,ratmap)
-    return FRMachineAndSphereOfBranchedCovering(src,ratmap,IsPolynomial(ratmap));
+    return SphereMachineAndSphereOfBranchedCovering(src,ratmap,IsPolynomial(ratmap));
 end);
 
 InstallMethod(MonodromyOfP1Map, "(IMG) for a marked sphere and a rational map",
         [IsMarkedSphere,IsP1Map],
         function(down,ratmap)
     local machine;
-    machine := FRMachineAndSphereOfBranchedCovering(down,ratmap)[1];
+    machine := SphereMachineAndSphereOfBranchedCovering(down,ratmap)[1];
     return GroupHomomorphismByImages(down!.model,SymmetricGroup(Length(machine!.trans[1])),GeneratorsOfGroup(down!.model),List(machine!.trans,PermList));
 end);
 InstallMethod(MonodromyOfP1Map, "(IMG) for a list of points and a rational map",
@@ -820,7 +820,7 @@ InstallMethod(MonodromyOfP1Map, "(IMG) for a list of points and a rational map",
     local down, up;
     down := NewMarkedSphere(downpts);
     up := NewMarkedSphere(List(CollectedP1Points(CriticalPointsOfP1Map(ratmap)),x->x[1]));
-    return List(FRMachineOfBranchedCovering(down,up,ratmap)!.output,PermList);
+    return List(SphereMachineOfBranchedCovering(down,up,ratmap)!.output,PermList);
 end);
 InstallMethod(MonodromyOfP1Map, "(IMG) for a rational map",
         [IsP1Map],
@@ -830,10 +830,10 @@ InstallMethod(MonodromyOfP1Map, "(IMG) for a rational map",
     cv := List(CollectedP1Points(List(cp,v->P1Image(ratmap,v))),x->x[1]);
     up := NewMarkedSphere(cp);
     down := NewMarkedSphere(cv);
-    return List(FRMachineOfBranchedCovering(down,up,ratmap)!.output,PermList);
+    return List(SphereMachineOfBranchedCovering(down,up,ratmap)!.output,PermList);
 end);
 
-InstallMethod(FRMachine, "(IMG) for a rational function",
+InstallMethod(SphereMachine, "(IMG) for a rational function",
         [IsP1Map],
         function(f)
     local i, poly, pcdata, pcp, spider, machine, x;
@@ -841,18 +841,60 @@ InstallMethod(FRMachine, "(IMG) for a rational function",
     pcdata := POSTCRITICALPOINTS@(f);
     poly := pcdata[1];
     pcp := pcdata[3];
-    Info(InfoFR,2,"Post-critical points at ",pcdata[3]);
+    Info(InfoIMG,2,"Post-critical points at ",pcdata[3]);
 
     spider := NewMarkedSphere(pcp);
     spider!.map := f;
     spider!.cycle := ATTRACTINGCYCLES@(pcdata);
 
-    machine := FRMachineOfBranchedCovering(spider,spider,f,poly);
+    machine := SphereMachineOfBranchedCovering(spider,spider,f,poly);
     SetMarkedSphere(machine,spider);
     SetP1Map(machine,f);
 
     return machine;
 end);
+
+InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
+        [IsMarkedSphere,IsMarkedSphere,IsBool],
+        function(spiderA,spiderB,fast)
+    local model, points, perm, dist, recur, endo, nf, g;
+
+    model := spiderA!.model;
+
+    # try to match feet of spiderA and spiderB
+    points := Vertices(spiderA);
+    perm := Vertices(spiderB);
+    
+    perm := MatchP1Points(perm,List(perm,x->points));
+    if perm=fail or Set(perm)<>[1..Length(points)] then # no match, find something coarse
+        return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentative(spiderA!.marking,x)^spiderB!.marking))/Length(points);
+    fi;
+    
+    
+    # move points of spiderB to their spiderA matches
+    spiderB := WiggledMarkedSphere(spiderB,points{perm});
+    dist := spiderB!.cut!.wiggled;
+    
+    if fast then # we just wiggled the points, the combinatorics didn't change
+        return dist/Length(points);
+    fi;
+    
+    recur := SphereMachineOfBranchedCovering(spiderA,spiderB,P1z,false);
+
+    endo := List(recur!.transitions,x->x[1]);
+    REDUCEINNER@(endo,GeneratorsOfMonoid(spiderB!.group),x->x);
+    
+    for g in endo do
+        dist := dist + (Length(g)-1); # if each image is a gen, then endo=1
+    od;
+    return dist/Length(points);
+end);
+InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres",
+        [IsMarkedSphere,IsMarkedSphere],
+        function(spiderA,spiderB)
+    return DistanceMarkedSpheres(spiderA,spiderB,false);
+end);
+
 ##############################################################################
 
 #E markedsphere.gi . . . . . . . . . . . . . . . . . . . . . . . . . ends here

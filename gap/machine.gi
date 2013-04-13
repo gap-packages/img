@@ -17,7 +17,9 @@ HasIMGRelator := fail;
 InstallMethod(IsSphereMachine, "(IMG) for an FR machine",
         [IsGroupFRMachine],
         function(M)
-    return IsSphereGroup(StateSet(M));
+    local g;
+    g := StateSet(M);
+    return HasIsSphereGroup(g) and IsSphereGroup(g);
 end);
 
 if false then # optimized in C code
@@ -114,18 +116,6 @@ BindGlobal("NFFUNCTION_FR", function(rel,dir,word)
     return result{[1..resulti]};
 end);
 fi;
-
-BindGlobal("REMOVEADDER@", function(g,adder)
-    # get rid of generator adder in g
-    local gens, rel, img, i, j;
-    gens := GeneratorsOfGroup(g);
-    rel := OrderingOfSphereGroup(g);
-    i := Position(gens,adder);
-    j := Position(rel,i);
-    img := ShallowCopy(gens);
-    img[j] := Product(gens{Concatenation(rel{[j+1..Length(rel)]},rel{[1..j-1]})},One(g));
-    return x->MappedWord(x,gens,img);
-end);
 
 # a homomorphism from the free group with 1 relation to a genuinely free group
 BindGlobal("ISOMORPHISMSIMPLIFIEDIMGGROUP@", function(src, rel)
@@ -232,49 +222,34 @@ end);
 InstallMethod(AsSphereMachine, "(IMG) for a group FR machine and a sphere group",
         [IsGroupFRMachine,IsSphereGroup],
         function(M,G)
-    local epi, fam;
-
-    #!!! check that the relator is valid, and that products on cycles are peripheral.
-    epi := GroupHomomorphismByImages(StateSet(M),G);
-    fam := FamilyObj(One(G));
-
-    return FRMachineNC(FamilyObj(M),G,List(M!.transitions,row->List(row,w->w^epi)),M!.output);
+    return M^GroupHomomorphismByImages(StateSet(M),G);
 end);   
-
-BindGlobal("IMGRELATOR@",ReturnFail);
-BindGlobal("ISIMGRELATOR@",ReturnFail);
-BindGlobal("IMGISONE@",ReturnFail);
-BindGlobal("IMGOPTIMIZE@",ReturnFail);
 
 InstallMethod(AsSphereMachine, "(IMG) for a group FR machine",
         [IsGroupFRMachine],
         function(M)
-    local w, p, trans, perm, N;
+    local f, g, epi, w, p, trans, perm, N;
     
     # try running a spider algorithm to discover a good ordering
     w := SPIDERALGORITHM@(M);
+    f := M!.free;
+
     perm := [fail];
-    if w<>fail and w.minimal then # insert that ordering
-        Add(perm,GeneratorsOfGroup(M!.free){w.ordering},1);
+    if w<>fail and w.minimal then # try that ordering first
+        Add(perm,GeneratorsOfGroup(f){w.ordering},1);
     fi;
     for p in perm do
         if p=fail then # add now all permutations fixing first letter
-            for p in SymmetricGroup([2..Length(GeneratorsOfGroup(M!.free))]) do
-                Add(perm,Permuted(GeneratorsOfGroup(M!.free),p));
+            for p in SymmetricGroup([2..Length(GeneratorsOfGroup(f))]) do
+                Add(perm,Permuted(GeneratorsOfGroup(f),p));
             od;
             continue;
         fi;
-        w := Product(p,One(StateSet(M)));
-        if ISIMGRELATOR@(M,w) then
-            trans := List(M!.transitions,ShallowCopy);
-            perm := List(M!.output,ShallowCopy);
-
-            if IMGOPTIMIZE@(trans,perm,w,true)=fail then
-                break;
-            fi;
-            N := FRMachineNC(FamilyObj(M),M!.free,trans,perm);
-            SetIMGRelator(N,w);
-            SetCorrespondence(N,IdentityMapping(M!.free));
+        g := AsSphereGroup(f/[Product(p,One(StateSet(M)))]);
+        epi := GroupHomomorphismByImages(f,g);
+        N := M^epi;
+        if N<>fail then
+            SetCorrespondence(N,epi);
             return N;
         fi;
     od;
@@ -630,26 +605,30 @@ end);
 InstallMethod(SupportingRays, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine],
         function(M)
-    local e, trans, nf, newM, i;
+    local g, gens, img, adder, f, nf, trans, output, spider, newM;
     
     # put the adding element in standard form
     M := NormalizedPolynomialSphereMachine(M);
+    g := StateSet(M);
+    gens := GeneratorsOfGroup(g);
+    img := ShallowCopy(gens);
+    adder := Position(gens,InitialState(AddingElement(M)));
+    Remove(img,adder);
+    f := FreeGroup(Length(img));
+    nf := GroupHomomorphismByImages(f,g,img);
+    trans := List(M!.transitions,x->List(x,y->PreImagesRepresentative(nf,y)));
+    output := ShallowCopy(M!.output);
+    Remove(trans,adder);
+    Remove(output,adder);
+    newM := FRMachineNC(FamilyObj(M),f,trans,output);
     
-    # first remove all occurrences of the adding element
-    e := InitialState(AddingElement(M));
-    nf := REMOVEADDER@(StateSet(M),IMGRelator(M),e);
-    trans := List(M!.transitions,r->List(r,nf));
-    i := Position(GeneratorsOfFRMachine(M),e);
-    trans[i] := M!.transitions[i];
-    newM := FRMachineNC(FamilyObj(M),StateSet(M),trans,M!.output,IMGRelator(M));
-    
-    e := SPIDERALGORITHM@(newM);
-    if e=fail then
+    spider := SPIDERALGORITHM@(newM);
+    if spider=fail then
         return fail;
-    elif e.minimal=false then
-        return e;
+    elif spider.minimal=false then
+        return spider;
     fi;
-    return [Length(AlphabetOfFRObject(M)),e.supportingangles[1],e.supportingangles[2]];
+    return [Length(AlphabetOfFRObject(M)),spider.supportingangles[1],spider.supportingangles[2]];
 end);
 
 InstallOtherMethod(SupportingRays, "(IMG) for a Mealy machine",
@@ -745,12 +724,10 @@ InstallMethod(SimplifiedSphereMachine, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine],
         function(M)
     local r, i, x;
+    Info(InfoIMG,1,"Simplification not yet implemented");
     r := SPIDERALGORITHM@(M);
     if r<>fail and r.minimal then
         SetCorrespondence(r.machine,r.transformation);
-        x := IMGRelator(M);
-        for i in r.transformation do x := x^i; od;
-        SetIMGRelator(r.machine,x);
         return r.machine;
     fi;
     return M;
@@ -760,7 +737,7 @@ InstallMethod(SimplifiedSphereMachine, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
     local N;
-    Info(InfoFR,1,"Simplification not yet implemented for general IMG machines");
+    Info(InfoIMG,1,"Simplification not yet implemented for general sphere machines");
     return N;
 end);
 #############################################################################
@@ -1288,46 +1265,46 @@ BindGlobal("MOTIONGROUP@", function(G)
     return Group(aut);
 end);
 
-BindGlobal("MATCHMARKINGS@", function(M,group,recur)
+BindGlobal("MATCHMARKINGS@", function(M1,M2)
     # return a homomorphism phi from StateSet(M) to <group> such that:
     # if g[i]^k lifts to a conjugate h of g[j] for some integer k, then
-    # phi(g[i]^k) = corresponding expression obtained from <recur>.
-    local src, dst, transM, transR, i, c, x, gens, g, h;
+    # phi(g[i]^k) = corresponding expression obtained from <M2>.
+    local src, dst, transM, transR, i, c, x, gens, g, h, group;
 
-    gens := GeneratorsOfGroup(StateSet(M));
-    transM := [One(StateSet(M))];
+    group := FamilyObj(Transition(M2,1,1))!.group;
+    gens := GeneratorsOfGroup(StateSet(M1));
+    transM := [One(StateSet(M1))];
     transR := [One(group)];
     src := [1];
-    dst := Difference(AlphabetOfFRObject(M),src);
+    dst := Difference(AlphabetOfFRObject(M1),src);
     while dst<>[] do
         c := Cartesian(src,dst);
         for i in [1..Length(gens)] do
-            x := First(c,p->Output(M,gens[i])[p[1]]=p[2]);
+            x := First(c,p->Output(M1,gens[i])[p[1]]=p[2]);
             if x<>fail then break; fi;
         od;
-        transM[x[2]] := Transition(M,gens[i],x[1])^-1*transM[x[1]];
-        transR[x[2]] := recur[1][i][x[1]]^-1*transR[x[1]];
+        transM[x[2]] := Transition(M1,gens[i],x[1])^-1*transM[x[1]];
+        transR[x[2]] := Transition(M2,gens[i],x[1])^-1*transR[x[1]];
         Add(src,Remove(dst,Position(dst,x[2])));
     od;
 
     src := [];
     dst := [];
     for i in [1..Length(gens)] do
-        x := WreathRecursion(M)(gens[i]);
-        Assert(0,recur[2][i]=x[2]);
-        for c in Cycles(PermList(x[2]),AlphabetOfFRObject(M)) do
-            g := Product(x[1]{c})^transM[c[1]];
-            h := Product(recur[1][i]{c})^transR[c[1]];
+        Assert(0,Output(M1,i)=Output(M2,i));
+        for c in Cycles(PermList(Output(M1,i)),AlphabetOfFRObject(M1)) do
+            g := Product(Transitions(M1,i){c})^transM[c[1]];
+            h := Product(Transitions(M2,i){c})^transR[c[1]];
             Add(src,g);
             Add(dst,h);
         od;
     od;
 
-    x := GroupHomomorphismByImagesNC(StateSet(M),group,src,dst);
+    x := GroupHomomorphismByImagesNC(StateSet(M1),group,src,dst);
     dst := List(gens,g->g^x);
     REDUCEINNER@(dst,GeneratorsOfMonoid(group),x->x);
 
-    return GroupHomomorphismByImagesNC(StateSet(M),group,gens,dst);
+    return GroupHomomorphismByImagesNC(StateSet(M1),group,gens,dst);
 end);
 
 InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
@@ -1367,7 +1344,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
             Add(b,Position(orbit[b[1]],d));
             Add(o,b[1]);
             d := transversal[b[1]][b[2]];
-            d := MATCHMARKINGS@(newM,states,[d!.transitions,d!.output]);
+            d := MATCHMARKINGS@(newM,states,d);
             Add(t,FACTORIZEAUT@(epi,M,d));
         od;
         Add(output,o);

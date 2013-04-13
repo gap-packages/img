@@ -45,7 +45,7 @@ ReadPackage("img", "gap/spider.gi");
 ReadPackage("img", "gap/machine.gi");
 ReadPackage("img", "gap/markedsphere.gi");
 ReadPackage("img", "gap/hurwitz.gi");
-#ReadPackage("img", "gap/thurston.gi");
+ReadPackage("img", "gap/thurston.gi");
 ReadPackage("img", "gap/examples.gi");
 #############################################################################
 

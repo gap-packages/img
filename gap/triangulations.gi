@@ -787,7 +787,7 @@ InstallMethod(Draw, "(IMG) for a triangulation",
     PRINTPOINTS@(f,t,[]);
     PRINTARCS@(f,t!.e,[],@.ro);
     
-    Info(InfoFR,3,"calling javaplot with:\n",s);
+    Info(InfoIMG,3,"calling javaplot with:\n",s);
     JAVAPLOT@(InputTextString(s));
 end);
 ##############################################################################

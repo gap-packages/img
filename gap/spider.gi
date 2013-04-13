@@ -516,7 +516,6 @@ BindGlobal("SPIDERALGORITHM@", function(machine)
     markedaddress := List([1..m], i-> false);
     oldaddress := [];
     extraniter := 0;
-Error("xx");
     
     repeat
 

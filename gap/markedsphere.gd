@@ -94,9 +94,8 @@
 ## </ManSection>
 
 ## <ManSection>
-##   <Oper Name="FRMachine" Arg="f" Label="rational function"/>
-##   <Oper Name="IMGMachine" Arg="f" Label="rational function"/>
-##   <Returns>An IMG FR machine.</Returns>
+##   <Oper Name="SphereMachine" Arg="f" Label="rational function"/>
+##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##   This function computes a triangulation of the sphere, on the
 ##   post-critical set of <A>f</A>, and lifts it through the map <A>f</A>.
@@ -169,17 +168,19 @@ DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
 DeclareAttribute("MarkedSphere", IsSphereMachine);
 DeclareAttribute("MarkedSphere", IsP1Map);
 
-DeclareOperation("FRMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
-DeclareOperation("FRMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);
-DeclareOperation("FRMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]);
-DeclareOperation("FRMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);
+DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
+DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);
+DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]);
+DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);
 
 DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
 
-DeclareAttribute("FRMachine", IsP1Map);
-DeclareAttribute("P1Map", IsFRMachine);
+DeclareAttribute("P1Map", IsSphereMachine);
+
+DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]);
+DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);
 #############################################################################
 
 #E markedsphere.gd . . . . . . . . . . . . . . . . . . . . . . . . .ends here

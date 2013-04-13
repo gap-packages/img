@@ -12,7 +12,9 @@
 
 DeclareGlobalFunction("NormalizedQuadraticP1Map");
 
-DeclareOperation("P1Map", [IsRingElement, IsFRMachine]);
+DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
+DeclareAttribute("SphereMachine", IsP1Map);
+DeclareAttribute("MarkedSphere", IsP1Map);
 DeclareProperty("IsBicritical", IsObject);
 
 DeclareOperation("FindThurstonObstruction", [IsElementOfSphereGroupCollection]);
