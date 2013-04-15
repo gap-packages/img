@@ -617,6 +617,7 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
              f := List([1..Length(t!.f)],i->Objectify(TYPE_FACE, rec(index := i))));
     for i in [1..Length(t!.v)] do
         SetNeighbour(r.v[i], r.e[Neighbour(t!.v[i])!.index]);
+        SetIsFake(r.v[i],IsFake(t!.v[i]));
     od;
     for i in [1..Length(t!.e)] do
         SetFrom(r.e[i], r.v[From(t!.e[i])!.index]);
@@ -624,6 +625,9 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
         for j in [Next,Prevopp,Opposite] do
             Setter(j)(r.e[i], r.e[j(t!.e[i])!.index]);
         od;
+        if HasGroupElement(t!.e[i]) then
+            SetGroupElement(r.e[i], GroupElement(t!.e[i]));
+        fi;
     od;
     for i in [1..Length(t!.f)] do
         SetNeighbour(r.f[i], r.e[Neighbour(t!.f[i])!.index]);
@@ -631,7 +635,9 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
     if IsList(movement) then
         r.wiggled := @.rz;
         for i in [1..Length(r.v)] do
-            if not IsFake(r.v[i]) then
+            if IsFake(r.v[i]) then
+                SetPos(r.v[i], Pos(t!.v[i]));
+            else
                 r.wiggled := r.wiggled + P1Distance(Pos(t!.v[i]), movement[i]);
                 SetPos(r.v[i], movement[i]);
             fi;
@@ -647,6 +653,7 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
         od;
         for i in [1..Length(r.f)] do SetPos(r.f[i], P1Image(movement,Pos(t!.f[i]))); od;
     fi;
+
     return Objectify(TYPE_TRIANGULATION, r);
 end);
 

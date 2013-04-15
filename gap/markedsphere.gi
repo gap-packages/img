@@ -867,7 +867,7 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
     
     perm := MatchP1Points(perm,List(perm,x->points));
     if perm=fail or Set(perm)<>[1..Length(points)] then # no match, find something coarse
-        return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentative(spiderA!.marking,x)^spiderB!.marking))/Length(points);
+        return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentative(spiderB!.marking,x^spiderA!.marking)))/Length(points);
     fi;
     
     
@@ -882,7 +882,7 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
     recur := SphereMachineOfBranchedCovering(spiderA,spiderB,P1z,false);
 
     endo := List(recur!.transitions,x->x[1]);
-    REDUCEINNER@(endo,GeneratorsOfMonoid(spiderB!.group),x->x);
+    REDUCEINNER@(endo,GeneratorsOfMonoid(model));
     
     for g in endo do
         dist := dist + (Length(g)-1); # if each image is a gen, then endo=1

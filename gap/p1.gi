@@ -308,7 +308,7 @@ InstallMethod(CollectedP1Points, "(IMG) list of p1points",
         list->CollectedP1Points(list,@.p1eps));
 
 InstallMethod(MatchP1Points, "(IMG) for two lists of points and a real",
-        [IsP1PointList,IsP1PointList,IsFloat],
+        [IsP1PointList,IsP1PointCollColl,IsFloat],
         function(ptA, ptB, separation)
     # ptA is a list of n points; ptB[i] is a list of neighbours of ptA[i]
     # each ptB[i][j] is a sphere point
@@ -333,7 +333,7 @@ InstallMethod(MatchP1Points, "(IMG) for two lists of points and a real",
     return perm;
 end);
 InstallMethod(MatchP1Points, "(IMG) for two lists of points",
-        [IsP1PointList,IsP1PointList],
+        [IsP1PointList,IsP1PointCollColl],
         function(ptA,ptB)
     return MatchP1Points(ptA,ptB,2*@.ro);
 end);

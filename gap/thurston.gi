@@ -33,23 +33,35 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
     # it is in particular assumed that recur[1] has as many lines as
     # StateSet(M) has generators; and that entries in recur[1][j] belong to a
     # free group of rank the length of v.
-    local w, i, j, k, c, x, y, gens1, gens2;
+    local w, i, j, k, c, g1, g2, gens1, gens2, src, dst;
 
-    gens1 := GeneratorsOfGroup(StateSet(M1));
-    gens2 := GeneratorsOfGroup(FamilyObj(M2!.transitions[1][1])!.group);
+    g1 := StateSet(M1);
+    g2 := FamilyObj(M2!.transitions[1][1])!.group;
+    gens1 := GeneratorsOfGroup(g1);
+    gens2 := GeneratorsOfGroup(g2);
+    src := [];
+    dst := [];
     w := [];
 
     for i in [1..Length(gens1)] do
         Assert(0,Output(M1,i)=Output(M2,i));
         for c in Cycles(PermList(Output(M1,i)),AlphabetOfFRObject(M1)) do
-            j := CyclicallyReducedWord(Product(M1!.transitions[i]{c}));
+            j := Product(M1!.transitions[i]{c});
             if IsOne(j) then continue; fi;
-            k := CyclicallyReducedWord(Product(M2!.transitions[i]{c}));
-            w[Position(gens1,j)] := Position(gens2,k);
+            k := Product(M2!.transitions[i]{c});
+            Add(src,j);
+            Add(dst,k);
+            w[Position(gens1,CyclicallyReducedWord(j))] := Position(gens2,CyclicallyReducedWord(k));
         od;
     od;
     Assert(0,BoundPositions(w)=[1..Length(gens1)]);
-    return w;
+    for i in [1..Length(gens2)] do
+        if not i in w then
+            Add(dst,gens2[i]);
+            Add(src,One(g1));
+        fi;
+    od;
+    return [GroupHomomorphismByImages(g2,g1,dst,src),w];
 end);
 
 BindGlobal("PUSHRECURSION@", function(map,M)
@@ -404,13 +416,12 @@ end);
 InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
-    local oldspider, spider, t, gens, n, deg, model,
-          f, mobius, match, v, i, j, recf, recmobius, map,
+    local old_downsphere, downsphere, upsphere, n, deg, model,
+          f, mobius, Mf, Mmobius, hom_mobius, match, v, i, j,
           dist, obstruction, lifts, sublifts, fast, poly;
 
     model := StateSet(M);
-    gens := GeneratorsOfGroup(model);
-    n := Length(gens);
+    n := Length(GeneratorsOfGroup(model));
     deg := Length(AlphabetOfFRObject(M));
     poly := IsPolynomialSphereMachine(M);
     
@@ -425,19 +436,19 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
         fi;
     fi;    
     
-    # create spider on +/- equidistributed points on Greenwich meridian.
+    # create downsphere on +/- equidistributed points on Greenwich meridian.
     v := [];
     for i in [1..n] do
         # on positive real axis, tending to infinity
         f := Exp(@.2ipi*(i-1)/(2*n-2));
         Add(v,P1Point(@.o*ImaginaryPart(f)/(@.ro+RealPart(f))));
     od;
-    spider := NewMarkedSphere(v,model);
+    downsphere := NewMarkedSphere(v,model);
 
     if ValueOption("julia")<>fail then
         i := ValueOption("julia");
         if not IsInt(i) then i := 1000; fi; # number of points to trace
-        spider!.points := EquidistributedP1Points(i);
+        downsphere!.points := EquidistributedP1Points(i);
     fi;
     
     lifts := fail;
@@ -445,81 +456,78 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
     fast := false;
 
     repeat
-        oldspider := spider;
+        old_downsphere := downsphere;
         # find a rational map that has the right critical values
-        f := BranchedCoveringByMonodromy(spider,Output(M)); #!!! use f, lifts
+        f := BranchedCoveringByMonodromy(downsphere,Output(M)); #!!! use f, lifts
         lifts := Concatenation(List(f.points,x->List(x,y->y[1])));
         f := f.map;
         Info(InfoIMG,3,"1: found rational map ",f," on vertices ",lifts);
 
-        if fast then # just get points closest to those in spider t
+        if fast then # just get points closest to those in downsphere t
             match := MatchP1Points(sublifts,List(sublifts,x->lifts));
             if match=fail then
 		Info(InfoIMG,3,"1.5: back to slow mode");
                 fast := false; continue;
             fi;
         else
-            # create a spider on the full preimage of the points of <spider>
-            t := NewMarkedSphere(lifts);
-            Info(InfoIMG,3,"2: created liftedspider ",t);
+            # create a spider on the full preimage of the points of <downsphere>
+            upsphere := NewMarkedSphere(lifts);
+            Info(InfoIMG,3,"2: created liftedspider ",upsphere);
 
-            # lift paths in <spider> to <t>
-            recf := SphereMachineOfBranchedCovering(spider,t,f,poly);
-            if recf=fail then return fail; fi;
-            Info(InfoIMG,3,"3: recursion ",recf);
+            # lift paths in <downsphere> to <upsphere>
+            Mf := SphereMachineOfBranchedCovering(downsphere,upsphere,f,poly);
+            Info(InfoIMG,3,"3: recursion ",Mf);
             
-            # find a bijection between the alphabets of <recf> and <M>
-            match := MATCHPERMS@(M,recf!.output);
+            # find a bijection between the alphabets of <Mf> and <M>
+            match := MATCHPERMS@(M,Mf!.output);
             if match=fail then return fail; fi;
             
-            recf := MYCHANGEFRMACHINEBASIS@(recf,match);
+            Mf := MYCHANGEFRMACHINEBASIS@(Mf,match);
             Info(InfoIMG,3,"4: alphabet permutation ",match);
 
             # extract those vertices in <v> that appear in the recursion
-            match := MATCHTRANS@(M,recf);
+            match := MATCHTRANS@(M,Mf);
             Info(InfoIMG,3,"5: extracted and sorted vertices ",match);
+            upsphere!.marking := upsphere!.marking*match[1]; # so we're again marked by <model>
+            upsphere!.model := model;
+            match := match[2];
         fi;
 
         # find a mobius transformation that normalizes <sublifts> wrt PSL2C
         sublifts := lifts{match};
-        mobius := P1MapNormalizingP1Points(sublifts,Vertices(spider));
+        mobius := P1MapNormalizingP1Points(sublifts,Vertices(downsphere));
         Info(InfoIMG,3,"6: normalize by mobius map ",mobius);
 
         # now create the new spider on the image of these points
         v := List(sublifts,p->P1Image(mobius,p));
         
 	if fast then
-            dist := Sum([1..Length(v)],i->P1Distance(Vertices(spider)[i],v[i]));
+            dist := Sum([1..Length(v)],i->P1Distance(Vertices(downsphere)[i],v[i]));
             if dist>@.fast*Length(v) then
                 fast := false;
                 Info(InfoIMG,3,"7: legs moved ",dist,"; back to slow mode");
-                spider := oldspider;
+                downsphere := old_downsphere;
                 continue; # restart
             fi;
             # just wiggle spider around
-            spider := WiggledMarkedSphere(spider,v);
+            downsphere := WiggledMarkedSphere(downsphere,v);
         else
-            spider := NewMarkedSphere(v,model);
-            recmobius := SphereMachineOfBranchedCovering(spider,t,InverseP1Map(mobius),poly);
-            if recmobius=fail then
-                return fail;
-            fi;
-            Info(InfoIMG,3,"7: new spider ",spider," with recursion ",recmobius);
+            downsphere := NewMarkedSphere(v,model);
+            Mmobius := SphereMachineOfBranchedCovering(downsphere,upsphere,mobius,poly);
+            Info(InfoIMG,3,"7: new spider ",downsphere," with recursion ",Mmobius);
 
             # compose recursion of f with that of mobius
-            map := t!.marking*GroupHomomorphismByImagesNC(t!.group,spider!.group,GeneratorsOfGroup(t!.group),List(recmobius,x->x[1]));
-            for i in recf[1] do
-                for j in [1..Length(i)] do i[j] := i[j]^map; od;
-            od;
-            Info(InfoIMG,3,"8: composed recursion is ",recf);
+            hom_mobius := GroupHomomorphismByImages(model,model,GeneratorsOfGroup(model),List(Mmobius!.transitions,x->x[1]));
+            Info(InfoIMG,3,"8: composed recursion is ",hom_mobius);
                    
             # finally set marking of new spider using M
-            spider!.marking := MATCHMARKINGS@(M,spider!.group,recf);
-            Info(InfoIMG,3,"9: marked new spider ",spider);
+            downsphere!.marking := downsphere!.marking*hom_mobius;
+            Info(InfoIMG,3,"9: marked new spider ",downsphere);
+            #!!! or inverse???
         fi;
         
-        dist := DistanceMarkedSpheres(spider,oldspider,fast);
-        Info(InfoIMG,2,"Spider moved ",dist," steps; feet=",Vertices(spider)," marking=",spider!.marking);
+        dist := DistanceMarkedSpheres(downsphere,old_downsphere,fast);
+        Info(InfoIMG,2,"Spider moved ",dist," steps; feet=",Vertices(downsphere)," marking=",downsphere!.marking);
 
         if dist<@.ratprec then
             if fast then # force one last run with the full algorithm
@@ -533,7 +541,7 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
         else
             fast := false;
         fi;
-        obstruction := SPIDEROBSTRUCTION@(spider,M);
+        obstruction := SPIDEROBSTRUCTION@(downsphere,M);
         if obstruction<>fail then
             return obstruction;
         fi;
@@ -543,32 +551,27 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
     
     i := NormalizedQuadraticP1Map(f,M,ValueOption("param"));
     if i<>fail then
-        spider := WiggledMarkedSphere(spider,InverseP1Map(i[2]));
+        downsphere := WiggledMarkedSphere(downsphere,InverseP1Map(i[2]));
         f := i[1];
     fi;
     
     # construct a new machine with simpler recursion
-    for i in recf[1] do
-        for j in [1..Length(i)] do
-            i[j] := PreImagesRepresentative(spider!.marking,i[j]);
-        od;
-    od;
-    t := FRMachine(model, recf[1], recf[2]);
+    #!!!!
     
     # in principle, now, t is the same as M (but perhaps in a slightly
     # different basis, i.e. conjugated by an inner automorphism)
     
     # find a good twist to shorten the marking; presumably, this
     # will give a simpler machine
-    i := SIMPLIFYBYBRAIDTWISTS@(M, spider!.marking);
-    t := t^Product(i);
-    SetCorrespondence(t,i);
+    i := SIMPLIFYBYBRAIDTWISTS@(M, downsphere!.marking);
+    Mf := Mf^Product(i);
+    SetCorrespondence(Mf,i);
     
-    spider!.map := f;
-    spider!.cycle := ATTRACTINGCYCLES@(POSTCRITICALPOINTS@(f));
+    downsphere!.map := f;
+    downsphere!.cycle := ATTRACTINGCYCLES@(POSTCRITICALPOINTS@(f));
                      
-    SetSphereMachine(f,t);
-    SetMarkedSphere(f,spider);
+    SetSphereMachine(f,Mf);
+    SetMarkedSphere(f,downsphere);
     return f;
 end);
 

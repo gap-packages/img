@@ -285,6 +285,7 @@ DeclareGlobalFunction("SetP1Points");
 
 DeclareCategory("IsP1Point",IsObject);
 DeclareCategoryCollections("IsP1Point");
+DeclareCategoryCollections("IsP1PointCollection");
 DeclareSynonym("IsP1PointList",IsP1PointCollection and IsList);
 DeclareCategory("IsIEEE754P1Point",IsP1Point);
 BindGlobal("P1PointsFamily",NewFamily("P1PointsFamily",IsP1Point));
@@ -317,8 +318,8 @@ DeclareAttribute("P1Antipode",IsP1Point);
 DeclareAttribute("P1Coordinate",IsP1Point);
 DeclareOperation("CollectedP1Points",[IsP1PointList]);
 DeclareOperation("CollectedP1Points",[IsP1PointList,IsFloat]);
-DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointList,IsFloat]);
-DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointList]);
+DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointCollColl,IsFloat]);
+DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointCollColl]);
 
 ################################################################
 # p1 maps

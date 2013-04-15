@@ -558,12 +558,21 @@ BindGlobal("COMPOSERECURSION@", function(trans,out,pre,post)
     # returns the new [trans,out].
     local i, w, newout, newtrans, deg, psi;
     deg := Length(trans[1]);
+    newout := [];
+    newtrans := [];
+
+    if deg=1 then # bug with wreath products on the trivial group
+        psi := GroupHomomorphismByImagesNC(Range(pre),Range(post),GeneratorsOfGroup(Range(pre)),List([1..Length(GeneratorsOfGroup(Range(pre)))],i->trans[i][1]));
+        for i in GeneratorsOfGroup(Source(pre)) do
+            Add(newout,[1]);
+            Add(newtrans,[PreImagesRepresentative(post,ImagesRepresentative(pre,i)^psi)]);
+        od;
+        return [newtrans,newout];
+    fi;
 
     w := WreathProduct(Range(post),SymmetricGroup(deg));
     psi := GroupHomomorphismByImagesNC(Range(pre),w,GeneratorsOfGroup(Range(pre)),List([1..Length(GeneratorsOfGroup(Range(pre)))],i->Product([1..deg],j->trans[i][j]^Embedding(w,j))*PermList(out[i])^Embedding(w,deg+1)));
 
-    newout := [];
-    newtrans := [];
     for i in GeneratorsOfGroup(Source(pre)) do
         w := ImagesRepresentative(pre,i)^psi;
         Add(newout,ListPerm(w![deg+1],deg));
@@ -646,24 +655,23 @@ InstallMethod(AsPolynomialSphereMachine, "(IMG) for a polynomial machine",
 ##
 #M Normalize polynomial machine
 ##
-BindGlobal("REDUCEINNER@", function(img0,gen,nf)
+BindGlobal("REDUCEINNER@", function(img0,gen)
     # repeatedly apply conjugation by elements of gen to reduce img, the list
     # of images of generators under an endomorphism.
-    # nf makes elements in normal form.
     # modifies img, and returns the conjugating element that was used to reduce;
     # i.e. after the run, List(img,x->x^elt) = img0
 
     local cost, oldcost, i, img, oldimg, elt, idle;
 
     elt := One(img0[1]);
-    oldimg := List(img0,nf);
+    oldimg := img0;
     oldcost := Sum(oldimg,Length);
     gen := Concatenation(gen,List(gen,Inverse));
     
     repeat
         idle := true;
         for i in gen do
-            img := List(oldimg,x->nf(x^i));
+            img := List(oldimg,x->x^i);
             cost := Sum(img,Length);
             if cost < oldcost then
                 oldcost := cost;
@@ -1302,7 +1310,7 @@ BindGlobal("MATCHMARKINGS@", function(M1,M2)
 
     x := GroupHomomorphismByImagesNC(StateSet(M1),group,src,dst);
     dst := List(gens,g->g^x);
-    REDUCEINNER@(dst,GeneratorsOfMonoid(group),x->x);
+    REDUCEINNER@(dst,GeneratorsOfMonoid(group));
 
     return GroupHomomorphismByImagesNC(StateSet(M1),group,gens,dst);
 end);
