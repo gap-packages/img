@@ -12,11 +12,11 @@
 
 DeclareGlobalFunction("NormalizedQuadraticP1Map");
 
+DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
-DeclareAttribute("SphereMachine", IsP1Map);
-DeclareAttribute("MarkedSphere", IsP1Map);
-DeclareProperty("IsBicritical", IsObject);
 
 DeclareOperation("FindThurstonObstruction", [IsElementOfSphereGroupCollection]);
+
+DeclareProperty("IsBicritical", IsObject);
 
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

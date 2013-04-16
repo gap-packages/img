@@ -773,6 +773,7 @@ InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a 
     fi;
 
     machine := FRMachine(src!.model,state,perm);
+    IsSphereMachine(machine); # set filter
 
     if poly then
         SetAddingElement(machine,FRElement(machine,src!.model.(Length(state))));
@@ -849,7 +850,6 @@ InstallMethod(SphereMachine, "(IMG) for a rational function",
 
     machine := SphereMachineOfBranchedCovering(spider,spider,f,poly);
     SetMarkedSphere(machine,spider);
-    SetP1Map(machine,f);
 
     return machine;
 end);

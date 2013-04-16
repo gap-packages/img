@@ -177,7 +177,7 @@ DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
 
-DeclareAttribute("P1Map", IsSphereMachine);
+DeclareAttribute("SphereMachine", IsP1Map);
 
 DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]);
 DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);

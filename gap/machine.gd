@@ -769,17 +769,6 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="BraidTwists" Arg="m"/>
-##   <Returns>Automorphisms of <A>m</A>'s stateset that preserve its relator.</Returns>
-##   <Description>
-##     This function returns a list of (positive and negative) free group automorphisms, that are
-##     such that conjugating <A>m</A> by these automorphisms preserves its IMG relator.
-##     <P/>
-##     These are in fact the generators of Artin's braid group.
-##   </Description>
-## </ManSection>
-##
-## <ManSection>
 ##   <Oper Name="RotatedSpider" Arg="m, [p]"/>
 ##   <Returns>A polynomial FR machine with rotated spider at infinity.</Returns>
 ##   <Description>
@@ -819,7 +808,6 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ## <#/GAPDoc>
 ##
 #DeclareAttribute("ComplexConjugate", IsFRMachine); # already declared for arithmetic objects
-DeclareAttribute("BraidTwists", IsSphereMachine);
 DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine]);
 DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 #############################################################################

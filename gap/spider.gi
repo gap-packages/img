@@ -99,14 +99,12 @@ end);
 
 BindGlobal("COUNTBOOL@", function(w)
     # returns fail if one of the states of a recursion w contains at least 2 equal letters
-    local v, i, count;
-    i := 1;
-    v := ExtRepOfObj(w);
-    count := [];
-    for i in [2,4..Length(v)] do
-        if not IsBound(count[v[i-1]]) then count[v[i-1]] := 0; fi;
-        count[v[i-1]] := count[v[i-1]] + AbsInt(v[i]);
-        if count[v[i-1]]>2 then return false; fi;
+    local l, count;
+    for l in LetterRepAssocWord(w) do
+        l := AbsInt(l);
+        if not IsBound(count[l]) then count[l] := 0; fi;
+        count[l] := count[l] + 1;
+        if count[l]>2 then return false; fi;
     od;
     return true;
 end);

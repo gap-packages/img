@@ -52,14 +52,25 @@ BindGlobal("BRUTEFORCEFACTORIZATION@", function(w,g)
     return l;
 end);
 
-InstallOtherMethod(AsWordLetterRepInGenerators, "(IMG) for a sphere group element and its sphere group",
-        [IsElementOfSphereGroup, IsGroup],
+InstallOtherMethod(AsWordLetterRepInGenerators, "(IMG) for a sphere group element and a subgroup",
+        [IsElementOfSphereGroup, IsGroup and HasGeneratorsOfGroup],
         function(w,g)
-    local l;
-    l := AsWordLetterRepInGenerators(UnderlyingElement(w),Group(List(GeneratorsOfGroup(g),UnderlyingElement)));
+    local l, G, gens, iso;
+
+    G := FamilyObj(w)!.group;
+    gens := GeneratorsOfGroup(g);
+
+    # first, try to use the FGA algorithms
+    if HasIsomorphismFreeGroup(G) then
+        iso := IsomorphismFreeGroup(G);
+        return AsWordLetterRepInGenerators(w^iso,Group(List(gens,x->x^iso)));
+    fi;
+
+    # a cheap shot
+    l := AsWordLetterRepInGenerators(UnderlyingElement(w),Group(List(gens,UnderlyingElement)));
     if l<>fail then return l; fi;
 
-    #!!! now complicated and inefficient method
+    # now complicated and inefficient method
     return BRUTEFORCEFACTORIZATION@(w,g);
 end);
 
@@ -145,6 +156,22 @@ BindGlobal("SPHERENFFUNCTION@", function(g,ordering,power)
     fi;
 end);
 
+InstallMethod(IsomorphismFreeGroup, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        function(G)
+    local F, n, gens, img, pregens, preimg;
+    
+    gens := GeneratorsOfGroup(G);
+    n := Length(gens);
+    F := FreeGroup(n-1);
+    pregens := GeneratorsOfGroup(F);
+    img := [];
+    img{OrderingOfSphereGroup(G)} := Concatenation(pregens,[Product(pregens)^-1]);
+    preimg := gens{OrderingOfSphereGroup(G){[1..n-1]}};
+
+    return GroupHomomorphismByFunction(G,F,w->MappedWord(w,gens,img),w->MappedWord(w,pregens,preimg));
+end);
+
 InstallGlobalFunction(SphereGroup, function (arg)
     local  F, G, fam, rel, n, ordering, power;
     
@@ -209,7 +236,12 @@ InstallGlobalFunction(SphereGroup, function (arg)
     G!.GeneratorsOfMagmaWithInverses := List(GeneratorsOfGroup(F),x->ElementOfSphereGroup(fam,x));
 
     SetIsSphereGroup(G,true);
-    
+
+    # set isomorphism to free group, if available
+    if ForAll(power,x->x=0) then
+        IsomorphismFreeGroup(G);
+    fi;
+
     return G;
 end);
 
@@ -569,6 +601,33 @@ BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertibl
     end,invertible,w->MappedWord(w,gens,outergens));
 
     return out;
+end);
+
+BindGlobal("SIMPLIFYBYBRAIDTWISTS@", function(g,hom)
+    # hom is a homomorphism from a group h to g.
+    # find a product of automorphisms of g such that hom, post-composed by these, becomes
+    # simpler, for the "sum of lengths of images of generators" metric.
+    # return the list of these automorphisms.
+    local gens, autgens, i, len, newhom, newlen, twist, idle;
+
+    autgens := GeneratorsOfGroup(AutomorphismGroup(g));
+    gens := GeneratorsOfGroup(Source(hom));
+    len := infinity;
+    twist := [];
+    repeat
+        idle := true;
+        newhom := hom * autgens;
+        newlen := List(newhom,t->Sum(gens,x->Length(x^t)));
+        i := Position(newlen,Minimum(newlen));
+        if newlen[i] < len then
+            len := newlen[i];
+            hom := newhom[i];
+            Add(twist,autgens[i]);
+            idle := false;
+        fi;
+    until idle;
+    
+    return twist;
 end);
 
 InstallMethod(IsomorphismFpGroup, "(IMG) for a sphere automorphism group",

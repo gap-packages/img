@@ -20,6 +20,7 @@ DeclareAttribute("EulerCharacteristic", IsGroup);
 DeclareAttribute("RankOfSphereGroup", IsSphereGroup);
 DeclareAttribute("OrderingOfSphereGroup", IsSphereGroup);
 DeclareAttribute("ExponentsOfSphereGroup", IsSphereGroup);
+DeclareAttribute("IsomorphismFreeGroup", IsSphereGroup);
 
 DeclareGlobalFunction("SphereGroup");
 DeclareOperation("ElementOfSphereGroup", [IsFamily, IsAssocWordWithInverse]);

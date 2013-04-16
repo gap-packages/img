@@ -252,8 +252,7 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
     # in the third case, normalize f as 1+a/z+b/z^2, such that 0 is on
     # a cycle of length <param>
     # return [new map, Möbius transformation from old to new]
-    local p, i, j, k, a, b, mobius, m, coeff, degree, numer, denom, z;
-    z := IndeterminateOfUnivariateRationalFunction(f);
+    local p, i, j, k, a, b, mobius, m, coeff, degree, numer, denom;
     p := POSTCRITICALPOINTS@(f);
     degree := DegreeOfP1Map(f);
     
@@ -277,9 +276,9 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
         j := First(p[3],z->not IsIdenticalObj(z,p[2][1][1]) and not IsIdenticalObj(z,p[2][2][1]));
         if j=fail then # no other point; then map is z^{\pm degree}
             if p[1] then
-                return [z^degree,mobius];
+                return [P1Monomial(degree),mobius];
             else
-                return [z^(-degree),mobius];
+                return [P1Monomial(-degree),mobius];
             fi;
         fi;
     elif param=IsPolynomial then
@@ -292,7 +291,7 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
             Error("Map is not a polynomial");
         od;
         if Length(p[3])=2 then
-            return [z^degree,mobius];
+            return [P1Monomial(degree),mobius];
         fi;
         k := First([1..Length(p[2])],k->p[2][k][1]<>p[3][j]); # other critical point
         mobius := MoebiusMap(p[2][k][1],p[3][j]);
@@ -326,19 +325,19 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
         od;
         if param=1 then # map marked point to infty, unmarked to 0, 0=>1
             if Length(p[3])=2 then
-                return [z^degree,mobius];
+                return [P1Monomial(degree),mobius];
             fi;
             j := First(p[4],r->r[1]=i-3)[2];
             mobius := MoebiusMap(p[2][3-i][1],p[3][j],p[2][i][1]);
         elif param=2 then # normalize as a/(z^2+2z), infty=>0->infty, -1=>
             if Length(p[3])=2 then # special case infty=>0=>infty or polynomial
                 if First(p[4],r->r[1]=j)[2]=j then
-                    return [z^degree,mobius];
+                    return [P1Monomial(degree),mobius];
                 else
-                    return [z^(-degree),mobius];
+                    return [P1Monomial(-degree),mobius];
                 fi;
             fi;
-            mobius := CompositionP1Map(MoebiusMap(p[3][j],p[2][3-i][1],p[2][i][1]),-z);
+            mobius := CompositionP1Map(MoebiusMap(p[3][j],p[2][3-i][1],p[2][i][1]),-P1z);
         else # normalize as 1+a/z+b/z^2, 0=>infty->1
             k := First(p[4],r->r[1]=j)[2];
             mobius := MoebiusMap(p[2][i][1],p[3][k],p[3][j]);
@@ -374,29 +373,6 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
     return [f,mobius];
 end);
 
-BindGlobal("SIMPLIFYBYBRAIDTWISTS@", function(m,marking)
-    local bg, g, i, len, newmarking, newlen, twist, idle;
-
-    bg := BraidTwists(m);
-    g := GeneratorsOfGroup(Source(marking));
-    len := infinity;
-    twist := [];
-    repeat
-        idle := true;
-        newmarking := List(bg,t->t*marking);
-        newlen := List(newmarking,t->Sum(g,x->Length(x^t)));
-        i := Position(newlen,Minimum(newlen));
-        if newlen[i] < len then
-            len := newlen[i];
-            marking := newmarking[i];
-            Add(twist,bg[i]);
-            idle := false;
-        fi;
-    until idle;
-    
-    return List(Reversed(twist),Inverse);
-end);
-
 # we rewrite it, because the transition entries are not in the stateset.
 # !!!! we'll have to generalize machines to have different input and output
 BindGlobal("MYCHANGEFRMACHINEBASIS@", function(M,p)
@@ -413,7 +389,7 @@ BindGlobal("MYCHANGEFRMACHINEBASIS@", function(M,p)
     return newM;
 end);
 
-InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
+InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
     local old_downsphere, downsphere, upsphere, n, deg, model,
@@ -523,7 +499,6 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
             # finally set marking of new spider using M
             downsphere!.marking := downsphere!.marking*hom_mobius;
             Info(InfoIMG,3,"9: marked new spider ",downsphere);
-            #!!! or inverse???
         fi;
         
         dist := DistanceMarkedSpheres(downsphere,old_downsphere,fast);
@@ -554,25 +529,29 @@ InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
         downsphere := WiggledMarkedSphere(downsphere,InverseP1Map(i[2]));
         f := i[1];
     fi;
-    
-    # construct a new machine with simpler recursion
-    #!!!!
-    
-    # in principle, now, t is the same as M (but perhaps in a slightly
-    # different basis, i.e. conjugated by an inner automorphism)
-    
+
     # find a good twist to shorten the marking; presumably, this
     # will give a simpler machine
-    i := SIMPLIFYBYBRAIDTWISTS@(M, downsphere!.marking);
-    Mf := Mf^Product(i);
-    SetCorrespondence(Mf,i);
+    v := SIMPLIFYBYBRAIDTWISTS@(model, downsphere!.marking);
+    for i in v do M := M^i; od;
+    SetCorrespondence(M,v);
     
     downsphere!.map := f;
     downsphere!.cycle := ATTRACTINGCYCLES@(POSTCRITICALPOINTS@(f));
-                     
-    SetSphereMachine(f,Mf);
-    SetMarkedSphere(f,downsphere);
-    return f;
+
+    return rec(map := f, machine := M, markedsphere := downsphere);
+end);
+
+InstallMethod(P1MapBySphereMachine, "(IMG) for a sphere machine",
+        [IsSphereMachine],
+        function(M)
+    local a;
+    a := ThurstonAlgorithm(M);
+    if IsBound(a.map) then
+        return a.map;
+    else
+        return a; # the obstruction
+    fi;
 end);
 
 #E thurston.gi . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here
