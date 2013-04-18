@@ -64,49 +64,35 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
     return [GroupHomomorphismByImages(g2,g1,dst,src),w];
 end);
 
-BindGlobal("PUSHRECURSION@", function(map,M)
-    # returns a WreathRecursion() function for Range(map), and not
-    # Source(map) = StateSet(M)
-    local w;
-    w := WreathRecursion(M);
-    return function(x)
-        local l;
-        l := w(PreImagesRepresentative(map,x));
-        return [List(l[1],x->Image(map,x)),l[2]];
-    end;
-end);
-
-BindGlobal("PULLRECURSION@", function(map,M)
-    # returns a WreathRecursion() function for Source(map), and not
-    # Range(map) = StateSet(M)
-    local w;
-    w := WreathRecursion(M);
-    return function(x)
-        local l;
-        l := w(Image(map,x));
-        return [List(l[1],x->PreImagesRepresentative(map,x)),l[2]];
-    end;
-end);
-
-BindGlobal("PERRONMATRIX@", function(mat)
-    local i, j, len;
+InstallMethod(IsNonContractingMatrix, "(IMG) for an integer matrix",
+        [IsMatrix],
+        function(mat)
+    local i, j, len, part, parts, submat, sublen;
     # find if there's an eigenvalue >= 1, without using numerical methods
 
     len := Length(mat);
-    if NullspaceMat(mat-IdentityMat(len))=[] then # no 1 eigenval
-        i := List([1..len],i->1);
-        j := List([1..len],i->1); # first approximation to perron-frobenius vector
-        repeat
-            i := i*mat;
-            j := j*mat*mat; # j should have all entries growing exponentially
-            if ForAll([1..len],a->j[a]=0 or j[a]<i[a]) then
-                return false; # perron-frobenius eigenval < 1
-            fi;
-        until ForAll(j-i,IsPosRat);
-    fi;
+    parts := List(EquivalenceClasses(StronglyConnectedComponents(BinaryRelationOnPoints(List([1..len],x->Filtered([1..len],y->IsPosRat(mat[x][y])))))),Elements);
+
+    for part in parts do
+        submat := mat{part}{part};
+        sublen := Length(part);
+
+        if NullspaceMat(submat-IdentityMat(sublen))=[] then # no 1 eigenval
+            i := List([1..sublen],i->1);
+            j := List([1..sublen],i->1);   # first approximation to perron-frobenius vector
+            repeat
+                i := i*submat;
+                j := j*submat*submat; # j should have all entries growing exponentially
+                if ForAll([1..sublen],a->j[a]=0 or j[a]<i[a]) then
+                    return false; # perron-frobenius eigenval < 1
+                fi;
+            until ForAll(j-i,IsPosRat);
+        fi;
+    od;
     return true;
 end);
 
+#!!! still old format
 BindGlobal("SURROUNDINGCURVE@", function(t,x)
     # returns a CCW sequence of edges disconnecting x from its complement in t.
     # x is a sequence of indices of vertices. t is a triangulation.
@@ -134,115 +120,100 @@ BindGlobal("SURROUNDINGCURVE@", function(t,x)
     return [a,c];
 end);
 
-BindGlobal("FINDOBSTRUCTION@", function(M,multicurve,spider,boundary)
-    # search for an obstruction starting with the elements of M.
-    # return fail or a record describing the obstruction.
-    # spider and boundary may be "fail".
-    local len, w, x, mat, row, i, j, c, d, group, pi, gens, peripheral;
+InstallMethod(LiftOfConjugacyClass, "(IMG) for a machine and a conjugacy class",
+        [IsGroupFRMachine,IsConjugacyClassGroupRep],
+        function(M,c)
+    local r, lift;
+    r := DecompositionOfFRElement(Representative(c));
+    lift := [];
+    for c in Cycles(PermList(r[2]),AlphabetOfFRObject(M)) do
+        Add(lift,[Length(c),ConjugacyClass(StateSet(M),Product(r[1]{c}))]);
+    od;
+    return lift;
+end);
+
+InstallMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere conj. classes",
+        [IsSphereMachine,IsMulticurve],
+        function(M,multicurve)
+    # enlarge multicurve so that it becomes invariant, and return the transition matrix;
+    # or return fail if the enlargement would cause curves to intersect
+    local g, len, mat, lift, c, row,
+           w, x, i, j, d, group, pi, gens, peripheral;
+
+    g := StateSet(M);
+    while g<>FamilyObj(Representative(multicurve[1]))!.group do
+        Error("Elements do not all have the same underlying sphere group");
+    od;
 
     len := Length(multicurve);
-    gens := GeneratorsOfGroup(StateSet(M));
-    group := FreeGroup(Length(gens)-1);
-    c := IMGRelator(M);
-    pi := GroupHomomorphismByImagesNC(StateSet(M),group,List([1..Length(gens)],i->Subword(c,i,i)),Concatenation(GeneratorsOfGroup(group),[Product(List(Reversed(GeneratorsOfGroup(group)),Inverse))]));
-
-    w := PUSHRECURSION@(pi,M);
-
-    peripheral := List(GeneratorsOfSemigroup(StateSet(M)),x->CyclicallyReducedWord(x^pi));
-    multicurve := List(multicurve,x->CyclicallyReducedWord(x^pi));
     mat := [];
-    for i in multicurve do
-        d := w(i);
+    for c in multicurve do
         row := List([1..len],i->0);
-        for i in Cycles(PermList(d[2]),AlphabetOfFRObject(M)) do
-            c := CyclicallyReducedWord(Product(d[1]{i}));
-            if ForAny(peripheral,x->IsConjugate(group,x,c)) then
-                continue; # peripheral curve
+        for lift in LiftOfConjugacyClass(M,c) do
+            if IsPeripheral(lift[2]) then
+                continue;
             fi;
-            j := First([1..len],j->IsConjugate(group,c,multicurve[j])
-                       or IsConjugate(group,c^-1,multicurve[j]));
+            j := Position(multicurve,lift[2]);
+            if j=fail then
+                j := Position(multicurve,lift[2]^-1);
+            fi;
             if j=fail then # add one more curve
+                if ForAny(multicurve,c->IntersectionNumber(c,lift[2])>0) then
+                    return fail;
+                fi;
                 for j in mat do Add(j,0); od;
-                Add(row,1/Length(i));
+                Add(row,1/lift[1]);
                 len := len+1;
                 Add(multicurve,c);
             else
-                row[j] := row[j] + 1/Length(i);
+                row[j] := row[j] + 1/lift[1];
             fi;
         od;
         Add(mat,row);
     od;
 
-    Info(InfoIMG,2,"Thurston matrix is ",mat);
+    return mat;
+end);
 
-    x := List(EquivalenceClasses(StronglyConnectedComponents(BinaryRelationOnPoints(List([1..len],x->Filtered([1..len],y->IsPosRat(mat[x][y])))))),Elements);
-    for i in x do
-        if PERRONMATRIX@(mat{i}{i}) then # there's an eigenvalue >= 1
-            d := rec(machine := M,
-                     obstruction := [],
-                     matrix := mat{i}{i});
-            if spider<>fail then
-                d.spider := spider;
-            fi;
-            for j in i do
-                if spider<>fail and IsBound(boundary[j]) then
-                    if not IsBound(spider!.arcs) then spider!.arcs := []; fi;
-                    Add(spider!.arcs,[[0,0,255],Float(105/100),boundary[j][1]]);
-                fi;
-                c := [PreImagesRepresentative(pi,multicurve[j])];
-                if spider<>fail then
-                    REDUCEINNER@(c,GeneratorsOfMonoid(StateSet(M)));
-                fi;
-                Append(d.obstruction,c);
-            od;
-            return d;
+InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
+        [IsSphereMachine,IsMarkedSphere],
+        function(M,spider)
+    # check if <spider> has coalesced points; in that case, find a short loop, saturate it by
+    # taking its lifts, and check if they form an obstruction
+    local multicurve, e, g, mat;
+
+    #1. for each edge of the spanning tree, consider its conjugacy class c. This represents
+    #   a simple closed curve, and if the edge is long then it probably is part of a long
+    #   tube, and therefore its dual curve is short (we wouldn't travel twice along the
+    #   long tube, in a minimal spanning tree; therefore, one cut is enough).
+
+    #2. for each such class c, saturate it by taking preimages under M, checking all the time
+    #   that the curves are all non-intersecting.
+
+    #3. compute the Thurston matrix of the invariant multicurve, and its spectral radius.
+
+    g := StateSet(M);
+    while g<>spider!.model do
+        Error("ThurstonObstruction: the marked sphere is not marked by the stateset of machine");
+    od;
+
+    for e in GeneratorsOfGroup(spider!.group) do
+        multicurve := [ConjugacyClass(g,e^spider!.marking)];
+        mat := ThurstonMatrix(M,multicurve);
+        if mat=fail then continue; fi;
+        if IsNonContractingMatrix(mat) then
+#            if spider<>fail and IsBound(boundary[j]) then
+#                if not IsBound(spider!.arcs) then spider!.arcs := []; fi;
+#                Add(spider!.arcs,[[0,0,255],Float(105/100),boundary[j][1]]);
+#            fi;
+            return rec(multicurve := multicurve,
+                       matrix := mat,
+                       # boundary := SURROUNDINGCURVE(spider!.cut,"half of tree cut at e"),
+                       machine := M);
         fi;
     od;
+
     return fail;
-end);
-
-InstallOtherMethod(FindThurstonObstruction, "(IMG) for a list of IMG elements",
-        [IsFRElementCollection],
-        function(elts)
-    local M;
-    M := UnderlyingFRMachine(elts[1]);
-    while not IsSphereMachine(M) or ForAny(elts,x->not IsIdenticalObj(M,UnderlyingFRMachine(x))) do
-        Error("Elements do not all have the same underlying IMG machine");
-    od;
-    return FINDOBSTRUCTION@(M,List(elts,InitialState),fail,fail);
-end);
-
-BindGlobal("SPIDEROBSTRUCTION@", function(spider,M)
-    # check if <spider> has coalesced points; in that case, read the
-    # loops around them and check if they form an obstruction
-    local multicurve, boundary, i, j, c, d, x, w;
-
-    # construct a list <x> of (lists of vertices that coalesce)
-    w := Vertices(spider);
-    x := Filtered(Combinations([1..Length(w)],2),p->P1Distance(w[p[1]],w[p[2]])<@.obst);
-    x := EquivalenceClasses(EquivalenceRelationByPairs(Domain([1..Length(w)]),x));
-    x := Filtered(List(x,Elements),c->Size(c)>1);
-    if x=[] then
-        return fail;
-    fi;
-
-    # replace each x by its conjugacy class
-    multicurve := [];
-    boundary := [];
-    for i in x do
-        c := One(spider!.group);
-        for j in SpanningTreeBoundary(spider) do
-            if (not j.from.index in i) and j.to.index in i then
-                c := c*GroupElement(j);
-            fi;
-        od;
-        Add(multicurve,c);
-        Add(boundary,SURROUNDINGCURVE@(spider!.cut,i));
-
-    od;
-    Info(InfoIMG,2,"Testing multicurve ",multicurve," for an obstruction");
-
-    return FINDOBSTRUCTION@(M,List(multicurve,x->PreImagesRepresentative(spider!.marking,x)),spider,boundary);
 end);
 
 InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
@@ -516,7 +487,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         else
             fast := false;
         fi;
-        obstruction := SPIDEROBSTRUCTION@(downsphere,M);
+        obstruction := ThurstonObstruction(M,downsphere);
         if obstruction<>fail then
             return obstruction;
         fi;

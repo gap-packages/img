@@ -430,6 +430,32 @@ InstallOtherMethod(ConjugacyClass, "(IMG) for a sphere group element",
     return c;
 end);
 
+InstallMethod(IsSphereConjugacyClass, "(IMG) for a group conj. class",
+        [IsConjugacyClassGroupRep  and IsAssociativeElementCollection and IsMultiplicativeElementWithInverseCollection],
+        function(c)
+    return IsElementOfSphereGroup(Representative(c));
+end);
+
+InstallMethod(Inverse, "(IMG) for a sphere conj. class",
+        [IsSphereConjugacyClass],
+        function(c)
+    return ConjugacyClass(Inverse(Representative(c)));
+end);
+
+InstallMethod(IsSphereConjugacyClassCollection, "(IMG) for a group conj. class",
+        [IsHomogeneousList and IsAssociativeElementCollColl and IsMultiplicativeElementWithInverseCollColl],
+        function(l)
+    local i, g;
+    if l=[] or not IsSphereConjugacyClass(l[1]) then return false; fi;
+    g := FamilyObj(Representative(l[1]))!.group;
+    for i in [2..Length(l)] do
+        if not IsSphereConjugacyClass(l[i]) or FamilyObj(Representative(l[i]))!.group<>g then
+            return false;
+        fi;
+    od;
+    return true;
+end);
+
 InstallMethod(IsConjugate, "(IMG) for sphere group elements",
         IsCollsElmsElms,
         [IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup],

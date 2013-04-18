@@ -15,8 +15,13 @@ DeclareGlobalFunction("NormalizedQuadraticP1Map");
 DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 
-DeclareOperation("FindThurstonObstruction", [IsElementOfSphereGroupCollection]);
+DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);
+DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 
 DeclareProperty("IsBicritical", IsObject);
+
+#!!! maybe move somewhere else?
+DeclareProperty("IsNonContractingMatrix", IsMatrix);
+DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
 
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

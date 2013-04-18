@@ -12,6 +12,7 @@
 
 DeclareCategory("IsElementOfSphereGroup", IsElementOfFpGroup and IsAssocWord);
 DeclareCategoryCollections("IsElementOfSphereGroup");
+DeclareCategoryCollections("IsElementOfSphereGroupCollection");
 DeclareProperty("IsElementOfSphereGroupFamily", IsElementOfFpGroupFamily);
 DeclareProperty("IsSphereGroup", IsFpGroup);
 DeclareAttribute("IsomorphismSphereGroup", IsFpGroup);
@@ -26,9 +27,12 @@ DeclareGlobalFunction("SphereGroup");
 DeclareOperation("ElementOfSphereGroup", [IsFamily, IsAssocWordWithInverse]);
 
 DeclareProperty("IsSphereConjugacyClass", IsAssociativeElementCollection and IsMultiplicativeElementWithInverseCollection);
+DeclareProperty("IsSphereConjugacyClassCollection", IsAssociativeElementCollColl and IsMultiplicativeElementWithInverseCollColl);
+DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection);
 DeclareAttribute("PeripheralClasses", IsSphereGroup);
 DeclareProperty("IsPeripheral", IsElementOfSphereGroup);
 DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
+DeclareAttribute("Inverse", IsSphereConjugacyClass);
 
 DeclareOperation("IntersectionNumber", [IsSphereConjugacyClass,IsSphereConjugacyClass]);
 DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);
