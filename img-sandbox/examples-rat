@@ -1,0 +1,25 @@
+A. Quadratic polynomials
+1. z^2 - 1 (attracting 2-cycle)
+2. z^2 + 0.6i (attracting fixed point; the Julia set is a fractal closed curve)
+3. z^2 + 0.7i (Cantor set; do backward iteration)
+4. z^2 + i (dendrite; do backward iteration)
+5. z^2 - 0.122561 + 0.744862i (attracting 3-cycle; ?Douady?s rabbit?)
+6. z^2 + 0.3590310628366145 + 0.1009348768642975i (attracting 8-cycle)
+7. z^2 + 0.25 (observe the ?flow pattern? near the parabolic fixed point)
+8. z^2 + 0.255 (view the bifurcation)
+9. exp(1.1994i)z + z^2 (Siegel disk)
+10. z^2 - 1.40114 (near the Fiegenbaum point; do backward iteration)
+11. z^2 - 1.754878 (?Airplane set?; do backward iteration)
+
+B. Examples of higher degree
+12. z + z^2 - 0.5z^3 (two attracting fixed points)
+13. z^3 + i (?Mouse Queen?; attracting 2-cycle)
+14. z^3 - 1.2z + .77 (neither connected, nor totally disconnected)
+15. (1 + 0.1i)(z - z^3/6 + z^5/120) (attempt to model (1 + 0.1i)sinz)
+
+C. Rational functions
+12. z^2 + 0.15/z
+13. z^2 + .03/z
+14. z^2 + .1/z^2
+15. 1 - 2/z^2 (Julia set is the whole plane)
+16. 1/z + z + 0.0001z^7 (4 attracting fixed points)

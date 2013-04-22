@@ -1,0 +1,279 @@
+#############################################################################
+##
+#W Makefile                                                 Laurent Bartholdi
+##                                                              Jakob Kroeker
+##
+#H   @(#)$Id$
+##
+#Y Copyright (C) 2007, Laurent Bartholdi
+##
+#############################################################################
+##
+##  This compiles the C/Java modules, creates archives, or
+##  compiles the documentation
+##
+#############################################################################
+
+.PHONY: all lib doc clean distribute mrproper wwwdir checkblocks tarballs
+
+LOCALBIN=bin/@TARGET@
+EXTERN=$(CURDIR)/bin/@TARGET@/extern
+
+CFLAGS=@CFLAGS@ -fPIC -std=c99 -Wall
+CC=@CC@ $(CFLAGS)
+
+JAVAC=@JAVAC@
+GAPPROG=@GAPPROG@
+GAC=@GAC@
+GSLLIB=gsl-1.15
+GIVAROLIB=givaro-3.6.0
+
+
+#############################################################################
+# lines added by jk:
+CXX=@CXX@ @CXXFLAGS@ $(CXXFLAGS)
+MPFRLIB=mpfr-3.1.0
+MPIRLIB=mpir-2.5.1
+FLINTLIB=flint-2.3-beta3
+FLINTEXTRACTDIR=flint-2.3
+#end changes by jk
+#############################################################################
+
+
+# changed by jk:
+#all: $(LOCALBIN) @LIB_TARGET@ $(LOCALBIN)/fr_dll.so @JAVABUILD@  
+all: $(LOCALBIN) @LIB_TARGET@ $(LOCALBIN)/fr_dll.so $(LOCALBIN)/hurwitzMapSearch @JAVABUILD@  
+
+
+
+lib:
+	echo "Make sure you downloaded extern/$(GSLLIB).tar.gz, extern/$(MPFRLIB).tar.bz2, extern/$(MPIRLIB).tar.bz2 and  extern/$(GIVAROLIB).tar.gz (instructions in extern/GET_LIBARIES)"
+	$(MAKE) gsllib
+	$(MAKE) givarolib
+	$(MAKE) mpirlib  # line added by jk
+	$(MAKE) mpfrlib  # line added by jk
+	$(MAKE) flintlib # line added by jk
+	
+
+#########################################################################
+# lines added by jk:
+
+extern/$(MPIRLIB).tar.bz2:
+	echo "I can't find $(MPIRLIB), so I'm going to download it"
+	(cd extern; wget --no-verbose http://www.mpir.org/$(MPIRLIB).tar.bz2)
+		
+		
+extern/$(MPFRLIB).tar.bz2:
+	echo "I can't find $(MPFRLIB), so I'm going to download it"
+	(cd extern; wget --no-verbose http://www.mpfr.org/$(MPFRLIB)/$(MPFRLIB).tar.bz2)
+
+
+extern/$(FLINTLIB).tar.gz:
+	echo "I can't find $(FLINTLIB), so I'm going to download it"
+	(cd extern; wget --no-verbose http://www.flintlib.org//$(FLINTLIB).tar.gz)
+	
+
+
+mpirlib: extern/$(MPIRLIB).tar.bz2
+	if ! test -r $(EXTERN)/include/mpir.h; then \
+	    cd extern && \
+	    tar -x -f $(MPIRLIB).tar.bz2 -j && \
+	    cd $(MPIRLIB) && \
+	    ./configure --enable-cxx --enable-shared --prefix=$(EXTERN) && \
+	    $(MAKE) yasm && \
+	    $(MAKE)      && \
+	    $(MAKE) install; \
+	fi
+#--enable-gmpcompat	
+	
+mpfrlib: extern/$(MPFRLIB).tar.bz2
+	if ! test -r $(EXTERN)/include/mpfr.h; then \
+	    cd extern && \
+	    tar -x -f $(MPFRLIB).tar.bz2 -j && \
+	    cd $(MPFRLIB) && \
+	    ./configure @WITHGMP@ --prefix=$(EXTERN) && \
+	    $(MAKE) install; \
+	fi
+	
+
+# find ./ -type f -exec sed -i 's/<mpir.h>/<gmp.h>/' {} \; ; \
+# find ./ -type f -exec sed -i 's/lmpir/lgmp/' {} \; ; \
+	
+# currently flintlib depends on MPIR and cannot be substituted by GMP
+flintlib: mpirlib mpfrlib extern/$(FLINTLIB).tar.gz
+	if ! test -r $(EXTERN)/include/$(FLINTEXTRACTDIR)/fmpq_poly.h; then \
+	    cd extern && \
+	    rm -rf $(FLINTEXTRACTDIR) && \
+	    tar -x -f $(FLINTLIB).tar.gz -z && \
+	    cd $(FLINTEXTRACTDIR) && \
+	    ./configure @WITHMPIR@ @WITHMPFR@ --prefix=$(EXTERN) CFLAGS="@c_options@ "   && \
+	    $(MAKE) && \
+	    $(MAKE) install; \
+	fi
+#LDFLAGS="@LINKGMP@ @LINKMPFR"	 CFLAGS="$(CFLAGS) @c_options@" CXXFLAGS="$(CXXFLAGS) @c_options@"
+
+
+
+$(LOCALBIN)/timer.o: hurwitz/src/timer.C
+	$(CXX) -c $< -o $@
+
+$(LOCALBIN)/xyMonom.o: hurwitz/src/xyMonom.cc
+	$(CXX) -c $< -o $@
+
+$(LOCALBIN)/random.o: hurwitz/src/random.cpp
+	$(CXX) -c $< -o $@
+
+$(LOCALBIN)/HurwitzMapFinder.o: hurwitz/src/HurwitzMapFinder.cpp
+	$(CXX) -c $< -o $@			
+
+$(LOCALBIN)/IrreduciblePolTable.o: hurwitz/src/IrreduciblePolTable.cpp
+	$(CXX) -c $< -o $@	
+
+$(LOCALBIN)/NormalizationRules.o: hurwitz/src/NormalizationRules.cpp
+	$(CXX) -c $< -o $@	
+
+$(LOCALBIN)/Shape.o: hurwitz/src/Shape.cpp
+	$(CXX) -c $< -o $@	
+
+
+$(LOCALBIN)/OutputMode.o: hurwitz/src/OutputMode.cpp
+	$(CXX) -c $< -o $@	
+	
+	
+$(LOCALBIN)/DebugLogger.o: hurwitz/src/DebugLogger.cpp
+	$(CXX) -c $< -o $@	
+
+$(LOCALBIN)/rationalMapSearchForGAP.o: hurwitz/src/rationalMapSearchForGAP.cpp
+	$(CXX) -c $< -o $@			
+		
+$(LOCALBIN)/hurwitzMapSearch: $(LOCALBIN)/timer.o \
+                              $(LOCALBIN)/xyMonom.o \
+                              $(LOCALBIN)/random.o \
+                              $(LOCALBIN)/HurwitzMapFinder.o \
+                              $(LOCALBIN)/IrreduciblePolTable.o \
+                              $(LOCALBIN)/NormalizationRules.o \
+                              $(LOCALBIN)/Shape.o \
+                              $(LOCALBIN)/OutputMode.o \
+                              $(LOCALBIN)/DebugLogger.o \
+                              $(LOCALBIN)/rationalMapSearchForGAP.o 
+	$(CXX) -o $@  $+ @LDFLAGS@ -lflint
+
+# end changes by jk
+#########################################################################	
+
+
+
+extern/$(GSLLIB).tar.gz:
+	echo "I can't find $(GSLLIB), so I'm going to download it"
+	(cd extern; wget --no-verbose http://ftpmirror.gnu.org/gsl/$(GSLLIB).tar.gz)
+	
+	
+
+
+extern/$(GIVAROLIB).tar.gz:
+	echo "I can't find $(GIVAROLIB), so I'm going to download it"
+	(cd extern; wget --no-verbose --no-check-certificate https://forge.imag.fr/frs/download.php/202/$(GIVAROLIB).tar.gz)
+
+
+
+
+gsllib: extern/$(GSLLIB).tar.gz
+	if ! test -r $(EXTERN)/include/gsl/gsl_vector.h; then \
+	    cd extern && \
+	    rm -rf $(GSLLIB) && \
+	    tar -x -f $(GSLLIB).tar.gz -z && \
+	    cd $(GSLLIB) && \
+	    ./configure --prefix=$(EXTERN) CFLAGS="$(CFLAGS) @c_options@" && \
+	    $(MAKE) && \
+	    $(MAKE) install; \
+	fi
+
+
+givarolib: # disable for now, too hard to compile on MacOS systems
+	true
+
+__givarolib: extern/$(GIVAROLIB).tar.gz
+	if ! test -r $(EXTERN)/include/givaro-config.h; then \
+	    cd extern && \
+	    rm -rf $(GIVAROLIB) &&
+	    tar -x -f $(GIVAROLIB).tar.gz -z && \
+	    cd $(GIVAROLIB) && \
+	    ./configure @WITHGMP@ --prefix=$(EXTERN) && \
+	    $(MAKE) && \
+	    $(MAKE) install; \
+	fi
+
+distribute: wwwdir doc tarballs
+
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+
+$(LOCALBIN)/rpoly.o: src/rpoly.c src/poly.h
+	$(CC) -c $< -o $@
+
+$(LOCALBIN)/p1.o: src/p1.c src/cpoly.C src/fr_dll.h
+	$(CC) -c $< -o $@ -I@GAPDIR@ -I@GAPDIR@/$(LOCALBIN) -DCONFIG_H
+
+$(LOCALBIN)/fr_dll.o: src/fr_dll.c src/cpoly.C src/fr_dll.h
+	$(CC) -c $< -o $@ -I@GAPDIR@ -I@GAPDIR@/$(LOCALBIN) -DCONFIG_H
+
+$(LOCALBIN)/findrat.o: src/findrat.c src/fr_dll.h
+	$(CC) -c $< -o $@ -I@GAPDIR@ -I@GAPDIR@/$(LOCALBIN) -DCONFIG_H
+
+$(LOCALBIN)/fr_dll.so: $(LOCALBIN)/fr_dll.o $(LOCALBIN)/findrat.o $(LOCALBIN)/rpoly.o $(LOCALBIN)/p1.o
+	$(GAC) -d -o $@ $+ @GACFLAGS@
+	
+
+java/javaplot.class: src/javaplot.java
+	$(JAVAC) -cp java/javaview.jar $< -d java
+
+java/javaview.jar:
+	wget --no-verbose -O javaview.zip http://www.javaview.de/download/data/javaview.zip
+	unzip -j -d java javaview.zip jars/javaview.jar
+	rm -f javaview.zip
+
+clean:
+	rm -rf .version config.log $(LOCALBIN) `find doc -type l`
+
+configure: cnf/Makefile.in cnf/configure.ac
+	(cd cnf; autoconf; mv -f configure ..)
+
+mrproper: clean
+	rm Makefile
+
+.version: PackageInfo.g
+	grep '^Version :=' $< | awk -F'"' '{print $$2}' > $@
+
+wwwdir: .version tarballs
+	mkdir -p www
+	rm -f `find www -type l`
+	cp README www/README.fr
+	cp PackageInfo.g www/PackageInfo.g
+	ln -s chap0.html www/index.html
+	ln -sf fr-`cat .version`.tar.gz www/fr.tar.gz
+	cp doc/manual.pdf www/manual.pdf
+	(cd doc; for i in *.html; do cp $$i ../www/$$i; done)
+	cp doc/manual.css www/manual.css
+	rsync -arvp --delete www/ laurent@rlaurent.uni-math.gwdg.de:public_html/FR/
+
+doc: doc/chap0.html
+
+doc/chap0.html: doc/fr.xml doc/frbib.xml gap/algebra.gd gap/frelement.gd \
+	gap/group.gd gap/img.gd gap/perlist.gd gap/vector.gd gap/examples.gd \
+	gap/frmachine.gd gap/helpers.gd gap/mealy.gd gap/trans.gd
+
+	echo 'LoadPackage("fr"); DOC@FR();' | $(GAPPROG) -r -q
+
+checkblocks:
+	grep '<#GAPDoc' PackageInfo.g gap/*d | awk -F'"' '{print $$2}' | sort > @@-blocks
+	grep '<#Include' doc/fr.xml | awk -F'"' '{print $$2}' | sort > @@-in
+	comm -3 @@-blocks @@-in
+	@rm @@-blocks @@-in
+
+tarballs: .version doc
+	rm -rf www/fr
+	mkdir -p www
+	tar -c -f - --exclude '*~' --exclude 'config.[ls]*' --exclude 'fr/Makefile*' --exclude .cvsignore --exclude autom4te.cache --exclude sandbox --exclude www --exclude bin --exclude 'extern/[a-z]*' --exclude CVS --exclude .version -C .. fr | (cd www; tar -x -f -)
+	tar -c -f www/fr-`cat .version`.tar.gz -z -C www fr
+
+#E Makefile . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here
