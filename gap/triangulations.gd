@@ -95,17 +95,17 @@ BindGlobal("TYPE_TRIANGULATION",
 DeclareRepresentation("IsTriangulationObjectRep",
         IsComponentObjectRep and IsAttributeStoringRep,[]);
 DeclareCategory("IsTriangulationObject",IsTriangulationObjectRep);
-DeclareCategory("IsVertex",IsTriangulationObject);
-DeclareCategory("IsEdge",IsTriangulationObject);
-DeclareCategory("IsFace",IsTriangulationObject);
+DeclareCategory("IsTriangulationVertex",IsTriangulationObject);
+DeclareCategory("IsTriangulationEdge",IsTriangulationObject);
+DeclareCategory("IsTriangulationFace",IsTriangulationObject);
 BindGlobal("TRIANGULATIONOBJECT_FAMILY",
         NewFamily("TriangulationFamily",IsTriangulationObject,CanEasilySortElements,CanEasilySortElements));
 BindGlobal("TYPE_VERTEX",
-        NewType(TRIANGULATIONOBJECT_FAMILY,IsVertex));
+        NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationVertex));
 BindGlobal("TYPE_EDGE",
-        NewType(TRIANGULATIONOBJECT_FAMILY,IsEdge));
+        NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationEdge));
 BindGlobal("TYPE_FACE",
-        NewType(TRIANGULATIONOBJECT_FAMILY,IsFace));
+        NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationFace));
 
 #############################################################################
 
@@ -113,42 +113,42 @@ DeclareOperation("DelaunayTriangulation", [IsList]);
 DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point,IsBool]);
-DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsFace,IsP1Point]);
-DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsFace,IsP1Point,IsBool]);
-DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsVertex]);
+DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point]);
+DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point,IsBool]);
+DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsTriangulationVertex]);
 DeclareOperation("WiggledTriangulation", [IsSphereTriangulation,IsObject]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
 DeclareOperation("Draw", [IsSphereTriangulation]);
 
-DeclareAttribute("Neighbour", IsVertex);
-DeclareOperation("Neighbours", [IsVertex]);
-DeclareOperation("Neighbours", [IsVertex,IsEdge]);
-DeclareAttribute("Pos", IsVertex);
-DeclareProperty("IsFake", IsVertex);
-DeclareOperation("Valency", [IsVertex]);
+DeclareAttribute("Neighbour", IsTriangulationVertex);
+DeclareOperation("Neighbours", [IsTriangulationVertex]);
+DeclareOperation("Neighbours", [IsTriangulationVertex,IsTriangulationEdge]);
+DeclareAttribute("Pos", IsTriangulationVertex);
+DeclareProperty("IsFake", IsTriangulationVertex);
+DeclareOperation("Valency", [IsTriangulationVertex]);
 
-DeclareAttribute("Left", IsEdge);
-DeclareAttribute("Right", IsEdge);
-DeclareAttribute("To", IsEdge);
-DeclareAttribute("From", IsEdge);
-DeclareAttribute("Next", IsEdge);
-DeclareAttribute("Prevopp", IsEdge);
-DeclareAttribute("Opposite", IsEdge);
-DeclareAttribute("Pos", IsEdge);
-DeclareAttribute("FromPos", IsEdge);
-DeclareAttribute("ToPos", IsEdge);
-DeclareAttribute("Length", IsEdge);
-DeclareAttribute("Map", IsEdge);
-DeclareAttribute("GroupElement", IsEdge, "mutable");
+DeclareAttribute("Left", IsTriangulationEdge);
+DeclareAttribute("Right", IsTriangulationEdge);
+DeclareAttribute("To", IsTriangulationEdge);
+DeclareAttribute("From", IsTriangulationEdge);
+DeclareAttribute("Next", IsTriangulationEdge);
+DeclareAttribute("Prevopp", IsTriangulationEdge);
+DeclareAttribute("Opposite", IsTriangulationEdge);
+DeclareAttribute("Pos", IsTriangulationEdge);
+DeclareAttribute("FromPos", IsTriangulationEdge);
+DeclareAttribute("ToPos", IsTriangulationEdge);
+DeclareAttribute("Length", IsTriangulationEdge);
+DeclareAttribute("Map", IsTriangulationEdge);
+DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable");
 
-DeclareAttribute("Neighbour", IsFace);
-DeclareOperation("Neighbours", [IsFace]);
-DeclareOperation("Neighbours", [IsFace,IsEdge]);
-DeclareAttribute("Pos", IsFace);
-DeclareAttribute("Radius", IsFace);
-DeclareAttribute("Centre", IsFace);
-DeclareOperation("Valency", [IsFace]);
+DeclareAttribute("Neighbour", IsTriangulationFace);
+DeclareOperation("Neighbours", [IsTriangulationFace]);
+DeclareOperation("Neighbours", [IsTriangulationFace,IsTriangulationEdge]);
+DeclareAttribute("Pos", IsTriangulationFace);
+DeclareAttribute("Radius", IsTriangulationFace);
+DeclareAttribute("Centre", IsTriangulationFace);
+DeclareOperation("Valency", [IsTriangulationFace]);
 
 DeclareOperation("ClosestFaces", [IsTriangulationObject]);
 DeclareOperation("ClosestVertices", [IsTriangulationObject]);

@@ -159,7 +159,7 @@ BindGlobal("TYPE_MARKEDSPHERE",
         NewType(MARKEDSPHERES_FAMILY, IsMarkedSphere));
 
 DeclareOperation("Draw", [IsMarkedSphere]);
-DeclareAttribute("Vertices", IsMarkedSphere);
+DeclareAttribute("VerticesOfMarkedSphere", IsMarkedSphere);
 DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]);
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);

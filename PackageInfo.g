@@ -64,7 +64,8 @@ Dependencies := rec(
 
 AvailabilityTest := ReturnTrue,
                     
-BannerString := Concatenation("Loading IMG ", String( ~.Version ), " ...\n"),
+BannerString := Concatenation("Loading IMG ", String( ~.Version ), #CallFuncList(function() if Filename(DirectoriesPackagePrograms("img"),"img_dll.so")=fail then return ""; else return "with DLL"; fi; end,[]),
+  " ...\n"),
 
 Autoload := false,
 TestFile := "tst/testall.g",

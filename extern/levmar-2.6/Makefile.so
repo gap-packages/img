@@ -14,14 +14,11 @@ CFLAGS=-fPIC $(CONFIGFLAGS) $(ARCHFLAGS) -O3 -funroll-loops -Wall #-pg
 LAPACKLIBS_PATH=/usr/local/lib # WHEN USING LAPACK, CHANGE THIS TO WHERE YOUR COMPILED LIBS ARE!
 LIBOBJS=$(ODIR)/lm.o $(ODIR)/Axb.o $(ODIR)/misc.o $(ODIR)/lmlec.o $(ODIR)/lmbc.o $(ODIR)/lmblec.o $(ODIR)/lmbleic.o
 LIBSRCS=lm.c Axb.c misc.c lmlec.c lmbc.c lmblec.c lmbleic.c
-LAPACKLIBS=-llapack -lblas -lf2c # comment this line if you are not using LAPACK.
-                                 # On systems with a FORTRAN (not f2c'ed) version of LAPACK, -lf2c is
-                                 # not necessary; on others, -lf2c is equivalent to -lF77 -lI77
-
+LAPACKLIBS=-llapack -lblas  # comment this line if you are not using LAPACK.
 LIBS=$(LAPACKLIBS)
 
 $(ODIR)/liblevmar.so.$(MAJ).$(MIN): $(LIBOBJS)
-	$(CC) -shared -Wl,-soname,liblevmar.so.$(MAJ) -o $(ODIR)/liblevmar.so.$(MAJ).$(MIN) $(LIBOBJS) #-llapack -lblas -lf2c
+	$(CC) -shared -Wl,-soname,liblevmar.so.$(MAJ) -o $(ODIR)/liblevmar.so.$(MAJ).$(MIN) $(LIBOBJS) #-llapack -lblas
 
 # implicit rule for generating *.o files in ODIR from *.c files
 $(ODIR)/%.o : %.c

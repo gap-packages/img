@@ -1,5 +1,3 @@
-#! probably: mess-up in IMG relations, causing the ordering to be sometimes 1,2,3, sometimes 3,2,1
-
 #############################################################################
 ##
 #W markedsphere.gi                                          Laurent Bartholdi
@@ -113,7 +111,7 @@ BindGlobal("CHECKREC@", function(recur,order,reduce)
     return result[2]=[1..Length(recur[2][1])] and ForAll(result[1],IsOne);
 end);
 
-InstallMethod(Vertices, [IsMarkedSphere],
+InstallMethod(VerticesOfMarkedSphere, [IsMarkedSphere],
         function(spider)
     # the vertices a spider lies on
     return List(Filtered(spider!.cut!.v,v->not IsFake(v)),Pos);
@@ -125,7 +123,7 @@ InstallMethod(SpanningTreeBoundary, [IsMarkedSphere],
     # it on our right. visit vertex n first.
     local i, e, edges, n;
 
-    n := Length(Vertices(spider));
+    n := Length(VerticesOfMarkedSphere(spider));
     e := First(spider!.cut!.e,e->spider!.intree[e!.index] and From(e)!.index=n);
     edges := [];
     repeat
@@ -792,7 +790,7 @@ InstallMethod(SphereMachineAndSphereOfBranchedCovering, "(IMG) for a marked sphe
         function(src,ratmap,poly)
     local lift, v, w;
     lift := ShallowCopy(CriticalPointsOfP1Map(ratmap));
-    for v in Vertices(src) do
+    for v in VerticesOfMarkedSphere(src) do
         for w in P1PreImages(ratmap,v) do
             if ForAll(lift,x->P1Distance(w,x)>@.p1eps) then
                 Add(lift,w);
@@ -862,8 +860,8 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
     model := spiderA!.model;
 
     # try to match feet of spiderA and spiderB
-    points := Vertices(spiderA);
-    perm := Vertices(spiderB);
+    points := VerticesOfMarkedSphere(spiderA);
+    perm := VerticesOfMarkedSphere(spiderB);
     
     perm := MatchP1Points(perm,List(perm,x->points));
     if perm=fail or Set(perm)<>[1..Length(points)] then # no match, find something coarse

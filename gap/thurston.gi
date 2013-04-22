@@ -442,14 +442,14 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
 
         # find a mobius transformation that normalizes <sublifts> wrt PSL2C
         sublifts := lifts{match};
-        mobius := P1MapNormalizingP1Points(sublifts,Vertices(downsphere));
+        mobius := P1MapNormalizingP1Points(sublifts,VerticesOfMarkedSphere(downsphere));
         Info(InfoIMG,3,"6: normalize by mobius map ",mobius);
 
         # now create the new spider on the image of these points
         v := List(sublifts,p->P1Image(mobius,p));
         
 	if fast then
-            dist := Sum([1..Length(v)],i->P1Distance(Vertices(downsphere)[i],v[i]));
+            dist := Sum([1..Length(v)],i->P1Distance(VerticesOfMarkedSphere(downsphere)[i],v[i]));
             if dist>@.fast*Length(v) then
                 fast := false;
                 Info(InfoIMG,3,"7: legs moved ",dist,"; back to slow mode");
@@ -473,7 +473,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         fi;
         
         dist := DistanceMarkedSpheres(downsphere,old_downsphere,fast);
-        Info(InfoIMG,2,"Spider moved ",dist," steps; feet=",Vertices(downsphere)," marking=",downsphere!.marking);
+        Info(InfoIMG,2,"Spider moved ",dist," steps; feet=",VerticesOfMarkedSphere(downsphere)," marking=",downsphere!.marking);
 
         if dist<@.ratprec then
             if fast then # force one last run with the full algorithm

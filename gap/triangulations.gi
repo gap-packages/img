@@ -32,28 +32,28 @@ InstallMethod(\., [IsTriangulationObject, IsInt], function(x,n)
     fi;
 end);
 
-InstallMethod(ViewString, [IsVertex],
+InstallMethod(ViewString, [IsTriangulationVertex],
         v->CONCAT@FR("<vertex ",v!.index,List(Neighbours(v),e->e!.index),">"));
-InstallMethod(ViewString, [IsEdge],
+InstallMethod(ViewString, [IsTriangulationEdge],
         e->CONCAT@FR("<edge ",e!.index,List([From(e),To(e)],v->v!.index),">"));
-InstallMethod(ViewString, [IsFace],
+InstallMethod(ViewString, [IsTriangulationFace],
         f->CONCAT@FR("<face ",f!.index,List(Neighbours(f),e->e!.index),">"));
 INSTALLPRINTERS@(IsTriangulationObject);
 
-Perform([IsVertex,IsEdge,IsFace], function(filter)
+Perform([IsTriangulationVertex,IsTriangulationEdge,IsTriangulationFace], function(filter)
     InstallMethod(\=, [filter,filter], function(a,b) return a!.index=b!.index; end);
     InstallMethod(\<, [filter,filter], function(a,b) return a!.index<b!.index; end);
 end);
-InstallMethod(\=, [IsVertex,IsEdge], ReturnFalse);
-InstallMethod(\<, [IsVertex,IsEdge], ReturnTrue);
-InstallMethod(\=, [IsVertex,IsFace], ReturnFalse);
-InstallMethod(\<, [IsVertex,IsFace], ReturnTrue);
-InstallMethod(\=, [IsEdge,IsFace], ReturnFalse);
-InstallMethod(\<, [IsEdge,IsFace], ReturnTrue);
+InstallMethod(\=, [IsTriangulationVertex,IsTriangulationEdge], ReturnFalse);
+InstallMethod(\<, [IsTriangulationVertex,IsTriangulationEdge], ReturnTrue);
+InstallMethod(\=, [IsTriangulationVertex,IsTriangulationFace], ReturnFalse);
+InstallMethod(\<, [IsTriangulationVertex,IsTriangulationFace], ReturnTrue);
+InstallMethod(\=, [IsTriangulationEdge,IsTriangulationFace], ReturnFalse);
+InstallMethod(\<, [IsTriangulationEdge,IsTriangulationFace], ReturnTrue);
 
 
-InstallMethod(Neighbours, [IsVertex], v->Neighbours(v,Neighbour(v)));
-InstallMethod(Neighbours, [IsVertex, IsEdge], function(v,e)
+InstallMethod(Neighbours, [IsTriangulationVertex], v->Neighbours(v,Neighbour(v)));
+InstallMethod(Neighbours, [IsTriangulationVertex, IsTriangulationEdge], function(v,e)
     local n;
     n := [];
     repeat
@@ -62,7 +62,7 @@ InstallMethod(Neighbours, [IsVertex, IsEdge], function(v,e)
     until e=n[1];
     return n;
 end);
-InstallMethod(Valency, [IsVertex], function(v)
+InstallMethod(Valency, [IsTriangulationVertex], function(v)
     local n, e0, e;
     n := 0;
     e0 := Neighbour(v);
@@ -74,16 +74,16 @@ InstallMethod(Valency, [IsVertex], function(v)
     return n;
 end);
 
-InstallMethod(IsFake, [IsVertex], ReturnFalse);
+InstallMethod(IsFake, [IsTriangulationVertex], ReturnFalse);
 
-InstallMethod(To, [IsEdge], e->From(Opposite(e)));
-InstallMethod(Right, [IsEdge], e->Left(Opposite(e)));
-InstallMethod(Map, [IsEdge], e->P1Path(FromPos(e),ToPos(e)));
-InstallMethod(Length, [IsEdge], e->P1Distance(FromPos(e),ToPos(e)));
-InstallMethod(FromPos, [IsEdge], e->Pos(From(e)));
-InstallMethod(ToPos, [IsEdge], e->Pos(To(e)));
-InstallMethod(Pos, [IsEdge], e->P1Barycentre(FromPos(e),ToPos(e)));
-InstallMethod(GroupElement, [IsEdge], function(e)
+InstallMethod(To, [IsTriangulationEdge], e->From(Opposite(e)));
+InstallMethod(Right, [IsTriangulationEdge], e->Left(Opposite(e)));
+InstallMethod(Map, [IsTriangulationEdge], e->P1Path(FromPos(e),ToPos(e)));
+InstallMethod(Length, [IsTriangulationEdge], e->P1Distance(FromPos(e),ToPos(e)));
+InstallMethod(FromPos, [IsTriangulationEdge], e->Pos(From(e)));
+InstallMethod(ToPos, [IsTriangulationEdge], e->Pos(To(e)));
+InstallMethod(Pos, [IsTriangulationEdge], e->P1Barycentre(FromPos(e),ToPos(e)));
+InstallMethod(GroupElement, [IsTriangulationEdge], function(e)
     e := Opposite(e);
     if HasGroupElement(e) then
         return GroupElement(e)^-1;
@@ -91,26 +91,26 @@ InstallMethod(GroupElement, [IsEdge], function(e)
         TryNextMethod();
     fi;
 end);
-InstallMethod(Opposite, [IsEdge and HasNext], e->Prevopp(Next(e)));
+InstallMethod(Opposite, [IsTriangulationEdge and HasNext], e->Prevopp(Next(e)));
 
-InstallMethod(Radius, [IsFace], function(f)
+InstallMethod(Radius, [IsTriangulationFace], function(f)
     local p;
     p := CallFuncList(P1Circumcentre,List(Neighbours(f),FromPos));
     SetCentre(f, p[1]); # we computed it for free
     return p[2];
 end);
 
-InstallMethod(Centre, [IsFace], function(f)
+InstallMethod(Centre, [IsTriangulationFace], function(f)
     local p;
     p := CallFuncList(P1Circumcentre,List(Neighbours(f),FromPos));
     SetRadius(f, p[2]); # we computed it for free
     return p[1];
 end);
     
-InstallMethod(Pos, [IsFace], f->P1Barycentre(List(Neighbours(f),FromPos)));
+InstallMethod(Pos, [IsTriangulationFace], f->P1Barycentre(List(Neighbours(f),FromPos)));
     
-InstallMethod(Neighbours, [IsFace], f->Neighbours(f,Neighbour(f)));
-InstallMethod(Neighbours, [IsFace, IsEdge], function(f,e)
+InstallMethod(Neighbours, [IsTriangulationFace], f->Neighbours(f,Neighbour(f)));
+InstallMethod(Neighbours, [IsTriangulationFace, IsTriangulationEdge], function(f,e)
     local n;
     n := [];
     repeat
@@ -120,7 +120,7 @@ InstallMethod(Neighbours, [IsFace, IsEdge], function(f,e)
     return n;
 end);
 
-InstallMethod(Valency, [IsFace], function(f)
+InstallMethod(Valency, [IsTriangulationFace], function(f)
     local n, e0, e;
     n := 0;
     e0 := Neighbour(f);
@@ -238,17 +238,17 @@ InstallMethod(LocateInTriangulation, "(IMG) for a triangulation and point",
     return LOCATE@(t,fail,p)[1];
 end);
 InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, vertex and point",
-        [IsSphereTriangulation, IsVertex, IsP1Point],
+        [IsSphereTriangulation, IsTriangulationVertex, IsP1Point],
         function(t,v,p)
     return LOCATE@(t,Left(Neighbour(v)),p)[1];
 end);
 InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, edge and point",
-        [IsSphereTriangulation, IsEdge, IsP1Point],
+        [IsSphereTriangulation, IsTriangulationEdge, IsP1Point],
         function(t,e,p)
     return LOCATE@(t,Left(e),p)[1];
 end);
 InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, face and point",
-        [IsSphereTriangulation, IsFace, IsP1Point],
+        [IsSphereTriangulation, IsTriangulationFace, IsP1Point],
         function(t,f,p)
     return LOCATE@(t,f,p)[1];
 end);
@@ -417,14 +417,14 @@ InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsP1Point, IsBool],
         function(t,p,delaunay)
     return ADDTOTRIANGULATION@(t,LOCATE@(t,fail,p)[1],p,delaunay);
 end);
-InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsFace, IsP1Point],
+InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsTriangulationFace, IsP1Point],
         function(t,f,p)
     return ADDTOTRIANGULATION@(t,f,p,true);
 end);
-InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsFace, IsP1Point, IsBool],
+InstallMethod(AddToTriangulation, [IsSphereTriangulation, IsTriangulationFace, IsP1Point, IsBool],
         ADDTOTRIANGULATION@);
 
-InstallMethod(RemoveFromTriangulation, [IsSphereTriangulation, IsVertex],
+InstallMethod(RemoveFromTriangulation, [IsSphereTriangulation, IsTriangulationVertex],
         function(t,v)
     # remove vertex v from triangulation t. flip edges as needed till v becomes
     # trivalent, then zap it.
@@ -660,13 +660,13 @@ end);
 InstallMethod(ShallowCopy, [IsSphereTriangulation],
         t->WiggledTriangulation(t,fail));
 
-InstallMethod(ClosestFaces, [IsVertex], x->List(Neighbours(x),Left));
-InstallMethod(ClosestFaces, [IsEdge], x->[Left(x),Right(x)]);
-InstallMethod(ClosestFaces, [IsFace], x->[x]);
+InstallMethod(ClosestFaces, [IsTriangulationVertex], x->List(Neighbours(x),Left));
+InstallMethod(ClosestFaces, [IsTriangulationEdge], x->[Left(x),Right(x)]);
+InstallMethod(ClosestFaces, [IsTriangulationFace], x->[x]);
 
-InstallMethod(ClosestVertices, [IsVertex], x->[x]);
-InstallMethod(ClosestVertices, [IsEdge], x->[From(x),To(x)]);
-InstallMethod(ClosestVertices, [IsFace], x->List(Neighbours(x),From));
+InstallMethod(ClosestVertices, [IsTriangulationVertex], x->[x]);
+InstallMethod(ClosestVertices, [IsTriangulationEdge], x->[From(x),To(x)]);
+InstallMethod(ClosestVertices, [IsTriangulationFace], x->List(Neighbours(x),From));
 
 BindGlobal("INTERPOLATE_ARC@", function(l)
     # interpolate along points of l
