@@ -42,4 +42,7 @@ InstallTrueMethod(IsAutomorphismGroup, IsAutomorphismGroupOfSphereGroup);
 
 DeclareAttribute("EpimorphismToOut", IsAutomorphismGroupOfSphereGroup);
 
+DeclareOperation("AmalgamatedFreeProduct", [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup]);
+DeclareAttribute("EmbeddingsOfAmalgamatedFreeProduct", IsSphereGroup);
+
 #E sphere.gd . . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

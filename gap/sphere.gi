@@ -716,5 +716,57 @@ end);
 ################################################################
 # graphs of groups
 ################################################################
+InstallMethod(AmalgamatedFreeProduct, "(IMG) for two sphere groups and two elements",
+        [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup],
+        function(G1,G2,x1,x2)
+    # free product of G1 and G2 modulo relation x1x2=1
+    local A, G, x, gens, order, exp, embed, img, i, c, names;
+
+    G := [G1,G2];
+    x := [x1,x2];
+    gens := List(G,GeneratorsOfGroup); gens := List(gens,ShallowCopy);
+    order := List(G,OrderingOfSphereGroup);
+    exp := List(G,ExponentsOfSphereGroup); exp := List(exp,ShallowCopy);
+    while not ForAll([1..2],i->x[i] in gens[i] and Order(x[i])=infinity) do
+        Error("Amalgamated free products work (for now) only along infinite-order generators");
+    od;
+
+    x := List([1..2],i->Position(gens[i],x[i]));
+    img := [];
+    for i in [1..2] do
+        Remove(gens[i],x[i]); Remove(exp[i],x[i]);
+        img[i] := [];
+        img[i]{Difference([1..Length(gens[i])+1],[x[i]])} := (i-1)*Length(gens[1])+[1..Length(gens[i])];
+    od;
+    x := List([1..2],i->Position(order[i],x[i]));
+    
+    order := List([1..2],i->Concatenation(order[i]{[x[i]+1..Length(order[i])]},order[i]{[1..x[i]-1]}));
+
+    A := SphereGroup(Concatenation(List([1..2],i->img[i]{order[i]})),Concatenation(exp));
+    embed := List([1..2],i->GroupHomomorphismByImages(G[i],A,gens[i],GeneratorsOfGroup(A){(i-1)*Length(gens[1])+[1..Length(gens[i])]}));
+    SetEmbeddingsOfAmalgamatedFreeProduct(A,embed);
+
+# a hack, now: rename the generators more nicely
+
+    names := List(gens,g->List(g,String));
+    if Intersection(names[1],names[2])<>[] then
+        c := names[1][1][1]; # first character
+        if c<>'z' and ForAll(names,list->ForAll(list,w->w[1]=c)) then # increment letter on half
+            names[2] := List(names[2],ShallowCopy);
+            for i in names[2] do i[1] := CHAR_INT(INT_CHAR(c)+1); od;
+        else
+            names := List([1..2],i->List(names[i],s->Concatenation(s,String(i))));
+        fi;
+    fi;
+    FamilyObj(One(A)![1])!.names := Concatenation(names);
+
+    return A;
+end);
+
+InstallMethod(Embedding, "(IMG) for a sphere group and an index",
+        [IsSphereGroup and HasEmbeddingsOfAmalgamatedFreeProduct,IsInt],
+        function(G,n)
+    return EmbeddingsOfAmalgamatedFreeProduct(G)[n];
+end);
 
 #E sphere.gi . . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

@@ -434,7 +434,7 @@ InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphis
     Assert(0,IsTransitive(Image(monodromy),[1..d]));
 
     cv := Filtered([1..Length(gens)],i->gens[i]^monodromy<>());
-    values := Vertices(spider);
+    values := VerticesOfMarkedSphere(spider);
     data := fail;
 
     if Length(cv)=2 then # bicritical

@@ -10,10 +10,6 @@
 ##
 #############################################################################
 
-IMGRelator := fail;
-SetIMGRelator := fail;
-HasIMGRelator := fail;
-
 InstallMethod(IsSphereMachine, "(IMG) for an FR machine",
         [IsGroupFRMachine],
         function(M)
@@ -142,7 +138,7 @@ InstallMethod(SubFRMachine, "(IMG) for a sphere machine and a map",
         Error("SubFRMachine: range and stateset must be the same\n");
     od;
     pi := WreathRecursion(M);
-    rel := IMGRelator(M);
+    rel := RelatorsOfFpGroup(S)[1]; #!!!
     trans := [];
     out := [];
     x := LetterRepAssocWord(rel);
@@ -164,7 +160,6 @@ InstallMethod(SubFRMachine, "(IMG) for a sphere machine and a map",
     x := FRMachineNC(FamilyObj(M),Source(f),trans,out);
     i := PreImagesRepresentative(f,rel);
     if i<>fail then
-        SetIMGRelator(x,i);
         x := CleanedSphereMachine(x);
     fi;
     if HasAddingElement(M) then
@@ -1067,7 +1062,7 @@ end);
 InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
         [IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool],
         function(M1,M2,formal)
-    local machines, adders, w, i, j, states, gen, sgen, sum, f, c, trans, out, deg;
+    local machines, adders, deg, states, amalgam, i, s, trans, out, embed, sum;
 
     machines := [M1,M2];
     adders := List(machines,x->InitialState(AddingElement(x)));
@@ -1078,64 +1073,30 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
     od;
     deg := deg[1];
            
-    w := List(machines,m->CyclicallyReducedWord(IMGRelator(m)));
-    for i in [1..2] do
-        j := PositionWord(w[i],adders[i]);
-        if j=fail then
-            Error("Cannot find adding machine in ",machines[i]);
-        fi;
-        w[i] := Subword(w[i],j+1,Length(w[i]))*Subword(w[i],1,j-1);
-    od;
-    
     machines := List(machines,NormalizedPolynomialSphereMachine);
-    machines[2] := ChangeFRMachineBasis(machines[2],PermList([deg,deg-1..1]));
+    machines[2] := ChangeFRMachineBasis(machines[2],PermList([deg,deg-1..1])); # make it inverse
 
     states := List(machines,StateSet);
-    gen := []; c := [];
-    for i in [1..2] do
-        c[i] := Position(GeneratorsOfGroup(states[i]),adders[i]);
-        if c[i]=fail then
-            Error("Adder must be a generator of machine");
-        else
-            gen[i] := ShallowCopy(GeneratorsOfGroup(states[i]));
-            Remove(gen[i],c[i]);
-        fi;
-    od;
-    sgen := List(gen,x->List(x,String));
-    if Intersection(sgen[1],sgen[2])<>[] then
-        i := sgen[1][1][1];
-        if ForAll(Concatenation(sgen),w->w[1]=i) then
-            sgen[2] := List(sgen[2],ShallowCopy);
-            for j in sgen[2] do j[1] := CHAR_INT(INT_CHAR(i)+1); od;
-        else
-            sgen := List([1,2],i->List(sgen[i],s->Concatenation(s,String(i))));
-        fi;
-    fi;
-    f := FreeGroup(Concatenation(sgen));
-    sgen := [GeneratorsOfGroup(f){[1..Length(gen[1])]},
-             GeneratorsOfGroup(f){[1..Length(gen[2])]+Length(gen[1])}];
-    for i in [1..2] do
-        Add(sgen[i],fail,c[i]);
-        w[i] := MappedWord(w[i],GeneratorsOfGroup(states[i]),sgen[i]);
-        sgen[i][c[i]] := w[i]^-1;
-        c[i] := GroupHomomorphismByImagesNC(states[i],f,GeneratorsOfGroup(states[i]),sgen[i]);
-    od;
-    
+    amalgam := AmalgamatedFreeProduct(states[1],states[2],adders[1],adders[2]);
+    embed := EmbeddingsOfAmalgamatedFreeProduct(amalgam);
+
     trans := [];
     out := [];
     for i in [1..2] do
-        for j in gen[i] do
-            Add(trans,List(AlphabetOfFRObject(machines[i]),a->Transition(machines[i],j,a)^c[i]));
-            Add(out,Output(machines[i],j));
+        for s in GeneratorsOfGroup(states[i]) do
+            if s=adders[i] then continue; fi;
+            Add(trans,List(AlphabetOfFRObject(machines[i]),a->Transition(machines[i],s,a)^embed[i]));
+            Add(out,Output(machines[i],s));
+            Assert(0,Position(GeneratorsOfGroup(amalgam),s^embed[i])=Length(out));
         od;
     od;
-    sum := FRMachineNC(FamilyObj(machines[1]),f,trans,out);
+    sum := FRMachineNC(FamilyObj(machines[1]),amalgam,trans,out);
 
     if not formal then
         Error("Non-formal matings are not yet implemented. Complain to laurent.bartholdi@gmail.com");
     fi;
     
-    SetCorrespondence(sum,c);
+    SetCorrespondence(sum,embed);
     return sum;
 end);
 InstallMethod(Mating, "(IMG) for two polynomial sphere machines",
@@ -1324,7 +1285,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
     states := StateSet(M);
     act := function(machine,aut) return DISTILLATE@(aut^-1*machine)[1]; end;
     inneract := function(machine,g) return DISTILLATE@(InnerAutomorphism(states,g^-1)*machine)[1]; end;
-    pmcg := PUREMCG@(states,IMGRelator(M));
+    pmcg := PUREMCG@(states);
     orbit := Orbit(pmcg,DISTILLATE@(M)[1],act);
     
     # sort orbit so that consecutive blocks are related by inner automorphisms
