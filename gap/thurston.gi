@@ -379,7 +379,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         elif i[1]-i[2]=-1 then
             return P1Monomial(-deg);
         else
-            Error(M," is not an IMG machine");
+            Error(M," is not a legal sphere machine");
         fi;
     fi;    
     
