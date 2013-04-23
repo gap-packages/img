@@ -12,26 +12,6 @@
 
 ################################################################
 
-InstallMethod(\., [IsTriangulationObject, IsInt], function(x,n)
-    n := NameRNam(n);
-    Info(InfoIMG,1,"Access to triangulation's ",n);
-    Error("Interrupt -- giving you a chance to clean up the code");
-    if n="n" then return Neighbours(x);
-    elif n="pos" then return Pos(x);
-    elif n="index" then return x!.index;
-    elif n="from" then return From(x);
-    elif n="to" then return To(x);        
-    elif n="to" then return To(x);        
-    elif n="left" then return Left(x);        
-    elif n="right" then return Right(x);        
-    elif n="reverse" then return Opposite(x);        
-    elif n="map" then return Map(x);
-    elif n="len" then return Length(x);
-    elif n="radius" then return Radius(x);
-    else Error("Don't know how to lookup ",n);
-    fi;
-end);
-
 InstallMethod(ViewString, [IsTriangulationVertex],
         v->CONCAT@FR("<vertex ",v!.index,List(Neighbours(v),e->e!.index),">"));
 InstallMethod(ViewString, [IsTriangulationEdge],
@@ -225,7 +205,7 @@ BindGlobal("LOCATE@", function(t,f0,p)
             if Size(y)=1 then # on edge
                 return [f0,emin,RealPart(P1Coordinate(baryc[y[1]]))];
             elif Size(y)=2 then # at vertex
-                y := First(y,i->(i+1) mod 3 in y);
+                y := First(y,i->1+i mod 3 in y);
                 return [f0,n[1+(y+1) mod 3],n[y],From(n[y])];
             else
                 Error("There is probably a triangle with a flat angle. I'm stuck");

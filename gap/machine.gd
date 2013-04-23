@@ -649,7 +649,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##
 DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]);
 DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]);
-DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsBool]);
+DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsBool]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);

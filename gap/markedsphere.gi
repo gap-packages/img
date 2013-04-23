@@ -214,18 +214,18 @@ InstallMethod(NewMarkedSphere, "(IMG) for a list of points and a group",
                 source[i] := One(f);
                 Add(ordering,i);
             fi;
-            source[i] := source[i] / GroupElement(e);
+            source[i] := LeftQuotient(GroupElement(e), source[i]);
         fi;
     od;
 
     f := FreeGroupOfFpGroup(model);
     g := GeneratorsOfGroup(f);
-    ordering := Reversed(ordering);
     image := GroupHomomorphismByImages(f,f,g{ordering},List([1..n],i->g[ordering[i]]^Inverse(Product(g{Difference([1..ordering[i]],ordering{[1..i]})}))));
-    ordering := FamilyObj(One(model))!.ordering;
+
+    ordering := OrderingOfSphereGroup(model);
     image := image*GroupHomomorphismByImages(f,f,List([1..n],i->g[ordering[i]]^Inverse(Product(g{Difference([1..ordering[i]],ordering{[1..i]})}))),g{ordering});
 
-    r!.marking := NORMALIZEHOMOMORPHISM@(GroupHomomorphismByImages(r!.group,model,source,List(g,x->ElementOfSphereGroup(FamilyObj(One(model)),x^image))));
+    r!.marking := GroupHomomorphismByImages(r!.group,model,source,List(g,x->ElementOfSphereGroup(FamilyObj(One(model)),x^image)));
     
     return r;
 end);
@@ -761,8 +761,8 @@ InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a 
             Add(lift!.points, Random(P1PreImages(ratmap,i)));
         od;
     fi;
-Error("xx");
-    perm := COMPOSERECURSION@(state,perm,InverseGeneralMapping(src!.marking),InverseGeneralMapping(lift!.marking));
+
+    perm := COMPOSERECURSION@(state,perm,src!.marking,lift!.marking);
     state := perm[1];
     perm := perm[2];
 

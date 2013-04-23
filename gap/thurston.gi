@@ -33,35 +33,64 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
     # it is in particular assumed that recur[1] has as many lines as
     # StateSet(M) has generators; and that entries in recur[1][j] belong to a
     # free group of rank the length of v.
-    local w, i, j, k, c, g1, g2, gens1, gens2, src, dst;
+    local w, i, j, k, c, instates, outstates2,
+          ingens, outgens2, trans1, trans2,
+          todo, done, src, dst;
 
-    g1 := StateSet(M1);
-    g2 := FamilyObj(M2!.transitions[1][1])!.group;
-    gens1 := GeneratorsOfGroup(g1);
-    gens2 := GeneratorsOfGroup(g2);
+    instates := StateSet(M1);
+    Assert(0,instates=StateSet(M2));
+    Assert(0,AlphabetOfFRObject(M1)=AlphabetOfFRObject(M2));
+
+    outstates2 := FamilyObj(M2!.transitions[1][1])!.group;
+    ingens := GeneratorsOfGroup(instates);
+    outgens2 := GeneratorsOfGroup(outstates2);
+    trans1 := [One(instates)];
+    trans2 := [One(outstates2)];
+    done := [1];
+    todo := Difference(AlphabetOfFRObject(M1),done);
+    while todo<>[] do
+        for i in [1..Length(ingens)] do
+            c := First(Cartesian(done,todo),p->Output(M1,ingens[i])[p[1]]=p[2]);
+            if c<>fail then break; fi;
+        od;
+        trans1[c[2]] := Transition(M1,ingens[i],c[1])^-1*trans1[c[1]];
+#!!!        trans2[c[2]] := Transition(M2,ingens[i],c[1])^-1*trans2[c[1]];
+        trans2[c[2]] := M2!.transitions[i][c[1]]^-1*trans2[c[1]];
+        Add(done,c[2]);
+        Remove(todo,Position(todo,c[2]));
+    od;
+
     src := [];
     dst := [];
     w := [];
 
-    for i in [1..Length(gens1)] do
+    for i in [1..Length(ingens)] do
         Assert(0,Output(M1,i)=Output(M2,i));
         for c in Cycles(PermList(Output(M1,i)),AlphabetOfFRObject(M1)) do
-            j := Product(M1!.transitions[i]{c});
+            j := Product(M1!.transitions[i]{c})^trans1[c[1]];
             if IsOne(j) then continue; fi;
-            k := Product(M2!.transitions[i]{c});
+            k := Product(M2!.transitions[i]{c})^trans2[c[1]];
             Add(src,j);
             Add(dst,k);
-            w[Position(gens1,CyclicallyReducedWord(j))] := Position(gens2,CyclicallyReducedWord(k));
+            w[Position(ingens,CyclicallyReducedWord(j))] := Position(outgens2,CyclicallyReducedWord(k));
         od;
     od;
-    Assert(0,BoundPositions(w)=[1..Length(gens1)]);
-    for i in [1..Length(gens2)] do
+    Assert(0,BoundPositions(w)=[1..Length(ingens)]);
+    for i in [1..Length(outgens2)] do
         if not i in w then
-            Add(dst,gens2[i]);
-            Add(src,One(g1));
+            Add(dst,outgens2[i]);
+            Add(src,One(instates));
         fi;
     od;
-    return [GroupHomomorphismByImages(g2,g1,dst,src),w];
+
+    # now mark the conj-generators of outstates2 that map to <>1, and try to reduce them by
+    # global conjugation.
+    # for the conj-generators that map to 1, we can actually replace them by their minimal
+    # conjugate, to speed up GroupHomomorphismByImages
+
+#!!! $$$ !!!
+Error("TODO!!!");
+    return [GroupHomomorphismByImages(outstates2,instates,dst,src),w];
 end);
 
 InstallMethod(IsNonContractingMatrix, "(IMG) for an integer matrix",
@@ -153,7 +182,7 @@ InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere con
     len := Length(multicurve);
     mat := [];
     for c in multicurve do
-        row := List([1..len],i->0);
+        row := List([1..len],i->0); # we compute row c of the transition matrix
         for lift in LiftOfConjugacyClass(M,c) do
             if IsPeripheral(lift[2]) then
                 continue;
@@ -166,10 +195,10 @@ InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere con
                 if ForAny(multicurve,c->IntersectionNumber(c,lift[2])>0) then
                     return fail;
                 fi;
-                for j in mat do Add(j,0); od;
-                Add(row,1/lift[1]);
+                Add(multicurve,lift[2]); # new curve
+                for j in mat do Add(j,0); od; # add 0 column
+                Add(row,1/lift[1]); # add new coefficient on present row
                 len := len+1;
-                Add(multicurve,c);
             else
                 row[j] := row[j] + 1/lift[1];
             fi;
@@ -368,9 +397,10 @@ end);
 InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
-    local old_downsphere, downsphere, upsphere, n, deg, model,
+    local old_downsphere, downsphere, n, deg, model,
           f, mobius, Mf, Mmobius, hom_mobius, match, v, i, j,
-          dist, obstruction, lifts, sublifts, fast, poly;
+          dist, obstruction, lifts, sublifts, fast, poly,
+          upsphere, upmodel, uporder;
 
     model := StateSet(M);
     n := Length(GeneratorsOfGroup(model));
@@ -411,19 +441,27 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         old_downsphere := downsphere;
         # find a rational map that has the right critical values
         f := BranchedCoveringByMonodromy(downsphere,Output(M)); #!!! use f, lifts
-        lifts := Concatenation(List(f.points,x->List(x,y->y[1])));
+        lifts := f.points;
         f := f.map;
         Info(InfoIMG,3,"1: found rational map ",f," on vertices ",lifts);
 
         if fast then # just get points closest to those in downsphere t
-            match := MatchP1Points(sublifts,List(sublifts,x->lifts));
+            v := List(Concatenation(lifts),x->x[1]); # just keep the points
+            match := MatchP1Points(sublifts,List(sublifts,x->v));
             if match=fail then
 		Info(InfoIMG,3,"1.5: back to slow mode");
                 fast := false; continue;
             fi;
         else
+            uporder := [];
+            v := [];
+            for i in [1..n] do
+                Append(v,List(lifts[i],x->x[1]));
+                Append(uporder,List(lifts[i],x->x[2]^-1)*ExponentsOfSphereGroup(model)[i]);
+            od;
+            upmodel := SphereGroup(Length(v),uporder);
             # create a spider on the full preimage of the points of <downsphere>
-            upsphere := NewMarkedSphere(lifts);
+            upsphere := NewMarkedSphere(v,upmodel);
             Info(InfoIMG,3,"2: created liftedspider ",upsphere);
 
             # lift paths in <downsphere> to <upsphere>
@@ -439,6 +477,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
 
             # extract those vertices in <v> that appear in the recursion
             match := MATCHTRANS@(M,Mf);
+
             Info(InfoIMG,3,"5: extracted and sorted vertices ",match);
             upsphere!.marking := upsphere!.marking*match[1]; # so we're again marked by <model>
             upsphere!.model := model;
@@ -446,7 +485,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         fi;
 
         # find a mobius transformation that normalizes <sublifts> wrt PSL2C
-        sublifts := lifts{match};
+        sublifts := v{match};
         mobius := P1MapNormalizingP1Points(sublifts,VerticesOfMarkedSphere(downsphere));
         Info(InfoIMG,3,"6: normalize by mobius map ",mobius);
 

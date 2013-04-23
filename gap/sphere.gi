@@ -55,7 +55,7 @@ end);
 InstallOtherMethod(AsWordLetterRepInGenerators, "(IMG) for a sphere group element and a subgroup",
         [IsElementOfSphereGroup, IsGroup and HasGeneratorsOfGroup],
         function(w,g)
-    local l, G, gens, iso;
+    local l, G, gens, iso, i;
 
     G := FamilyObj(w)!.group;
     gens := GeneratorsOfGroup(g);
@@ -66,10 +66,22 @@ InstallOtherMethod(AsWordLetterRepInGenerators, "(IMG) for a sphere group elemen
         return AsWordLetterRepInGenerators(w^iso,Group(List(gens,x->x^iso)));
     fi;
 
-    # a cheap shot
-    l := AsWordLetterRepInGenerators(UnderlyingElement(w),Group(List(gens,UnderlyingElement)));
-    if l<>fail then return l; fi;
+    if not IsBound(g!.freelift) then
+        # we should(!) add the normal closure of all relations; but this seems to work well in
+        # practice.
+        g!.freelift := Group(Concatenation(List(gens,UnderlyingElement),RelatorsOfFpGroup(G)));
+    fi;
 
+    # a cheap shot
+    l := AsWordLetterRepInGenerators(UnderlyingElement(w),g!.freelift);
+    if l<>fail then
+        w := [];
+        gens := [-Length(gens)..Length(gens)];
+        for i in l do if i in gens then Add(w,i); fi; od;
+        return w;
+    fi;
+
+    Info(InfoIMG,1,"AsWordLetterRepInGenerators: resorting to brute-force factorization; this could be slow");
     # now complicated and inefficient method
     return BRUTEFORCEFACTORIZATION@(w,g);
 end);

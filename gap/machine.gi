@@ -189,6 +189,7 @@ InstallGlobalFunction(NewSphereMachine,
     local relators, iso, fam, machine, data, len;
     #!!! Guess the orders and relator if not supplied.
     #!!! also recognize adder
+    #!!! also check that it's a legal machine; implement general safety procedure
 
     len := Length(arg);
     while not '=' in arg[len] do
@@ -340,6 +341,7 @@ BindGlobal("COPYADDER@", function(M,N)
     SetAddingElement(M,FRElement(M,InitialState(AddingElement(N))));
 end);
 
+#!!! we don't use this anymore -- it seems actually to slow things down
 BindGlobal("NORMALIZEHOMOMORPHISM@", function(f)
     local g, mapi, sf, rf, gens;
     if not HasMappingGeneratorsImages(f) then
@@ -365,7 +367,6 @@ InstallMethod(\*, "(IMG) for an FR machine and a mapping",
     if S<>Source(f) or S<>Range(f) then
         Error("\*: source, range and stateset must be the same\n");
     fi;
-    f := NORMALIZEHOMOMORPHISM@(f);
     N := FRMachineNC(FamilyObj(M),S,List(M!.transitions,r->List(r,x->x^f)),M!.output);
     IsSphereMachine(N);
     if HasAddingElement(M) then
@@ -414,7 +415,6 @@ InstallMethod(\^, "(IMG) for a group FR machine and a mapping",
     trans := [];
     out := [];
     finv := InverseGeneralMapping(f);
-    f := NORMALIZEHOMOMORPHISM@(f);
     if finv=fail then return fail; fi;
     for i in GeneratorsOfGroup(newS) do
         x := pi(i^finv);
@@ -547,31 +547,34 @@ BindGlobal("TRUNC@", function(a)
 end);
 
 BindGlobal("COMPOSERECURSION@", function(trans,out,pre,post)
-    # twist the recursion [trans,out] by precomposing by pre, and
-    # post-composing by post^-1. These are homomorphisms with range
+    # twist the recursion [trans,out] by precomposing by pre^-1, and
+    # post-composing by post. These are homomorphisms with range
     # the (source, range) group of [trans,out].
     # returns the new [trans,out].
-    local i, w, newout, newtrans, deg, psi;
+    local i, w, newout, newtrans, deg, psi, source, gens;
     deg := Length(trans[1]);
+    source := Source(pre);
+    gens := GeneratorsOfGroup(source);
+
     newout := [];
     newtrans := [];
 
     if deg=1 then # bug with wreath products on the trivial group
-        psi := GroupHomomorphismByImagesNC(Range(pre),Range(post),GeneratorsOfGroup(Range(pre)),List([1..Length(GeneratorsOfGroup(Range(pre)))],i->trans[i][1]));
-        for i in GeneratorsOfGroup(Source(pre)) do
+        psi := GroupHomomorphismByImagesNC(source,Source(post),gens,List([1..Length(gens)],i->trans[i][1]));
+        for i in GeneratorsOfGroup(Range(pre)) do
             Add(newout,[1]);
-            Add(newtrans,[PreImagesRepresentative(post,ImagesRepresentative(pre,i)^psi)]);
+            Add(newtrans,[ImagesRepresentative(post,PreImagesRepresentative(pre,i)^psi)]);
         od;
         return [newtrans,newout];
     fi;
 
-    w := WreathProduct(Range(post),SymmetricGroup(deg));
-    psi := GroupHomomorphismByImagesNC(Range(pre),w,GeneratorsOfGroup(Range(pre)),List([1..Length(GeneratorsOfGroup(Range(pre)))],i->Product([1..deg],j->trans[i][j]^Embedding(w,j))*PermList(out[i])^Embedding(w,deg+1)));
+    w := WreathProduct(Source(post),SymmetricGroup(deg));
+    psi := GroupHomomorphismByImagesNC(source,w,gens,List([1..Length(gens)],i->Product([1..deg],j->trans[i][j]^Embedding(w,j))*PermList(out[i])^Embedding(w,deg+1)));
 
-    for i in GeneratorsOfGroup(Source(pre)) do
-        w := ImagesRepresentative(pre,i)^psi;
+    for i in GeneratorsOfGroup(Range(pre)) do
+        w := PreImagesRepresentative(pre,i)^psi;
         Add(newout,ListPerm(w![deg+1],deg));
-        Add(newtrans,List([1..deg],j->PreImagesRepresentative(post,w![j])));
+        Add(newtrans,List([1..deg],j->ImagesRepresentative(post,w![j])));
     od;
     
     return [newtrans,newout];
@@ -840,14 +843,28 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
     # d is the degree
     # F is a list of Fatou critical points
     # J is a list of Julia critical points
-    # machtype=1: mealy machine;
-    # =2: formal construction (non-coalesced points with same itinerary), finite recursion nice;
-    # =3: formal construction, adding machine nice
-    # =4: non-formal (coalesced)
+    # machtype.mealy: mealy machine, default=f
+    # machtype.formal: formal construction (non-coalesced points with same itinerary), default=f
+    # machtype.adding: formal construction, adding machine nice
+    # machtype.orbispace: give points their minimial degree, default=t
     # returns an FR machine, and sets correspondence to [fF,fJ], where
     # these functions return, for a given angle, the corresponding generator.
-    local C, V, i, j, part, pcp, f, newf, g, trans, t, out, o, p, q, rank, epsilon, epi,
+    local C, V, i, j, part, pcp, f, newf, gens, trans, t, out, o, p, q, rank, epsilon, epi,
           one, machine, orders;
+
+    for i in RecNames(machtype) do
+        while not i in ["formal","adding","orbispace","mealy"] do
+            Error("PolynomialSphereMachine: option '",i,"' not recognized");
+        od;
+        while not IsBool(machtype.(i)) do
+            Error("PolynomialSphereMachine: option '",i,"' should be a boolean");
+        od;
+    od;
+    machtype := ShallowCopy(machtype);
+    if not IsBound(machtype.mealy) then machtype.mealy := false; fi;
+    if not IsBound(machtype.formal) then machtype.formal := false; fi;
+    if not IsBound(machtype.adding) then machtype.adding := true; fi;
+    if not IsBound(machtype.orbispace) then machtype.orbispace := true; fi;
 
     C := Concatenation(List(F,x->[x,FJ@[1]]),List(J,x->[x,FJ@[2]]));
     for i in C do
@@ -905,13 +922,17 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
     
     part := part{List([0..d-1]/d,x->KM$INPART@(part,x))};
 
-    if machtype=1 then
-        g := [1..rank+1];
+    if machtype.mealy then
+        gens := [1..rank+1];
         one := rank+1;
     else
-        orders := PCPORDERS@(C,d,pcp);
+        if machtype.orbispace then
+            orders := PCPORDERS@(C,d,pcp);
+        else
+            orders := List([0..rank],i->0);
+        fi;
         f := SphereGroup(rank+1,orders);
-        g := GeneratorsOfGroup(f);
+        gens := GeneratorsOfGroup(f);
         one := One(f);
     fi;
     trans := [];
@@ -927,12 +948,12 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
             else
                 p := p[1][Position(p[1],q) mod Length(p[1])+1];
             fi;
-            if machtype<=2 then
+            if machtype.mealy or not machtype.adding then
                 o[KM$INPART@(part,q)] := KM$INPART@(part,p);
 
                 p := Position(pcp,[q,i[2]]);
                 if p<>fail then
-                    p := g[p];
+                    p := gens[p];
                 else
                     p := one;
                 fi;
@@ -941,15 +962,15 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
                 if p<>q then
                     Add(o,1+(j+d*(p-q)) mod d);
                     if p>q then
-                        Add(t,Product(g{Filtered([rank,rank-1..1],j->pcp[j][1]>q and pcp[j][1]<p and pcp[j][2]=i[2])},one)^-1);
+                        Add(t,Product(gens{Filtered([rank,rank-1..1],j->pcp[j][1]>q and pcp[j][1]<p and pcp[j][2]=i[2])},one)^-1);
                     else
-                        Add(t,Product(g{Filtered([rank,rank-1..1],j->pcp[j][1]>=p and pcp[j][1]<=q and pcp[j][2]=i[2])},one));
+                        Add(t,Product(gens{Filtered([rank,rank-1..1],j->pcp[j][1]>=p and pcp[j][1]<=q and pcp[j][2]=i[2])},one));
                     fi;
                 else
                     Add(o,j+1);
                     p := Position(pcp,[q,i[2]]);
                     if p<>fail then
-                        Add(t,g[p]);
+                        Add(t,gens[p]);
                     else
                         Add(t,one);
                     fi;
@@ -959,23 +980,23 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
         Add(trans,t);
         Add(out,o);
     od;
-    if machtype=1 then
-        Add(trans,List([1..d],i->Length(g)));
+    if machtype.mealy then
+        Add(trans,List([1..d],i->Length(gens)));
         Add(out,[1..d]);
         machine := MealyMachine(trans,out);
         SetCorrespondence(machine,pcp);
-        SetAddingElement(machine,Product(Reversed(g),i->FRElement(machine,i)));
+        SetAddingElement(machine,Product(Reversed(gens),i->FRElement(machine,i)));
     else
-        t := [g[Length(g)]];
+        t := [gens[Length(gens)]];
         Append(t,List([1..d-1],i->one));
         Add(trans,t);
         Add(out,Concatenation([d],[1..d-1]));
         machine := FRMachine(f,trans,out);
-        SetAddingElement(machine,FRElement(machine,g[Length(g)]));
+        SetAddingElement(machine,FRElement(machine,gens[Length(gens)]));
         SetCorrespondence(machine,pcp);
     fi;
 
-    if machtype=4 then
+    if not (machtype.formal or machtype.mealy) then
         p := [[1..rank]];
         t := List(pcp,x->x[1]);
         for i in [1..rank] do
@@ -995,19 +1016,19 @@ BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
             for i in p do
                 o := one;
                 for j in [i[Length(i)],i[Length(i)]-1..i[1]] do
-                    if not j in i then o := g[j]^-1*o; fi;
-                    o := o*g[j];
+                    if not j in i then o := gens[j]^-1*o; fi;
+                    o := o*gens[j];
                 od;
                 Add(q,o);
             od;
             pcp := List(p,r->[pcp{r}[1],pcp[r[1]][2]]);
             orders := orders{List(p,Representative)}; Add(orders,0);
             newf := SphereGroup(Length(p)+1,orders);
-            epi := GroupHomomorphismByImagesNC(newf,f,GeneratorsOfGroup(newf),Concatenation(q,[g[Length(g)]]));
+            epi := GroupGeneralMappingByImages(f,newf,Concatenation(q,[gens[Length(gens)]]),GeneratorsOfGroup(newf));
             trans := COMPOSERECURSION@(trans,out,epi,epi);
             out := trans[2]; trans := trans[1];
             machine := FRMachine(newf,trans,out);
-            SetAddingElement(machine,FRElement(machine,PreImagesRepresentative(epi,g[Length(g)])));
+            SetAddingElement(machine,FRElement(machine,GeneratorsOfGroup(newf)[Length(orders)]));
             SetCorrespondence(machine,pcp);
         fi;
     fi;
@@ -1019,19 +1040,19 @@ end);
 InstallMethod(PolynomialMealyMachine, "(IMG) for a degree, Fatou and Julia preangles",
         [IsPosInt,IsList,IsList],
         function(n,F,J)
-    return POLYNOMIALMACHINE@(n,F,J,1);
+    return POLYNOMIALMACHINE@(n,F,J,rec(mealy:=true));
 end);
 
 InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia preangles",
         [IsPosInt,IsList,IsList],
         function(n,F,J)
-    return POLYNOMIALMACHINE@(n,F,J,4);
+    return POLYNOMIALMACHINE@(n,F,J,rec());
 end);
 
 InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia preangles, and bool",
-        [IsPosInt,IsList,IsList,IsBool],
-        function(n,F,J,nice)
-    return POLYNOMIALMACHINE@(n,F,J,Position([,true,false],nice));
+        [IsPosInt,IsList,IsList,IsRecord],
+        function(n,F,J,options)
+    return POLYNOMIALMACHINE@(n,F,J,options);
 end);
 
 BindGlobal("FATOUANGLES@", function(n,A)
@@ -1091,6 +1112,7 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
         od;
     od;
     sum := FRMachineNC(FamilyObj(machines[1]),amalgam,trans,out);
+    IsSphereMachine(sum);
 
     if not formal then
         Error("Non-formal matings are not yet implemented. Complain to laurent.bartholdi@gmail.com");
