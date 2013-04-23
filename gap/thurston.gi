@@ -55,6 +55,7 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
         od;
         trans1[c[2]] := Transition(M1,ingens[i],c[1])^-1*trans1[c[1]];
 #!!!        trans2[c[2]] := Transition(M2,ingens[i],c[1])^-1*trans2[c[1]];
+#!!! write it like that as soon as inner stateset and output stateset are dissociated
         trans2[c[2]] := M2!.transitions[i][c[1]]^-1*trans2[c[1]];
         Add(done,c[2]);
         Remove(todo,Position(todo,c[2]));
@@ -68,28 +69,34 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
         Assert(0,Output(M1,i)=Output(M2,i));
         for c in Cycles(PermList(Output(M1,i)),AlphabetOfFRObject(M1)) do
             j := Product(M1!.transitions[i]{c})^trans1[c[1]];
-            if IsOne(j) then continue; fi;
             k := Product(M2!.transitions[i]{c})^trans2[c[1]];
             Add(src,j);
             Add(dst,k);
-            w[Position(ingens,CyclicallyReducedWord(j))] := Position(outgens2,CyclicallyReducedWord(k));
+            if not IsOne(j) then 
+                w[Position(ingens,CyclicallyReducedWord(j))] := Position(outgens2,CyclicallyReducedWord(k));
+            fi;
         od;
     od;
     Assert(0,BoundPositions(w)=[1..Length(ingens)]);
-    for i in [1..Length(outgens2)] do
-        if not i in w then
-            Add(dst,outgens2[i]);
-            Add(src,One(instates));
-        fi;
-    od;
 
     # now mark the conj-generators of outstates2 that map to <>1, and try to reduce them by
     # global conjugation.
     # for the conj-generators that map to 1, we can actually replace them by their minimal
     # conjugate, to speed up GroupHomomorphismByImages
+    todo := [];
+    for i in [1..Length(src)] do
+        if not IsOne(src[i]) then Add(todo,dst[i]); fi;
+    od;
+    todo := REDUCEINNER@(todo,outgens2);
 
-#!!! $$$ !!!
-Error("TODO!!!");
+    for i in [1..Length(src)] do
+        if IsOne(src[i]) then
+            dst[i] := CyclicallyReducedWord(dst[i]);
+        else
+            dst[i] := dst[i]^todo;
+        fi;
+    od;
+
     return [GroupHomomorphismByImages(outstates2,instates,dst,src),w];
 end);
 
