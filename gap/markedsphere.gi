@@ -761,7 +761,7 @@ InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a 
             Add(lift!.points, Random(P1PreImages(ratmap,i)));
         od;
     fi;
-
+Error("xx");
     perm := COMPOSERECURSION@(state,perm,InverseGeneralMapping(src!.marking),InverseGeneralMapping(lift!.marking));
     state := perm[1];
     perm := perm[2];

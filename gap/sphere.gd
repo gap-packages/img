@@ -32,7 +32,10 @@ DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection);
 DeclareAttribute("PeripheralClasses", IsSphereGroup);
 DeclareProperty("IsPeripheral", IsElementOfSphereGroup);
 DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
-DeclareAttribute("Inverse", IsSphereConjugacyClass);
+DeclareOperation("InverseMutable", [IsSphereConjugacyClass]);
+DeclareOperation("InverseSameMutability", [IsSphereConjugacyClass]);
+DeclareAttribute("InverseImmutable", IsSphereConjugacyClass);
+DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);
 
 DeclareOperation("IntersectionNumber", [IsSphereConjugacyClass,IsSphereConjugacyClass]);
 DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);

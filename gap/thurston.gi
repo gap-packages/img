@@ -123,23 +123,28 @@ end);
 InstallMethod(LiftOfConjugacyClass, "(IMG) for a machine and a conjugacy class",
         [IsGroupFRMachine,IsConjugacyClassGroupRep],
         function(M,c)
-    local r, lift;
-    r := DecompositionOfFRElement(Representative(c));
+    local trans, cycle, lift;
+    
+    c := Representative(c);
+    trans := Transitions(M,c);
     lift := [];
-    for c in Cycles(PermList(r[2]),AlphabetOfFRObject(M)) do
-        Add(lift,[Length(c),ConjugacyClass(StateSet(M),Product(r[1]{c}))]);
+    for cycle in Cycles(PermList(Output(M,c)),AlphabetOfFRObject(M)) do
+        Add(lift,[Length(cycle),ConjugacyClass(Product(trans{cycle}))]);
     od;
     return lift;
 end);
 
-InstallMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere conj. classes",
-        [IsSphereMachine,IsMulticurve],
+#!!! method selection fails for collections
+InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere conj. classes",
+        [IsSphereMachine,IsList],
         function(M,multicurve)
     # enlarge multicurve so that it becomes invariant, and return the transition matrix;
     # or return fail if the enlargement would cause curves to intersect
     local g, len, mat, lift, c, row,
            w, x, i, j, d, group, pi, gens, peripheral;
-
+    
+    if not IsMulticurve(multicurve) then Error("1"); TryNextMethod(); fi;
+        
     g := StateSet(M);
     while g<>FamilyObj(Representative(multicurve[1]))!.group do
         Error("Elements do not all have the same underlying sphere group");

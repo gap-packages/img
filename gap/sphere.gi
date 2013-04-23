@@ -376,25 +376,25 @@ BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     od;
     return [minm,ElementOfSphereGroup(fam,minx)];
 end);
-    
+
 InstallOtherMethod(CyclicallyReducedWord, "(IMG) for a sphere group element",
         [IsElementOfSphereGroup],
         g->MAKECYCLICALLYREDUCED@(g)[1]);
 
-InstallMethod(IsPeripheral, "(IMG) for a sphere group element",
-        [IsElementOfSphereGroup],
+BindGlobal("ISPERIPHERAL@",
         function(g)
     g := MAKECYCLICALLYREDUCED@(g)[1];
-    return g=Subword(g,1,1)^Length(g);
+    return IsOne(g) or g=Subword(g,1,1)^Length(g);
 end);
+    
+InstallMethod(IsPeripheral, "(IMG) for a sphere group element",
+        [IsElementOfSphereGroup],
+        ISPERIPHERAL@);
+
 
 InstallMethod(IsPeripheral, "(IMG) for a sphere conjugacy class",
         [IsSphereConjugacyClass],
-        function(c)
-    local g;
-    g := MAKECYCLICALLYREDUCED@(Representative(c))[1];
-    return g=Subword(g,1,1)^Length(g);
-end);
+        c->ISPERIPHERAL@(Representative(c)));
 
 InstallMethod(Order, "(IMG) for a sphere group element",
         [IsElementOfSphereGroup],
@@ -436,10 +436,19 @@ InstallMethod(IsSphereConjugacyClass, "(IMG) for a group conj. class",
     return IsElementOfSphereGroup(Representative(c));
 end);
 
-InstallMethod(Inverse, "(IMG) for a sphere conj. class",
-        [IsSphereConjugacyClass],
-        function(c)
-    return ConjugacyClass(Inverse(Representative(c)));
+Perform([InverseImmutable,InverseSameMutability,InverseMutable],
+        function(method)
+    InstallMethod(method, "(IMG) for a sphere conj. class",
+            [IsSphereConjugacyClass],
+            function(c)
+        return ConjugacyClass(Inverse(Representative(c)));
+    end);
+end);
+
+InstallMethod(POW, "(IMG) for a sphere conj. class and an integer",
+        [IsSphereConjugacyClass,IsInt],
+        function(c,n)
+    return ConjugacyClass(Representative(c)^n);
 end);
 
 InstallMethod(IsSphereConjugacyClassCollection, "(IMG) for a group conj. class",

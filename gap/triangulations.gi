@@ -38,6 +38,9 @@ InstallMethod(ViewString, [IsTriangulationEdge],
         e->CONCAT@FR("<edge ",e!.index,List([From(e),To(e)],v->v!.index),">"));
 InstallMethod(ViewString, [IsTriangulationFace],
         f->CONCAT@FR("<face ",f!.index,List(Neighbours(f),e->e!.index),">"));
+InstallMethod(PrintString, [IsTriangulationObject], ViewString);
+InstallMethod(String, [IsTriangulationObject], ViewString);
+InstallMethod(DisplayString, [IsTriangulationObject], ViewString);
 INSTALLPRINTERS@(IsTriangulationObject);
 
 Perform([IsTriangulationVertex,IsTriangulationEdge,IsTriangulationFace], function(filter)
