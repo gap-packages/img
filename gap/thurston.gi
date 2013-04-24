@@ -24,6 +24,18 @@ BindGlobal("MATCHPERMS@", function(M,q)
     return c;
 end);
 
+BindGlobal("PARABOLICQUOTIENT@", function(g,w)
+    # returns the epimorphism from the sphere group g to the group on the parabolic elements
+    # indexed by w.
+    local h, img;
+
+    img := []; img{w} := [1..Length(w)];
+    h := SphereGroup(img{Filtered(OrderingOfSphereGroup(g),x->x in w)},ExponentsOfSphereGroup(g){w});
+    img := List(GeneratorsOfGroup(g),x->One(h));
+    img{w} := GeneratorsOfGroup(h);
+    return GroupHomomorphismByImages(g,h,img);
+end);
+
 BindGlobal("MATCHTRANS@", function(M1,M2)
     # match generators g[i] of M to elements of v.
     # returns a list <w> of elements of <v> such that:
@@ -35,7 +47,7 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
     # free group of rank the length of v.
     local w, i, j, k, c, instates, outstates2,
           ingens, outgens2, trans1, trans2,
-          todo, done, src, dst;
+          todo, done, src, epi, dst;
 
     instates := StateSet(M1);
     Assert(0,instates=StateSet(M2));
@@ -70,37 +82,26 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
         for c in Cycles(PermList(Output(M1,i)),AlphabetOfFRObject(M1)) do
             j := Product(M1!.transitions[i]{c})^trans1[c[1]];
             k := Product(M2!.transitions[i]{c})^trans2[c[1]];
-            Add(src,j);
-            Add(dst,k);
             if not IsOne(j) then 
+                Add(src,j);
+                Add(dst,k);
                 w[Position(ingens,CyclicallyReducedWord(j))] := Position(outgens2,CyclicallyReducedWord(k));
             fi;
         od;
     od;
     Assert(0,BoundPositions(w)=[1..Length(ingens)]);
 
-    # now mark the conj-generators of outstates2 that map to <>1, and try to reduce them by
+    # now reduce the conj-generators of outstates2 that map to <>1 by
     # global conjugation.
-    # for the conj-generators that map to 1, we can actually replace them by their minimal
-    # conjugate, to speed up GroupHomomorphismByImages
-    todo := [];
-    for i in [1..Length(src)] do
-        if not IsOne(src[i]) then Add(todo,dst[i]); fi;
-    od;
-    todo := REDUCEINNER@(todo,outgens2);
+    REDUCEINNER@(dst,outgens2);
 
-    for i in [1..Length(src)] do
-        if IsOne(src[i]) then
-            dst[i] := CyclicallyReducedWord(dst[i]);
-        else
-            dst[i] := dst[i]^todo;
-        fi;
-    od;
+    # get rid of the elements going to 1
+    epi := PARABOLICQUOTIENT@(outstates2,w);
 
-    return [GroupHomomorphismByImages(outstates2,instates,dst,src),w];
+    return [epi*GroupHomomorphismByImages(Range(epi),instates,List(dst,x->x^epi),src),w];
 end);
 
-InstallMethod(IsNonContractingMatrix, "(IMG) for an integer matrix",
+InstallMethod(NonContractingSubmatrix, "(IMG) for an integer matrix",
         [IsMatrix],
         function(mat)
     local i, j, len, part, parts, submat, sublen;
@@ -113,19 +114,21 @@ InstallMethod(IsNonContractingMatrix, "(IMG) for an integer matrix",
         submat := mat{part}{part};
         sublen := Length(part);
 
-        if NullspaceMat(submat-IdentityMat(sublen))=[] then # no 1 eigenval
-            i := List([1..sublen],i->1);
-            j := List([1..sublen],i->1);   # first approximation to perron-frobenius vector
-            repeat
-                i := i*submat;
-                j := j*submat*submat; # j should have all entries growing exponentially
-                if ForAll([1..sublen],a->j[a]=0 or j[a]<i[a]) then
-                    return false; # perron-frobenius eigenval < 1
-                fi;
-            until ForAll(j-i,IsPosRat);
+        if NullspaceMat(submat-IdentityMat(sublen))<>[] then # a 1 eigenvalue
+            return part;
         fi;
+        i := List([1..sublen],i->1);
+        j := List([1..sublen],i->1);   # first approximation to perron-frobenius vector
+        repeat
+            i := i*submat;
+            j := j*submat*submat; # j should have all entries growing exponentially
+            if ForAll(j-i,IsPosRat) then # all entries increased
+                return part;
+            fi;
+        until ForAll([1..sublen],a->j[a]=0 or j[a]<i[a]); # all entries decreased if they could;
+        # perron-frobenius eigenval < 1
     od;
-    return true;
+    return fail;
 end);
 
 #!!! still old format
@@ -221,7 +224,7 @@ InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
         function(M,spider)
     # check if <spider> has coalesced points; in that case, find a short loop, saturate it by
     # taking its lifts, and check if they form an obstruction
-    local multicurve, e, g, mat;
+    local multicurve, e, g, mat, part;
 
     #1. for each edge of the spanning tree, consider its conjugacy class c. This represents
     #   a simple closed curve, and if the edge is long then it probably is part of a long
@@ -241,14 +244,17 @@ InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
     for e in GeneratorsOfGroup(spider!.group) do
         multicurve := [ConjugacyClass(g,e^spider!.marking)];
         mat := ThurstonMatrix(M,multicurve);
+
         if mat=fail then continue; fi;
-        if IsNonContractingMatrix(mat) then
+
+        part := NonContractingSubmatrix(mat);
+        if part<>fail then
 #            if spider<>fail and IsBound(boundary[j]) then
 #                if not IsBound(spider!.arcs) then spider!.arcs := []; fi;
 #                Add(spider!.arcs,[[0,0,255],Float(105/100),boundary[j][1]]);
 #            fi;
-            return rec(multicurve := multicurve,
-                       matrix := mat,
+            return rec(multicurve := multicurve{part},
+                       matrix := mat{part}{part},
                        # boundary := SURROUNDINGCURVE(spider!.cut,"half of tree cut at e"),
                        machine := M);
         fi;

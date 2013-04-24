@@ -839,7 +839,9 @@ BindGlobal("PCPORDERS@", function(C,d,pcp)
     return pcporders;
 end);
 
-BindGlobal("POLYNOMIALMACHINE@", function(d,F,J,machtype)
+InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia preangles, and options",
+        [IsPosInt,IsList,IsList,IsRecord],
+        function(d,F,J,machtype)
     # d is the degree
     # F is a list of Fatou critical points
     # J is a list of Julia critical points
@@ -1040,19 +1042,13 @@ end);
 InstallMethod(PolynomialMealyMachine, "(IMG) for a degree, Fatou and Julia preangles",
         [IsPosInt,IsList,IsList],
         function(n,F,J)
-    return POLYNOMIALMACHINE@(n,F,J,rec(mealy:=true));
+    return PolynomialSphereMachine(n,F,J,rec(mealy:=true));
 end);
 
 InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia preangles",
         [IsPosInt,IsList,IsList],
         function(n,F,J)
-    return POLYNOMIALMACHINE@(n,F,J,rec());
-end);
-
-InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia preangles, and bool",
-        [IsPosInt,IsList,IsList,IsRecord],
-        function(n,F,J,options)
-    return POLYNOMIALMACHINE@(n,F,J,options);
+    return PolynomialSphereMachine(n,F,J,rec());
 end);
 
 BindGlobal("FATOUANGLES@", function(n,A)
@@ -1075,7 +1071,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree and preangles",
 end);
 
 InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, preangles, and bool",
-        [IsPosInt,IsList,IsBool],
+        [IsPosInt,IsList,IsRecord],
         function(n,A,nice)
     return PolynomialSphereMachine(n,FATOUANGLES@(n,A),JULIAANGLES@(n,A),nice);
 end);

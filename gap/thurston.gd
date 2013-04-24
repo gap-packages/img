@@ -21,7 +21,7 @@ DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 DeclareProperty("IsBicritical", IsObject);
 
 #!!! maybe move somewhere else?
-DeclareProperty("IsNonContractingMatrix", IsMatrix);
+DeclareOperation("NonContractingSubmatrix", [IsMatrix]);
 DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
 
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here
