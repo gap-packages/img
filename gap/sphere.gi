@@ -128,7 +128,7 @@ BindGlobal("SPHERENFFUNCTION@", function(g,ordering,power)
         ordering := ShortLexOrdering(freemon,Permuted(gens,id));
     elif AsSortedList(power)=[2,4,4] then # force different +/- ordering
         ordering := ShortLexOrdering(freemon,Permuted(gens,(1,6)));
-    elif Set(power)=[2] then # force non-consecutive indices
+    elif IsSubset(power,[1,2]) then # force non-consecutive indices
         if IsEvenInt(n) then
             ordering := ShortLexOrdering(freemon,gens{Concatenation(ordering{Concatenation([1,3..n-1],[2,4..n])},[n+1..2*n])});
         else

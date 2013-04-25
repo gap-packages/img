@@ -848,7 +848,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
     # machtype.mealy: mealy machine, default=f
     # machtype.formal: formal construction (non-coalesced points with same itinerary), default=f
     # machtype.adding: formal construction, adding machine nice
-    # machtype.orbispace: give points their minimial degree, default=t
+    # machtype.orbispace: give points their minimial degree, default=f
     # returns an FR machine, and sets correspondence to [fF,fJ], where
     # these functions return, for a given angle, the corresponding generator.
     local C, V, i, j, part, pcp, f, newf, gens, trans, t, out, o, p, q, rank, epsilon, epi,
@@ -866,7 +866,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
     if not IsBound(machtype.mealy) then machtype.mealy := false; fi;
     if not IsBound(machtype.formal) then machtype.formal := false; fi;
     if not IsBound(machtype.adding) then machtype.adding := true; fi;
-    if not IsBound(machtype.orbispace) then machtype.orbispace := true; fi;
+    if not IsBound(machtype.orbispace) then machtype.orbispace := false; fi;
 
     C := Concatenation(List(F,x->[x,FJ@[1]]),List(J,x->[x,FJ@[2]]));
     for i in C do
