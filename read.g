@@ -12,6 +12,24 @@
 ##  during a GAP session.
 #############################################################################
 
+InstallMethod( IsSingleValued,
+  "map from whole fp group or free group, given on std. gens: test relators",
+  [IsFromFpGroupStdGensGeneralMappingByImages], SUM_FLAGS,
+function(hom)
+local s,sg,o,gi;
+  s:=Source(hom);
+  if not IsWholeFamily(s) then
+    TryNextMethod();
+  fi;
+  if IsFreeGroup(s) then
+    return true;
+  fi;
+  sg:=FreeGeneratorsOfFpGroup(s){hom!.genpositions};
+  o:=One(Range(hom));
+  gi:=MappingGeneratorsImages(hom)[2];
+  return ForAll(RelatorsOfFpGroup(s),i->MappedWord(i,sg,gi)=o);
+end);
+
 #############################################################################
 ##
 #R Read the install files.

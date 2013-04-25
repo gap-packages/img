@@ -916,8 +916,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
             KM$SPLITPART@(part,i[1],epsilon);
         fi;
     od;
-    
-    
+        
     while Sum(C,x->Length(x[1])-1)<>d-1 do
         Error("F and J describe a map of wrong degree");
     od;
@@ -999,19 +998,23 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
     fi;
 
     if not (machtype.formal or machtype.mealy) then
-        p := [[1..rank]];
+        p := [[1..rank]]; # start by trivial partition
         t := List(pcp,x->x[1]);
-        for i in [1..rank] do
+        for i in [1..rank] do # repeat this many times
             q := [];
-            for i in p do
+            for p in p do # go through all parts
                 o := List([1..d],i->[]);
-                for i in i do
-                    Add(o[KM$INPART@(part,t[i])],i);
+                for i in p do
+                    if ForAny(C,r->t[i] in r[1]) then # it's critical, separate it
+                        Add(o,[i]);
+                    else
+                        Add(o[KM$INPART@(part,t[i])],i); # see its address
+                    fi;
                 od;
-                UniteSet(q,Difference(o,[[]]));
+                UniteSet(q,o);
             od;
-            t := List(t,x->TRUNC@(d*x));
-            p := q;
+            t := List(t,x->TRUNC@(d*x)); # mop the post-critical points by the doubling map
+            p := Difference(q,[[]]);
         od;
         if Length(p)<rank then
             q := [];
