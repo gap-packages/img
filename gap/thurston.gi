@@ -131,29 +131,25 @@ InstallMethod(NonContractingSubmatrix, "(IMG) for an integer matrix",
     return fail;
 end);
 
-#!!! still old format
-BindGlobal("SURROUNDINGCURVE@", function(t,x)
-    # returns a CCW sequence of edges disconnecting x from its complement in t.
-    # x is a sequence of indices of vertices. t is a triangulation.
+BindGlobal("SURROUNDINGCURVE@", function(triangulation,points)
+    # returns a CCW sequence of edges disconnecting points from its complement in triangulation.
+    # points is a sequence of indices of vertices.
     local starte, a, c, v, e, i;
 
-    starte := First(t!.e,j->j.from.index in x and not j.to.index in x);
-    v := starte.from;
-    a := [starte.left.pos];
+    starte := First(triangulation!.e,e->From(e)!.index in points and not To(e)!.index in points);
+    v := From(starte);
+    a := [Pos(Left(starte))];
     c := [];
-    i := POSITIONID@(v.n,starte);
+    e := starte;
     repeat
-        i := i+1;
-        if i > Length(v.n) then i := 1; fi;
-        e := v.n[i];
-        if e.to.index in x then
-            v := e.to;
-            e := e.reverse;
-            i := POSITIONID@(v.n,e);
+        e := Prevopp(e);
+        if To(e)!.index in points then
+            v := To(e);
+            e := Opposite(e);
         else
             Add(c,e);
-            Add(a,e.pos);
-            Add(a,e.left.pos);
+            Add(a,Pos(e));
+            Add(a,Pos(Left(e)));
         fi;
     until IsIdenticalObj(e,starte);
     return [a,c];
@@ -216,14 +212,14 @@ InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere con
     return mat;
 end);
 
-BindGlobal("SURROUNDINGCCLASS@", function(spider,pts)
+BindGlobal("SURROUNDINGCCLASS@", function(spider,points)
     # returns the conjugacy class, in spider.model, representing a simple closed loop
-    # in spider!.cut that surrounds minimally the points in pts (which are assumed connected)
+    # in spider!.cut that surrounds minimally the points in points (which are assumed connected)
     local c, e;
 
     c := One(spider!.model);
     for e in SpanningTreeBoundary(spider) do
-        if (not From(e)!.index in pts) and To(e)!.index in pts then
+        if (not From(e)!.index in points) and To(e)!.index in points then
             c := c*GroupElement(e)^spider!.marking;
         fi;
     od;
