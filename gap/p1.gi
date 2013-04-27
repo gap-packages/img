@@ -952,7 +952,7 @@ InstallOtherMethod(P1MapNormalizingP1Points, "(IMG) for two lists of points",
     # points[l] to 0 and points[m] to 1.
     map := FINDTHREEPOINTS@(oldpoints);
     map := MoebiusMap(points{map},oldpoints{map});
-    if Sum([1..Length(points)],i->P1Distance(P1Image(map,points[i]),oldpoints[i]))<Length(points)*@.fast then
+    if Sum([1..Length(points)],i->P1Distance(P1Image(map,points[i]),oldpoints[i]))<Length(points)*@.fast and Sum(points,SphereP1)^2<Length(points)*@.fast^2 then
         return map;
     fi;
 

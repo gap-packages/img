@@ -199,7 +199,7 @@ InstallGlobalFunction(NewSphereMachine,
     
     while '=' in arg[Length(arg)] do Error("I couldn't find any relator"); od;
 
-    machine := UnderlyingFRMachine(CallFuncList(FRGroup,arg{[1..len]}:IsFRElement).1);
+    machine := CallFuncList(NewGroupFRMachine,arg{[1..len]});
     data := rec(holdername := RANDOMNAME@FR());
     BindGlobal(data.holdername, StateSet(machine));
     relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
@@ -417,8 +417,8 @@ InstallMethod(\^, "(IMG) for a group FR machine and a mapping",
     finv := InverseGeneralMapping(f);
     if finv=fail then return fail; fi;
     for i in GeneratorsOfGroup(newS) do
-        x := pi(i^finv);
-        Add(trans,List(x[1],x->x^f));
+        x := pi(ImagesRepresentative(finv,i));
+        Add(trans,List(x[1],x->ImagesRepresentative(f,x)));
         Add(out,x[2]);
     od;
     N := FRMachineNC(FamilyObj(M),newS,trans,out);

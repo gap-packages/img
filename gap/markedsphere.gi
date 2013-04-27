@@ -858,6 +858,9 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
     local model, points, perm, dist, recur, endo, nf, g;
 
     model := spiderA!.model;
+    while spiderB!.model<>model do
+        Error("DistanceMarkedSpheres: the spheres don't have the same model group");
+    od;
 
     # try to match feet of spiderA and spiderB
     points := VerticesOfMarkedSphere(spiderA);

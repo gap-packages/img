@@ -173,17 +173,14 @@ InstallMethod(LiftOfConjugacyClass, "(IMG) for a machine and a conjugacy class",
     return lift;
 end);
 
-#!!! method selection fails for collections
 InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere conj. classes",
-        [IsSphereMachine,IsList],
+        [IsSphereMachine,IsMulticurve],
         function(M,multicurve)
     # enlarge multicurve so that it becomes invariant, and return the transition matrix;
     # or return fail if the enlargement would cause curves to intersect
     local g, len, mat, lift, c, row,
            w, x, i, j, d, group, pi, gens, peripheral;
     
-    if not IsMulticurve(multicurve) then Error("1"); TryNextMethod(); fi;
-        
     g := StateSet(M);
     while g<>FamilyObj(Representative(multicurve[1]))!.group do
         Error("Elements do not all have the same underlying sphere group");
@@ -219,17 +216,30 @@ InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere con
     return mat;
 end);
 
+BindGlobal("SURROUNDINGCCLASS@", function(spider,pts)
+    # returns the conjugacy class, in spider.model, representing a simple closed loop
+    # in spider!.cut that surrounds minimally the points in pts (which are assumed connected)
+    local c, e;
+
+    c := One(spider!.model);
+    for e in SpanningTreeBoundary(spider) do
+        if (not From(e)!.index in pts) and To(e)!.index in pts then
+            c := c*GroupElement(e)^spider!.marking;
+        fi;
+    od;
+    return ConjugacyClass(c);
+end);
+
 InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
         [IsSphereMachine,IsMarkedSphere],
         function(M,spider)
     # check if <spider> has coalesced points; in that case, find a short loop, saturate it by
     # taking its lifts, and check if they form an obstruction
-    local multicurve, e, g, mat, part;
+    local domain, multicurve, e, g, mat, submat, parts;
 
-    #1. for each edge of the spanning tree, consider its conjugacy class c. This represents
-    #   a simple closed curve, and if the edge is long then it probably is part of a long
-    #   tube, and therefore its dual curve is short (we wouldn't travel twice along the
-    #   long tube, in a minimal spanning tree; therefore, one cut is enough).
+    #1. Add edges of the spanning tree, and look at the connected components on vertices.
+    #   for each c.c., compute the cunve surrounding it (discarding peripheral ones), as
+    #   a conjugacy class c.
 
     #2. for each such class c, saturate it by taking preimages under M, checking all the time
     #   that the curves are all non-intersecting.
@@ -241,20 +251,27 @@ InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
         Error("ThurstonObstruction: the marked sphere is not marked by the stateset of machine");
     od;
 
-    for e in GeneratorsOfGroup(spider!.group) do
-        multicurve := [ConjugacyClass(g,e^spider!.marking)];
+    domain := Domain([1..Length(spider!.cut!.v)]);
+    parts := EquivalenceRelationByPairs(domain,[]);
+
+    e := ShallowCopy(SpanningTreeBoundary(spider));
+    SortParallel(List(e,Length),e);
+
+    for e in e do
+        parts := JoinEquivalenceRelations(parts,EquivalenceRelationByPairs(domain,[[From(e)!.index,To(e)!.index]]));
+        multicurve := List(Filtered(List(EquivalenceClasses(parts),Elements),x->Length(x)>1),p->SURROUNDINGCCLASS@(spider,p));
         mat := ThurstonMatrix(M,multicurve);
 
         if mat=fail then continue; fi;
 
-        part := NonContractingSubmatrix(mat);
-        if part<>fail then
+        submat := NonContractingSubmatrix(mat);
+        if submat<>fail then
 #            if spider<>fail and IsBound(boundary[j]) then
 #                if not IsBound(spider!.arcs) then spider!.arcs := []; fi;
 #                Add(spider!.arcs,[[0,0,255],Float(105/100),boundary[j][1]]);
 #            fi;
-            return rec(multicurve := multicurve{part},
-                       matrix := mat{part}{part},
+            return rec(multicurve := multicurve{submat},
+                       matrix := mat{submat}{submat},
                        # boundary := SURROUNDINGCURVE(spider!.cut,"half of tree cut at e"),
                        machine := M);
         fi;
@@ -515,6 +532,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
             fi;
             # just wiggle spider around
             downsphere := WiggledMarkedSphere(downsphere,v);
+            #!!! if Delaunay triangulation condition fails after wiggling, go back to slow mode
         else
             downsphere := NewMarkedSphere(v,model);
             Mmobius := SphereMachineOfBranchedCovering(downsphere,upsphere,mobius,poly);
@@ -544,7 +562,13 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         else
             fast := false;
         fi;
-        obstruction := ThurstonObstruction(M,downsphere);
+        if fast then # recompute triangulation, it may have drifted too much
+            #!!! we wouldn't have to do that if we knew that the Delaunay condition is satisfied
+            #even after fast wiggling
+            obstruction := ThurstonObstruction(M,NewMarkedSphere(v,model));
+        else
+            obstruction := ThurstonObstruction(M,downsphere);
+        fi;
         if obstruction<>fail then
             return obstruction;
         fi;
