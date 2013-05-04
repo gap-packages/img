@@ -84,12 +84,7 @@ checkblocks:
 	comm -3 @@-blocks @@-in
 	@rm @@-blocks @@-in
 
-tarballs: doc
-	mkdir -p zips
-	tar -c -f zips/img-$(VERSION).tar.gz -z --exclude '*~' --exclude '.[a-z]*' --exclude 'config.[ls]*' --exclude 'img/Makefile*' --exclude autom4te.cache --exclude sandbox --exclude zips --exclude bin --exclude extern -C .. img
-	ln -sf img-$(VERSION).tar.gz zips/img.tar.gz
-
-wwwdir: doc/chap0.html tarballs
+wwwdir: doc/chap0.html
 	cp PackageInfo.g doc/
 	cp README doc/README.img
 	(cd doc; git add *.html manual.pdf manual.css PackageInfo.g README.img; git commit -m 'New html files'; git push github master:gh-pages --force)
