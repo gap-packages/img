@@ -155,7 +155,7 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     od;
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
-PrintTo("layout-in",sin);#!!!
+
     stdin := InputTextString(sin);
     sout := "";
     stdout := OutputTextString(sout,false);
@@ -163,7 +163,6 @@ PrintTo("layout-in",sin);#!!!
     CloseStream(stdin);
     CloseStream(stdout);
 
-PrintTo("layout-out",sout);#!!!
     m := EvalString(sout);
     m := 1.0*m; # make sure all entries are floats
     v := List(m,P1Sphere);
@@ -260,7 +259,7 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
                 zeros := [],
                 poles := [],
                 cp := [],
-                post := post);
+                post := InverseP1Map(post));
     Assert(0,sout[3]="ZEROS/POLES" and numzero=Int(sout[4]));
     for i in [0..numzero] do
         x := Int(sout[5+2*i]);
@@ -455,7 +454,6 @@ InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphis
         REFINETRIANGULATION@(t,@.hurwitzmesh);
         LAYOUTTRIANGULATION@(t);
         t := OPTIMIZELAYOUT@(spider,t);
-    
         data := rec(map := CompositionP1Map(t.post,P1MapByZerosPoles(Concatenation(List(t.zeros,x->ListWithIdenticalEntries(x.degree,x.pos))),
                         Concatenation(List(t.poles,x->ListWithIdenticalEntries(x.degree,x.pos))),
                      

@@ -38,21 +38,19 @@
 ##     <P/> This function requires external programs in the subdirectory
 ##     "hurwitz" to have been compiled.
 ## <Example><![CDATA[
-## !!!! rewrite example
 ## gap> # we'll construct 2d-2 points on the equator, and permutations
 ## gap> # in order (1,2),...,(d-1,d),(d-1,d),...,(1,2) for these points.
 ## gap> # first, the spider.
 ## gap> d := 20;;
 ## gap> z := List([0..2*d-3], i->P1Point(Exp(i*PMCOMPLEX.constants.2IPI/(2*d-2))));;
-## gap> spider := TRIVIALSPIDER@FR(z);;
-## gap> g := FreeGroup(2*d-2);;
-## gap> IMGMARKING@FR(spider,g);
+## gap> g := SphereGroup(2*d-2);;
+## gap> sphere := NewMarkedSphere(z,g);;
 ## gap> # next, the permutation representation
 ## gap> perms := List([1..d-1],i->(i,i+1));;
 ## gap> Append(perms,Reversed(perms));
 ## gap> perms := GroupHomomorphismByImages(g,SymmetricGroup(d),GeneratorsOfGroup(g),perms);;
 ## gap> # now compute the map
-## gap> HurwitzMap(spider,perms);
+## gap> BranchedCoveringByMonodromy(spider,perms);
 ## rec( cp := [ rec( degree := 2, pos := <1.0022-0.0099955i>, to := <vertex 19[ 9, 132, 13, 125 ]> ), 
 ##       rec( degree := 2, pos := <1.0022-0.0099939i>, to := <vertex 20[ 136, 128, 129, 11 ]> ), 
 ##       rec( degree := 2, pos := <1.0039-0.0027487i>, to := <vertex 10[ 73, 74, 16, 82 ]> ), 
@@ -202,6 +200,23 @@
 ##       rec( degree := 3, pos := <1.1275-0.99184i> ), rec( degree := 2, pos := <0.56764-0.17254i> ), 
 ##       rec( degree := 2, pos := <-0.99516-0.79619i> ), rec( degree := 4, pos := <0+0i> ) ] )
 ## ]]></Example>
+## gap> # IV.5.2 in Granboulan's PhD, the automorphism group of the Mathieu group M_22
+## gap> autm22 := Group((1,2,3,4,5,6,7,8,9,10,11)(12,13,14,15,16,17,18,19,20,21,22),
+##                      (1,9,3,2)(4,8,17,21)(5,20,19,6)(12,22,16,13)(7,18)(10,11)(14,15),
+##                      (3,8)(4,20)(6,18)(7,17)(9,11)(13,15)(16,21));;
+## gap> IsomorphismGroups(DerivedSubgroup(autm22),MathieuGroup(22))<>fail;
+## true
+## gap> DessinByPermutations(autm22.1,autm22.2,autm22.3);
+## ...
+## gap> # IV.5.3 in Granboulan's PhD, the "extraterrestrial" dessin with group M_24
+## gap> m24_ET := Group((1,2,3)(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24),
+##                     (1,7,5)(2,4,23)(3,22,8)(9,21,19)(10,18,12)(13,17,15),
+##                     (1,4)(2,22)(3,7)(5,6)(8,21)(9,18)(10,11)(12,17)(13,14)(15,16)(19,20)(23,24));;
+## gap> IsomorphismGroups(m24_ET,MathieuGroup(24))<>fail;
+## true
+## gap> @IMG.hurwitzmesh := 0.4;; # need finer precision
+## gap> DessinByPermutations(m24_ET.1,m24_ET.2,m24_ET.3);
+## ...
 ##   </Description>
 ## </ManSection>
 ## <#/GAPDoc>

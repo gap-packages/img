@@ -882,27 +882,10 @@ DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Func Name="Mandel" Arg="[map]"/>
-##   <Returns>Calls the external program <File>mandel</File>.</Returns>
-##   <Description>
-##     This function starts the external program <File>mandel</File>, by Wolf Jung.
-##     The program is searched for along the standard PATH; alternatively,
-##     its location can be set in the string variable EXEC@FR.mandel.
-##
-##     <P/> When called with no arguments, this command returns starts
-##     <File>mandel</File> in its default mode. With a rational map as argument, it
-##     starts <File>mandel</File> pointing at that rational map.
-##
-##     <P/> More information on <File>mandel</File> can be found
-##     at <URL>http://www.mndynamics.com</URL>.
-##   </Description>
-## </ManSection>
 ## <#/GAPDoc>
 ##
 DeclareGlobalFunction("PostCriticalMachine");
 DeclareGlobalFunction("DBRationalIMGGroup");
-DeclareGlobalFunction("Mandel");
 #############################################################################
 
 #############################################################################
