@@ -43,7 +43,6 @@ CHOLMOD_LIBS=""
 for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
     unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
-echo checking $CHOLMOD_LIBS
     AC_CHECK_LIB(cholmod,cholmod_allocate_triplet,[cm_found=true],[cm_found=false],[$CHOLMOD_LIBS])
     if test $cm_found = true; then break; fi
 done
