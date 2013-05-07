@@ -14,6 +14,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 #include "src/compiled.h"
 #include "src/macfloat.h"
 #include "poly.h"
