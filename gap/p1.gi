@@ -655,7 +655,7 @@ InstallOtherMethod(CompositionP1Map, [IsP1Map, IsP1Map, IsP1Map],
     return CompositionP1Map(map3,CompositionP1Map(map2,map1));
 end);
 
-BindGlobal("P1MAP_EVAL@", function(num,den,x)
+BindGlobal("RATMAP_EVAL@", function(num,den,x)
     if Norm(x) <= @.ro then
         return POLY_EVAL@(num,x) / POLY_EVAL@(den,x);
     else
@@ -667,7 +667,7 @@ end);
 InstallMethod(P1Image, "(IMG) generic P1 map", [IsP1Map,IsP1Point],
         function(map,z)
     map := CoefficientsOfP1Map(map);
-    return P1Point(P1MAP_EVAL@(map[1],map[2],z![1]));
+    return P1Point(RATMAP_EVAL@(map[1],map[2],z![1]));
 end);
 
 InstallOtherMethod(POW, "(IMG) generic P1 map", [IsP1Point,IsP1Map],
@@ -735,7 +735,7 @@ InstallMethod(P1MapByZerosPoles, "(IMG) generic P1 map", [IsP1PointList,IsP1Poin
     if dst=P1infinity then
         num := num * src![1];
     else
-        num := num * dst![1] / P1MAP_EVAL@(num,den,src![1])![1];
+        num := num * dst![1] / RATMAP_EVAL@(num,den,src![1]);
     fi;
 
     return P1MapByCoefficients(num,den);
@@ -759,7 +759,7 @@ InstallMethod(P1INTERSECT@, "(IMG) generic P1 map", [IsP1Map,IsP1Map,IsP1Map],
     intersect := [];
     for u in roots do
         if not @.isr(u) or u < -eps or u > 1+eps then continue; fi;
-        z := P1MAP_EVAL@(ratmap[1],ratmap[2],u);
+        z := RATMAP_EVAL@(ratmap[1],ratmap[2],u);
         # t = gamma^-1*ratmap*delta(u)
         t := RealPart(z);
         if IsXInfinity(z) or ImaginaryPart(z) < -@.ro or ImaginaryPart(z) > @.ro

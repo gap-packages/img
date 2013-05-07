@@ -14,21 +14,21 @@
 ################################################################
 # p1 points
 ################################################################
-InstallMethod(P1Point, [IsIEEE754FloatRep], z->C22P1POINT(NewFloat(IsPMComplex,z),@.o));
+InstallMethod(P1Point, [IsIEEE754FloatRep], z->C22P1POINT(NewFloat(IsPMComplex,z),1.0_z));
 InstallMethod(P1Point, [IsIEEE754FloatRep,IsIEEE754FloatRep],
         function(r,i)
-    return C22P1POINT(NewFloat(IsPMComplex,r,i),@.o);
+    return C22P1POINT(NewFloat(IsPMComplex,r,i),1.0_z);
 end);
-InstallMethod(P1Point, [IsPMComplex], z->C22P1POINT(z,@.o));
+InstallMethod(P1Point, [IsPMComplex], z->C22P1POINT(z,1.0_z));
 InstallMethod(P1Point, [IsPMComplex,IsPMComplex], C22P1POINT);
 
 InstallOtherMethod(P1Point, [IsString,IsString], 1, function(re,im)
     # try first if IEEE754 P1s
-    if IsPMComplex(@.o) then return STRINGS2P1POINT(re,im); fi;
+    if @.isc=IsPMComplex then return STRINGS2P1POINT(re,im); fi;
     TryNextMethod();
 end);
 
-InstallMethod(P1INFINITY@, [IsIEEE754P1Point], p->C22P1POINT(@.o,@.z));
+InstallMethod(P1INFINITY@, [IsIEEE754P1Point], p->C22P1POINT(1.0_z,0.0_z));
 
 InstallMethod(P1Coordinate, [IsIEEE754P1Point], function(p)
     p := P1POINT2C2(p);
@@ -84,7 +84,7 @@ end);
                    
 InstallMethod(P1MAPBYCOEFFICIENTS2@, [IsPMComplex,IsList,IsList],
         function(dummy,numer,denom)
-    return MAT2P1MAP([[1,0],[0,1]]*@.o*[numer,denom]);
+    return MAT2P1MAP([[1,0],[0,1]]*1.0_z*[numer,denom]);
 end);
 
 InstallMethod(AsP1Map, [IsIEEE754FloatRep], x->AsP1Map(NewFloat(IsPMComplex,x)));
