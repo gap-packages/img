@@ -1,3 +1,4 @@
+Info(InfoIMG,1,"Add doc to machine.gd");
 #############################################################################
 ##
 #W machine.gd                                               Laurent Bartholdi
@@ -9,6 +10,8 @@
 ##  FR machines with stateset a sphere group
 ##
 #############################################################################
+
+DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
 
 DeclareProperty("IsSphereMachine", IsFRMachine);
 DeclareAttribute("AddingElement", IsSphereMachine);

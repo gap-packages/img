@@ -1,3 +1,4 @@
+Info(InfoIMG,1,"Add doc to markedsphere.gd");
 #############################################################################
 ##
 #W markedsphere.gd                                          Laurent Bartholdi
@@ -10,22 +11,23 @@
 ##
 #############################################################################
 
-#############################################################################
-##
-#E MarkedSpheres
-##
 ## <#GAPDoc Label="MarkedSpheres">
 ## <ManSection>
-##   <Filt Name="IsSphereTriangulation"/>
 ##   <Filt Name="IsMarkedSphere"/>
-##   <Attr Name="Spider" Arg="ratmap" Label="r"/>
-##   <Attr Name="Spider" Arg="machine" Label="m"/>
+DeclareCategory("IsMarkedSphere", IsObject);
+BindGlobal("MARKEDSPHERES_FAMILY",
+        NewFamily("MarkedSpheres", IsMarkedSphere));
+BindGlobal("TYPE_MARKEDSPHERE",
+        NewType(MARKEDSPHERES_FAMILY, IsMarkedSphere));
+
+DeclareAttribute("MarkedSphere", IsSphereMachine);
+DeclareAttribute("MarkedSphere", IsP1Map);
+# undocumented for now
+DeclareAttribute("VerticesOfMarkedSphere", IsMarkedSphere);
+DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);
 ##   <Description>
-##     The category of triangulated spheres (points in Moduli space),
-##     or of marked, triangulated spheres (points in Teichmüller space).
-##
-##     <P/> Various commands have an attribudte <C>Spider</C>, which records
-##     this point in Teichmüller space.
+##     The category of marked, triangulated spheres
+##     (points in Teichmüller space).
 ##   </Description>
 ## </ManSection>
 ##
@@ -73,8 +75,9 @@
 ##
 ## <ManSection>
 ##   <Oper Name="Draw" Arg="s" Label="spider"/>
+DeclareOperation("Draw", [IsMarkedSphere]);
 ##   <Description>
-##     This command plots the spider <A>s</A> in a separate X window.
+##     This command plots the marked sphere <A>s</A> in a separate window.
 ##     It displays the complex sphere, big dots at the post-critical
 ##     set (feet of the spider), and the arcs and dual arcs
 ##     of the triangulation connecting the feet.
@@ -152,21 +155,9 @@
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-DeclareCategory("IsMarkedSphere", IsObject);
-BindGlobal("MARKEDSPHERES_FAMILY",
-        NewFamily("MarkedSpheres", IsMarkedSphere));
-BindGlobal("TYPE_MARKEDSPHERE",
-        NewType(MARKEDSPHERES_FAMILY, IsMarkedSphere));
-
-DeclareOperation("Draw", [IsMarkedSphere]);
-DeclareAttribute("VerticesOfMarkedSphere", IsMarkedSphere);
-DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]);
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);
 DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
-
-DeclareAttribute("MarkedSphere", IsSphereMachine);
-DeclareAttribute("MarkedSphere", IsP1Map);
 
 DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
 DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);

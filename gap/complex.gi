@@ -2,8 +2,6 @@
 ##
 #W complex.gi                                               Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
 #Y Copyright (C) 2012, Laurent Bartholdi
 ##
 #############################################################################

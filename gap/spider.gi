@@ -2,8 +2,6 @@
 ##
 #W spider.g                                 Laurent Bartholdi + Dzmitry Dudko
 ##
-#H   @(#)$Id$
-##
 #Y Copyright (C) 2010, Laurent Bartholdi + Dzmitry Dudko
 ##
 #############################################################################

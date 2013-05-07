@@ -1,3 +1,4 @@
+Info(InfoIMG,1,"Add doc to hurwitz.gd");
 #############################################################################
 ##
 #W hurwitz.gd                                               Laurent Bartholdi

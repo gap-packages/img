@@ -2,9 +2,7 @@
 ##
 #W p1_ieee754.gi                                            Laurent Bartholdi
 ##
-#H   @(#)$Id$
-##
-#Y Copyright (C) 2012, Laurent Bartholdi
+#Y Copyright (C) 2012-2013, Laurent Bartholdi
 ##
 #############################################################################
 ##

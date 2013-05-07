@@ -25,6 +25,7 @@ LIBDOGLEG=extern/libdogleg-0.08
 MYCC=./libtool --mode=compile --tag=CC $(CC) $(CFLAGS) @CFLAGS@ @GAP_CPPFLAGS@ -std=c99 -g -Wall
 MYLD=./libtool --mode=link --tag=CC $(CC) $(CFLAGS) -g
 JAVAC=@JAVAC@
+CHOLMOD_CFLAGS=@CHOLMOD_CFLAGS@
 
 all: $(LOCALBIN) @MAKE_LIBTARGETS@ $(LOCALBIN)/img_dll.so java/javaplot.class $(LOCALBIN)/layout $(LOCALBIN)/hsolve
 

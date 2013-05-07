@@ -3,6 +3,8 @@
 
 AC_DEFUN([AC_CHECK_LIBDOGLEG],[
 
+AC_CHECK_CHOLMOD
+
 extern_libs=false
 AC_ARG_WITH(libdogleg,
  [  --with-libdogleg=<location>
@@ -35,7 +37,7 @@ AC_MSG_RESULT([extern])
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib
 	if [[ ! -f $(EXTERN)/include/dogleg.h ]]; then \\
-		$(MAKE) -B -C $(LIBDOGLEG); \\
+		$(MAKE) CC="$CC $CHOLMOD_INCLUDE $CHOLMOD_LIBS" -B -C $(LIBDOGLEG); \\
 		cp $(LIBDOGLEG)/libdogleg.* $(EXTERN)/lib/; \\
 		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/; \\
 	fi\n'`

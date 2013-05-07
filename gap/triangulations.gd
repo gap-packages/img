@@ -10,6 +10,9 @@
 ##
 #############################################################################
 
+## <#GAPDoc Label="Triangulations">
+## <ManSection>
+##   <Filt Name="IsSphereTriangulation"/>
 DeclareCategory("IsSphereTriangulation", IsObject);
 BindGlobal("TRIANGULATION_FAMILY",
         NewFamily("SphereTriangulations", IsSphereTriangulation));
@@ -30,20 +33,8 @@ BindGlobal("TYPE_EDGE",
         NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationEdge));
 BindGlobal("TYPE_FACE",
         NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationFace));
-
-#############################################################################
-##
-## <#GAPDoc Label="Triangulations">
-## <ManSection>
-##   <Oper Name="DelaunayTriangulation" Arg="points, [quality]"/>
-DeclareOperation("DelaunayTriangulation", [IsList]);
-DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);
-##   <Returns>A Delaunay triangulation of the sphere.</Returns>
 ##   <Description>
-##     If <A>points</A> is a list of points on the unit sphere, represented
-##     by their 3D coordinates, this function creates a triangulation of
-##     the sphere with these points as vertices. This triangulation is
-##     such that the angles are as equilateral as possible.
+##     The category of triangulated spheres (points in Moduli space).
 ##
 ##     <P/> This triangulation is a collection of vertices, edges and faces.
 ##     These are new GAP objects. The attributes for vertices are: <List>
@@ -110,18 +101,32 @@ DeclareOperation("Valency", [IsTriangulationFace]);
 ##     <Mark><C>ClosestFaces</C></Mark> <Item>A list containing the face itself</Item>
 ##     </List>
 ##
-##     <P/> If all points are aligned on a great circle, or if all points
-##     are in a hemisphere, some points are added so as to make the
-##     triangulation simplicial with all edges of length <M>&lt;\pi</M>.
-##     These vertices additionally have the <C>IsFake</C> property set to
-##     <K>true</K>.
-##
 DeclareOperation("Draw", [IsSphereTriangulation]);
 ##     <P/> A triangulation may be plotted with <C>Draw</C>; this requires
 ##     <Package>appletviewer</Package> to be installed. The command
 ##     <C>Draw(t:detach)</C> detaches the subprocess after it is started.
 ##     The extra arguments <C>Draw(t:lower)</C> or <C>Draw(t:upper)</C>
 ##     stretch the triangulation to the lower, respectively upper, hemisphere.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="DelaunayTriangulation" Arg="points, [quality]"/>
+DeclareOperation("DelaunayTriangulation", [IsList]);
+DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);
+##   <Returns>A Delaunay triangulation of the sphere.</Returns>
+##   <Description>
+##     If <A>points</A> is a list of points on the unit sphere, represented
+##     by their 3D coordinates, this function creates a triangulation of
+##     the sphere with these points as vertices. This triangulation satisfies
+##     the <E>Delaunay</E> condition that no point lies in the circumcircle
+##     of any face.
+##
+##     <P/> If all points are aligned on a great circle, or if all points
+##     are in a hemisphere, some points are added so as to make the
+##     triangulation simplicial with all edges of length <M>&lt;\pi</M>.
+##     These vertices additionally have the <C>IsFake</C> property set to
+##     <K>true</K>.
 ##
 ##     <P/> If the second argument <A>quality</A>, which must be a floatean,
 ##     is present, then all triangles in the resulting triangulation are
