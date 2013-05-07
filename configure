@@ -16892,6 +16892,7 @@ LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
 for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+unset ac_cv_lib_cholmod_cholmod_allocate_triplet
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
 $as_echo_n "checking for cholmod_allocate_triplet in -lcholmod... " >&6; }
