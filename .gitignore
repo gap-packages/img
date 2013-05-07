@@ -35,6 +35,7 @@ extern/levmar-2.6/CMakeFiles/
 extern/levmar-2.6/cmake_install.cmake
 extern/levmar-2.6/liblevmar.a
 extern/levmar-2.6/lmdemo
-extern/libdogleg-0.08/dogleg.d
+extern/libdogleg-0.08/*.d
 extern/libdogleg-0.08/*.o
+extern/libdogleg-0.08/libdogleg*
 
