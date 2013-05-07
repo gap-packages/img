@@ -1,4 +1,3 @@
-Info(InfoIMG,1,"Add doc to machine.gd");
 #############################################################################
 ##
 #W machine.gd                                               Laurent Bartholdi
@@ -11,26 +10,18 @@ Info(InfoIMG,1,"Add doc to machine.gd");
 ##
 #############################################################################
 
-DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
-
-DeclareProperty("IsSphereMachine", IsFRMachine);
-DeclareAttribute("AddingElement", IsSphereMachine);
-DeclareGlobalFunction("NewSphereMachine");
-DeclareAttribute("AsSphereMachine", IsFRMachine);
-DeclareOperation("AsSphereMachine", [IsFRMachine, IsWord]);
-DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
-
 #############################################################################
 ##
-#M IMGMachine
+#M SphereMachine
 ##
-## <#GAPDoc Label="IMGMachine">
+## <#GAPDoc Label="SphereMachine">
 ## <ManSection>
 ##   <Filt Name="IsSphereMachine" Arg="m"/>
+DeclareProperty("IsSphereMachine", IsFRMachine);
 ##   <Filt Name="IsPolynomialSphereMachine" Arg="m"/>
 ##   <Description>
-##     The categories of <E>IMG</E> and <E>polynomial</E> machines.
-##     IMG machines are group FR machines
+##     The categories of <E>Sphere</E> and <E>polynomial</E> machines.
+##     Sphere machines are group FR machines
 ##     with an additional element, their attribute <Ref Attr="IMGRelator"/>;
 ##     see <Ref Oper="AsIMGMachine"/>.
 ##
@@ -51,37 +42,22 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="IMGMachineNC" Arg="fam, group, trans, out, rel"/>
-##   <Returns>An IMG FR machine.</Returns>
+##   <Oper Name="AsSphereMachine" Arg="m[,w]"/>
+DeclareAttribute("AsSphereMachine", IsFRMachine);
+DeclareOperation("AsSphereMachine", [IsFRMachine, IsWord]);
+DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
+##   <Returns>A sphere machine.</Returns>
 ##   <Description>
-##     This function creates, without checking its arguments, a new
-##     IMG machine in family <A>fam</A>, stateset <A>group</A>, with
-##     transitions and output <A>trans,out</A>, and IMG relator <A>rel</A>.
-##   </Description>
-## </ManSection>
-##
-## <ManSection>
-##   <Oper Name="AsIMGMachine" Arg="m[,w]"/>
-##   <Returns>An IMG FR machine.</Returns>
-##   <Description>
-##     This function creates a new IMG FR machine, starting from a group
-##     FR machine <A>m</A>. If a state <C>w</C> is specified, and that
+##     This function creates a new sphere machine, starting from a group
+##     FR machine <A>m</A>. If a state <A>w</A> is specified, and that
 ##     state defines the trivial FR element, then it is used
-##     as <Ref Attr="IMGRelator"/>; if the state <C>w</C> is non-trivial, then
-##     a new generator <C>f</C> is added to <A>m</A>, equal to the
-##     inverse of <C>w</C>; and the IMG relator is chosen to be <C>w*f</C>.
-##     Finally, if no relator is specified, and the product (in some ordering)
-##     of the generators is trivial, then that product is used as IMG
+##     as relator; if <A>w</A> is a sphere group, then it is used as the
+##     new stateset.
+##     Finally, if no relator and no group is specified, and the product (in some ordering)
+##     of the generators is trivial, then that product is used as
 ##     relator. In other cases, the method returns <K>fail</K>.
 ##
-##     <P/> Note that IMG elements and FR elements are compared differently
-##     (see the example below); namely, an FR element is trivial precisely
-##     when it acts trivially on sequences. An IMG element is trivial
-##     precisely when a finite number of applications of free cancellation,
-##     the IMG relator, and the decomposition map, result in trivial elements
-##     of the underlying free group.
-##
-##     <P/> A standard FR machine can be recovered from an IMG FR machine
+##     <P/> A standard FR machine can be recovered from a sphere machine
 ##     by <Ref Oper="AsGroupFRMachine"/>, <Ref Oper="AsMonoidFRMachine"/>,
 ##     and <Ref Oper="AsSemigroupFRMachine"/>.
 ## <Example><![CDATA[
@@ -89,7 +65,7 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## <Mealy machine on alphabet [ 1 .. 2 ] with 3 states>
 ## gap> g := AsGroupFRMachine(m);
 ## <FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2 ] )>
-## gap> AsIMGMachine(g,Product(GeneratorsOfFRMachine(g)));
+## gap> AsSphereMachine(g,Product(GeneratorsOfFRMachine(g)));
 ## <FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2, t ] )/[ f1*f2*t ]>
 ## gap> Display(last);
 ##  G  |              1         2
@@ -99,32 +75,13 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ##   t | f2^-1*f1*f2*t,2   f1^-1,1
 ## ----+-----------------+---------+
 ## Relator: f1*f2*t
-## gap> g := AsGroupFRMachine(GuptaSidkiMachine);
-## <FR machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2 ] )>
-## gap> m := AsIMGMachine(g,GeneratorsOfFRMachine(g)[1]);
-## <FR machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2, t ] )/[ f1*t ]>
-## gap> x := FRElement(g,2)^3; IsOne(x);
-## <3|identity ...>
-## true
-## gap> x := FRElement(m,2)^3; IsOne(x);
-## <3#f2^3>
-## false
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Attr Name="IMGRelator" Arg="m"/>
-##   <Returns>The relator of the IMG FR machine.</Returns>
-##   <Description>
-##     This attribute stores the product of generators that is trivial.
-##     In essence, it records an ordering of the generators whose
-##     product is trivial in the punctured sphere's fundamental group.
-##   </Description>
-## </ManSection>
-##
-## <ManSection>
-##   <Attr Name="CleanedIMGMachine" Arg="m"/>
+##   <Attr Name="CleanedSphereMachine" Arg="m"/>
+DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
 ##   <Returns>A cleaned-up version of <A>m</A>.</Returns>
 ##   <Description>
 ##     This command attempts to shorten the length of the transitions in
@@ -135,34 +92,33 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Attr Name="NewSemigroupFRMachine" Arg="..."/>
-##   <Attr Name="NewMonoidFRMachine" Arg="..."/>
-##   <Attr Name="NewGroupFRMachine" Arg="..."/>
-##   <Attr Name="NewIMGMachine" Arg="..."/>
-##   <Returns>A new FR machine, based on string descriptions.</Returns>
+##   <Attr Name="NewSphereMachine" Arg="..."/>
+DeclareGlobalFunction("NewSphereMachine");
+##   <Returns>A new sphere machine, based on string descriptions.</Returns>
 ##   <Description>
-##     This command constructs a new FR or IMG machine, in a format similar to
+##     This command constructs a new sphere machine, in a format similar to
 ##     <Ref Func="FRGroup"/>; namely, the arguments are strings of the form
 ##     "gen=&lt;word-1,...,word-d&gt;perm"; each <C>word-i</C> is a word in the
 ##     generators; and <C>perm</C> is a transformation,
-##     either written in disjoint cycle or in images notation.
+##     either written in disjoint cycle or in images notation. The underlying
+##     group of the machine is a sphere group.
 ##
-##     <P/>Except in the semigroup case, <C>word-i</C> is allowed to be the
+##     <P/><C>word-i</C> is allowed to be the
 ##     empty string; and the "&lt;...&gt;" may be skipped altogether.
-##     In the group or IMG case, each <C>word-i</C> may also contain inverses.
+##     Each <C>word-i</C> may also contain inverses.
 ##
-##     <P/>In the IMG case, an extra final argument is allowed, which is a word
-##     in the generators, and describes the IMG relation. If absent,
-##     <Package>FR</Package> will attempt to find such a relation.
+##     <P/>The extra final arguments describe relations in the underlying
+##     sphere group; at least one relation is required, the product of the
+##     generators in an appropriate order.
 ##         
 ##     <P/>The following examples construct realizable foldings of the
 ##     polynomial <M>z^3+i</M>, following Cui's arguments.         
 ## <Example><![CDATA[
-## gap> fold1 := NewIMGMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>",
-##      "A=<,,b*a,,,B*A>(3,6)","B=(1,6,5,4,3,2)");
+## gap> fold1 := NewSphereMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>",
+##      "A=<,,b*a,,,B*A>(3,6)","B=(1,6,5,4,3,2)","a*B*A*b");
 ## gap> <FR machine with alphabet [ 1, 2, 3, 4, 5, 6 ] on Group( [ a, b, A, B ] )/[ a*B*A*b ]>                                
-## gap> fold2 := NewIMGMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>",
-##      "A=(1,6)(2,5)(3,4)","B=<B*A,,,b*a,,>(1,4)(2,6)(3,5)");;
+## gap> fold2 := NewSphereMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>",
+##      "A=(1,6)(2,5)(3,4)","B=<B*A,,,b*a,,>(1,4)(2,6)(3,5)","a*B*A*b");;
 ## gap> RationalFunction(fold1); RationalFunction(fold2);
 ## ...
 ## ]]></Example>
@@ -189,6 +145,10 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## <ManSection>
 ##   <Prop Name="IsKneadingMachine" Arg="m"/>
 ##   <Prop Name="IsPlanarKneadingMachine" Arg="m"/>
+DeclareProperty("IsKneadingMachine",IsFRMachine);
+DeclareProperty("IsPlanarKneadingMachine",IsFRMachine);
+InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine);
+InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
 ##   <Returns>Whether <A>m</A> is a (planar) kneading machine.</Returns>
 ##   <Description>
 ##     A <E>kneading machine</E> is a special kind of Mealy machine, used
@@ -222,59 +182,9 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="AsPolynomialFRMachine" Arg="m [,adder]"/>
-##   <Oper Name="AsPolynomialIMGMachine" Arg="m [,adder [,relator]]"/>
-##   <Returns>A polynomial FR machine.</Returns>
-##   <Description>
-##     The first function creates a new polynomial FR machine, starting from
-##     a group or Mealy machine. A <E>polynomial</E> machine is one that
-##     has a distinguished adding element, <Ref Attr="AddingElement"/>.
-##
-##     <P/> If the argument is a Mealy machine, it must be planar (see
-##     <Ref Prop="IsPlanarKneadingMachine"/>). If the argument is a group
-##     machine, its permutations must be treelike, and its outputs must be
-##     such that, up to conjugation, each non-trivial state appears
-##     exactly once as the product along all cycles of all states.
-##
-##     <P/> If a second argument <A>adder</A> is supplied, it is checked to
-##     represent an adding element, and is used as such.
-##
-##     <P/> The second function creates a new polynomial IMG machine, i.e.
-##     a polynomial FR machine with an extra relation among the generators.
-##     the optional second argument may be an adder (if <A>m</A> is an IMG
-##     machine) or a relator (if <A>m</A> is a polynomial FR machine). Finally,
-##     if <A>m</A> is a group FR machine, two arguments, an adder and a relator,
-##     may be specified.
-##
-##     <P/> A machine without the extra polynomial / IMG information may be
-##     recovered using <Ref Oper="AsGroupFRMachine"/>.
-## <Example><![CDATA[
-## gap> M := PolynomialIMGMachine(2,[1/7],[]);; SetName(StateSet(M),"F"); M;
-## <FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]>
-## gap> Mi := AsIMGMachine(M);
-## <FR machine with alphabet [ 1, 2 ] on F/[ f4*f3*f2*f1 ]>
-## gap> Mp := AsPolynomialFRMachine(M);
-## <FR machine with alphabet [ 1, 2 ] and adder f4 on F>
-## gap> Mg := AsGroupFRMachine(M);
-## <FR machine with alphabet [ 1, 2 ] on F>
-## gap>
-## gap> AsPolynomialIMGMachine(Mg);
-## <FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]>
-## gap> AsPolynomialIMGMachine(Mi);
-## <FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]>
-## gap> AsPolynomialIMGMachine(Mp);
-## <FR machine with alphabet [ 1, 2 ] and adder f4 on F/[ f4*f3*f2*f1 ]>
-## gap> AsIMGMachine(Mg);
-## <FR machine with alphabet [ 1, 2 ] on F4/[ f1*f4*f3*f2 ]>
-## gap> AsPolynomialFRMachine(Mg);
-##<FR machine with alphabet [ 1, 2 ] and adder f4 on F4>
-## ]]></Example>
-##   </Description>
-## </ManSection>
-##
-## <ManSection>
-##   <Attr Name="AddingElement" Arg="m" Label="FR machine"/>
-##   <Returns>The relator of the IMG FR machine.</Returns>
+##   <Attr Name="AddingElement" Arg="m" Label="sphere machine"/>
+DeclareAttribute("AddingElement", IsSphereMachine);
+##   <Returns>The element generating the adding submachine.</Returns>
 ##   <Description>
 ##     This attribute stores the product of generators that is an
 ##     adding machine.
@@ -291,7 +201,7 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## <Example><![CDATA[
 ## gap> f := FreeGroup("a","b","c","x","y","z");;
 ## gap> AssignGeneratorVariables(f);
-## gap> m := AsIMGMachine(FRMachine(f,[[a^-1,b*a],[One(f),c],[a,One(f)],[z*y*x,
+## gap> m := AsSphereMachine(FRMachine(f,[[a^-1,b*a],[One(f),c],[a,One(f)],[z*y*x,
 ##        x^-1*y^-1],[One(f),x],[One(f),y]],[(1,2),(),(),(1,2),(),()]));;
 ## gap> Display(m);
 ##  G |      1             2   
@@ -305,7 +215,7 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## ---+---------+-------------+
 ## Relator: z*y*x*c*b*a
 ## gap> iso := GroupHomomorphismByImages(f,f,[a,b^(y^-1),c^(x^-1*y^-1*a^-1),x^(b*a*z*a^-1),y,z^(a^-1)],[a,b,c,x,y,z]);;
-## gap> newm := CleanedIMGMachine(ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]));;
+## gap> newm := CleanedSphereMachine(ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]));;
 ## gap> Display(newm);
 ##  G |          1         2   
 ## ---+-------------+---------+
@@ -320,32 +230,56 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>
-## <#/GAPDoc>
 ##
-DeclareProperty("IsKneadingMachine",IsFRMachine);
-DeclareProperty("IsPlanarKneadingMachine",IsFRMachine);
-InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine);
-InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
-
-DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
-
+## <ManSection>
+##   <Oper Name="AsPolynomialSphereMachine" Arg="m [,adder [,relator]]"/>
 DeclareSynonym("IsPolynomialSphereMachine",IsSphereMachine and HasAddingElement);
 DeclareAttribute("AsPolynomialSphereMachine",IsFRMachine);
 DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
+##   <Returns>A polynomial sphere machine.</Returns>
+##   <Description>
+##     The first function creates a new polynomial sphere machine, starting from
+##     a group or Mealy machine. A <E>polynomial</E> machine is one that
+##     has a distinguished adding element, <Ref Attr="AddingElement"/>.
+##
+##     <P/> If the argument is a Mealy machine, it must be planar (see
+##     <Ref Prop="IsPlanarKneadingMachine"/>). If the argument is a group
+##     machine, its permutations must be treelike, and its outputs must be
+##     such that, up to conjugation, each non-trivial state appears
+##     exactly once as the product along all cycles of all states.
+##
+##     <P/> If a second argument <A>adder</A> is supplied, it is checked to
+##     represent an adding element, and is used as such.
+##
+## <Example><![CDATA[
+## gap> M := PolynomialMealyMachine(2,[1/7],[]);
+## !!!
+## gap> Mi := AsPolynomialSphereMachine(M);
+## !!!
+## ]]></Example>
+##   </Description>
+## </ManSection>
+## <#/GAPDoc>
+##
 #############################################################################
 
 #############################################################################
 ##
 #M Operations
 ##
-## <#GAPDoc Label="IMGOperations">
+## <#GAPDoc Label="SphereOperations">
 ## <ManSection>
-##   <Oper Name="PolynomialFRMachine" Arg="d,per[,pre]"/>
-##   <Oper Name="PolynomialIMGMachine" Arg="d,per[,pre[,formal]]"/>
+##   <Oper Name="PolynomialSphereMachine" Arg="d,per[,pre]"/>
 ##   <Oper Name="PolynomialMealyMachine" Arg="d,per[,pre]"/>
-##   <Returns>An IMG FR machine.</Returns>
+DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]);
+DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]);
+DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]);
+DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]);
+DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]);
+DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
+##   <Returns>A sphere or Mealy machine.</Returns>
 ##   <Description>
-##     This function creates a group, IMG or Mealy machine that describes
+##     This function creates a sphere or Mealy machine that describes
 ##     a topological polynomial. The polynomial is described symbolically
 ##     in the language of <E>external angles</E>. For more details, see
 ##     <Cite Key="MR762431"/> and <Cite Key="MR812271"/> (in the quadratic
@@ -361,13 +295,13 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##     at the root of a Fatou component, and the angles in <A>pre</A> land
 ##     on the Julia set.
 ##
-##     <P/> Note that, for IMG machines, the last generator of the machine
+##     <P/> Note that, for sphere machines, the last generator of the machine
 ##     produced is an adding machine, representing a loop going
 ##     counterclockwise around infinity (in the compactification of
 ##     <M>\mathbb C</M> by a disk, this loop goes <E>clockwise</E> around
 ##     that disk).
 ##
-##     <P/> In constructing a polynomial IMG machine, one may specify a
+##     <P/> In constructing a polynomial sphere machine, one may specify a
 ##     boolean flag <A>formal</A>, which defaults to <K>true</K>. In
 ##     a <E>formal</E> recursion, distinct angles give distinct generators;
 ##     while in a non-formal recursion, distinct angles, which land at the
@@ -381,14 +315,14 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##     <C>[a,s]</C> where <M>a</M> is an angle landing on generator <C>i</C>
 ##     and <M>s</M> is <K>"Julia"</K> or <K>"Fatou"</K>.
 ##
-##     <P/> If only one list of angles is supplied, then <Package>FR</Package>
+##     <P/> If only one list of angles is supplied, then <Package>IMG</Package>
 ##     guesses that all angles with denominator coprime to <A>n</A> are
 ##     Fatou, and all the others are Julia.
 ##
-##     <P/> The inverse operation, reconstructing the angles from the IMG
+##     <P/> The inverse operation, reconstructing the angles from the sphere
 ##     machine, is <Ref Oper="SupportingRays"/>.
 ## <Example><![CDATA[
-## gap> PolynomialIMGMachine(2,[0],[]); # the adding machine
+## gap> PolynomialSphereMachine(2,[0],[]); # the adding machine
 ## <FR machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2 ] )/[ f2*f1 ]>
 ## gap> Display(last);
 ##  G  |     1        2
@@ -397,7 +331,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##  f2 |   f2,2   <id>,1
 ## ----+--------+--------+
 ## Relator: f2*f1
-## gap> Display(PolynomialIMGMachine(2,[1/3],[])); # the Basilica
+## gap> Display(PolynomialSphereMachine(2,[1/3],[])); # the Basilica
 ##  G  |      1         2
 ## ----+---------+---------+
 ##  f1 | f1^-1,2   f2*f1,1
@@ -405,7 +339,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##  f3 |    f3,2    <id>,1
 ## ----+---------+---------+
 ## Relator: f3*f2*f1
-## gap> Display(PolynomialIMGMachine(2,[],[1/6])); # z^2+I
+## gap> Display(PolynomialSphereMachine(2,[],[1/6])); # z^2+I
 ##  G  |            1         2
 ## ----+---------------+---------+
 ##  f1 | f1^-1*f2^-1,2   f2*f1,1
@@ -414,12 +348,12 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##  f4 |          f4,2    <id>,1
 ## ----+---------------+---------+
 ## Relator: f4*f3*f2*f1
-## gap> PolynomialIMGMachine(2,[],[5/12]);
-## gap> PolynomialIMGMachine(2,[],[5/12]);
+## gap> PolynomialSphereMachine(2,[],[5/12]);
+## gap> PolynomialSphereMachine(2,[],[5/12]);
 ## <FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]>
 ## gap> Correspondence(last);
 ## [ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
-## gap> PolynomialIMGMachine(2,[],[5/12],false);
+## gap> PolynomialSphereMachine(2,[],[5/12],false);
 ## <FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>
 ## gap> Correspondence(last);
 ## [ [ [ 1/3, 2/3 ], "Julia" ], [ [ 5/12 ], "Julia" ], [ [ 5/6 ], "Julia" ] ]
@@ -428,31 +362,31 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## <Listing><![CDATA[
 ## PoirierExamples := function(arg)
 ##     if arg=[1] then
-##         return PolynomialIMGMachine(2,[1/7],[]);
+##         return PolynomialSphereMachine(2,[1/7],[]);
 ##     elif arg=[2] then
-##         return PolynomialIMGMachine(2,[],[1/2]);
+##         return PolynomialSphereMachine(2,[],[1/2]);
 ##     elif arg=[3,1] then
-##         return PolynomialIMGMachine(2,[],[5/12]);
+##         return PolynomialSphereMachine(2,[],[5/12]);
 ##     elif arg=[3,2] then
-##         return PolynomialIMGMachine(2,[],[7/12]);
+##         return PolynomialSphereMachine(2,[],[7/12]);
 ##     elif arg=[4,1] then
-##         return PolynomialIMGMachine(3,[[3/4,1/12],[1/4,7/12]],[]);
+##         return PolynomialSphereMachine(3,[[3/4,1/12],[1/4,7/12]],[]);
 ##     elif arg=[4,2] then
-##         return PolynomialIMGMachine(3,[[7/8,5/24],[5/8,7/24]],[]);
+##         return PolynomialSphereMachine(3,[[7/8,5/24],[5/8,7/24]],[]);
 ##     elif arg=[4,3] then
-##         return PolynomialIMGMachine(3,[[1/8,19/24],[3/8,17/24]],[]);
+##         return PolynomialSphereMachine(3,[[1/8,19/24],[3/8,17/24]],[]);
 ##     elif arg=[5] then
-##         return PolynomialIMGMachine(3,[[3/4,1/12],[3/8,17/24]],[]);
+##         return PolynomialSphereMachine(3,[[3/4,1/12],[3/8,17/24]],[]);
 ##     elif arg=[6,1] then
-##         return PolynomialIMGMachine(4,[],[[1/4,3/4],[1/16,13/16],[5/16,9/16]]);
+##         return PolynomialSphereMachine(4,[],[[1/4,3/4],[1/16,13/16],[5/16,9/16]]);
 ##     elif arg=[6,2] then
-##         return PolynomialIMGMachine(4,[],[[1/4,3/4],[3/16,15/16],[7/16,11/16]]);
+##         return PolynomialSphereMachine(4,[],[[1/4,3/4],[3/16,15/16],[7/16,11/16]]);
 ##     elif arg=[7] then
-##         return PolynomialIMGMachine(5,[[0,4/5],[1/5,2/5,3/5]],[[1/5,4/5]]);
+##         return PolynomialSphereMachine(5,[[0,4/5],[1/5,2/5,3/5]],[[1/5,4/5]]);
 ##     elif arg=[9,1] then
-##         return PolynomialIMGMachine(3,[[0,1/3],[5/9,8/9]],[]);
+##         return PolynomialSphereMachine(3,[[0,1/3],[5/9,8/9]],[]);
 ##     elif arg=[9,2] then
-##         return PolynomialIMGMachine(3,[[0,1/3]],[[5/9,8/9]]);
+##         return PolynomialSphereMachine(3,[[0,1/3]],[[5/9,8/9]]);
 ##     else
 ##         Error("Unknown Poirier example ",arg);
 ##     fi;
@@ -463,9 +397,10 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##
 ## <ManSection>
 ##   <Attr Name="SupportingRays" Arg="m"/>
+DeclareAttribute("SupportingRays",IsFRMachine);
 ##   <Returns>A <C>[degree,fatou,julia]</C> description of <A>m</A>.</Returns>
 ##   <Description>
-##     This operation is the inverse of <Ref Oper="PolynomialIMGMachine"/>:
+##     This operation is the inverse of <Ref Oper="PolynomialSphereMachine"/>:
 ##     it computes a choice of angles, describing landing rays on Fatou/Julia
 ##     critical points.
 ##
@@ -478,17 +413,17 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##     the equivalence relation on the set of generators of <A>m</A> that
 ##     describes the pinching.
 ## <Example><![CDATA[
-## gap> r := PolynomialIMGMachine(2,[1/7],[]);
+## gap> r := PolynomialSphereMachine(2,[1/7],[]);
 ## <FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>
 ## gap> F := StateSet(r);; SetName(F,"F");
 ## gap> SupportingRays(r);
 ## [ 2, [ [ 1/7, 9/14 ] ], [  ] ] # actually returns the angle 2/7
-## gap> # now CallFuncList(PolynomialIMGMachine,last) would return the machine r
+## gap> # now CallFuncList(PolynomialSphereMachine,last) would return the machine r
 ## gap> twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1^(F.2*F.1),F.2^F.1,F.3,F.4])^-1;
 ## [ f1, f2, f3, f4 ] -> [ f1*f2*f1^-1, f2*f1*f2*f1^-1*f2^-1, f3, f4 ]
 ## gap> List([-5..5],i->2*SupportingRays(r*twist^i)[2][1][1]);
 ## [ 4/7, 5/7, 4/7, 4/7, 5/7, 2/7, 4/7, 4/7, 2/7, 4/7, 4/7 ]
-## gap> r := PolynomialIMGMachine(2,[],[1/6]);;
+## gap> r := PolynomialSphereMachine(2,[],[1/6]);;
 ## gap> F := StateSet(r);;
 ## gap> twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;
 ## gap> SupportingRays(r);
@@ -516,59 +451,29 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Attr Name="AsGroupFRMachine" Arg="f" Label="endomorphism"/>
-##   <Attr Name="AsMonoidFRMachine" Arg="f" Label="endomorphism"/>
-##   <Attr Name="AsSemigroupFRMachine" Arg="f" Label="endomorphism"/>
-##   <Returns>An FR machine.</Returns>
+##   <Attr Name="NormalizedPolynomialSphereMachine" Arg="m"/>
+DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
+##   <Returns>A polynomial sphere machine.</Returns>
 ##   <Description>
-##     This function creates an FR machine on a 1-letter alphabet,
-##     that represents the endomorphism <A>f</A>. It is specially useful
-##     when combined with products of machines; indeed the usual product
-##     of machines corresponds to composition of endomorphisms.
-## <Example><![CDATA[
-## gap> f := FreeGroup(2);;
-## gap> h := GroupHomomorphismByImages(f,f,[f.1,f.2],[f.2,f.1*f.2]);
-## [ f1, f2 ] -> [ f2, f1*f2 ]
-## gap> m := AsGroupFRMachine(h);
-## <FR machine with alphabet [ 1 ] on Group( [ f1, f2 ] )>
-## gap> mm := TensorProduct(m,m);
-## <FR machine with alphabet [ 1 ] on Group( [ f1, f2 ] )>
-## gap> Display(mm);
-##  G  |         1
-## ----+------------+
-##  f1 |    f1*f2,1
-##  f2 | f2*f1*f2,1
-## ----+------------+
-## ]]></Example>
-##   </Description>
-## </ManSection>
-##
-## <ManSection>
-##   <Attr Name="NormalizedPolynomialFRMachine" Arg="m"/>
-##   <Attr Name="NormalizedPolynomialIMGMachine" Arg="m"/>
-##   <Returns>A polynomial FR machine.</Returns>
-##   <Description>
-##     This function returns a new FR machine, in which the adding element
+##     This function returns a new sphere machine, in which the adding element
 ##     has been put into a standard form <M>t=[t,1,\dots,1]s</M>, where
 ##     <M>s</M> is the long cycle <M>i\mapsto i-1</M>.
-##
-##     <P/> For the first command, the machine returned is an FR machine;
-##     for the second, it is an IMG machine.
 ##   </Description>
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Attr Name="SimplifiedIMGMachine" Arg="m"/>
-##   <Returns>A simpler IMG machine.</Returns>
+##   <Attr Name="SimplifiedSphereMachine" Arg="m"/>
+DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
+##   <Returns>A simpler sphere machine.</Returns>
 ##   <Description>
-##     This function returns a new IMG machine, with hopefully simpler
+##     This function returns a new sphere machine, with hopefully simpler
 ##     transitions. The simplified machine is obtained by applying
 ##     automorphisms to the stateset. The sequence of automorphisms
 ##     (in increasing order) is stored as a correspondence; namely,
-##     if <C>n=SimplifiedIMGMachine(m)</C>, then
+##     if <C>n=SimplifiedSphereMachine(m)</C>, then
 ##     <C>m^Product(Correspondence(n))=n</C>.
 ## <Example><![CDATA[
-## gap> r := PolynomialIMGMachine(2,[1/7],[]);;
+## gap> r := PolynomialSphereMachine(2,[1/7],[]);;
 ## gap> F := StateSet(r);; SetName(F,"F");
 ## gap> twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1^(F.2*F.1),F.2^F.1,F.3,F.4]);;
 ## gap> m := r*twist;; Display(m);
@@ -581,7 +486,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## ----+------------------------+------------+
 ## Adding element: f4
 ## Relator: f4*f3*f2*f1
-## gap> n := SimplifiedIMGMachine(m);
+## gap> n := SimplifiedSphereMachine(m);
 ## <FR machine with alphabet [ 1, 2 ] and adder f4 on F>
 ## gap> Display(n);
 ##  G  |            1            2
@@ -601,9 +506,11 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##
 ## <ManSection>
 ##   <Oper Name="Mating" Arg="m1,m2 [,formal]"/>
-##   <Returns>An IMG FR machine.</Returns>
+DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]);
+DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]);
+##   <Returns>A sphere machine.</Returns>
 ##   <Description>
-##     This function "mates" two polynomial IMG machines.
+##     This function "mates" two polynomial sphere machines.
 ##
 ##     <P/> The mating is defined as follows: one removes a disc around
 ##     the adding machine in <A>m1</A> and <A>m2</A>; one applies complex
@@ -625,8 +532,8 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## gap> z := Indeterminate(MPC_PSEUDOFIELD);;
 ## gap> a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;
 ## gap> c := RootsFloat((z^3+z)^3+z);;
-## gap> am := List(a,a->IMGMachine((a-1)*(3*z^2-2*z^3)+1));;
-## gap> cm := List(c,c->IMGMachine(z^3+c));;
+## gap> am := List(a,a->SphereMachine((a-1)*(3*z^2-2*z^3)+1));;
+## gap> cm := List(c,c->SphereMachine(z^3+c));;
 ## gap> m := ListX(am,cm,Mating);;
 ## gap> # m[2] is realizable
 ## gap> RationalFunction(m[2]);
@@ -650,31 +557,21 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]);
-DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]);
-DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]);
-DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]);
-DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]);
-DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
-
-DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
-DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
-DeclareAttribute("SupportingRays",IsFRMachine);
-DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]);
-DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]);
 #############################################################################
 
 #############################################################################
 ##
-#M Automorphisms of FR machines
+#M Automorphisms of sphere machines
 ##
 ## <#GAPDoc Label="AutomorphismsFRMachines">
 ## <ManSection>
 ##   <Attr Name="AutomorphismVirtualEndomorphism" Arg="v"/>
-##   <Attr Name="AutomorphismIMGMachine" Arg="m"/>
+##   <Attr Name="AutomorphismSphereMachine" Arg="m"/>
+DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]);
+DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##   <Returns>A description of the pullback map on Teichmüller space.</Returns>
 ##   <Description>
-##     Let <A>m</A> be an IMG machine, thought of as a biset for the
+##     Let <A>m</A> be a sphere machine, thought of as a biset for the
 ##     fundamental group <M>G</M> of a punctured sphere. Let <M>M</M> denote
 ##     the automorphism of the surface, seen as a group of outer
 ##     automorphisms of <M>G</M> that fixes the conjugacy classes of punctures.
@@ -694,9 +591,9 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 ## <Example><![CDATA[
 ## gap> z := Indeterminate(COMPLEX_FIELD);;
 ## gap> # a Sierpinski carpet map without multicurves
-## gap> m := IMGMachine((z^2-z^-2)/2/COMPLEX_I);
+## gap> m := SphereMachine((z^2-z^-2)/2/COMPLEX_I);
 ## <FR machine with alphabet [ 1, 2, 3, 4 ] on Group( [ f1, f2, f3, f4 ] )/[ f3*f2*f1*f4 ]>
-## gap> AutomorphismIMGMachine(i);
+## gap> AutomorphismSphereMachine(i);
 ## <FR machine with alphabet [ 1, 2 ] on Group( [ x1, x2, x3, x4, x5, x6 ] )>
 ## gap> Display(last);
 ##  G  |     1        2
@@ -709,7 +606,7 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 ##  x6 | <id>,2   <id>,1  
 ## ----+--------+--------+
 ## gap> # the original rabbit problem
-## gap> m := PolynomialIMGMachine(2,[1/7],[]);;
+## gap> m := PolynomialSphereMachine(2,[1/7],[]);;
 ## gap> v := VirtualEndomorphism(m,1);;
 ## gap> a := AutomorphismVirtualEndomorphism(v);
 ## MappingByFunction( <group with 20 generators>, <group with 6 generators>, function( a ) ... end )
@@ -723,17 +620,28 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]);
-DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 #############################################################################
 
 #############################################################################
 ##
-#M ChangeFRMachineBasis
+## <#GAPDoc Label="RotatedSpider">
+## <ManSection>
+##   <Oper Name="LiftOfConjugacyClass" Arg="m c"/>
+DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
+##   <Returns>A list of conjugacy classes and multiplicities.</Returns>
+##   <Description>
+##     This command computes the preimage of the conjugacy class <A>c</A>
+##     by the sphere machine <A>m</A>, namely, it applies the wreath recursion
+##     to a representative of <A>c</A> and collects the products on all
+##     cycles. It returns then a list of pairs <C>[cc,len]</C> where <C>cc</C>
+##     is the conjugacy class of a product on a cycle, and <C>len</C> is the
+##     length of the cycle.
+##   </Description>
+## </ManSection>
 ##
-## <#GAPDoc Label="ChangeFRMachineBasis">
 ## <ManSection>
 ##   <Oper Name="ComplexConjugate" Arg="m"/>
+#DeclareAttribute("ComplexConjugate", IsFRMachine); # already declared for arithmetic objects
 ##   <Returns>An FR machine with inverted states.</Returns>
 ##   <Description>
 ##     This function constructs an FR machine whose generating states are
@@ -741,7 +649,7 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##     rational map <M>f(z)</M>, this would construct the machine of the
 ##     conjugate map <M>\overline{f(\overline z)}</M>.
 ## <Example><![CDATA[
-## gap> a := PolynomialIMGMachine(2,[1/7]);
+## gap> a := PolynomialSphereMachine(2,[1/7]);
 ## <FR machine with alphabet [ 1, 2 ] and adder FRElement(...,f4) on <object>/[ f4*f3*f2*f1 ]>
 ## gap> Display(a);
 ##  G  |            1            2
@@ -773,6 +681,8 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##
 ## <ManSection>
 ##   <Oper Name="RotatedSpider" Arg="m, [p]"/>
+DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine]);
+DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 ##   <Returns>A polynomial FR machine with rotated spider at infinity.</Returns>
 ##   <Description>
 ##     This function constructs an isomorphic polynomial FR machine, but with
@@ -781,7 +691,7 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##     adding element of <A>m</A>, and <A>p</A>, the rotation parameter, is
 ##     <M>1</M> by default.
 ## <Example><![CDATA[
-## gap> a := PolynomialIMGMachine(3,[1/4]);
+## gap> a := PolynomialSphereMachine(3,[1/4]);
 ## <FR machine with alphabet [ 1, 2, 3 ] and adder FRElement(...,f3) on <object>/[ f3*f2*f1 ]>
 ## gap> Display(a);
 ##  G  |      1        2         3
@@ -810,9 +720,6 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-#DeclareAttribute("ComplexConjugate", IsFRMachine); # already declared for arithmetic objects
-DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine]);
-DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 #############################################################################
 
 #############################################################################
@@ -822,6 +729,7 @@ DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 ## <#GAPDoc Label="DBRationalIMGGroup">
 ## <ManSection>
 ##   <Func Name="DBRationalIMGGroup" Arg="sequence/map"/>
+DeclareGlobalFunction("DBRationalIMGGroup");
 ##   <Returns>An IMG group from Dau's database.</Returns>
 ##   <Description>
 ##     This function returns the iterated monodromy group from a database
@@ -852,6 +760,7 @@ DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 ##
 ## <ManSection>
 ##   <Func Name="PostCriticalMachine" Arg="f"/>
+DeclareGlobalFunction("PostCriticalMachine");
 ##   <Returns>The Mealy machine of <A>f</A>'s post-critical orbit.</Returns>
 ##   <Description>
 ##     This function constructs a Mealy machine <C>P</C> on the alphabet
@@ -884,11 +793,8 @@ DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>
-##
 ## <#/GAPDoc>
 ##
-DeclareGlobalFunction("PostCriticalMachine");
-DeclareGlobalFunction("DBRationalIMGGroup");
 #############################################################################
 
 #############################################################################
@@ -898,6 +804,7 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ## <#GAPDoc Label="Conversions">
 ## <ManSection>
 ##   <Attr Name="KneadingSequence" Arg="angle" Label="angle"/>
+DeclareAttribute("KneadingSequence", IsRat);
 ##   <Returns>The kneading sequence associated with <A>angle</A>.</Returns>
 ##   <Description>
 ##     This function converts a rational angle to a kneading sequence, to
@@ -917,6 +824,7 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ##
 ## <ManSection>
 ##   <Attr Name="AllInternalAddresses" Arg="n"/>
+DeclareGlobalFunction("AllInternalAddresses");
 ##   <Returns>Internal addresses of maps with period up to <A>n</A>.</Returns>
 ##   <Description>
 ##     This function returns internal addresses for all periodic points of
@@ -940,6 +848,7 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ##
 ## <ManSection>
 ##   <Func Name="ExternalAnglesRelation" Arg="degree, n"/>
+DeclareGlobalFunction("ExternalAnglesRelation");
 ##   <Returns>An equivalence relation on the rationals.</Returns>
 ##   <Description>
 ##     This function returns the equivalence relation on <C>Rationals</C>
@@ -957,14 +866,15 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ##
 ## <ManSection>
 ##   <Func Name="ExternalAngle" Arg="machine"/>
+DeclareGlobalFunction("ExternalAngle");
 ##   <Returns>The external angle identifying <A>machine</A>.</Returns>
 ##   <Description>
-##     In case <A>machine</A> is the IMG machine of a unicritical
+##     In case <A>machine</A> is the sphere machine of a unicritical
 ##     polynomial, this function computes the external angle landing at the
 ##     critical value. More precisely, it computes the equivalence class of
 ##     that external angle under <Ref Func="ExternalAnglesRelation"/>.
 ## <Example><![CDATA[
-## gap> ExternalAngle(PolynomialIMGMachine(2,[1/7])); # the rabbit
+## gap> ExternalAngle(PolynomialSphereMachine(2,[1/7])); # the rabbit
 ## {2/7}
 ## gap> Elements(last);
 ## [ 1/7, 2/7 ]
@@ -973,10 +883,6 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ## </ManSection>
 ## <#/GAPDoc>
 ##
-DeclareAttribute("KneadingSequence", IsRat);
-DeclareGlobalFunction("AllInternalAddresses");
-DeclareGlobalFunction("ExternalAngle");
-DeclareGlobalFunction("ExternalAnglesRelation");
 #############################################################################
 
 #E machine.gd . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

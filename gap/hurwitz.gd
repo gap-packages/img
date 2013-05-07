@@ -1,4 +1,3 @@
-Info(InfoIMG,1,"Add doc to hurwitz.gd");
 #############################################################################
 ##
 #W hurwitz.gd                                               Laurent Bartholdi
@@ -11,19 +10,17 @@ Info(InfoIMG,1,"Add doc to hurwitz.gd");
 ##
 #############################################################################
 
-#############################################################################
-##
-#E The Hurwitz problem
-##
 ## <#GAPDoc Label="Hurwitz">
 ## <ManSection>
-##   <Oper Name="BranchedCoveringByMonodromy" Arg="spider, monodromy [, last]"/>
+##   <Oper Name="BranchedCoveringByMonodromy" Arg="sphere, monodromy [, last]"/>
+DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism]);
+DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism,IsRecord]);
 ##   <Returns>A record describing a Hurwitz map.</Returns>
 ##   <Description>
-##     If <A>spider</A> is a spider, marked by a group <M>G</M>, and
+##     If <A>sphere</A> is a marked sphere, marked by a group <M>G</M>, and
 ##     <A>monodromy</A> is a homomorphism from <M>G</M> to a permutation
 ##     group, this function computes a rational map whose critical values
-##     are the vertices of <A>spider</A> and whose monodromy about these
+##     are the vertices of <A>sphere</A> and whose monodromy about these
 ##     critical values is given by <A>monodromy</A>.
 ##
 ##     <P/> The returned data are in a record with a field <C>degree</C>, the
@@ -34,14 +31,14 @@ Info(InfoIMG,1,"Add doc to hurwitz.gd");
 ##     and <C>cp</C> describing the zeros, poles and critical points of the
 ##     map. Each entry in these lists is a record with entries <C>degree</C>,
 ##     <C>pos</C> and <C>to</C> giving, for each point in the source of
-##     <C>map</C>, the local degree and the vertex in <A>spider</A> it maps to.
+##     <C>map</C>, the local degree and the vertex in <A>sphere</A> it maps to.
 ##
 ##     <P/> This function requires external programs in the subdirectory
 ##     "hurwitz" to have been compiled.
 ## <Example><![CDATA[
 ## gap> # we'll construct 2d-2 points on the equator, and permutations
 ## gap> # in order (1,2),...,(d-1,d),(d-1,d),...,(1,2) for these points.
-## gap> # first, the spider.
+## gap> # first, the marked sphere
 ## gap> d := 20;;
 ## gap> z := List([0..2*d-3], i->P1Point(Exp(i*PMCOMPLEX.constants.2IPI/(2*d-2))));;
 ## gap> g := SphereGroup(2*d-2);;
@@ -51,7 +48,7 @@ Info(InfoIMG,1,"Add doc to hurwitz.gd");
 ## gap> Append(perms,Reversed(perms));
 ## gap> perms := GroupHomomorphismByImages(g,SymmetricGroup(d),GeneratorsOfGroup(g),perms);;
 ## gap> # now compute the map
-## gap> BranchedCoveringByMonodromy(spider,perms);
+## gap> BranchedCoveringByMonodromy(sphere,perms);
 ## rec( cp := [ rec( degree := 2, pos := <1.0022-0.0099955i>, to := <vertex 19[ 9, 132, 13, 125 ]> ), 
 ##       rec( degree := 2, pos := <1.0022-0.0099939i>, to := <vertex 20[ 136, 128, 129, 11 ]> ), 
 ##       rec( degree := 2, pos := <1.0039-0.0027487i>, to := <vertex 10[ 73, 74, 16, 82 ]> ), 
@@ -152,9 +149,11 @@ Info(InfoIMG,1,"Add doc to hurwitz.gd");
 ##
 ## <ManSection>
 ##   <Oper Name="DessinByPermutations" Arg="s0,s1[,sinf]"/>
+DeclareOperation("DessinByPermutations", [IsPerm,IsPerm]);
+DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
 ##   <Returns>A rational map (see <Ref Oper="HurwitzMap"/>) with monodromies <A>s,t</A>.</Returns>
 ##   <Description>
-##     This command computes the Hurwitz map associated with the spider
+##     This command computes the Hurwitz map associated with the spanning tree
 ##     <M>[0,1]\cup[1,\infty]</M>; the monodromy representation is by
 ##     the permutation <A>s0</A> at <M>0</M> and <A>s1</A> at <M>1</M>. The
 ##     optional third argument <A>sinf</A> is the monodromy at <M>\infty</M>,
@@ -221,11 +220,5 @@ Info(InfoIMG,1,"Add doc to hurwitz.gd");
 ##   </Description>
 ## </ManSection>
 ## <#/GAPDoc>
-##
-DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism]);
-DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism,IsRecord]);
-DeclareOperation("DessinByPermutations", [IsPerm,IsPerm]);
-DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
-#############################################################################
 
 #E hurwitz.gd . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

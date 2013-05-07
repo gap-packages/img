@@ -145,6 +145,8 @@ end);
 
 ################################################################
 # external programs
+@.javaopts := ["-J-Xmx512m"];
+
 BindGlobal("EXEC@", rec());
 CallFuncList(function(file)
     if file<>fail then Read(file); fi;
@@ -155,7 +157,7 @@ BindGlobal("JAVAPLOT@", function(input)
     CHECKEXEC@FR("appletviewer");
 
     s := "";
-    r := [Concatenation("-J-Xmx512m -J-Djava.security.policy=",Filename(DirectoriesPackageLibrary("img","java"),"javaplot.pol")), Filename(DirectoriesPackageLibrary("img","java"),"javaplot.html")];
+    r := Concatenation(@.javaopts,[Concatenation("-J-Djava.security.policy=",Filename(DirectoriesPackageLibrary("img","java"),"javaplot.pol")), Filename(DirectoriesPackageLibrary("img","java"),"javaplot.html")]);
     if ValueOption("detach")<>fail then
         r := EXECINSHELL@FR(input,Concatenation(EXEC@.appletviewer," ",r[1]," ",r[2]),true);
     else
