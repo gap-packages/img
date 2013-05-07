@@ -1,4 +1,3 @@
-Info(InfoIMG,1,"Add doc to markedsphere.gd");
 #############################################################################
 ##
 #W markedsphere.gd                                          Laurent Bartholdi
@@ -32,44 +31,15 @@ DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="RationalFunction" Arg="[z,] m"/>
-##   <Returns>A rational function.</Returns>
+##   <Oper Name="NewMarkedSphere" Arg="points [group]"/>
+DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]);
+DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);
+##   <Returns>A new marked sphere on points <A>points</A>.</Returns>
 ##   <Description>
-##   This command runs a modification of Hubbard and Schleicher's
-##   "spider algorithm" <Cite Key="MR1315537"/> on the IMG FR machine <A>m</A>.
-##   It either returns a rational function <C>f</C> whose associated machine
-##   is <A>m</A>; or a record describing the Thurston obstruction to
-##   realizability of <C>f</C>.
-##
-##   <P/> This obstruction record <C>r</C> contains a list <C>r.multicurve</C>
-##   of conjugacy classes in <C>StateSet(m)</C>, which represent
-##   short multicurves; a matrix <C>r.mat</C>, and a spider <C>r.spider</C>
-##   on which the obstruction was discovered.
-##
-##   <P/> If a rational function is returned, it has preset attributes
-##   <C>Spider(f)</C> and <C>IMGMachine(f)</C> which is a simplified
-##   version of <A>m</A>. This rational function is also normalized so that
-##   its post-critical points have barycenter=0 and has two post-critical
-##   points at infinity and on the positive real axis.
-##   Furthermore, if <A>m</A> is polynomial-like, then the returned map is
-##   a polynomial.
-##
-##   <P/> The command accepts the following options, to return a map in a given normalization: <List>
-##   <Mark><C>RationalFunction(m:param:=IsPolynomial)</C></Mark>
-##         <Item>returns <M>f=z^d+A_{d-2}z^{d-2}+\cdots+A_0</M>;</Item>
-##   <Mark><C>RationalFunction(m:param:=IsBicritical)</C></Mark>
-##         <Item>returns <M>f=((pz+q)/(rz+s)^d</M>, with
-##               <M>1</M>postcritical;</Item>
-##   <Mark><C>RationalFunction(m:param:=n)</C></Mark>
-##         <Item>returns <M>f=1+a/z+b/z^2</M> or <M>f=a/(z^2+2z)</M>
-##               if <C>n=2</C>.</Item>
-##   </List>
-## <Example><![CDATA[
-## gap> m := PolynomialIMGMachine(2,[1/3],[]);
-## <FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f3*f2*f1 ]>
-## gap> RationalFunction(m);
-## 0.866025*z^2+(-1)*z+(-0.288675)
-## ]]></Example>
+##     This function creates a new marked sphere, based on the
+##     Delaunay triangulation on <A>points</A>. If a sphere group <A>group</A>
+##     is specified, it is used to mark the sphere; otherwise a new
+##     sphere group is created.
 ##   </Description>
 ## </ManSection>
 ##
@@ -95,24 +65,83 @@ DeclareOperation("Draw", [IsMarkedSphere]);
 ##     also apply.
 ##   </Description>
 ## </ManSection>
-
+##
+## <ManSection>
+##   <Oper Name="WiggledMarkedSphere" Arg="sphere m"/>
+DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
+##   <Returns>A new marked sphere.</Returns>
+##   <Description>
+##     This operation moves the vertices of the marked sphere <A>sphere</A>,
+##     preserving its marking. The argument <A>m</A>, which specifies a
+##     movement of the vertices, is either a Möbius transformation (to be
+##     applied to all vertices) or a list of new positions for them.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="SphereMachineOfBranchedCovering" Arg="down up map [poly]"/>
+##   <Oper Name="SphereMachineAndSphereOfBranchedCovering" Arg="down map [poly]"/>
+DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
+DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);
+DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]);
+DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);
+##   <Returns>A sphere machine or [machine,marked sphere].</Returns>
+##   <Description>
+##     The first function computes, out of a marked sphere <A>down</A> in
+##     the range of the P1 map <A>map</A> and a marked sphere <A>up</A> in
+##     its domain, the sphere machine representing the monodromy action of
+##     the map. Its input stateset is the model group of <A>down</A>, while
+##     its output stateset is the model group of <A>up</A>.
+##
+##     <P/> The second function first computes a marked sphere on the
+##     full preimage by <A>map</A> of the vertices of <A>down</A>, then
+##     computes the sphere machine, and finally returns a list containing
+##     the machine and the sphere at the source of <A>map</A>.
+##
+##     <P/> The optional parameter <A>poly</A> specifies that the map <A>map</A>
+##     is to be treated as a polynomial, and that the machine is to be
+##     normalized so that its last generator is an adding machine in
+##     standard form.
+##   </Description>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="MonodromyOfP1Map" Arg="[marking] map"/>
+DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]);
+DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]);
+DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
+##   <Returns>The monodromy action of <A>map</A>.</Returns>
+##   <Description>
+##     This function computes the monodromy of the P1 map <A>map</A>;
+##     this is simply the activity of the sphere machine associated with
+##     the map.
+##
+##     <P/> The optional first argument <A>marking</A> may be a marked sphere,
+##     in which case the monodromy is returned as a homomorphism from the
+##     marked sphere's marking. It may also be a list of P1 points, in which
+##     case the monodromy is returned as a list of permutations, one per
+##     point. If the first argument is missing, it is assumed to be the
+##     list of critical values of <A>map</A>.
+##   </Description>
+## </ManSection>
+##
 ## <ManSection>
 ##   <Oper Name="SphereMachine" Arg="f" Label="rational function"/>
+DeclareAttribute("SphereMachine", IsP1Map);
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##   This function computes a triangulation of the sphere, on the
 ##   post-critical set of <A>f</A>, and lifts it through the map <A>f</A>.
 ##   the action of the fundamental group of the punctured sphere is
-##   then read into an IMG fr machine <C>m</C>, which is returned.
+##   then read into an sphere machine <C>m</C>, which is returned.
 ##
-##   <P/> This machine has a preset attribute <C>Spider(m)</C>.
+##   <P/> This machine has a preset attribute <C>MarkedSphere(m)</C>.
 ##
 ##   <P/> An approximation of the Julia set of <A>f</A> can be computed,
 ##   and plotted on the spider, with the form <C>IMGMachine(f:julia)</C>
 ##   or <C>IMGMachine(f:julia:=gridsize)</C>.
 ## <Example><![CDATA[
-## gap> z := Indeterminate(COMPLEX_FIELD);;
-## gap> IMGMachine(z^2-1);
+## gap> SphereMachine(P1z^2-1);
 ## <FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f2*f1*f3 ]>
 ## gap> Display(last);
 ##  G  |            1        2
@@ -127,51 +156,21 @@ DeclareOperation("Draw", [IsMarkedSphere]);
 ## </ManSection>
 ##
 ## <ManSection>
-##   <Oper Name="FindThurstonObstruction" Arg="list"/>
-##   <Returns>A description of the obstruction corresponding to <A>list</A>, or <K>fail</K>.</Returns>
+##   <Oper Name="DistanceMarkedSpheres" Arg="sphere1 sphere2 [fast]"/>
+DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]);
+DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);
+##   <Returns>The approximate distance between the marked spheres.</Returns>
 ##   <Description>
-##     This method accepts a list of IMG elements on the same underlying
-##     machine, and treats these as representatives of conjugacy classes
-##     defining (part of) a multicurve. It computes whether these
-##     curves, when supplemented with their lifts under the recursion,
-##     constitute a Thurston obstruction, by computing its transition matrix.
-##
-##     <P/> The method either returns <K>fail</K>, if there is no obstruction,
-##     or a record with as fields <C>matrix,machine,obstruction</C> giving
-##     respectively the transition matrix, a simplified machine, and the
-##     curves that constitute a minimal obstruction.
-## <Example><![CDATA[
-## gap> r := PolynomialIMGMachine(2,[],[1/6]);;
-## gap> F := StateSet(r);;
-## gap> twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;
-## gap> SupportingRays(r*twist^-1);
-## rec( machine := <FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]>,
-##      twist := [ f1, f2, f3, f4 ] -> [ f1, f3^-1*f2*f3, f3^-1*f2^-1*f3*f2*f3, f4 ],
-##      obstruction := "Dehn twist" )
-## gap> FindThurstonObstruction([FRElement(last.machine,[2,3])]);
-## rec( matrix := [ [ 1 ] ], machine := <FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]>, obstruction := [ f1^-1*f4^-1 ] )
-## ]]></Example>
+##     This function approximates coarsely the Teichmüller distance between
+##     marked spheres with same model group.
+##     If the vertices of <A>sphere1</A> can be wiggled to
+##     the vertices of <A>sphere2</A> in such a manner that the markings
+##     coincide, then the distance is the sum of the movements of the
+##     vertices. Otherwise, it is <M>1+</M> the sum of the lengths of the
+##     images of a sphere group automorphism that carries the marking of
+##     <A>sphere1</A> to that of <A>sphere2</A>.
 ##   </Description>
 ## </ManSection>
 ## <#/GAPDoc>
-##
-DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]);
-DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);
-DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
-
-DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
-DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);
-DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]);
-DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);
-
-DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]);
-DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]);
-DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
-
-DeclareAttribute("SphereMachine", IsP1Map);
-
-DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]);
-DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);
-#############################################################################
 
 #E markedsphere.gd . . . . . . . . . . . . . . . . . . . . . . . . .ends here

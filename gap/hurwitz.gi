@@ -104,9 +104,9 @@ BindGlobal("REFINETRIANGULATION@", function(triangulation,maxlen)
     od;
     
     maxdegree := Maximum(List(triangulation!.v,v->v!.degree));
-    mult := Int(Log(7./maxlen)/Log(1.5));
+    mult := Int(Log(7*@.ro/maxlen)/Log(3/2*@.ro));
     repeat
-        len := List([1..maxdegree],i->(maxlen*1.5^mult)^i);
+        len := List([1..maxdegree],i->(maxlen*(3/2*@.ro)^mult)^i);
         idle := true;
         for e in triangulation!.e do
             if Length(e) > len[Maximum(From(e)!.degree,To(e)!.degree)] then
@@ -149,7 +149,7 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
         od;
         for e in Neighbours(f) do
             e := Next(e);
-            PrintTo(stdin,Length(e)^(1/Maximum(To(e)!.degree,From(e)!.degree))," ");
+            PrintTo(stdin,NewFloat(IsIEEE754FloatRep,Length(e)^(1/Maximum(To(e)!.degree,From(e)!.degree)))," ");
         od;
         PrintTo(stdin,"\n");
     od;
@@ -164,7 +164,7 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     CloseStream(stdout);
 
     m := EvalString(sout);
-    m := 1.0*m; # make sure all entries are floats
+    m := @.ro*m; # make sure all entries are floats
     v := List(m,P1Sphere);
     map := P1MapNormalizingP1Points(v);
     v := List(v,v->P1Image(map,v));

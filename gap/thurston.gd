@@ -54,6 +54,26 @@ DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 ##   <Description>
 ##     This command returs either the map computed by
 ##     <Ref Oper="ThurstonAlgorithm"/> or a Thurston obstruction.
+##
+##   <P/> It runs a modification of Hubbard and Schleicher's
+##   "spider algorithm" <Cite Key="MR1315537"/> on the sphere machine <A>m</A>.
+##
+##   <P/> The command accepts the following options, to return a map in a given normalization: <List>
+##   <Mark><C>P1MapBySphereMachine(m:param:=IsPolynomial)</C></Mark>
+##         <Item>returns <M>f=z^d+A_{d-2}z^{d-2}+\cdots+A_0</M>;</Item>
+##   <Mark><C>P1MapBySphereMachine(m:param:=IsBicritical)</C></Mark>
+##         <Item>returns <M>f=((pz+q)/(rz+s)^d</M>, with
+##               <M>1</M>postcritical;</Item>
+##   <Mark><C>P1MapBySphereMachine(m:param:=n)</C></Mark>
+##         <Item>returns <M>f=1+a/z+b/z^2</M> or <M>f=a/(z^2+2z)</M>
+##               if <C>n=2</C>.</Item>
+##   </List>
+## <Example><![CDATA[
+## gap> m := PolynomialSphereMachine(2,[1/3],[]);
+## <FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f3*f2*f1 ]>
+## gap> P1MapBySphereMachine(m);
+## 0.866025*z^2+(-1)*z+(-0.288675)
+## ]]></Example>
 ##   </Description>
 ## </ManSection>
 ##
@@ -67,6 +87,17 @@ DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);
 ##     or some preimages intersect. In the latter case, <K>fail</K> returned,
 ##     while in the former case the Thurston matrix of the multicurve is
 ##     returned.
+## <Example><![CDATA[
+## gap> r := PolynomialSphereMachine(2,[],[1/6]);;
+## gap> F := StateSet(r);;
+## gap> twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;
+## gap> SupportingRays(r*twist^-1);
+## rec( machine := <FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]>,
+##      twist := [ f1, f2, f3, f4 ] -> [ f1, f3^-1*f2*f3, f3^-1*f2^-1*f3*f2*f3, f4 ],
+##      obstruction := "Dehn twist" )
+## gap> ThurstonMatrix(last.machine,[ConjugacyClass(F.2*F.3)]);
+## [ [ 1 ] ]
+## ]]></Example>
 ##   </Description>
 ## </ManSection>
 ##
@@ -86,7 +117,6 @@ DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 ##     iterated preimages, see <Ref Oper="ThurstonMatrix"/>.
 ##   </Description>
 ## </ManSection>
-##
 ## <#/GAPDoc>
 
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here
