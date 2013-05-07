@@ -95,7 +95,8 @@ InstallMethod(LT, "for complex numbers",
         function(x,y)
     return x![1]<y![1] or (x![1]=y![1] and x![2]<y![2]);
 end);
-
+InstallMethod(IsXInfinity, [IsPMComplex], x->x=PMCOMPLEX.constants.INFINITY);
+        
 InstallMethod(RealPart, [IsPMComplex], x->x![1]);
 InstallMethod(ImaginaryPart, [IsPMComplex], x->x![2]);
 InstallMethod(ComplexConjugate, [IsPMComplex],
@@ -124,11 +125,17 @@ end);
 InstallOtherMethod(INV, [IsPMComplex], function(x)
     local r;
     r := x![1]^2+x![2]^2;
+    if r=0.0_l then
+        return PMCOMPLEX.constants.INFINITY;
+    fi;
     return Objectify(TYPE_PMCOMPLEX, [x![1]/r,-x![2]/r]);
 end);
 
 InstallOtherMethod(QUO, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
+    if y=0.0_z then
+        return PMCOMPLEX.constants.INFINITY;
+    fi;
     return x*INV(y);
 end);
 
