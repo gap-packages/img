@@ -37,8 +37,8 @@ AC_MSG_RESULT([extern])
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib
 	if [[ ! -f $(EXTERN)/include/dogleg.h ]]; then \\
-		$(MAKE) CC="$CC $CHOLMOD_INCLUDE $CHOLMOD_LIBS" -B -C $(LIBDOGLEG); \\
-		cp $(LIBDOGLEG)/libdogleg.* $(EXTERN)/lib/; \\
+		$(MAKE) CC="$CC $CHOLMOD_INCLUDE $CHOLMOD_LIBS" -B -C $(LIBDOGLEG) && \\
+		cp $(LIBDOGLEG)/libdogleg.* $(EXTERN)/lib/ && \\
 		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/; \\
 	fi\n'`
 

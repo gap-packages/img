@@ -63,9 +63,9 @@ if test "$LEVMAR" = extern; then
 LEVMAR_MAKELIB=`printf 'liblevmar:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib
 	if [[ ! -f $(EXTERN)/include/levmar.h ]]; then \\
-		(cd $(LEVMAR) && cmake .); \\
-		$(MAKE) -C $(LEVMAR) levmar C_FLAGS=-fPIC; \\
-		cp $(LEVMAR)/liblevmar.a $(EXTERN)/lib/; \\
+		(cd $(LEVMAR) && cmake .) && \\
+		$(MAKE) -C $(LEVMAR) levmar C_FLAGS=-fPIC && \\
+		cp $(LEVMAR)/liblevmar.a $(EXTERN)/lib/ && \\
 		cp $(LEVMAR)/levmar.h $(EXTERN)/include/; \\
 	fi\n'`
 
