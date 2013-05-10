@@ -170,7 +170,7 @@ InstallMethod(LiftOfConjugacyClass, "(IMG) for a machine and a conjugacy class",
 end);
 
 InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere conj. classes",
-        [IsSphereMachine,IsMulticurve],
+        [IsSphereMachine,IsList], # filter "IsMulticurve" is not accepted
         function(M,multicurve)
     # enlarge multicurve so that it becomes invariant, and return the transition matrix;
     # or return fail if the enlargement would cause curves to intersect
@@ -178,8 +178,8 @@ InstallOtherMethod(ThurstonMatrix, "(IMG) for a machine and a list of sphere con
            w, x, i, j, d, group, pi, gens, peripheral;
     
     g := StateSet(M);
-    while g<>FamilyObj(Representative(multicurve[1]))!.group do
-        Error("Elements do not all have the same underlying sphere group");
+    while not IsMulticurve(multicurve) or ForAny(multicurve,c->g<>FamilyObj(Representative(c))!.group) do
+        Error("Second argument should be multicurve over machine's underlying sphere group");
     od;
 
     len := Length(multicurve);
