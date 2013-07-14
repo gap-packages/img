@@ -184,29 +184,75 @@ InstallMethod(DisplayString, "(IMG) for a sphere machine",
 ##
 #A AsSphereFRMachine
 ##
+BindGlobal("ADDERPOS@", function(M)
+    return Position(GeneratorsOfFRMachine(M),InitialState(AddingElement(M)));
+end);
+
+BindGlobal("ISADDER@", function(M,w)
+    local r, c;
+    r := WreathRecursion(M)(w);
+    c := Cycles(PermList(r[2]),AlphabetOfFRObject(M));
+    return Length(c)=1 and # transitive element
+           IsConjugate(StateSet(M),w,Product(r[1]{c[1]}));
+end);
+
 InstallGlobalFunction(NewSphereMachine,
         function(arg)
-    local relators, iso, fam, machine, data, len;
-    #!!! Guess the orders and relator if not supplied.
-    #!!! also recognize adder
-    #!!! also check that it's a legal machine; implement general safety procedure
+    local r, rr, relators, machine, states, data, len, adder;
+    #!!! Guess the orders, the relator, and the adder if not supplied.
 
     len := Length(arg);
     while not '=' in arg[len] do
         len := len-1;
         while len=0 do Error("I couldn't find any definition of generator"); od;
     od;
-    
-    while '=' in arg[Length(arg)] do Error("I couldn't find any relator"); od;
 
+    while '=' in arg[Length(arg)] do Error("I couldn't find any relator"); od;
+    
+#    adder := ValueOption("AddingElement");
+#    if adder<>fail then
+#        while not IsString(adder) do
+#            Error("Required form is AddingElement := <string>");
+#        od;
+#    fi;
+    
     machine := CallFuncList(NewGroupFRMachine,arg{[1..len]});
     data := rec(holdername := RANDOMNAME@FR());
     BindGlobal(data.holdername, StateSet(machine));
     relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
+    states := AsSphereGroup(StateSet(machine)/relators);
+    
+#    if adder<>fail then
+#        MakeReadWriteGlobal(data.holdername);
+#        UnbindGlobal(data.holdername);
+#        BindGlobal(data.holdername, states);
+#        adder := STRING_WORD2GAP@FR(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
+#    fi;
+    
     MakeReadWriteGlobal(data.holdername);
     UnbindGlobal(data.holdername);
-
-    return AsSphereMachine(machine,AsSphereGroup(StateSet(machine)/relators));
+    
+    for r in relators do
+        rr := WreathRecursion(machine)(r);
+        while not ISONE@FR(rr[2]) or ForAny(rr[1],w->not IsOne(ElementOfSphereGroup(FamilyObj(One(states)),w))) do
+            Error("Relation ",r," does not hold in the machine");
+        od;
+    od;
+    
+    machine := AsSphereMachine(machine,states);
+    
+#    if adder<>fail then
+#        while not ISADDER@(machine,adder) do
+#            Error("Element ",adder," is not an adder");
+#        od;
+#        SetAddingElement(machine,FRElement(machine,adder));
+#    fi;
+    len := Length(GeneratorsOfGroup(states));
+    if ISADDER@(machine,states.(len)) then
+        SetAddingElement(machine,FRElement(machine,states.(len)));
+    fi;
+    
+    return machine;
 end);
 
 InstallMethod(AsSphereMachine, "(IMG) for a group FR machine and a word",
@@ -581,18 +627,6 @@ BindGlobal("COMPOSERECURSION@", function(trans,out,pre,post)
 end);
 
 BindGlobal("FJ@",["Fatou","Julia"]);
-
-BindGlobal("ADDER@", function(M)
-    return Position(GeneratorsOfFRMachine(M),InitialState(AddingElement(M)));
-end);
-
-BindGlobal("ISADDER@", function(M,w)
-    local r, c;
-    r := WreathRecursion(M)(w);
-    c := Cycles(PermList(r[2]),AlphabetOfFRObject(M));
-    return Length(c)=1 and # transitive element
-           IsConjugate(StateSet(M),w,Product(r[1]{c[1]}));
-end);
 
 # this is a machine with no "infinity" element; the product of the generators (in some order)
 # is assumed to be an adding element

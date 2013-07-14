@@ -672,7 +672,7 @@ BindGlobal("NORMALIZEADDINGMACHINE@", function(srcmodel,liftmodel,trans,out,srca
     deg := Length(trans[1]);
     cycle := Cycles(PermList(out[srcadder]),[1..deg]);
     while Length(cycle)<>1 or not IsConjugate(liftmodel,Product(trans[srcadder]{cycle[1]}),liftmodel.(liftadder)) do
-        Error("Element #",liftadder," is not an adding element");
+        Error("Element ",srcmodel.(srcadder)," is not an adding element");
     od;
     
     perm := PermList(Concatenation([deg],[1..deg-1]));
