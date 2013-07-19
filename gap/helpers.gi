@@ -48,7 +48,7 @@ end);
 
 UTIME@ := function()
     local v;
-    if not IsBound(IO_gettimeofday) then return 0.0_l; fi;
+    if not ISBOUND_GLOBAL("IO_gettimeofday") then return 0.0_l; fi;
     v := ValueGlobal("IO_gettimeofday")(); # avoid warning if IO is not loaded
     return v.tv_sec+1.e-6_l*v.tv_usec;
 end;
