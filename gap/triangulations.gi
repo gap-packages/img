@@ -637,7 +637,9 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
         for i in [1..Length(r.f)] do SetPos(r.f[i], P1Image(movement,Pos(t!.f[i]))); od;
     fi;
 
-    return Objectify(TYPE_TRIANGULATION, r);
+    r := Objectify(TYPE_TRIANGULATION, r);
+    FIXDELAUNAY@(r);
+    return r;
 end);
 
 InstallMethod(ShallowCopy, [IsSphereTriangulation],

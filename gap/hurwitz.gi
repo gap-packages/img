@@ -441,9 +441,11 @@ InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphis
                     points := []);
         data.points{cv} := [[[P1zero,d]],[[P1infinity,d]]];
     elif Length(cv)=3 then # tricritical
-        data := TRICRITICAL@(d,List(cv,i->gens[i]^monodromy));
-        if data<>fail then
-            data.map := CompositionP1Map(MoebiusMap(values{cv}),data.map);
+        t := TRICRITICAL@(d,List(cv,i->gens[i]^monodromy));
+        if t<>fail then
+            data := rec(map := CompositionP1Map(MoebiusMap(values{cv}),t.map),
+                        points := []);
+            data.points{cv} := t.points;
         fi;
 #    elif d=3 then # quadricritical, but degree 3
 #        p := QUADRICRITICAL@(perm{cv},values{cv});
