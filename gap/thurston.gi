@@ -276,7 +276,7 @@ InstallMethod(ThurstonObstruction, "(IMG) for a marked sphere and a machine",
     return fail;
 end);
 
-InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
+InstallGlobalFunction(NormalizedP1Map, function(f,M,param)
     # param is IsPolynomial, IsBicritical, or a positive integer.
     # in the first case, normalize f as z^d+a_{d-2}*z^{d-2}+...+a_0
     # in the second case, normalize f as (az^d+b)/(cz^d+e)
@@ -295,7 +295,7 @@ InstallGlobalFunction(NormalizedQuadraticP1Map, function(f,M,param)
         fi;
     fi;
     while not IsPosInt(param) and param<>IsPolynomial and param<>IsBicritical do
-        Error("NormalizedQuadraticP1Map: parameter should be 'IsPolynomial', 'IsBicritical' or a positive integer");
+        Error("NormalizedP1Map: parameter should be 'IsPolynomial', 'IsBicritical' or a positive integer");
     od;
         
     mobius := MoebiusMap(p[2][1][1], p[2][2][1]); # send 2 first c.p. to 0,infty
@@ -558,10 +558,8 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         else
             fast := false;
         fi;
-        if fast then # recompute triangulation, it may have drifted too much
-            #!!! we wouldn't have to do that if we knew that the Delaunay condition is satisfied
-            #even after fast wiggling
-            obstruction := ThurstonObstruction(M,NewMarkedSphere(v,model));
+        if fast then
+            obstruction := fail; # assume no obstruction, since we converge
         else
             obstruction := ThurstonObstruction(M,downsphere);
         fi;
@@ -572,7 +570,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
     
     Info(InfoIMG,2,"Spider converged");
     
-    i := NormalizedQuadraticP1Map(f,M,ValueOption("param"));
+    i := NormalizedP1Map(f,M,ValueOption("param"));
     if i<>fail then
         downsphere := WiggledMarkedSphere(downsphere,InverseP1Map(i[2]));
         f := i[1];

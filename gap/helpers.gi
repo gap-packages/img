@@ -180,7 +180,7 @@ InstallGlobalFunction(Mandel, function(arg)
     od;
     cmd := "mandel";
     if arg<>[] then
-        f := NormalizedQuadraticP1Map(arg[1],0,IsBicritical)[1]; # (az^2+b)/(cz^2+d)
+        f := NormalizedP1Map(arg[1],0,IsBicritical)[1]; # (az^2+b)/(cz^2+d)
         if IsPolynomial(f) then
             f := CoefficientsOfUnivariatePolynomial(f);
             a := f[1]*f[3];

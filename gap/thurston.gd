@@ -12,8 +12,8 @@
 
 ## <#GAPDoc Label="Thurston">
 ## <ManSection>
-##   <Func Name="NormalizedQuadraticP1Map" Arg="f M param"/>
-DeclareGlobalFunction("NormalizedQuadraticP1Map");
+##   <Func Name="NormalizedP1Map" Arg="f M param"/>
+DeclareGlobalFunction("NormalizedP1Map");
 DeclareProperty("IsBicritical", IsObject);
 ##   <Returns>[A canonical conjugate of <A>f</A>,the conjugator].</Returns>
 ##   <Description>
