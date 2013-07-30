@@ -430,7 +430,7 @@ BindGlobal("LIFTARC@", function(spider,ratmap,from,to,gamma,downcell)
     # lifts to a path from p0 to candidate.pos and staying in upcell.
     # works by subdividing the time interval.
         local c, d, l, i, p, subdiv;
-    
+    Info(InfoIMG,3,"choosebysubdivision ",[p0,t0,t1,candidates,upbdry]);
         subdiv := [rec(t := t0, pos := p0), rec(t := t1)];
         i := 2;
         while i <= Length(subdiv) do
@@ -626,6 +626,7 @@ MARKTIME@(2);
             if c.d=0 then curedge := c.e; else curedge := fail; fi;
             curelt := curelt * GroupElement(c.e);
             curtime := c.t;
+            curpos := c.pos;
             # if at a vertex, allow time to go back a little, in case the
             # edges don't really match
             if c.u < @.p1eps or c.u > @.ro-@.p1eps then
@@ -853,6 +854,8 @@ InstallMethod(SphereMachine, "(IMG) for a rational function",
 end);
 
 InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
+        # this is some sort of Teichmüller distance. The marked spheres
+        # are assumed to be normalized, e.g. by fixing 3 points as 0,1,infty.
         [IsMarkedSphere,IsMarkedSphere,IsBool],
         function(spiderA,spiderB,fast)
     local model, points, perm, dist, recur, endo, nf, g;
@@ -862,19 +865,14 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
         Error("DistanceMarkedSpheres: the spheres don't have the same model group");
     od;
 
-    # try to match feet of spiderA and spiderB
-    points := VerticesOfMarkedSphere(spiderA);
-    perm := VerticesOfMarkedSphere(spiderB);
+    # move points of spiderB to their spiderA matches
+    points := VerticesOfMarkedSphere(spiderA);    
+    spiderB := WiggledMarkedSphere(spiderB,points);
+    dist := spiderB!.cut!.wiggled;
     
-    perm := MatchP1Points(perm,List(perm,x->points));
-    if perm=fail or Set(perm)<>[1..Length(points)] then # no match, find something coarse
+    if dist>@.fast then # crude estimate
         return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentative(spiderB!.marking,x^spiderA!.marking)))/Length(points);
     fi;
-    
-    
-    # move points of spiderB to their spiderA matches
-    spiderB := WiggledMarkedSphere(spiderB,points{perm});
-    dist := spiderB!.cut!.wiggled;
     
     if fast then # we just wiggled the points, the combinatorics didn't change
         return dist/Length(points);

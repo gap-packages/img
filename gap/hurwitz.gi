@@ -162,7 +162,11 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     Process(DirectoryCurrent(),Filename(DirectoriesPackagePrograms("img"),"layout"),stdin,stdout,[]);
     CloseStream(stdin);
     CloseStream(stdout);
-
+    
+    if sout="" then
+        Error("There was an error in the call to layout. This may possibly be fixed by reducing @IMG.hurwitzmesh");
+    fi;
+    
     m := EvalString(sout);
     m := @.ro*m; # make sure all entries are floats
     v := List(m,P1Sphere);
