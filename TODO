@@ -1,6 +1,5 @@
 These are the things I'll get to do when I get to do them:
 
-img:
   * blow-ups, tuning of IMG
   * adding machines of fractional (e.g. 1/7) amplitude, for more tunings & matings
   * "dilute" FR machine by multiplying stateset with {1..n} and chaining them in sequence
@@ -9,10 +8,5 @@ img:
   * canonical decompositions
   * recode properly rpoly, maybe have higher precision?
 
-URGENT:
-- "prenucleus" using just the states, not the action to compare. possibly return also the relations that are needed to make it a nucleus, something like the "triangles".
-
-- polynomialmachine etc. create a biset, or a just a sphere fr machine
-- triangulations more abstract: just work with pairs/triples of conjugacy classes
-- lifting done symbolically
-- an IMGMachine is just a machine with stateset a sphere group!
+  * "prenucleus" using just the states, not the action to compare. possibly return also the relations that are needed to make it a nucleus, something like the "triangles".
+  * abstract triangulations: just work with pairs/triples of conjugacy classes. do the lifting symbolically. train tracks.
