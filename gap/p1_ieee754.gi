@@ -91,7 +91,7 @@ InstallMethod(AsP1Map, [IsIEEE754FloatRep], x->AsP1Map(NewFloat(IsPMComplex,x)))
 
 InstallMethod(AsP1Map, [IsPMComplex], x->MAT2P1MAP([[x],[One(x)]]));
 
-InstallMethod(AsP1Map, [IsIEEE754P1Map], x->x);
+InstallMethod(AsP1Map, [IsIEEE754P1Map], IdFunc);
 
 InstallMethod(CoefficientsOfP1Map, [IsIEEE754P1Map], P1MAP2MAT);
 
