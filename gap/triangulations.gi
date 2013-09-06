@@ -170,20 +170,44 @@ InstallMethod(DisplayString, "(IMG) for a triangulation",
 end);
 INSTALLPRINTERS@(IsSphereTriangulation);
 
+InstallMethod(EdgePath, "(IMG) for a triangulation and two faces",
+        [IsSphereTriangulation, IsTriangulationFace, IsTriangulationFace],
+        function(t,f0,f1)
+    local path, stuck, e, emin, y, ymin;
+    
+    stuck := Length(t!.f); # worst possible running time
+    path := [];
+    
+    while f0<>f1 do
+        stuck := stuck-1;
+        while stuck<0 do
+            Error("We're stuck in a loop trying to find a path. Repent.");
+        od;
+        ymin := 2*@.ro;
+        for e in Neighbours(f0) do
+            y := SphereP1Y(P1Image(InverseP1Map(Map(e)),Pos(f1)));
+            if y<ymin then ymin := y; emin := e; fi;
+        od;
+        Add(path,emin);
+        f0 := Right(emin);
+    od;
+        
+    return path;
+end);
+
 BindGlobal("LOCATE@", function(t,f0,p)
     # for an initial face f0 and a P1Point p
     # f0 is allowed to be <fail>, in which case the first face is chosen
     # returns either [face,barycentric_coords],
     #             or [face,edge,edge_coord],
     #             or [face,edge_in,edge_out,vertex]
-    local y, yc, baryc, n, ymin, e, emin, i, seen;
+    local y, yc, baryc, n, ymin, e, emin, i, stuck;
     
     if f0=fail then f0 := t!.f[1]; fi;
-    # bad, this can cost linear time, and not logarithmic.
-    # we should use a "rho" method to detect loops
-    seen := BlistList([1..Length(t!.f)],[]);
+    stuck := Length(t!.f); # worst possible running time
     repeat
-        while seen[f0!.index] do
+        stuck := stuck-1;
+        while stuck<0 do
             Error("We're stuck in a loop trying to locate a face. Repent.");
         od;
         baryc := [];
@@ -197,43 +221,71 @@ BindGlobal("LOCATE@", function(t,f0,p)
             Add(yc,y);
             if y<ymin then ymin := y; emin := e; fi;
         od;
-        if ymin>@.reps then # inside face
+        if ymin>@.p1eps then # inside face
             return [f0,yc];
         fi;
         if ymin>-@.reps then # on edge or vertex
-            y := Filtered([1..3],i->yc[i]<@.reps);
+            y := Filtered([1..3],i->yc[i]<@.p1eps);
             if Size(y)=1 then # on edge
                 return [f0,emin,RealPart(P1Coordinate(baryc[y[1]]))];
             elif Size(y)=2 then # at vertex
                 y := First(y,i->1+i mod 3 in y);
-                return [f0,n[1+(y+1) mod 3],n[y],From(n[y])];
+                return [f0,n[y],n[1+y mod 3],To(n[y])];
             else
                 Error("There is probably a triangle with a flat angle. I'm stuck");
             fi;
         fi;
-        seen[f0!.index] := true;
         f0 := Right(emin);
     until false;
 end);
-InstallMethod(LocateInTriangulation, "(IMG) for a triangulation and point",
+InstallMethod(LocateFaceInTriangulation, "(IMG) for a triangulation and point",
         [IsSphereTriangulation, IsP1Point],
         function(t,p)
     return LOCATE@(t,fail,p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, vertex and point",
+InstallMethod(LocateFaceInTriangulation, "(IMG) for a triangulation, vertex and point",
         [IsSphereTriangulation, IsTriangulationVertex, IsP1Point],
         function(t,v,p)
     return LOCATE@(t,Left(Neighbour(v)),p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, edge and point",
+InstallMethod(LocateFaceInTriangulation, "(IMG) for a triangulation, edge and point",
         [IsSphereTriangulation, IsTriangulationEdge, IsP1Point],
         function(t,e,p)
     return LOCATE@(t,Left(e),p)[1];
 end);
-InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, face and point",
+InstallMethod(LocateFaceInTriangulation, "(IMG) for a triangulation, face and point",
         [IsSphereTriangulation, IsTriangulationFace, IsP1Point],
         function(t,f,p)
     return LOCATE@(t,f,p)[1];
+end);
+
+BindGlobal("LOCATE2@", function(t,f,p)
+    f := LOCATE@(t,f,p);
+    if Length(f)=2 then
+        return f[1];
+    elif Length(f)=3 then
+        return f[2];
+    elif Length(f)=4 then
+        return f[4];
+    fi;
+end);
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation and point",
+        [IsSphereTriangulation, IsTriangulationFace, IsP1Point],
+        LOCATE2@);
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, vertex and point",
+        [IsSphereTriangulation, IsTriangulationVertex, IsP1Point],
+        function(t,v,p)
+    return LOCATE2@(t,Left(Neighbour(v)),p);
+end);
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, edge and point",
+        [IsSphereTriangulation, IsTriangulationEdge, IsP1Point],
+        function(t,e,p)
+    return LOCATE2@(t,Left(e),p);
+end);
+InstallMethod(LocateInTriangulation, "(IMG) for a triangulation, face and point",
+        [IsSphereTriangulation, IsP1Point],
+        function(t,p)
+    return LOCATE2@(t,fail,p);
 end);
 
 BindGlobal("YRATIO@", function(a,b,c,d)
@@ -645,9 +697,17 @@ end);
 InstallMethod(ShallowCopy, [IsSphereTriangulation],
         t->WiggledTriangulation(t,fail));
 
+InstallMethod(ClosestFace, [IsTriangulationVertex], x->Left(Neighbour(x)));
+InstallMethod(ClosestFace, [IsTriangulationEdge], Left);
+InstallMethod(ClosestFace, [IsTriangulationFace], IdFunc);
+
 InstallMethod(ClosestFaces, [IsTriangulationVertex], x->List(Neighbours(x),Left));
 InstallMethod(ClosestFaces, [IsTriangulationEdge], x->[Left(x),Right(x)]);
 InstallMethod(ClosestFaces, [IsTriangulationFace], x->[x]);
+
+InstallMethod(ClosestVertex, [IsTriangulationVertex], IdFunc);
+InstallMethod(ClosestVertex, [IsTriangulationEdge], From);
+InstallMethod(ClosestVertex, [IsTriangulationFace], x->From(Neighbour(x)));
 
 InstallMethod(ClosestVertices, [IsTriangulationVertex], x->[x]);
 InstallMethod(ClosestVertices, [IsTriangulationEdge], x->[From(x),To(x)]);

@@ -47,9 +47,13 @@ DeclareOperation("Neighbours", [IsTriangulationVertex,IsTriangulationEdge]);
 DeclareOperation("Valency", [IsTriangulationVertex]);
 ##     <Mark><C>Pos</C></Mark> <Item>The P1 point where the vertex is located</Item>
 DeclareAttribute("Pos", IsTriangulationVertex);
+##     <Mark><C>ClosestVertex</C></Mark> <Item>The vertex itself</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>A list containing the vertex itself</Item>
-##     <Mark><C>ClosestFaces</C></Mark> <Item>The faces that contain the point</Item>
+##     <Mark><C>ClosestFace</C></Mark> <Item>The face left of the first neighbour</Item>
+##     <Mark><C>ClosestFaces</C></Mark> <Item>The faces that contain the vertex</Item>
+DeclareOperation("ClosestFace", [IsTriangulationObject]);
 DeclareOperation("ClosestFaces", [IsTriangulationObject]);
+DeclareOperation("ClosestVertex", [IsTriangulationObject]);
 DeclareOperation("ClosestVertices", [IsTriangulationObject]);
 ##     <Mark><C>IsFake</C></Mark> <Item>whether the vertex was added for refinement</Item>
 DeclareProperty("IsFake", IsTriangulationVertex);
@@ -80,7 +84,9 @@ DeclareAttribute("Map", IsTriangulationEdge);
 ##     <Mark><C>GroupElement</C></Mark> <Item>A group element describing "crossing through the edge
 ##       from the left to the right"</Item>
 DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable");
+##     <Mark><C>ClosestVertex</C></Mark> <Item>The from vertex</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>The two endpoints</Item>
+##     <Mark><C>ClosestFace</C></Mark> <Item>The left neighbour</Item>
 ##     <Mark><C>ClosestFaces</C></Mark> <Item>The two adjacent faces</Item>
 ##     </List>
 ##
@@ -97,9 +103,17 @@ DeclareAttribute("Radius", IsTriangulationFace);
 DeclareAttribute("Centre", IsTriangulationFace);
 ##     <Mark><C>Valency</C></Mark> <Item>The number of neighbouring edges</Item>
 DeclareOperation("Valency", [IsTriangulationFace]);
+##     <Mark><C>ClosestVertex</C></Mark> <Item>The from of the first neighbour</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>The vertices that the face contains</Item>
+##     <Mark><C>ClosestFace</C></Mark> <Item>The face itself</Item>
 ##     <Mark><C>ClosestFaces</C></Mark> <Item>A list containing the face itself</Item>
 ##     </List>
+##
+## <ManSection>
+##   <Oper Name="EdgePath" Arg="t,f0,f1"/>
+DeclareOperation("EdgePath", [IsSphereTriangulation,IsTriangulationFace,IsTriangulationFace]);
+##   <Returns>A sequence of edges taking <A>f0</A> to <A>f1</A>.</Returns>
+## </ManSection>
 ##
 DeclareOperation("Draw", [IsSphereTriangulation]);
 ##     <P/> A triangulation may be plotted with <C>Draw</C>; this requires
@@ -173,14 +187,17 @@ DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsTriangulati
 ## </ManSection>
 ##
 ## <ManSection>
+##   <Oper Name="LocateFaceInTriangulation" Arg="t,[seed,]point"/>
 ##   <Oper Name="LocateInTriangulation" Arg="t,[seed,]point"/>
+DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsP1Point]);
+DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
-##   <Returns>The face in <A>t</A> containing <A>point</A>.</Returns>
+##   <Returns>The face(t) in <A>t</A> containing <A>point</A>.</Returns>
 ##   <Description>
 ##     This command locates the face in <A>t</A> that contains <A>point</A>;
-##     or, if <A>point</A> lies on an edge or a vertex, it returns that
-##     edge or vertex.
+##     in the second form, if <A>point</A> lies on an edge or a vertex,
+##     it returns that edge or vertex.
 ##
 ##     <P/> The optional second argument specifies a starting vertex,
 ##     edge, face, or vertex index from which to start the search. Its only
