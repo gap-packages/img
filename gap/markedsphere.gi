@@ -437,7 +437,7 @@ BindGlobal("LIFTARC@", function(spider,ratmap,from,to,gamma,downcell)
             if not IsBound(subdiv[i].lifts) then
                 subdiv[i].lifts := [];
                 for p in P1PreImages(ratmap,P1Image(gamma,P1Point(subdiv[i].t))) do
-                    if ForAll(upbdry,e->SphereP1Y(P1Image(InverseP1Map(Map(e)),p))>-@.reps) then
+                    if ForAll(upbdry,e->SphereP1Y(P1Image(InverseP1Map(Map(e)),p))>-@.p1eps) then
                         Add(subdiv[i].lifts,p);
                     fi;
                 od;
@@ -562,39 +562,38 @@ MARKTIME@(2);
     # xings[edge.index] are the (left-to-right) crossings of gamma with f(edge)
     xings := [];
     
-    # toface is a list indexed by faces, containing starts and ends of lifts
+    # toface is a list indexed by faces, containing ends of lifts
     toface := [];
     for f in to do
-        if not IsBound(toface[f.cell!.index]) then toface[f.cell!.index] := []; fi;
-        Add(toface[f.cell!.index],f);
+        if not IsBound(toface[f.face!.index]) then toface[f.face!.index] := []; fi;
+        Add(toface[f.face!.index],f);
     od;
 
     for lift in from do
-        curface := lift.cell;
+        curface := lift.face;
         curedge := fail; # will keep track of edge to which we're parallel
         curpos := lift.pos;
         curelt := lift.elt;
         curtime := -@.p1eps; # just in case we're on an edge or vertex
-
+        Info(InfoIMG,4,"Ready to lift ",lift);
+        
         repeat
             getbdry();
             getxings();
             getcandidates();
+            Info(InfoIMG,4,"Lifting at time ",curtime,": pos=",curpos," in ",[curface,curedge]);
             
             c := First(candidates,c->ESSDISJOINT@(ratmap,curpos,c.pos,downcell));
-            if candidates=[] then # our last chance is a "to" on the other side
-                lift := fail;
-                for e in Neighbours(curface) do if IsBound(toface[Right(e)!.index]) then
-                    for c in toface[Right(e)!.index] do
-                        if ESSDISJOINT@(ratmap,curpos,c.pos,downcell) then
-                            curelt := curelt * GroupElement(e);
-                            curface := Right(e);
-                            lift := c;
-                            break;
-                        fi;
-                    od;
-                    if lift<>fail then break; fi;
-                fi; od;
+            if candidates=[] then # our last chance is that we're at an edge or vertex
+                for f in toface do for f in f do
+                    if INID@(curface,ClosestFaces(f.cell)) and ESSDISJOINT@(ratmap,curpos,f.pos,downcell) then
+                        curelt := curelt * Product(List(EdgePath(spider,curface,f.face),GroupElement));
+                        curface := f.face;
+                        lift := f;
+                        break;
+                    fi;
+                od; od;
+                Error("I'm stuck trying to advance, there are no candidates.");
             elif c=fail then                
                 c := [];
                 for i in candidates do
@@ -603,14 +602,18 @@ MARKTIME@(2);
                     fi;
                 od;
                 c := choosebysubdivision(curpos,curtime,nexttime,c,curbdry);
-                if not IsBound(c.e) and not IsBound(c.cell) then # got a new point in curface
+                if not IsBound(c.e) and not IsBound(c.face) then # got a new point in curface
                     curpos := c.pos;
                     curtime := nexttime;
                     continue;
                 fi;
             fi;
             
-            if IsBound(c.cell) then # "to" cell: done!
+            while not IsRecord(c) do # something went awfully wrong
+                Error("I can't move any further, but haven't reached any endpoint. Repent.");
+            od;
+            
+            if IsBound(c.face) then # "to" cell: done!
                 lift := ShallowCopy(Remove(toface[curface!.index],POSITIONID@(toface[curface!.index],c)));
                 lift.elt := curelt;
                 break;
@@ -652,11 +655,16 @@ BindGlobal("LIFTEDGE@", function(spider,ratmap,from,to,edge)
     #     elt := <gpelement>); this is a reordering of <to>,
     #     such that from[i] continues to to[i], and
     #     to[i].elt = from[i].elt * (product of edges crossed along the lift)
-    local mid;
+    local mid, r, p;
     
     Info(InfoIMG,3,"Lifting edge ",edge);
-
-    mid := List(P1PreImages(ratmap,Pos(edge)),y->rec(pos := y, cell := LocateInTriangulation(spider!.cut,y)));
+    
+    mid := [];
+    for p in P1PreImages(ratmap,Pos(edge)) do
+        r := rec(pos := p, cell := LocateInTriangulation(spider!.cut,p));
+        r.face := ClosestFace(r.cell);
+        Add(mid,r);
+    od;
     
     mid := LIFTARC@(spider,ratmap,from,mid,P1Path(Pos(Left(edge)),Pos(edge)),Left(edge));
     return LIFTARC@(spider,ratmap,mid,to,P1Path(Pos(edge),Pos(Right(edge))),Right(edge));
@@ -707,7 +715,16 @@ InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a 
     local face, f, e, r, i, j, todo, lifts, perm, state, p, s, base, idle, machine;
     
     # first lift all face centres, and choose a face containing the lift
-    face := List(src!.cut!.f,x->List(P1PreImages(ratmap,Pos(x)),y->rec(pos := y, cell := LocateInTriangulation(lift!.cut,y))));
+    face := [];
+    for f in src!.cut!.f do
+        lifts := [];
+        for p in P1PreImages(ratmap,Pos(f)) do
+            r := rec(pos := p, cell := LocateInTriangulation(lift!.cut,p));
+            r.face := ClosestFace(r.cell);
+            Add(lifts,r);
+        od;
+        Add(face,lifts);
+    od;
     
     # and choose a base point
     if poly then
