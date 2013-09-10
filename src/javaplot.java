@@ -163,7 +163,7 @@ public class javaplot extends Applet {
 	// compute f(z) = n/d without division;
 	// and f'(z) = dz, avoiding 0/0 as much as possible
 	double znorm = v.z.sqrAbs();
-	if (v.z.sqrAbs() <= 1.) {
+	if (znorm <= 1.) {
 	    n = evalpoly(v.z,num,degree);
 	    d = evalpoly(v.z,den,degree);
 	    dz *= (1.+znorm)*evalpoly(v.z,dnum,degree-1).mult(d).sub(evalpoly(v.z,dden,degree-1).mult(n)).abs();
