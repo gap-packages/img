@@ -54,7 +54,7 @@ Cdouble aa, bb, cc, lzi, lzr, sr, szi, szr, t, u, xx, xxx, yy;
 
 const Cdouble RADFAC = 3.14159265358979323846/180; // Degrees-to-radians conversion factor = pi/180
 const Cdouble lb2 = logl(2.0);	// Dummy variable to avoid re-calculating this value in loop below
-const Cdouble lo = LDBL_MIN/LDBL_EPSILON;
+const Cdouble lo = DBL_MIN/DBL_EPSILON;
 const Cdouble cosr = cos(94.0*RADFAC); // = -0.069756474
 const Cdouble sinr = sin(94.0*RADFAC); // = 0.99756405
 
@@ -72,7 +72,9 @@ yy = -xx;
 
 // Remove zeros at the origin, if any
 j = 0;
-while (op[N] == 0){
+
+// while (op[N])=0){ !!! made test skip all small zeroes, too
+while (fabsl(op[N])<1.e-19*fabsl(op[0])){
     zeror[j] = zeroi[j] = 0.0;
     N--;
     j++;
@@ -100,7 +102,7 @@ while (N >= 1){ // Main loop
     // Find the largest and smallest moduli of the coefficients
 
     moduli_max = 0.0;
-    moduli_min = LDBL_MAX;
+    moduli_min = DBL_MAX;
 
     for (i = 0; i < NN; i++){
         x = fabsl(p[i]);
@@ -116,14 +118,14 @@ while (N >= 1){ // Main loop
 
     sc = lo/moduli_min;
 
-    if (((sc <= 1.0) && (moduli_max >= 10)) || ((sc > 1.0) && (LDBL_MAX/sc >= moduli_max))){
-        sc = ((sc == 0) ? LDBL_MIN : sc);
+    if (((sc <= 1.0) && (moduli_max >= 10)) || ((sc > 1.0) && (DBL_MAX/sc >= moduli_max))){
+        sc = ((sc == 0) ? DBL_MIN : sc);
         l = (int)(logl(sc)/lb2 + 0.5);
         factor = powl(2.0, l);
         if (factor != 1.0){
             for (i = 0; i < NN; i++)   p[i] *= factor;
         } // End if (factor != 1.0)
-    } // End if (((sc <= 1.0) && (moduli_max >= 10)) || ((sc > 1.0) && (LDBL_MAX/sc >= moduli_max)))
+    } // End if (((sc <= 1.0) && (moduli_max >= 10)) || ((sc > 1.0) && (DBL_MAX/sc >= moduli_max)))
 
     // Compute lower bound on moduli of zeros
 
@@ -198,7 +200,7 @@ while (N >= 1){ // Main loop
                 K[j] = t*K[j - 1] + p[j];
             } // End for i
             K[0] = p[0];
-            zerok = ((fabsl(K[NM1]) <= fabsl(bb)*LDBL_EPSILON*10.0) ? 1 : 0);
+            zerok = ((fabsl(K[NM1]) <= fabsl(bb)*DBL_EPSILON*10.0) ? 1 : 0);
         } // End else !zerok
 
     } // End for jj
@@ -443,9 +445,9 @@ int dumFlag = 3;	// TYPE = 3 indicates the quadratic is almost a factor of K
 // Synthetic division of K by the quadratic 1, u, v
 QuadSD_ak1(N, u, v, K, qk, c, d);
 
-if (fabsl((*c)) <= (100.0*LDBL_EPSILON*fabsl(K[N - 1]))) {
-    if (fabsl((*d)) <= (100.0*LDBL_EPSILON*fabsl(K[N - 2])))   return dumFlag;
-} // End if (fabsl(c) <= (100.0*LDBL_EPSILON*fabsl(K[N - 1])))
+if (fabsl((*c)) <= (100.0*DBL_EPSILON*fabsl(K[N - 1]))) {
+    if (fabsl((*d)) <= (100.0*DBL_EPSILON*fabsl(K[N - 2])))   return dumFlag;
+} // End if (fabsl(c) <= (100.0*DBL_EPSILON*fabsl(K[N - 1])))
 
 *h = v*b;
 if (fabsl((*d)) >= fabsl((*c))){
@@ -487,7 +489,7 @@ if (tFlag == 3){	// Use unscaled form of the recurrence
 
 temp = ((tFlag == 1) ? b : a);
 
-if (fabsl(a1) > (10.0*LDBL_EPSILON*fabsl(temp))){
+if (fabsl(a1) > (10.0*DBL_EPSILON*fabsl(temp))){
     // Use scaled form of the recurrence
 
     (*a7) /= a1;
@@ -497,7 +499,7 @@ if (fabsl(a1) > (10.0*LDBL_EPSILON*fabsl(temp))){
 
     for (i = 2; i < N; i++)   K[i] = -((*a7)*qp[i - 1]) + (*a3)*qk[i - 2] + qp[i];
 
-} // End if (fabsl(a1) > (10.0*LDBL_EPSILON*fabsl(temp)))
+} // End if (fabsl(a1) > (10.0*DBL_EPSILON*fabsl(temp)))
 else {
     // If a1 is nearly zero, then use a special form of the recurrence
 
@@ -583,7 +585,7 @@ do {
     for (i = 1; i < N; i++)   ee = ee*zm + fabsl(qp[i]);
 
     ee = ee*zm + fabsl((*a) + t);
-    ee = (9.0*ee + 2.0*fabsl(t) - 7.0*(fabsl((*a) + t) + zm*fabsl((*b))))*LDBL_EPSILON;
+    ee = (9.0*ee + 2.0*fabsl(t) - 7.0*(fabsl((*a) + t) + zm*fabsl((*b))))*DBL_EPSILON;
 
     // Iteration has converged sufficiently if the polynomial value is less than 20 times this bound
 
@@ -602,7 +604,7 @@ do {
         // A cluster appears to be stalling the convergence. Five fixed shift
         // steps are taken with a u, v close to the cluster.
 
-        relstp = ((relstp < LDBL_EPSILON) ? sqrtl(LDBL_EPSILON) : sqrtl(relstp));
+        relstp = ((relstp < DBL_EPSILON) ? sqrtl(DBL_EPSILON) : sqrtl(relstp));
 
         u -= u*relstp;
         v += v*relstp;
@@ -674,12 +676,12 @@ for ( ; ; ) {
     // Iteration has converged sufficiently if the polynomial value is less than
     // 20 times this bound
 
-    if (mp <= 20.0*LDBL_EPSILON*(2.0*ee - mp)){
+    if (mp <= 20.0*DBL_EPSILON*(2.0*ee - mp)){
         *NZ = 1;
         *szr = s;
         *szi = 0.0;
         break;
-    } // End if (mp <= 20.0*LDBL_EPSILON*(2.0*ee - mp))
+    } // End if (mp <= 20.0*DBL_EPSILON*(2.0*ee - mp))
 
     j++;
 
@@ -707,22 +709,22 @@ for ( ; ; ) {
     qk[0] = kv = K[0];
     for (i = 1; i < N; i++)   qk[i] = kv = kv*s + K[i];
 
-    if (fabsl(kv) > fabsl(K[nm1])*10.0*LDBL_EPSILON){
+    if (fabsl(kv) > fabsl(K[nm1])*10.0*DBL_EPSILON){
         // Use the scaled form of the recurrence if the value of K at s is non-zero
         t = -(pv/kv);
         K[0] = qp[0];
         for (i = 1; i < N; i++)   K[i] = t*qk[i - 1] + qp[i];
-    } // End if (fabsl(kv) > fabsl(K[nm1])*10.0*LDBL_EPSILON)
-    else { // else (fabsl(kv) <= fabsl(K[nm1])*10.0*LDBL_EPSILON)
+    } // End if (fabsl(kv) > fabsl(K[nm1])*10.0*DBL_EPSILON)
+    else { // else (fabsl(kv) <= fabsl(K[nm1])*10.0*DBL_EPSILON)
         // Use unscaled form
         K[0] = 0.0;
         for (i = 1; i < N; i++)   K[i] = qk[i - 1];
-    } // End else (fabsl(kv) <= fabsl(K[nm1])*10.0*LDBL_EPSILON)
+    } // End else (fabsl(kv) <= fabsl(K[nm1])*10.0*DBL_EPSILON)
 
     kv = K[0];
     for (i = 1; i < N; i++)   kv = kv*s + K[i];
 
-    t = ((fabsl(kv) > (fabsl(K[nm1])*10.0*LDBL_EPSILON)) ? -(pv/kv) : 0.0);
+    t = ((fabsl(kv) > (fabsl(K[nm1])*10.0*DBL_EPSILON)) ? -(pv/kv) : 0.0);
 
     s += t;
 
