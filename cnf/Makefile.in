@@ -85,7 +85,10 @@ checkblocks:
 	comm -3 @@-blocks @@-in
 	@rm @@-blocks @@-in
 
-wwwdir: doc/chap0.html
+wwwdir: doc
+	git tag -f $(VERSION)
+	git push origin :refs/tags/$(VERSION)
+	git push --tags
 	cp PackageInfo.g doc/
 	cp README doc/README.img
 	(cd doc; git add *.html manual.pdf manual.css PackageInfo.g README.img; git commit -m 'New html files'; git push github master:gh-pages --force)
