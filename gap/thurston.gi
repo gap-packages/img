@@ -405,7 +405,8 @@ InstallGlobalFunction(NormalizedP1Map, function(f,M,param)
 end);
 
 # we rewrite it, because the transition entries are not in the stateset.
-# !!!! we'll have to generalize machines to have different input and output
+# !!! we'll have to generalize machines to have different input and output,
+# !!! and then use the standard "CHANGEFRMACHINEBASIS"
 BindGlobal("MYCHANGEFRMACHINEBASIS@", function(M,p)
     local trans, i, d, newM;
     d := Size(AlphabetOfFRObject(M));
@@ -420,10 +421,41 @@ BindGlobal("MYCHANGEFRMACHINEBASIS@", function(M,p)
     return newM;
 end);
 
+BindGlobal("MAPATTRACTINGCYCLES@", function(map,points)
+    local cycle, period, len, next, i, p, pp, periodic, critical;
+    
+    cycle := [];
+    next := [];
+    period := [];
+    
+    for i in [1..Length(points)] do
+        critical := false; periodic := false;
+        p := points[i]; pp := p;
+        repeat
+            pp := ClosestP1Point(points,P1Image(map,pp));
+            pp := ClosestP1Point(points,P1Image(map,pp));
+            p := ClosestP1Point(points,P1Image(map,p));
+        until p=pp;
+        len := 0;
+        repeat
+            len := len+1;
+            periodic := periodic or points[i]=p;
+            critical := critical or P1MapScaling(map,p)<@.p1eps;
+            p := ClosestP1Point(points,P1Image(map,p));
+        until p=pp;
+        if critical and periodic then
+            Add(cycle,points[i]);
+            Add(next,Position(points,ClosestP1Point(points,P1Image(map,points[i])))-1);
+            Add(period,len);
+        fi;
+    od;
+    return TransposedMat([cycle,next,period]);
+end);
+
 InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
-    local old_downsphere, downsphere, n, deg, model,
+    local old_downsphere, old_covering, downsphere, n, deg, model,
           f, mobius, Mf, Mmobius, hom_mobius, match, v, i, j,
           dist, obstruction, lifts, sublifts, fast, poly,
           upsphere, upmodel, uporder;
@@ -444,6 +476,8 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         fi;
     fi;    
     
+    # !!! extra check if euclidean orbispace: [2,4,4], [3,3,3], [2,3,6], [2,2,2,2]
+    
     # create downsphere on +/- equidistributed points on Greenwich meridian.
     v := [];
     for i in [1..n] do
@@ -460,15 +494,15 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
     fi;
     
     lifts := fail;
-    f := fail; # in the beginning, we don't know them
     fast := false;
-
+    old_covering := fail;
+    
     repeat
         old_downsphere := downsphere;
         # find a rational map that has the right critical values
-        f := BranchedCoveringByMonodromy(downsphere,Output(M)); #!!! use f, lifts
-        lifts := f.points;
-        f := f.map;
+        old_covering := BranchedCoveringByMonodromy(downsphere,Output(M),old_covering);
+        lifts := old_covering.points;
+        f := old_covering.map;
         Info(InfoIMG,3,"1: found rational map ",f," on vertices ",lifts);
 
         if fast then # just get points closest to those in downsphere t
@@ -583,7 +617,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
     SetCorrespondence(M,v);
     
     downsphere!.map := f;
-    downsphere!.cycle := ATTRACTINGCYCLES@(POSTCRITICALPOINTS@(f));
+    downsphere!.cycle := MAPATTRACTINGCYCLES@(f,VerticesOfMarkedSphere(downsphere));
 
     return rec(map := f, machine := M, markedsphere := downsphere);
 end);

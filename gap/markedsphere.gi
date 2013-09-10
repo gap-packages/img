@@ -356,7 +356,7 @@ InstallGlobalFunction(PostCriticalMachine, function(f)
     return machine;
 end);
 
-BindGlobal("ATTRACTINGCYCLES@", function(pcdata)
+BindGlobal("PCDATAATTRACTINGCYCLES@", function(pcdata)
     local cycle, period, len, next, i, j, jj, periodic, critical;
     
     cycle := [];
@@ -862,7 +862,7 @@ InstallMethod(SphereMachine, "(IMG) for a rational function",
 
     spider := NewMarkedSphere(pcp);
     spider!.map := f;
-    spider!.cycle := ATTRACTINGCYCLES@(pcdata);
+    spider!.cycle := PCDATAATTRACTINGCYCLES@(pcdata);
 
     machine := SphereMachineOfBranchedCovering(spider,spider,f,poly);
     SetMarkedSphere(machine,spider);
