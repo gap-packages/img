@@ -338,6 +338,12 @@ InstallMethod(MatchP1Points, "(IMG) for two lists of points",
     return MatchP1Points(ptA,ptB,2*@.ro);
 end);
 
+InstallMethod(ClosestP1Point, "(IMG) for a point and a list of points",
+        [IsP1PointList,IsP1Point],
+        function(ptlist,pt)
+    return ptlist[MatchP1Points([pt],[ptlist],2*@.ro)[1]];
+end);
+
 InstallMethod(XRatio, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1Point,IsP1Point],
         function(p1,p2,p3,p4)
     p1 := C2_P1POINT@(p1);

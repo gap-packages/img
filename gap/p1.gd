@@ -165,6 +165,12 @@ DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointCollColl]);
 ## </ManSection>
 ##
 ## <ManSection>
+##   <Oper Name="ClosestP1Point" Arg="p1points, p1point"/>
+DeclareOperation("ClosestP1Point",[IsP1PointList,IsP1Point]);
+##   <Returns>The point in <A>p1points</A> closest to <A>p1point</A>.</Returns>
+## </ManSection>
+##
+## <ManSection>
 ##   <Filt Name="IsP1Map"/>
 DeclareSynonym("IsP1Map",IsUnivariateRationalFunction and IsFloatRationalFunction);
 DeclareCategory("IsIEEE754P1Map",IsP1Map);
@@ -334,6 +340,12 @@ DeclareOperation("PreImagesElm",[IsP1Map,IsP1Point]);
 DeclareAttribute("Primitive",IsP1Map);
 #DeclareAttribute("Derivative",IsP1Map);
 ##   <Returns>The [anti]derivative of the rational map <A>map</A>.</Returns>
+## </ManSection>
+##
+## <ManSection>
+##   <Oper Name="P1MapScaling" Arg="map, p1point"/>
+DeclareOperation("P1MapScaling",[IsP1Map,IsP1Point]);
+##   <Returns>The scaling factor from <A>point</A> to <A>map(point)</A>.</Returns>
 ## </ManSection>
 ##
 ## <ManSection>

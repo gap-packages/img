@@ -606,6 +606,15 @@ static ldcomplex eval_d_poly (int deg, ldcomplex *coeff, ldcomplex x)
   return v;
 }
 
+static ldcomplex eval_d_ylop (int deg, ldcomplex *coeff, ldcomplex x)
+{ /* evaluate x^(deg-1)*coeff' at 1/x */
+  ldcomplex v = coeff[1];
+  int i;
+  for (i = 2; i <= deg; i++)
+    v = v*x + i*coeff[i];
+  return v;
+}
+
 static Obj CLEANUPP1MAP(Obj self, Obj map, Obj objprec)
 {
   int deg = p1map_degree(map), i, j;
@@ -881,6 +890,25 @@ static Obj P1DERIVATIVE(Obj self, Obj map)
   }
 }
 
+static Obj P1MAPSCALING(Obj self, Obj map, Obj objp)
+{
+  p1point p = GET_P1POINT(objp);
+  int deg = p1map_degree(map);
+  ldcomplex *numer = p1map_numer(map), *denom = p1map_denom(map), diff;
+
+  if (cisfinite(p)) {
+    ldcomplex d = eval_poly(deg, denom, p);
+    ldcomplex n = eval_poly(deg, numer, p);
+    diff = eval_d_poly(deg, numer, p)*d - eval_d_poly(deg, denom, p)*n;
+    diff *= (1.0 + cnorm(p));
+    diff /= (cnorm(d) + cnorm(n));
+  } else {
+    diff = numer[deg]*denom[deg-1] - numer[deg-1]*denom[deg];
+    diff /= (cnorm(numer[deg]) + cnorm(denom[deg]));
+  }
+  return NEW_FLOAT(cabsl(diff));
+}
+
 static Obj P1NUMERATOR(Obj self, Obj map)
 {
   int deg = p1map_degree(map), i;
@@ -1021,6 +1049,7 @@ static Obj P1INTERSECT(Obj self, Obj gamma, Obj ratmap, Obj delta)
   ldouble rpoly[2*deg+1]; /* rpoly = imag(poly) */
   for (i = 0; i <= 2*deg; i++)
     rpoly[i] = cimagl(poly[i]);
+
   int numroots = roots_rpoly (2*deg, rpoly, zero);
   if (numroots < 0)
     return Fail;
@@ -1133,6 +1162,7 @@ static StructGVarFunc GVarFuncs[] = {
   { "P1MAPCONJUGATE", 1, "p1map", P1CONJUGATE, "p1.c:P1CONJUGATE" },
   { "P1MAPPRIMITIVE", 1, "p1map", P1PRIMITIVE, "p1.c:P1PRIMITIVE" },
   { "P1MAPDERIVATIVE", 1, "p1map", P1DERIVATIVE, "p1.c:P1DERIVATIVE" },
+  { "P1MAPSCALING", 2, "p1map, p1point", P1MAPSCALING, "p1.c:P1MAPSCALING" },
   { "P1MAPNUMERATOR", 1, "p1map", P1NUMERATOR, "p1.c:P1NUMERATOR" },
   { "P1MAPDENOMINATOR", 1, "p1map", P1DENOMINATOR, "p1.c:P1DENOMINATOR" },
   { "P1MAP_SUM", 2, "p1map,p1map", P1_SUM, "p1.c:P1_SUM" },

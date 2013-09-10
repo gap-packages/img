@@ -197,6 +197,8 @@ InstallMethod(Primitive, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPPRIMITIVE)
 
 InstallMethod(Derivative, "(IMG) for a P1 map", [IsIEEE754P1Map], 2, P1MAPDERIVATIVE);
 
+InstallMethod(P1MapScaling, "(IMG) for a P1 map and a point", [IsIEEE754P1Map,IsIEEE754P1Point], P1MAPSCALING);
+
 InstallMethod(NumeratorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPNUMERATOR);
 
 InstallMethod(DenominatorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPDENOMINATOR);
