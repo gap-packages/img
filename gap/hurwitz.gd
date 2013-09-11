@@ -33,6 +33,10 @@ DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorph
 ##     <C>pos</C> and <C>to</C> giving, for each point in the source of
 ##     <C>map</C>, the local degree and the vertex in <A>sphere</A> it maps to.
 ##
+##     <P/> If a third argument is supplied, it should be a record similar to
+##     the return value of the command. If the result is close enough to
+##     the supplied record, it will be used to speed up the calculation.
+##
 ##     <P/> This function requires external programs in the subdirectory
 ##     "hurwitz" to have been compiled.
 ## <Example><![CDATA[

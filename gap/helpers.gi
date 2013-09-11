@@ -75,7 +75,7 @@ BindGlobal("MAKEP1EPS@", function()
         @.obst := 10^-2*@.ro; # points that close are suspected to form an obstruction
     fi;
     @.fast := 10^-1*@.ro; # if spider moved that little, just wiggle it
-    @.ratprec := @.reps^(3/4); # quality to achieve in rational fct.
+    @.ratprec := @.reps^(1/2); # minimal quality to achieve in rational fct.
     @.hurwitzmesh := 1/2*@.ro; # mesh size in the computation of hurwitz maps
 end);
 

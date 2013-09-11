@@ -382,16 +382,19 @@ BindGlobal("CHECKTRIANGULATION@", function(t)
 end);
 
 BindGlobal("FIXDELAUNAY@", function(t)
-    local idle, e;
+    local idle, e, fixes;
+    fixes := 0;
     repeat
         idle := true;
         for e in t!.e do
             if YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.rz then
                 FLIPEDGE@(e,true);
+                fixes := fixes + 1;
                 idle := false;
             fi;
         od;
     until idle;
+    return fixes;
 end);
 
 BindGlobal("ADDTOTRIANGULATION@", function(t,f0,p,delaunay)
@@ -690,7 +693,7 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
     fi;
 
     r := Objectify(TYPE_TRIANGULATION, r);
-    FIXDELAUNAY@(r);
+    r!.flips := FIXDELAUNAY@(r);
     return r;
 end);
 

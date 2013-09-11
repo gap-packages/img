@@ -184,15 +184,23 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
     od;
 end);
 
-BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
-    # "lift" is an approximate lift of "spider". refine its positions.
+BindGlobal("OPTIMIZELAYOUT@", function(cv, cp)
+    # "vertices" are critical values. We optimize the critical points above
+    # them so that there exists a map with these critical points / values
     
     # find Möbius transformation putting the most ramified c.v. at 0,infty,
     # and the next most ramified c.v. at 1;
     # and find another Möbius transformation so that 0,infty,1 are fixed,
     # all of maximal order.
-    local cp, max, l0, l1, linf, pre, post, x, y, numzero, numcv,
-          sin, sout, stdin, stdout, data, cv, i, printp1, scanp1;
+    
+    # return then a record with fields:
+    # degree, the degree
+    # zeros, the zeros, as a list of rec(degree := <deg>, pos := <p1 point>)
+    # poles, the poles, "
+    # cp, the critical points, as a list of rec(degree, pos, to := vertices[...])
+    # post, the Möbius transformation putting the ramification values at 0,1,inf
+    local cpcv, max, l0, l1, linf, pre, post, x, y, numzero, numcp, cvindex,
+          sin, sout, stdin, stdout, data, i, printp1, scanp1;
     
     printp1 := function(stream,z)
         z := P1Coordinate(z);
@@ -206,46 +214,48 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     
     sin := "";
     stdin := OutputTextString(sin,false);
-
-    cp := Filtered(lift!.v,x->IsBound(x!.degree) and IsBound(x!.below));
-    max := Maximum(List(cp,x->x!.degree));
-    linf := First(cp,x->x!.degree=max);
-    max := Maximum(List(Filtered(cp,x->x!.below<>linf!.below),x->x!.degree));
-    l0 := First(cp,x->x!.below<>linf!.below and x!.degree=max);
-    max := Maximum(List(Filtered(cp,x->x!.below<>linf!.below and x!.below<>l0!.below),x->x!.degree));
-    l1 := First(cp,x->x!.below<>linf!.below and x!.below<>l0!.below and x!.degree=max);
     
-    post := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->Pos(x!.below))));
-    pre := InverseP1Map(MoebiusMap(List([l0,l1,linf],Pos)));
+    cpcv := Concatenation(List([1..Length(cv)],i->List(cp[i],r->[r,i])));
+    max := Maximum(List(cpcv,x->x[1][2]));
+    linf := First(cpcv,x->x[1][2]=max);
+    max := Maximum(List(Filtered(cpcv,x->x[2]<>linf[2]),x->x[1][2]));
+    l0 := First(cpcv,x->x[2]<>linf[2] and x[1][2]=max);
+    max := Maximum(List(Filtered(cpcv,x->x[2]<>linf[2] and x[2]<>l0[2]),x->x[1][2]));
+    l1 := First(cpcv,x->x[2]<>linf[2] and x[2]<>l0[2] and x[1][2]=max);
     
-    PrintTo(stdin,"DEGREE ",(Sum(cp,x->x!.degree-1)+2)/2,"\n");
-    numzero := Number(cp,x->x!.below=l0!.below or x!.below=linf!.below)-2;
+    post := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->cv[x[2]])));
+    pre := InverseP1Map(MoebiusMap(List([l0,l1,linf],x->x[1][1])));
+    
+    PrintTo(stdin,"DEGREE ",(Sum(cpcv,x->x[1][2]-1)+2)/2,"\n");
+    numzero := Length(cp[l0[2]])+Length(cp[linf[2]])-2;
     PrintTo(stdin,"ZEROS/POLES ",numzero,"\n");
-    for x in cp do
-        if (x!.below=l0!.below or x!.below=linf!.below) and x<>l0 and x<>linf then
-            if x!.below=l0!.below then
-                PrintTo(stdin,x!.degree); # zero
-            else
-                PrintTo(stdin,-x!.degree); # pole
-            fi;
-            PrintTo(stdin," "); printp1(stdin,Pos(x)^pre); PrintTo(stdin,"\n");
+    for x in cp[l0[2]] do # zero
+        if x<>l0[1] then
+            PrintTo(stdin,x[2]," ");
+            printp1(stdin,x[1]^pre); PrintTo(stdin,"\n");
         fi;
     od;
-    PrintTo(stdin,l0!.degree,"\n");
-    numcv := Number(cp,x->x!.below<>l0!.below and x!.below<>linf!.below and x!.degree>1)-1;
-    cv := [];
-    PrintTo(stdin,"CRITICAL ",numcv,"\n");
-    for x in cp do
-        if x!.below<>l0!.below and x!.below<>linf!.below and x!.degree>1 and x<>l1 then
-            PrintTo(stdin,x!.degree);
-            PrintTo(stdin," "); printp1(stdin,Pos(x)^pre);
-            PrintTo(stdin," "); printp1(stdin,Pos(x!.below)^post);
+    for x in cp[linf[2]] do # pole
+        if x<>linf[1] then
+            PrintTo(stdin,-x[2]," ");
+            printp1(stdin,x[1]^pre); PrintTo(stdin,"\n");
+        fi;
+    od;
+    PrintTo(stdin,l0[1][2],"\n");
+    numcp := Number(cpcv,x->x[2]<>l0[2] and x[2]<>linf[2] and x[1][2]>1)-1;
+    PrintTo(stdin,"CRITICAL ",numcp,"\n");
+    cvindex := [];
+    for x in cpcv do
+        if x[2]<>l0[2] and x[2]<>linf[2] and x[1][2]>1 and x<>l1 then
+            PrintTo(stdin,x[1][2]);
+            PrintTo(stdin," "); printp1(stdin,x[1][1]^pre);
+            PrintTo(stdin," "); printp1(stdin,cv[x[2]]^post);
             PrintTo(stdin,"\n");
-            Add(cv,x!.below);
+            Add(cvindex,x[2]);
         fi;
     od;
-    Add(cv,l1!.below);
-    PrintTo(stdin,l1!.degree,"\n");
+    Add(cvindex,l1[2]);
+    PrintTo(stdin,l1[1][2],"\n");
     PrintTo(stdin,"END\n");
     CloseStream(stdin);
     
@@ -253,12 +263,14 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
     sout := "";
     stdout := OutputTextString(sout,false);
     
-    Process(DirectoryCurrent(),Filename(DirectoriesPackagePrograms("img"),"hsolve"),stdin,stdout,[]);
+    if Process(DirectoryCurrent(),Filename(DirectoriesPackagePrograms("img"),"hsolve"),stdin,stdout,[])<>0 then
+        return fail;
+    fi;
     CloseStream(stdin);
     CloseStream(stdout);
     
     sout := SplitString(sout,WHITESPACE);
-    Assert(0,sout[1]="DEGREE" and Int(sout[2])=(Sum(cp,x->x!.degree-1)+2)/2);
+    Assert(0,sout[1]="DEGREE" and Int(sout[2])=(Sum(cpcv,x->x[1][2]-1)+2)/2);
     data := rec(degree := Int(sout[2]),
                 zeros := [],
                 poles := [],
@@ -273,26 +285,26 @@ BindGlobal("OPTIMIZELAYOUT@", function(spider,lift)
             y := scanp1(sout[6+2*i]);
         fi;
         if x>0 then
-            Add(data.zeros,rec(degree := x, pos := y, to := l0!.below));
+            Add(data.zeros,rec(degree := x, pos := y, to := l0[2]));
         else
-            Add(data.poles,rec(degree := -x, pos := y, to := linf!.below));
+            Add(data.poles,rec(degree := -x, pos := y, to := linf[2]));
         fi;
     od;
-    Assert(0,sout[2*numzero+6]="CRITICAL" and Int(sout[2*numzero+7])=numcv);
-    for i in [0..numcv] do
+    Assert(0,sout[2*numzero+6]="CRITICAL" and Int(sout[2*numzero+7])=numcp);
+    for i in [0..numcp] do
         x := Int(sout[2*numzero+8+3*i]);
-        if i=numcv then
+        if i=numcp then
             y := P1one;
         else
             y := scanp1(sout[2*numzero+9+3*i]);
         fi;
-        Add(data.cp,rec(degree := x, pos := y, to := cv[i+1]));
+        Add(data.cp,rec(degree := x, pos := y, to := cvindex[i+1]));
     od;
-    if numcv >= 0 then
-        Assert(0,sout[2*numzero+3*numcv+9]="END");
+    if numcp >= 0 then
+        Assert(0,sout[2*numzero+3*numcp+9]="END");
     fi;
-    Add(data.poles,rec(degree := 2*data.degree-1-Sum(Concatenation(data.cp,data.zeros,data.poles),x->x.degree-1), pos := P1infinity, to := linf!.below));
-    
+    Add(data.poles,rec(degree := 2*data.degree-1-Sum(Concatenation(data.cp,data.zeros,data.poles),x->x.degree-1), pos := P1infinity, to := linf[2]));
+
     return data;
 end);
 
@@ -399,6 +411,7 @@ BindGlobal("TRICRITICAL@", function(deg,perm)
     return data;
 end);
 
+# !!! not used anymore
 BindGlobal("QUADRICRITICAL@", function(perm,values)
     local c, w, f, m, id, aut, z;
     
@@ -414,20 +427,19 @@ BindGlobal("QUADRICRITICAL@", function(perm,values)
     
     # find appropriate c
     f := List(c,c->P1z^2*(c*(P1z-1)+2-c)/(c*(P1z+1)-c));
-    m := List(f,FRMachine);
+    m := List(f,SphereMachine);
     
     f := CompositionP1Map(aut,f[First([1..Length(c)],i->Output(m[i],id[1])=Output(m[i],id[2]))]);
     
     return [f, [P1zero, P1one, P1infinity, P1Point(c*(c-2)/(c^2-1))]];
 end);
 
-InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphism",
-        [IsMarkedSphere,IsGroupHomomorphism],
-        function(spider,monodromy)
+DeclareGlobalFunction("BRANCHEDCOVERINGBYMONODROMY@");
+InstallGlobalFunction(BRANCHEDCOVERINGBYMONODROMY@, function(spider,monodromy,hint)
     # compute the critical points, zeros and poles of a map whose
     # critical values are vertices of "spider", with monodromy given
     # by the homomorphism "monodromy".
-    local t, d, g, gens, cv, values, data, i, j, k, dist, mindist, minpos, new, v, w;
+    local t, d, g, gens, cv, values, data, i, j, k, dist, mindist, minpos, new, v, w, layout;
 
     g := Source(monodromy);
     gens := GeneratorsOfGroup(g);
@@ -451,31 +463,54 @@ InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphis
                         points := []);
             data.points{cv} := t.points;
         fi;
-#    elif d=3 then # quadricritical, but degree 3
+# !!! not really useful, the generic code works well
+#   elif d=3 then # quadricritical, but degree 3
 #        p := QUADRICRITICAL@(perm{cv},values{cv});
     fi;
-
+    
     if data=fail then # general lifting procedure
-        t := LIFTBYMONODROMY@(spider,monodromy,d);
-        REFINETRIANGULATION@(t,@.hurwitzmesh);
-        LAYOUTTRIANGULATION@(t);
-        t := OPTIMIZELAYOUT@(spider,t);
-        data := rec(map := CompositionP1Map(t.post,P1MapByZerosPoles(Concatenation(List(t.zeros,x->ListWithIdenticalEntries(x.degree,x.pos))),
-                        Concatenation(List(t.poles,x->ListWithIdenticalEntries(x.degree,x.pos))),
+        repeat # try first to use the hint
+            if hint=fail then
+                t := LIFTBYMONODROMY@(spider,monodromy,d);
+                REFINETRIANGULATION@(t,@.hurwitzmesh);
+                LAYOUTTRIANGULATION@(t);
+                hint := List(VerticesOfMarkedSphere(spider),p->[]);
+                for v in t!.v do
+                    if IsBound(v!.degree) and IsBound(v!.below) and not IsFake(v!.below) then
+                        Add(hint[v!.below!.index], [Pos(v),v!.degree]);
+                    fi;
+                od;
+            else
+                t := fail;
+                hint := hint.points;
+            fi;
+            layout := OPTIMIZELAYOUT@(VerticesOfMarkedSphere(spider),hint);
+            if t=fail then # check solution
+                for v in Concatenation(layout.cp,layout.zeros,layout.poles) do
+                    if ForAll(hint[v.to],x->P1Distance(x[1],v.pos)>@.fast) then
+                        layout := fail; # moved too far
+                        break;
+                    fi;
+                od;
+                hint := fail; # if we have to restart, discard the hint.
+            elif layout=fail then # panic
+                Error("Could not apply Newton's method to optimize the positions of the critical points.");
+            fi;
+        until layout<>fail;
+        
+        data := rec(map := CompositionP1Map(layout.post,P1MapByZerosPoles(Concatenation(List(layout.zeros,x->ListWithIdenticalEntries(x.degree,x.pos))),
+                        Concatenation(List(layout.poles,x->ListWithIdenticalEntries(x.degree,x.pos))),
                      
                         P1one,P1one)),
-                    points := []);
-        for v in Concatenation(t.cp,t.poles,t.zeros) do
-            i := v.to!.index;
-            if not IsBound(data.points[i]) then data.points[i] := []; fi;
-            Add(data.points[i], [v.pos,v.degree]);
+                    points := List(VerticesOfMarkedSphere(spider),x->[]));
+        for v in Concatenation(layout.cp,layout.poles,layout.zeros) do
+            Add(data.points[v.to], [v.pos,v.degree]);
         od;
     fi;
 
     for v in spider!.cut!.v do
         if IsFake(v) then continue; fi;
         i := v!.index;
-        if not IsBound(data.points[i]) then data.points[i] := []; fi;
         if Sum(data.points[i],x->x[2])=d then continue; fi;
 
         new := P1PreImages(data.map,Pos(v));
@@ -494,6 +529,27 @@ InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphis
     od;
 
     return data;
+end);
+
+InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider and a homomorphism",
+        [IsMarkedSphere,IsGroupHomomorphism],
+        function(spider,monodromy)
+    return BRANCHEDCOVERINGBYMONODROMY@(spider,monodromy,fail);
+end);
+InstallOtherMethod(BranchedCoveringByMonodromy, "(IMG) for a spider, a homomorphism, and fail",
+        [IsMarkedSphere,IsGroupHomomorphism,IsBool],
+        function(spider,monodromy,hint)
+    if hint=fail then
+        return BRANCHEDCOVERINGBYMONODROMY@(spider,monodromy,fail);
+    else
+        TryNextMethod();
+    fi;
+end);
+
+InstallMethod(BranchedCoveringByMonodromy, "(IMG) for a spider, a homomorphism, and a hint",
+        [IsMarkedSphere,IsGroupHomomorphism,IsRecord],
+        function(spider,monodromy,hint)
+    return BRANCHEDCOVERINGBYMONODROMY@(spider,monodromy,hint);
 end);
 
 InstallMethod(DessinByPermutations, "(IMG) for three permutations",

@@ -457,7 +457,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         function(M)
     local old_downsphere, old_covering, downsphere, n, deg, model,
           f, mobius, Mf, Mmobius, hom_mobius, match, v, i, j,
-          dist, obstruction, lifts, sublifts, fast, poly,
+          dist, old_dist, obstruction, lifts, sublifts, fast, do_hurwitz, poly,
           upsphere, upmodel, uporder;
 
     model := StateSet(M);
@@ -496,15 +496,21 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
     lifts := fail;
     fast := false;
     old_covering := fail;
+    do_hurwitz := true; # whether we should compute the Hurwitz map
+    dist := @.rz;
     
     repeat
-        old_downsphere := downsphere;
-        # find a rational map that has the right critical values
-        old_covering := BranchedCoveringByMonodromy(downsphere,Output(M),old_covering);
-        lifts := old_covering.points;
-        f := old_covering.map;
-        Info(InfoIMG,3,"1: found rational map ",f," on vertices ",lifts);
-
+        if do_hurwitz then
+            old_dist := dist;
+            old_downsphere := downsphere;
+            # find a rational map that has the right critical values
+            old_covering := BranchedCoveringByMonodromy(downsphere,Output(M),old_covering);
+            lifts := old_covering.points;
+            f := old_covering.map;
+            Info(InfoIMG,3,"1: found rational map ",f," on vertices ",lifts);
+            do_hurwitz := false;
+        fi;
+        
         if fast then # just get points closest to those in downsphere t
             v := List(Concatenation(lifts),x->x[1]); # just keep the points
             match := MatchP1Points(sublifts,List(sublifts,x->v));
@@ -530,7 +536,9 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
             
             # find a bijection between the alphabets of <Mf> and <M>
             match := MATCHPERMS@(M,Mf!.output);
-            if match=fail then return fail; fi;
+            if match=fail then
+                Error("Couldn't match the permutations. This looks like a bug.");
+            fi;
             
             Mf := MYCHANGEFRMACHINEBASIS@(Mf,match);
             Info(InfoIMG,3,"4: alphabet permutation ",match);
@@ -562,7 +570,12 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
             fi;
             # just wiggle spider around
             downsphere := WiggledMarkedSphere(downsphere,v);
-            #!!! if Delaunay triangulation condition fails after wiggling, go back to slow mode
+            if downsphere!.cut!.flips>0 then # this variable stores the
+                # number of triangles we had to flip
+                Info(InfoIMG,3,"7: Delaunay condition required ",downsphere!.cut!.flips,">0 flips during wiggling; back to slow mode");
+                fast := false;
+                continue; # restart
+            fi;
         else
             downsphere := NewMarkedSphere(v,model);
             Mmobius := SphereMachineOfBranchedCovering(downsphere,upsphere,mobius,poly);
@@ -580,18 +593,18 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         dist := DistanceMarkedSpheres(downsphere,old_downsphere,fast);
         Info(InfoIMG,2,"Spider moved ",dist," steps; feet=",VerticesOfMarkedSphere(downsphere)," marking=",downsphere!.marking);
 
-        if dist<@.ratprec then
+        if dist<@.ratprec and dist>=old_dist then
             if fast then # force one last run with the full algorithm
                 fast := false;
+                old_dist := @.rz;
                 continue;
             fi;
             f := CleanedP1Map(CompositionP1Map(f,InverseP1Map(mobius)),@.p1eps);
             break;
-        elif dist<@.fast then
-            fast := true;
-        else
-            fast := false;
         fi;
+        
+        fast := dist<@.fast;
+
         if fast then
             obstruction := fail; # assume no obstruction, since we converge
         else
@@ -600,6 +613,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         if obstruction<>fail then
             return obstruction;
         fi;
+        do_hurwitz := true; # flag for new iteration
     until false;
     
     Info(InfoIMG,2,"Spider converged");
