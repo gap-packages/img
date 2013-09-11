@@ -434,8 +434,7 @@ BindGlobal("QUADRICRITICAL@", function(perm,values)
     return [f, [P1zero, P1one, P1infinity, P1Point(c*(c-2)/(c^2-1))]];
 end);
 
-DeclareGlobalFunction("BRANCHEDCOVERINGBYMONODROMY@");
-InstallGlobalFunction(BRANCHEDCOVERINGBYMONODROMY@, function(spider,monodromy,hint)
+BindGlobal("BRANCHEDCOVERINGBYMONODROMY@", function(spider,monodromy,hint)
     # compute the critical points, zeros and poles of a map whose
     # critical values are vertices of "spider", with monodromy given
     # by the homomorphism "monodromy".
@@ -511,6 +510,7 @@ InstallGlobalFunction(BRANCHEDCOVERINGBYMONODROMY@, function(spider,monodromy,hi
     for v in spider!.cut!.v do
         if IsFake(v) then continue; fi;
         i := v!.index;
+        if not IsBound(data.points[i]) then data.points[i] := []; fi;
         if Sum(data.points[i],x->x[2])=d then continue; fi;
 
         new := P1PreImages(data.map,Pos(v));
