@@ -585,15 +585,21 @@ MARKTIME@(2);
             
             c := First(candidates,c->ESSDISJOINT@(ratmap,curpos,c.pos,downcell));
             if candidates=[] then # our last chance is that we're at an edge or vertex
-                for f in toface do for f in f do
-                    if INID@(curface,ClosestFaces(f.cell)) and ESSDISJOINT@(ratmap,curpos,f.pos,downcell) then
-                        curelt := curelt * Product(List(EdgePath(spider,curface,f.face),GroupElement));
-                        curface := f.face;
-                        lift := f;
-                        break;
-                    fi;
-                od; od;
-                Error("I'm stuck trying to advance, there are no candidates.");
+                Info(InfoIMG,4,"Searching for endgame move to target cell");
+                for f in toface do
+                    for f in f do
+                        if INID@(curface,ClosestFaces(f.cell)) and ESSDISJOINT@(ratmap,curpos,f.pos,downcell) then
+                            curelt := curelt * Product(List(EdgePath(spider!.cut,curface,f.face),GroupElement));
+                            curface := f.face;
+                            c := f; # signal done
+                            break;
+                        fi;
+                    od;
+                    if c<>fail then break; fi; # "goto done"
+                od;
+                if c=fail then
+                    Error("I'm stuck trying to advance, there are no candidates.");
+                fi;
             elif c=fail then                
                 c := [];
                 for i in candidates do
@@ -621,7 +627,7 @@ MARKTIME@(2);
             
             # if we're parallel to an edge, maybe move back to the previous cell
             if not IsIdenticalObj(Left(c.e),curface) then
-                Error("This code is probably not necessary @@");
+                Error("This code is probably not necessary. Please contact laurent.bartholdi@gmail.com if it gets triggered");
                 curelt := curelt / GroupElement(c.e);
             fi;
             
