@@ -11,10 +11,10 @@
 #############################################################################
 
 ## <#GAPDoc Label="Hurwitz">
-## <ManSection>
-##   <Oper Name="BranchedCoveringByMonodromy" Arg="sphere, monodromy [, last]"/>
 DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism]);
 DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism,IsRecord]);
+## <ManSection>
+##   <Oper Name="BranchedCoveringByMonodromy" Arg="sphere, monodromy [, last]"/>
 ##   <Returns>A record describing a Hurwitz map.</Returns>
 ##   <Description>
 ##     If <A>sphere</A> is a marked sphere, marked by a group <M>G</M>, and
@@ -151,11 +151,11 @@ DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorph
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="DessinByPermutations" Arg="s0,s1[,sinf]"/>
 DeclareOperation("DessinByPermutations", [IsPerm,IsPerm]);
 DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
-##   <Returns>A rational map (see <Ref Oper="HurwitzMap"/>) with monodromies <A>s,t</A>.</Returns>
+## <ManSection>
+##   <Oper Name="DessinByPermutations" Arg="s0,s1[,sinf]"/>
+##   <Returns>A rational map (see <Ref Oper="BranchedCoveringByMonodromy"/>) with monodromies <A>s,t</A>.</Returns>
 ##   <Description>
 ##     This command computes the Hurwitz map associated with the spanning tree
 ##     <M>[0,1]\cup[1,\infty]</M>; the monodromy representation is by
@@ -208,7 +208,7 @@ DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
 ## gap> autm22 := Group((1,2,3,4,5,6,7,8,9,10,11)(12,13,14,15,16,17,18,19,20,21,22),
 ##                      (1,9,3,2)(4,8,17,21)(5,20,19,6)(12,22,16,13)(7,18)(10,11)(14,15),
 ##                      (3,8)(4,20)(6,18)(7,17)(9,11)(13,15)(16,21));;
-## gap> IsomorphismGroups(DerivedSubgroup(autm22),MathieuGroup(22))<>fail;
+## gap> IsomorphismGroups(DerivedSubgroup(autm22),MathieuGroup(22))&lt;&gt;fail;
 ## true
 ## gap> DessinByPermutations(autm22.1,autm22.2,autm22.3);
 ## ...
@@ -216,7 +216,7 @@ DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);
 ## gap> m24_ET := Group((1,2,3)(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24),
 ##                     (1,7,5)(2,4,23)(3,22,8)(9,21,19)(10,18,12)(13,17,15),
 ##                     (1,4)(2,22)(3,7)(5,6)(8,21)(9,18)(10,11)(12,17)(13,14)(15,16)(19,20)(23,24));;
-## gap> IsomorphismGroups(m24_ET,MathieuGroup(24))<>fail;
+## gap> IsomorphismGroups(m24_ET,MathieuGroup(24))&lt;&gt;fail;
 ## true
 ## gap> @IMG.hurwitzmesh := 0.4;; # need finer precision
 ## gap> DessinByPermutations(m24_ET.1,m24_ET.2,m24_ET.3);

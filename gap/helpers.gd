@@ -12,9 +12,9 @@
 #############################################################################
 
 ## <#GAPDoc Label="Helpers">
+DeclareGlobalFunction("Mandel");
 ## <ManSection>
 ##   <Func Name="Mandel" Arg="[map]"/>
-DeclareGlobalFunction("Mandel");
 ##   <Returns>Calls the external program <File>mandel</File>.</Returns>
 ##   <Description>
 ##     This function starts the external program <File>mandel</File>, by Wolf Jung.
@@ -30,12 +30,12 @@ DeclareGlobalFunction("Mandel");
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("NonContractingSubmatrix", [IsMatrix]);
 ## <ManSection>
 ##   <Oper Name="NonContractingSubmatrix" Arg="mat"/>
-DeclareOperation("NonContractingSubmatrix", [IsMatrix]);
-##   <Returns><K>fail<K> or a list of indices <C>l</C> such that <C>mat{l}{l}</C> is irreducible and non-contracting</Returns>
+##   <Returns><K>fail</K> or a list of indices <C>l</C> such that <C>mat{l}{l}</C> is irreducible and non-contracting</Returns>
 ##   <Description>
-##     This function computes a minimal submatrix whose spectral radius is <M>&geq;1</M>. If none exists,
+##     This function computes a minimal submatrix whose spectral radius is <M>\geq1</M>. If none exists,
 ##     it returns <K>fail</K>.
 ## <Example><![CDATA[
 ## gap> NonContractingSubmatrix([[2]]);
@@ -47,6 +47,7 @@ DeclareOperation("NonContractingSubmatrix", [IsMatrix]);
 ## gap> NonContractingSubmatrix([[0,1],[0,1]]);
 ## [ 2 ]
 ## ]]></Example>
+##   </Description>
 ## </ManSection>
 ## <#/GAPDoc>
 

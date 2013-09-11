@@ -11,10 +11,10 @@
 #############################################################################
 
 ## <#GAPDoc Label="Thurston">
-## <ManSection>
-##   <Func Name="NormalizedP1Map" Arg="f M param"/>
 DeclareGlobalFunction("NormalizedP1Map");
 DeclareProperty("IsBicritical", IsObject);
+## <ManSection>
+##   <Func Name="NormalizedP1Map" Arg="f M param"/>
 ##   <Returns>[A canonical conjugate of <A>f</A>,the conjugator].</Returns>
 ##   <Description>
 ##     The last argument <A>param</A> is either <C>IsPolynomial</C>,
@@ -34,9 +34,9 @@ DeclareProperty("IsBicritical", IsObject);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 ## <ManSection>
 ##   <Oper Name="ThurstonAlgorithm" Arg="m"/>
-DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 ##   <Returns>rec(map := f, machine := M, markedsphere := s).</Returns>
 ##   <Description>
 ##     This command runs Thurston's algorithm on the sphere machine
@@ -47,9 +47,9 @@ DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 ## <ManSection>
 ##   <Oper Name="P1MapBySphereMachine" Arg="m"/>
-DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 ##   <Returns>Either a map or an obstruction.</Returns>
 ##   <Description>
 ##     This command returs either the map computed by
@@ -77,9 +77,9 @@ DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);
 ## <ManSection>
 ##   <Oper Name="ThurstonMatrix" Arg="m multicurve"/>
-DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);
 ##   <Returns>The transition matrix of the multicurve.</Returns>
 ##   <Description>
 ##     This command computes the iterated preimages of the multicurve
@@ -101,9 +101,9 @@ DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 ## <ManSection>
 ##   <Oper Name="ThurstonObstruction" Arg="m sphere"/>
-DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 ##   <Returns>rec(multicurve := mc, matrix := m) or <K>fail</K>.</Returns>
 ##   <Description>
 ##     This command tries to find a Thurston obstruction (multicurve such

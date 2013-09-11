@@ -24,8 +24,9 @@ fi;
 MakeReadOnlyGlobal("VERSION@");
 
 BindGlobal("DOC@", function() MakeGAPDocDoc(Concatenation(PATH@,"/doc"),"img",
-  ["../gap/img.gd","../gap/examples.gd","../gap/helpers.gd",
-   "../gap/complex.gd","../gap/p1.gd",
+  ["../gap/complex.gd","../gap/examples.gd","../gap/helpers.gd","../gap/hurwitz.gd",
+   "../gap/machine.gd","../gap/markedsphere.gd","../gap/p1.gd","../gap/sphere.gd",
+   "../gap/thurston.gd","../gap/triangulations.gd",
    "../PackageInfo.g"],"img");
 end);
 

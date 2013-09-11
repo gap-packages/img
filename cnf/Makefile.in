@@ -76,7 +76,7 @@ configure: cnf/Makefile.in cnf/configure.ac
 
 doc: doc/chap0.html
 
-doc/chap0.html: doc/img.xml doc/imgbib.xml gap/helpers.gd gap/complex.gd
+doc/chap0.html: doc/img.xml doc/imgbib.xml gap/*.gd
 	echo 'LoadPackage("img"); DOC@IMG();' | @GAP_EXEC@ -r -q -T -l ";$(PWDUU)"
 
 checkblocks:

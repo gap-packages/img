@@ -11,8 +11,6 @@
 #############################################################################
 
 ## <#GAPDoc Label="MarkedSpheres">
-## <ManSection>
-##   <Filt Name="IsMarkedSphere"/>
 DeclareCategory("IsMarkedSphere", IsObject);
 BindGlobal("MARKEDSPHERES_FAMILY",
         NewFamily("MarkedSpheres", IsMarkedSphere));
@@ -24,16 +22,18 @@ DeclareAttribute("MarkedSphere", IsP1Map);
 # undocumented for now
 DeclareAttribute("VerticesOfMarkedSphere", IsMarkedSphere);
 DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);
+## <ManSection>
+##   <Filt Name="IsMarkedSphere"/>
 ##   <Description>
 ##     The category of marked, triangulated spheres
 ##     (points in Teichmüller space).
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="NewMarkedSphere" Arg="points [group]"/>
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]);
 DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);
+## <ManSection>
+##   <Oper Name="NewMarkedSphere" Arg="points [group]"/>
 ##   <Returns>A new marked sphere on points <A>points</A>.</Returns>
 ##   <Description>
 ##     This function creates a new marked sphere, based on the
@@ -43,9 +43,9 @@ DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("Draw", [IsMarkedSphere]);
 ## <ManSection>
 ##   <Oper Name="Draw" Arg="s" Label="spider"/>
-DeclareOperation("Draw", [IsMarkedSphere]);
 ##   <Description>
 ##     This command plots the marked sphere <A>s</A> in a separate window.
 ##     It displays the complex sphere, big dots at the post-critical
@@ -66,9 +66,9 @@ DeclareOperation("Draw", [IsMarkedSphere]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
 ## <ManSection>
 ##   <Oper Name="WiggledMarkedSphere" Arg="sphere m"/>
-DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
 ##   <Returns>A new marked sphere.</Returns>
 ##   <Description>
 ##     This operation moves the vertices of the marked sphere <A>sphere</A>,
@@ -78,13 +78,13 @@ DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="SphereMachineOfBranchedCovering" Arg="down up map [poly]"/>
-##   <Oper Name="SphereMachineAndSphereOfBranchedCovering" Arg="down map [poly]"/>
 DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]);
 DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]);
 DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]);
 DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);
+## <ManSection>
+##   <Oper Name="SphereMachineOfBranchedCovering" Arg="down up map [poly]"/>
+##   <Oper Name="SphereMachineAndSphereOfBranchedCovering" Arg="down map [poly]"/>
 ##   <Returns>A sphere machine or [machine,marked sphere].</Returns>
 ##   <Description>
 ##     The first function computes, out of a marked sphere <A>down</A> in
@@ -105,11 +105,11 @@ DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="MonodromyOfP1Map" Arg="[marking] map"/>
 DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]);
 DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
+## <ManSection>
+##   <Oper Name="MonodromyOfP1Map" Arg="[marking] map"/>
 ##   <Returns>The monodromy action of <A>map</A>.</Returns>
 ##   <Description>
 ##     This function computes the monodromy of the P1 map <A>map</A>;
@@ -125,9 +125,9 @@ DeclareOperation("MonodromyOfP1Map", [IsP1Map]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareAttribute("SphereMachine", IsP1Map);
 ## <ManSection>
 ##   <Oper Name="SphereMachine" Arg="f" Label="rational function"/>
-DeclareAttribute("SphereMachine", IsP1Map);
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##   This function computes a triangulation of the sphere, on the
@@ -155,10 +155,10 @@ DeclareAttribute("SphereMachine", IsP1Map);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="DistanceMarkedSpheres" Arg="sphere1 sphere2 [fast]"/>
 DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]);
 DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);
+## <ManSection>
+##   <Oper Name="DistanceMarkedSpheres" Arg="sphere1 sphere2 [fast]"/>
 ##   <Returns>The approximate distance between the marked spheres.</Returns>
 ##   <Description>
 ##     This function approximates coarsely the Teichmüller distance between

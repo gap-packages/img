@@ -11,8 +11,6 @@
 #############################################################################
 
 ## <#GAPDoc Label="Triangulations">
-## <ManSection>
-##   <Filt Name="IsSphereTriangulation"/>
 DeclareCategory("IsSphereTriangulation", IsObject);
 BindGlobal("TRIANGULATION_FAMILY",
         NewFamily("SphereTriangulations", IsSphereTriangulation));
@@ -33,57 +31,69 @@ BindGlobal("TYPE_EDGE",
         NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationEdge));
 BindGlobal("TYPE_FACE",
         NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationFace));
+
+DeclareAttribute("Neighbour", IsTriangulationVertex);
+DeclareOperation("Neighbours", [IsTriangulationVertex]);
+DeclareOperation("Neighbours", [IsTriangulationVertex,IsTriangulationEdge]);
+DeclareOperation("Valency", [IsTriangulationVertex]);
+DeclareAttribute("Pos", IsTriangulationVertex);
+DeclareOperation("ClosestFace", [IsTriangulationObject]);
+DeclareOperation("ClosestFaces", [IsTriangulationObject]);
+DeclareOperation("ClosestVertex", [IsTriangulationObject]);
+DeclareOperation("ClosestVertices", [IsTriangulationObject]);
+DeclareProperty("IsFake", IsTriangulationVertex);
+DeclareAttribute("Left", IsTriangulationEdge);
+DeclareAttribute("Right", IsTriangulationEdge);
+DeclareAttribute("To", IsTriangulationEdge);
+DeclareAttribute("From", IsTriangulationEdge);
+DeclareAttribute("Next", IsTriangulationEdge);
+DeclareAttribute("Prevopp", IsTriangulationEdge);
+DeclareAttribute("Opposite", IsTriangulationEdge);
+DeclareAttribute("Pos", IsTriangulationEdge);
+DeclareAttribute("FromPos", IsTriangulationEdge);
+DeclareAttribute("ToPos", IsTriangulationEdge);
+DeclareAttribute("Length", IsTriangulationEdge);
+DeclareAttribute("Map", IsTriangulationEdge);
+DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable");
+DeclareAttribute("Neighbour", IsTriangulationFace);
+DeclareOperation("Neighbours", [IsTriangulationFace]);
+DeclareOperation("Neighbours", [IsTriangulationFace,IsTriangulationEdge]);
+DeclareAttribute("Pos", IsTriangulationFace);
+DeclareAttribute("Radius", IsTriangulationFace);
+DeclareAttribute("Centre", IsTriangulationFace);
+DeclareOperation("Valency", [IsTriangulationFace]);
+
+DeclareOperation("Draw", [IsSphereTriangulation]);
+## <ManSection>
+##   <Filt Name="IsSphereTriangulation"/>
 ##   <Description>
 ##     The category of triangulated spheres (points in Moduli space).
 ##
 ##     <P/> This triangulation is a collection of vertices, edges and faces.
 ##     These are new GAP objects. The attributes for vertices are: <List>
 ##     <Mark><C>Neighbour</C></Mark> <Item>any edge starting at the vertex</Item>
-DeclareAttribute("Neighbour", IsTriangulationVertex);
 ##     <Mark><C>Neighbours</C></Mark> <Item>a list of neighbours, in counterclockwise order (an optional adugument lets one specify the starting edge)</Item>
-DeclareOperation("Neighbours", [IsTriangulationVertex]);
-DeclareOperation("Neighbours", [IsTriangulationVertex,IsTriangulationEdge]);
 ##     <Mark><C>Valency</C></Mark> <Item>the number of neighbours</Item>
-DeclareOperation("Valency", [IsTriangulationVertex]);
 ##     <Mark><C>Pos</C></Mark> <Item>The P1 point where the vertex is located</Item>
-DeclareAttribute("Pos", IsTriangulationVertex);
 ##     <Mark><C>ClosestVertex</C></Mark> <Item>The vertex itself</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>A list containing the vertex itself</Item>
 ##     <Mark><C>ClosestFace</C></Mark> <Item>The face left of the first neighbour</Item>
 ##     <Mark><C>ClosestFaces</C></Mark> <Item>The faces that contain the vertex</Item>
-DeclareOperation("ClosestFace", [IsTriangulationObject]);
-DeclareOperation("ClosestFaces", [IsTriangulationObject]);
-DeclareOperation("ClosestVertex", [IsTriangulationObject]);
-DeclareOperation("ClosestVertices", [IsTriangulationObject]);
 ##     <Mark><C>IsFake</C></Mark> <Item>whether the vertex was added for refinement</Item>
-DeclareProperty("IsFake", IsTriangulationVertex);
 ##     </List>
 ##
 ##     <P/> The edges come in opposite pairs, and are thought of as having a face on their left.
 ##     Their possible attributes are: <List>
 ##     <Mark><C>Left</C>, <C>Right</C></Mark> <Item>The adjacent faces</Item>
-DeclareAttribute("Left", IsTriangulationEdge);
-DeclareAttribute("Right", IsTriangulationEdge);
 ##     <Mark><C>To</C>, <C>From</C></Mark> <Item>The vertices that the edge goes to/from</Item>
-DeclareAttribute("To", IsTriangulationEdge);
-DeclareAttribute("From", IsTriangulationEdge);
 ##     <Mark><C>Next</C></Mark> <Item>The edge after on the left face (starting where the present edge ends)</Item>
-DeclareAttribute("Next", IsTriangulationEdge);
 ##     <Mark><C>Prevopp</C></Mark> <Item>The opposite of the edge before on the left face (starting where the present edge starts)</Item>
-DeclareAttribute("Prevopp", IsTriangulationEdge);
 ##     <Mark><C>Opposite</C></Mark> <Item>The opposite edge (with reversed orientation)</Item>
-DeclareAttribute("Opposite", IsTriangulationEdge);
 ##     <Mark><C>Pos</C></Mark> <Item>The position of the midpoint. <C>FromPos</C> and <C>ToPos</C> are shortcuts</Item>
-DeclareAttribute("Pos", IsTriangulationEdge);
-DeclareAttribute("FromPos", IsTriangulationEdge);
-DeclareAttribute("ToPos", IsTriangulationEdge);
 ##     <Mark><C>Length</C></Mark>
-DeclareAttribute("Length", IsTriangulationEdge);
 ##     <Mark><C>Map</C></Mark> <Item>A P1 map sending <M>[0,1]</M> to the edge</Item>
-DeclareAttribute("Map", IsTriangulationEdge);
 ##     <Mark><C>GroupElement</C></Mark> <Item>A group element describing "crossing through the edge
 ##       from the left to the right"</Item>
-DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable");
 ##     <Mark><C>ClosestVertex</C></Mark> <Item>The from vertex</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>The two endpoints</Item>
 ##     <Mark><C>ClosestFace</C></Mark> <Item>The left neighbour</Item>
@@ -92,30 +102,16 @@ DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable");
 ##
 ##     <P/> The faces have the following possible attributes: <List>
 ##     <Mark><C>Neighbour</C></Mark> <Item>Some edge with this face on its left</Item>
-DeclareAttribute("Neighbour", IsTriangulationFace);
 ##     <Mark><C>Neighbours</C></Mark> <Item>The neighbours of the face, in counterclockwise order around the face (an optional argument lets one specify the starting edge)</Item>
-DeclareOperation("Neighbours", [IsTriangulationFace]);
-DeclareOperation("Neighbours", [IsTriangulationFace,IsTriangulationEdge]);
 ##     <Mark><C>Pos</C></Mark> <Item>The position of the face's barycentre</Item>
-DeclareAttribute("Pos", IsTriangulationFace);
 ##     <Mark><C>Radius</C>, <C>Centre</C></Mark> <Item>The circumradius and circumcentre of the face (assumed to be a triangle)</Item>
-DeclareAttribute("Radius", IsTriangulationFace);
-DeclareAttribute("Centre", IsTriangulationFace);
 ##     <Mark><C>Valency</C></Mark> <Item>The number of neighbouring edges</Item>
-DeclareOperation("Valency", [IsTriangulationFace]);
 ##     <Mark><C>ClosestVertex</C></Mark> <Item>The from of the first neighbour</Item>
 ##     <Mark><C>ClosestVertices</C></Mark> <Item>The vertices that the face contains</Item>
 ##     <Mark><C>ClosestFace</C></Mark> <Item>The face itself</Item>
 ##     <Mark><C>ClosestFaces</C></Mark> <Item>A list containing the face itself</Item>
 ##     </List>
 ##
-## <ManSection>
-##   <Oper Name="EdgePath" Arg="t,f0,f1"/>
-DeclareOperation("EdgePath", [IsSphereTriangulation,IsTriangulationFace,IsTriangulationFace]);
-##   <Returns>A sequence of edges taking <A>f0</A> to <A>f1</A>.</Returns>
-## </ManSection>
-##
-DeclareOperation("Draw", [IsSphereTriangulation]);
 ##     <P/> A triangulation may be plotted with <C>Draw</C>; this requires
 ##     <Package>appletviewer</Package> to be installed. The command
 ##     <C>Draw(t:detach)</C> detaches the subprocess after it is started.
@@ -124,10 +120,16 @@ DeclareOperation("Draw", [IsSphereTriangulation]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("EdgePath", [IsSphereTriangulation,IsTriangulationFace,IsTriangulationFace]);
 ## <ManSection>
-##   <Oper Name="DelaunayTriangulation" Arg="points, [quality]"/>
+##   <Oper Name="EdgePath" Arg="t,f0,f1"/>
+##   <Returns>A sequence of edges taking <A>f0</A> to <A>f1</A>.</Returns>
+## </ManSection>
+##
 DeclareOperation("DelaunayTriangulation", [IsList]);
 DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);
+## <ManSection>
+##   <Oper Name="DelaunayTriangulation" Arg="points, [quality]"/>
 ##   <Returns>A Delaunay triangulation of the sphere.</Returns>
 ##   <Description>
 ##     If <A>points</A> is a list of points on the unit sphere, represented
@@ -161,12 +163,12 @@ DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="AddToTriangulation" Arg="t[,seed],point[,delaunay]"/>
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point,IsBool]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point]);
 DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point,IsBool]);
+## <ManSection>
+##   <Oper Name="AddToTriangulation" Arg="t[,seed],point[,delaunay]"/>
 ##   <Description>
 ##     This command adds the P1 point <A>point</A> to the triangulation
 ##     <A>t</A>. If a face <A>seed</A> is provided, it will speed up the
@@ -178,21 +180,21 @@ DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFac
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsTriangulationVertex]);
 ## <ManSection>
 ##   <Oper Name="RemoveFromTriangulation" Arg="t,vertex"/>
-DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsTriangulationVertex]);
 ##   <Description>
-##     This command removes the vertex <A>vertex<A> from the triangulation <A>t</A>.
+##     This command removes the vertex <A>vertex</A> from the triangulation <A>t</A>.
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="LocateFaceInTriangulation" Arg="t,[seed,]point"/>
-##   <Oper Name="LocateInTriangulation" Arg="t,[seed,]point"/>
 DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsP1Point]);
 DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);
+## <ManSection>
+##   <Oper Name="LocateFaceInTriangulation" Arg="t,[seed,]point"/>
+##   <Oper Name="LocateInTriangulation" Arg="t,[seed,]point"/>
 ##   <Returns>The face(t) in <A>t</A> containing <A>point</A>.</Returns>
 ##   <Description>
 ##     This command locates the face in <A>t</A> that contains <A>point</A>;
@@ -214,10 +216,10 @@ DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Po
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="WiggledTriangulation" Arg="t,moebiusmap"/>
-##   <Oper Name="WiggledTriangulation" Arg="t,newpoints"/>
 DeclareOperation("WiggledTriangulation", [IsSphereTriangulation,IsObject]);
+## <ManSection>
+##   <Oper Name="WiggledTriangulation" Arg="t,moebiusmap" Label="wiggle moebius"/>
+##   <Oper Name="WiggledTriangulation" Arg="t,newpoints" Label="wiggle points"/>
 ##   <Returns>A new triangulation, with moved vertices.</Returns>
 ##   <Description>
 ##     This command creates a new triangulation, in which only the
@@ -229,9 +231,9 @@ DeclareOperation("WiggledTriangulation", [IsSphereTriangulation,IsObject]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("EquidistributedP1Points");
 ## <ManSection>
 ##   <Func Name="EquidistributedP1Points" Arg="N"/>
-DeclareGlobalFunction("EquidistributedP1Points");
 ##   <Returns>A list of <A>N</A> P1 points that are reasonably well spaced.</Returns>
 ## </ManSection>
 ## <#/GAPDoc>

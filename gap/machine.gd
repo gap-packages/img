@@ -15,20 +15,20 @@
 #M SphereMachine
 ##
 ## <#GAPDoc Label="SphereMachine">
+##
+DeclareProperty("IsSphereMachine", IsFRMachine);
 ## <ManSection>
 ##   <Filt Name="IsSphereMachine" Arg="m"/>
-DeclareProperty("IsSphereMachine", IsFRMachine);
 ##   <Filt Name="IsPolynomialSphereMachine" Arg="m"/>
 ##   <Description>
 ##     The categories of <E>Sphere</E> and <E>polynomial</E> machines.
 ##     Sphere machines are group FR machines
-##     with an additional element, their attribute <Ref Attr="IMGRelator"/>;
-##     see <Ref Oper="AsIMGMachine"/>.
+##     whose underlying group is a sphere group, see <Ref Oper="SphereGroup"/>.
 ##
 ##     <P/> A polynomial machine is a group FR machine with a distinguished
 ##     state (which must be a generator of the stateset), stored as the
 ##     attribute <Ref Attr="AddingElement"/>; see
-##     <Ref Oper="AsPolynomialFRMachine"/>. If it is normalized, in the sense
+##     <Ref Oper="AsPolynomialSphereMachine"/>. If it is normalized, in the sense
 ##     that the wreath recursion of the adding element <C>a</C> is
 ##     <C>[[a,1,...,1],[d,1,...,d-1]]</C>, then the basepoint is assumed
 ##     to be at <M>+\infty</M>; the element <C>a</C> describes a
@@ -41,11 +41,11 @@ DeclareProperty("IsSphereMachine", IsFRMachine);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="AsSphereMachine" Arg="m[,w]"/>
 DeclareAttribute("AsSphereMachine", IsFRMachine);
 DeclareOperation("AsSphereMachine", [IsFRMachine, IsWord]);
 DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
+## <ManSection>
+##   <Oper Name="AsSphereMachine" Arg="m[,w]"/>
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##     This function creates a new sphere machine, starting from a group
@@ -58,8 +58,9 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ##     relator. In other cases, the method returns <K>fail</K>.
 ##
 ##     <P/> A standard FR machine can be recovered from a sphere machine
-##     by <Ref Oper="AsGroupFRMachine"/>, <Ref Oper="AsMonoidFRMachine"/>,
-##     and <Ref Oper="AsSemigroupFRMachine"/>.
+##     by <Ref Oper="AsGroupFRMachine" BookName="FR"/>,
+##     <Ref Oper="AsMonoidFRMachine" BookName="FR"/>,
+##     and <Ref Oper="AsSemigroupFRMachine" BookName="FR"/>.
 ## <Example><![CDATA[
 ## gap> m := UnderlyingFRMachine(BasilicaGroup);
 ## <Mealy machine on alphabet [ 1 .. 2 ] with 3 states>
@@ -79,9 +80,9 @@ DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
 ## <ManSection>
 ##   <Attr Name="CleanedSphereMachine" Arg="m"/>
-DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
 ##   <Returns>A cleaned-up version of <A>m</A>.</Returns>
 ##   <Description>
 ##     This command attempts to shorten the length of the transitions in
@@ -91,13 +92,13 @@ DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("NewSphereMachine");
 ## <ManSection>
 ##   <Attr Name="NewSphereMachine" Arg="..."/>
-DeclareGlobalFunction("NewSphereMachine");
 ##   <Returns>A new sphere machine, based on string descriptions.</Returns>
 ##   <Description>
 ##     This command constructs a new sphere machine, in a format similar to
-##     <Ref Func="FRGroup"/>; namely, the arguments are strings of the form
+##     <Ref Func="FRGroup" BookName="FR"/>; namely, the arguments are strings of the form
 ##     "gen=&lt;word-1,...,word-d&gt;perm"; each <C>word-i</C> is a word in the
 ##     generators; and <C>perm</C> is a transformation,
 ##     either written in disjoint cycle or in images notation. The underlying
@@ -124,15 +125,6 @@ DeclareGlobalFunction("NewSphereMachine");
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>
-##
-## <ManSection>
-##   <Oper Name="AsIMGElement" Arg="e"/>
-##   <Filt Name="IsIMGElement" Arg="e"/>
-##   <Description>
-##     The category of <E>IMG elements</E>, namely FR elements of an IMG
-##     machine. See <Ref Oper="AsIMGMachine"/> for details.
-##   </Description>
-## </ManSection>
 ## <#/GAPDoc>
 ##
 #############################################################################
@@ -142,13 +134,13 @@ DeclareGlobalFunction("NewSphereMachine");
 #M PolynomialMachine
 ##
 ## <#GAPDoc Label="PolynomialFRMachine">
-## <ManSection>
-##   <Prop Name="IsKneadingMachine" Arg="m"/>
-##   <Prop Name="IsPlanarKneadingMachine" Arg="m"/>
 DeclareProperty("IsKneadingMachine",IsFRMachine);
 DeclareProperty("IsPlanarKneadingMachine",IsFRMachine);
 InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine);
 InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
+## <ManSection>
+##   <Prop Name="IsKneadingMachine" Arg="m"/>
+##   <Prop Name="IsPlanarKneadingMachine" Arg="m"/>
 ##   <Returns>Whether <A>m</A> is a (planar) kneading machine.</Returns>
 ##   <Description>
 ##     A <E>kneading machine</E> is a special kind of Mealy machine, used
@@ -181,9 +173,9 @@ InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Attr Name="AddingElement" Arg="m" Label="sphere machine"/>
 DeclareAttribute("AddingElement", IsSphereMachine);
+## <ManSection>
+##   <Attr Name="AddingElement" Arg="m"/>
 ##   <Returns>The element generating the adding submachine.</Returns>
 ##   <Description>
 ##     This attribute stores the product of generators that is an
@@ -231,11 +223,11 @@ DeclareAttribute("AddingElement", IsSphereMachine);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="AsPolynomialSphereMachine" Arg="m [,adder [,relator]]"/>
 DeclareSynonym("IsPolynomialSphereMachine",IsSphereMachine and HasAddingElement);
 DeclareAttribute("AsPolynomialSphereMachine",IsFRMachine);
 DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
+## <ManSection>
+##   <Oper Name="AsPolynomialSphereMachine" Arg="m [,adder [,relator]]"/>
 ##   <Returns>A polynomial sphere machine.</Returns>
 ##   <Description>
 ##     The first function creates a new polynomial sphere machine, starting from
@@ -268,15 +260,15 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 #M Operations
 ##
 ## <#GAPDoc Label="SphereOperations">
-## <ManSection>
-##   <Oper Name="PolynomialSphereMachine" Arg="d,per[,pre]"/>
-##   <Oper Name="PolynomialMealyMachine" Arg="d,per[,pre]"/>
 DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]);
 DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
+## <ManSection>
+##   <Oper Name="PolynomialSphereMachine" Arg="d,per[,pre]"/>
+##   <Oper Name="PolynomialMealyMachine" Arg="d,per[,pre]"/>
 ##   <Returns>A sphere or Mealy machine.</Returns>
 ##   <Description>
 ##     This function creates a sphere or Mealy machine that describes
@@ -395,9 +387,9 @@ DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareAttribute("SupportingRays",IsFRMachine);
 ## <ManSection>
 ##   <Attr Name="SupportingRays" Arg="m"/>
-DeclareAttribute("SupportingRays",IsFRMachine);
 ##   <Returns>A <C>[degree,fatou,julia]</C> description of <A>m</A>.</Returns>
 ##   <Description>
 ##     This operation is the inverse of <Ref Oper="PolynomialSphereMachine"/>:
@@ -450,9 +442,9 @@ DeclareAttribute("SupportingRays",IsFRMachine);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
 ## <ManSection>
 ##   <Attr Name="NormalizedPolynomialSphereMachine" Arg="m"/>
-DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
 ##   <Returns>A polynomial sphere machine.</Returns>
 ##   <Description>
 ##     This function returns a new sphere machine, in which the adding element
@@ -461,9 +453,9 @@ DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
 ## <ManSection>
 ##   <Attr Name="SimplifiedSphereMachine" Arg="m"/>
-DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
 ##   <Returns>A simpler sphere machine.</Returns>
 ##   <Description>
 ##     This function returns a new sphere machine, with hopefully simpler
@@ -504,10 +496,10 @@ DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="Mating" Arg="m1,m2 [,formal]"/>
 DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]);
 DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]);
+## <ManSection>
+##   <Oper Name="Mating" Arg="m1,m2 [,formal]"/>
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##     This function "mates" two polynomial sphere machines.
@@ -564,11 +556,11 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 #M Automorphisms of sphere machines
 ##
 ## <#GAPDoc Label="AutomorphismsFRMachines">
+DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]);
+DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ## <ManSection>
 ##   <Attr Name="AutomorphismVirtualEndomorphism" Arg="v"/>
 ##   <Attr Name="AutomorphismSphereMachine" Arg="m"/>
-DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]);
-DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##   <Returns>A description of the pullback map on Teichmüller space.</Returns>
 ##   <Description>
 ##     Let <A>m</A> be a sphere machine, thought of as a biset for the
@@ -625,9 +617,9 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 #############################################################################
 ##
 ## <#GAPDoc Label="RotatedSpider">
+DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
 ## <ManSection>
 ##   <Oper Name="LiftOfConjugacyClass" Arg="m c"/>
-DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroupRep]);
 ##   <Returns>A list of conjugacy classes and multiplicities.</Returns>
 ##   <Description>
 ##     This command computes the preimage of the conjugacy class <A>c</A>
@@ -639,9 +631,9 @@ DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroup
 ##   </Description>
 ## </ManSection>
 ##
+#DeclareAttribute("ComplexConjugate", IsFRMachine); # already declared for arithmetic objects
 ## <ManSection>
 ##   <Oper Name="ComplexConjugate" Arg="m"/>
-#DeclareAttribute("ComplexConjugate", IsFRMachine); # already declared for arithmetic objects
 ##   <Returns>An FR machine with inverted states.</Returns>
 ##   <Description>
 ##     This function constructs an FR machine whose generating states are
@@ -679,10 +671,10 @@ DeclareOperation("LiftOfConjugacyClass", [IsGroupFRMachine,IsConjugacyClassGroup
 ##   </Description>
 ## </ManSection>
 ##
-## <ManSection>
-##   <Oper Name="RotatedSpider" Arg="m, [p]"/>
 DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine]);
 DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
+## <ManSection>
+##   <Oper Name="RotatedSpider" Arg="m, [p]"/>
 ##   <Returns>A polynomial FR machine with rotated spider at infinity.</Returns>
 ##   <Description>
 ##     This function constructs an isomorphic polynomial FR machine, but with
@@ -727,9 +719,9 @@ DeclareOperation("RotatedSpider", [IsPolynomialSphereMachine, IsInt]);
 #E DBRationalIMGGroup
 ##
 ## <#GAPDoc Label="DBRationalIMGGroup">
+DeclareGlobalFunction("DBRationalIMGGroup");
 ## <ManSection>
 ##   <Func Name="DBRationalIMGGroup" Arg="sequence/map"/>
-DeclareGlobalFunction("DBRationalIMGGroup");
 ##   <Returns>An IMG group from Dau's database.</Returns>
 ##   <Description>
 ##     This function returns the iterated monodromy group from a database
@@ -758,15 +750,15 @@ DeclareGlobalFunction("DBRationalIMGGroup");
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("PostCriticalMachine");
 ## <ManSection>
 ##   <Func Name="PostCriticalMachine" Arg="f"/>
-DeclareGlobalFunction("PostCriticalMachine");
 ##   <Returns>The Mealy machine of <A>f</A>'s post-critical orbit.</Returns>
 ##   <Description>
 ##     This function constructs a Mealy machine <C>P</C> on the alphabet
 ##     <C>[1]</C>, which describes the post-critical set of <A>f</A>.
 ##     It is in fact an oriented graph with constant out-degree 1. It is
-##     most conveniently passed to <Ref Oper="Draw"/>.
+##     most conveniently passed to <Ref Oper="Draw" BookName="FR"/>.
 ##
 ##     <P/> The attribute <C>Correspondence(P)</C> is the list of values
 ##     associated with the stateset of <C>P</C>.
@@ -802,9 +794,9 @@ DeclareGlobalFunction("PostCriticalMachine");
 #E Conversions
 ##
 ## <#GAPDoc Label="Conversions">
+DeclareAttribute("KneadingSequence", IsRat);
 ## <ManSection>
 ##   <Attr Name="KneadingSequence" Arg="angle" Label="angle"/>
-DeclareAttribute("KneadingSequence", IsRat);
 ##   <Returns>The kneading sequence associated with <A>angle</A>.</Returns>
 ##   <Description>
 ##     This function converts a rational angle to a kneading sequence, to
@@ -822,9 +814,9 @@ DeclareAttribute("KneadingSequence", IsRat);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("AllInternalAddresses");
 ## <ManSection>
 ##   <Attr Name="AllInternalAddresses" Arg="n"/>
-DeclareGlobalFunction("AllInternalAddresses");
 ##   <Returns>Internal addresses of maps with period up to <A>n</A>.</Returns>
 ##   <Description>
 ##     This function returns internal addresses for all periodic points of
@@ -846,9 +838,9 @@ DeclareGlobalFunction("AllInternalAddresses");
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("ExternalAnglesRelation");
 ## <ManSection>
 ##   <Func Name="ExternalAnglesRelation" Arg="degree, n"/>
-DeclareGlobalFunction("ExternalAnglesRelation");
 ##   <Returns>An equivalence relation on the rationals.</Returns>
 ##   <Description>
 ##     This function returns the equivalence relation on <C>Rationals</C>
@@ -864,9 +856,9 @@ DeclareGlobalFunction("ExternalAnglesRelation");
 ##   </Description>
 ## </ManSection>
 ##
+DeclareGlobalFunction("ExternalAngle");
 ## <ManSection>
 ##   <Func Name="ExternalAngle" Arg="machine"/>
-DeclareGlobalFunction("ExternalAngle");
 ##   <Returns>The external angle identifying <A>machine</A>.</Returns>
 ##   <Description>
 ##     In case <A>machine</A> is the sphere machine of a unicritical

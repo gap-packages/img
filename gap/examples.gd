@@ -15,12 +15,12 @@
 #E PoirierExamples
 ##
 ## <#GAPDoc Label="Poirier">
+DeclareGlobalFunction("PoirierExamples");
 ## <ManSection>
 ##   <Func Name="PoirierExamples" Arg="..."/>
-DeclareGlobalFunction("PoirierExamples");
 ##   <Description>
 ##     The examples from Poirier's paper <Cite Key="math.DS/9305207"/>.
-##     See details under <Ref Oper="PolynomialIMGMachine"/>; in particular,
+##     See details under <Ref Oper="PolynomialSphereMachine"/>; in particular,
 ##     <C>PoirierExamples(1)</C> is the Douady rabbit map.
 ##   </Description>
 ## </ManSection>
