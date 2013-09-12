@@ -58,6 +58,8 @@ else
     LEVMAR=yes
 fi
 
+fi
+
 if test "$LEVMAR" = extern; then
 
 LEVMAR_MAKELIB=`printf 'liblevmar:
@@ -73,8 +75,6 @@ MAKE_LIBTARGETS="$MAKE_LIBTARGETS liblevmar"
 
 LEVMAR_CFLAGS='-I$(EXTERN)/include'
 LEVMAR_LDFLAGS='-L$(EXTERN)/lib'
-
-fi
 
 fi
 
