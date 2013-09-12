@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>GAP (IMG) - Chapter 5: IMG implementation details</title>
+<title>GAP (IMG) - Chapter 5: Examples</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="GAPDoc2HTML" />
 <link rel="stylesheet" type="text/css" href="manual.css" />
@@ -19,42 +19,96 @@
 
 <div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap4.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap6.html">[Next Chapter]</a>&nbsp;  </div>
 
-<p><a id="X830C0CE882611F8E" name="X830C0CE882611F8E"></a></p>
-<div class="ChapSects"><a href="chap5.html#X830C0CE882611F8E">5 <span class="Heading">IMG implementation details</span></a>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap5.html#X7F8F64548143DF99">5.1 <span class="Heading">Marked spheres</span></a>
+<p><a id="X7A489A5D79DA9E5C" name="X7A489A5D79DA9E5C"></a></p>
+<div class="ChapSects"><a href="chap5.html#X7A489A5D79DA9E5C">5 <span class="Heading">Examples</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap5.html#X7AF5DEF08531AFA5">5.1 <span class="Heading">Examples of groups</span></a>
 </span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap5.html#X8700DB2886B0A7E4">5.1-1 PoirierExamples</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap5.html#X82F0B23486F2E3AC">5.1-2 DBRationalIMGGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap5.html#X8365719F7E03B7C3">5.1-3 PostCriticalMachine</a></span>
+</div></div>
 </div>
-</div>
 
-<h3>5 <span class="Heading">IMG implementation details</span></h3>
+<h3>5 <span class="Heading">Examples</span></h3>
 
-<p><strong class="pkg">IMG</strong> creates new categories for the various objects considered in the package. The first category is ...</p>
+<p><strong class="pkg">IMG</strong> predefines a large collection of sphere machines, as well as the generic constructions of polynomials.</p>
 
-<p><a id="X7F8F64548143DF99" name="X7F8F64548143DF99"></a></p>
+<p><a id="X7AF5DEF08531AFA5" name="X7AF5DEF08531AFA5"></a></p>
 
-<h4>5.1 <span class="Heading">Marked spheres</span></h4>
+<h4>5.1 <span class="Heading">Examples of groups</span></h4>
 
-<p><strong class="pkg">IMG</strong> contains algorithms that convert a rational function (with floating-point complex coefficients) to an IMG machine and back.</p>
+<p>DeclareGlobalFunction("PoirierExamples");</p>
 
-<p>Consider a rational map <span class="SimpleMath">f</span> of degree <span class="SimpleMath">d</span>. First, compute the post-critical set <span class="SimpleMath">P_f</span>; this is done by iterating <span class="SimpleMath">f</span> on critical points, and considering points at angle at most <span class="SimpleMath">EPS@.prec</span> from each other as equal.</p>
+<p><a id="X8700DB2886B0A7E4" name="X8700DB2886B0A7E4"></a></p>
 
-<p>Then construct a spherical Delaunay triangulation <span class="SimpleMath">T</span> on <span class="SimpleMath">P_f</span>; and choose in it a minimal spanning tree; edges of that tree represent a generating set of the fundamental group <span class="SimpleMath">G</span> of <span class="SimpleMath">S^2∖ P_f</span>.</p>
+<h5>5.1-1 PoirierExamples</h5>
 
-<p>Lift first through <span class="SimpleMath">f</span> the edges of the dual tree in the dual tesselation of <span class="SimpleMath">T</span>; they will form <span class="SimpleMath">d</span> connected subgraphs, numbered <span class="SimpleMath">1,...,d</span>. Lift then the edges crossing the minimal spanning tree, and read the elements of <span class="SimpleMath">F</span> that their lifts represent, as well as the subgraphs they start and end in. This data describes an FR machine.</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PoirierExamples</code>( <var class="Arg">...</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>The examples from Poirier's paper <a href="chapBib.html#biBmath.DS/9305207">[Poi]</a>. See details under <code class="func">PolynomialSphereMachine</code> (<a href="chap3.html#X80E689F38412EE20"><span class="RefLink">3.3-1</span></a>); in particular, <code class="code">PoirierExamples(1)</code> is the Douady rabbit map.</p>
 
-<p>Choose then for each vertex in <span class="SimpleMath">P_f</span> an adjacent face in <span class="SimpleMath">T/</span>. This choice defines a generating family of <span class="SimpleMath">F</span> made up, for each vertex, of a path in the dual tree starting at a basepoint, a sequence of edges around a vertex starting at the chosen face, and a path back in the dual tree. The product, in an appropriate order, of these generators describes an IMG machine.</p>
+<p>DeclareGlobalFunction("DBRationalIMGGroup");</p>
 
-<p>There is an epimorphism from the group <span class="SimpleMath">G</span>, generated by these loops around vertices, to <span class="SimpleMath">F</span>; and this epimorphism becomes an isomorphism if one adds to <span class="SimpleMath">G/</span> the relation "product of generators in an appropriate order". Such a triangulation, with a given group <span class="SimpleMath">G</span> and a homomorphism from <span class="SimpleMath">G</span> to <span class="SimpleMath">F</span>, is called a <em>spider</em>.</p>
+<p><a id="X82F0B23486F2E3AC" name="X82F0B23486F2E3AC"></a></p>
 
-<p>The inverse algorithm is quite similar. Consider an IMG machine <span class="SimpleMath">M</span>, with stateset <span class="SimpleMath">G</span>. Start by a "standard" set of points on the sphere, one per generator of <span class="SimpleMath">M</span>, and construct a spider <span class="SimpleMath">S</span> on them. Find a rational map <span class="SimpleMath">f</span> with critical values at the vertices of <span class="SimpleMath">S</span> and monodromy given by the activities of <span class="SimpleMath">M</span>, and lift <span class="SimpleMath">S</span> to a spider <span class="SimpleMath">T</span>, marked by a group <span class="SimpleMath">H</span>. The lifting gives a homomorphism <span class="SimpleMath">f^*:G-&gt; H≀ Sym(d)</span>.</p>
+<h5>5.1-2 DBRationalIMGGroup</h5>
 
-<p>By appropriately relabeling the alphabet, one can ensure that this homomorphism coincides with <span class="SimpleMath">M</span>'s recursion at the first level. Furthermore, it identifies each vertex <span class="SimpleMath">v_i</span> of <span class="SimpleMath">T</span> either with a vertex <span class="SimpleMath">w_j</span> of <span class="SimpleMath">S</span>, if for some <span class="SimpleMath">g∈ G</span> a state in <span class="SimpleMath">M</span> of <span class="SimpleMath">g</span> is a conjugate <span class="SimpleMath">g_j</span>, while the corresponding entry of <span class="SimpleMath">f^*(g)</span> is a conjugate of <span class="SimpleMath">h_i</span>.</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DBRationalIMGGroup</code>( <var class="Arg">sequence/map</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: An IMG group from Dau's database.</p>
 
-<p>Construct then a new triangulation <span class="SimpleMath">S'</span> by keeping only those vertices of <span class="SimpleMath">T</span> that were identified, and mapping them by a Möbius transformation <span class="SimpleMath">μ</span> to "standard position". This means that the barycenter of the points is <span class="SimpleMath">0∈ R^3</span>, that the last point goes to <span class="SimpleMath">∞</span>, and that the next-to-last goes to <span class="SimpleMath">R_+</span>. Letting <span class="SimpleMath">F</span> denote the group on the minimal spanning tree of <span class="SimpleMath">S'</span>, there is a homomorphism <span class="SimpleMath">μ_*:H-&gt; F</span>.</p>
+<p>This function returns the iterated monodromy group from a database of groups associated to quadratic rational maps. This database has been compiled by Dau Truong Tan <a href="chapBib.html#biBtan:database">[Tan02]</a>.</p>
 
-<p>The decomposition <span class="SimpleMath">ϕ</span> of <span class="SimpleMath">M</span> then produces a homomorphism <span class="SimpleMath">m:G-&gt; F</span> such that <span class="SimpleMath">μ_*f^*=mϕ</span>. This turns <span class="SimpleMath">S'</span> into a spider on <span class="SimpleMath">G</span>. Iterate then this process with <span class="SimpleMath">S'</span>.</p>
+<p>When called with no arguments, this command returns the database contents in raw form.</p>
 
-<p>Either the spiders <span class="SimpleMath">S</span> converge, and then <span class="SimpleMath">μ^-1f</span> is the desired rational function; or there is a Thurston obstruction, which is a non-contracting multicurve. Seek therefore clusters of vertices that are very close from each other, and compute the curve going around them; this defines a conjugacy class in <span class="SimpleMath">G</span>. In <span class="SimpleMath">M</span>, compute the iterated decomposition of this curve, and its associated transition matrix. If it has spectrum at least <span class="SimpleMath">1</span>, return the multicurve as an obstruction; otherwise, continue.</p>
+<p>The argments can be a sequence; the first integer is the size of the postcritical set, the second argument is an index for the postcritical graph, and sometimes a third argument distinguishes between maps with same post-critical graph.</p>
+
+<p>If the argument is a rational map, the command returns the IMG group of that map, assuming its canonical quadratic rational form form exists in the database.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(z^2-1);</span>
+IMG((z-1)^2)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(z^2+1); # not post-critically finite</span>
+fail
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DBRationalIMGGroup(4,1,1);</span>
+IMG((z/h+1)^2|2h^3+2h^2+2h+1=0,h~-0.64)
+</pre></div>
+
+<p>DeclareGlobalFunction("PostCriticalMachine");</p>
+
+<p><a id="X8365719F7E03B7C3" name="X8365719F7E03B7C3"></a></p>
+
+<h5>5.1-3 PostCriticalMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PostCriticalMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The Mealy machine of <var class="Arg">f</var>'s post-critical orbit.</p>
+
+<p>This function constructs a Mealy machine <code class="code">P</code> on the alphabet <code class="code">[1]</code>, which describes the post-critical set of <var class="Arg">f</var>. It is in fact an oriented graph with constant out-degree 1. It is most conveniently passed to <code class="func">Draw</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap5.html#X7DF9F3AD86602DFC"><span class="RefLink">FR: Draw</span></a>).</p>
+
+<p>The attribute <code class="code">Correspondence(P)</code> is the list of values associated with the stateset of <code class="code">P</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(Rationals,"z");;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PostCriticalMachine(z^2);</span>
+&lt;Mealy machine on alphabet [ 1 ] with 2 states&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(m);</span>
+   |  1
+---+-----+
+ a | a,1
+ b | b,1
+---+-----+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(m);</span>
+[ 0, infinity ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PostCriticalMachine(z^2-1);; Display(m); Correspondence(m);</span>
+   |  1
+---+-----+
+ a | c,1
+ b | b,1
+ c | a,1
+---+-----+
+[ -1, infinity, 0 ]
+</pre></div>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap4.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap6.html">[Next Chapter]</a>&nbsp;  </div>

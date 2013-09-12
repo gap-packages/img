@@ -88,7 +88,6 @@ License along with this program, in the file COPYING.  If not, see
 <Chapter Label="imgpackage"><Heading>IMG package</Heading>
 
 <Section Label="mathintro"><Heading>A brief mathematical introduction</Heading>
-
 This chapter assumes that you have no familiarity with iterated
 monodromy groups. If you do, and wish to see their usage within &GAP;
 through a sample session, please skip to Section <Ref
@@ -140,7 +139,6 @@ and in particular
 </Section>
 
 <Section Label="imgintro"><Heading>An example session</Heading>
-
 This is a brief introduction describing some of the simpler features
 of the <Package>IMG</Package> package. It assumes you have some
 familiarity with the theory of groups defined by automata, and of
@@ -175,167 +173,270 @@ gap> Display(basilica);
 ----+---------+---------+
 Adding element: FRElement(...,f3)
 Relators: [ f3*f2*f1 ]
+gap> P1MapBySphereMachine(basilica);
+<z^2-1._z>
 ]]></Example>
-We have just created the basilica machine, with group <M>G=\langle f1,f2,f3|f3f2f1\rangle</M>.
+We have just created the basilica machine, with group <M>G=\langle f1,f2,f3|f3f2f1\rangle</M>, and computed the corresponding rational map.
 
-<P/> ...
+<P/> We now compute the mating of the basilica with itself: that is
+the Thurston map which acts as <M>z^2-1</M> on the upper hemisphere,
+by angle doubling on the equator, and also as <M>z^2-1</M> on the
+lower hemisphere. It turns out that this map is obstructed, i.e. does
+not have a realization as a rational map. The obstruction consists of
+a curve separating the points <M>-1</M> and <M>0</M> on both
+hemispheres:
+<Example><![CDATA[
+gap> basilica2 := Mating(basilica,basilica);
+<sphere machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2, g1, g2 ] ) / [ f2*f1*g2*g1 ]>
+gap> P1MapBySphereMachine(last);
+rec(
+  machine := <sphere machine with alphabet [ 1, 2 ] on Group( [ f1, f2, g1, g2 ] ) / [ f2*f1*g2*g1 \
+]>, matrix := [ [ 1 ] ], multicurve := [ f1*g1^G ] )
+]]></Example>
 </Section>
 
 </Chapter>
 
-<Chapter Label="img"><Heading>Iterated monodromy groups</Heading>
-Iterated monodromy machines are a special class of group FR machines
-(see Section <Ref Label="FRMachine" BookName="FR"/>) whose underlying
-<Ref Oper="StateSet" BookName="FR"/> is a sphere group, namely a group
-given by a redundant generator and a relation involving all generators
-once.
+<Chapter Label="sphere"><Heading>Sphere groups and machines</Heading>
 
-<Section><Heading>Creators and operations for sphere machines</Heading>
-<#Include Label="SphereMachine">
+<Section><Heading>Sphere groups</Heading>
+Fundamental groups of punctured spheres, and of sphere orbifolds, are
+defined in <Package>IMG</Package> as a special class of finitely
+presented groups. The generators of the group represent the punctures
+of the sphere, or more generally its orbispace points.
+
 <#Include Label="SphereGroups">
-<#Include Label="Thurston">
-<#Include Label="PolynomialFRMachine">
-<#Include Label="SphereOperations">
-<#Include Label="AutomorphismsFRMachines">
-<#Include Label="DBRationalIMGGroup">
 </Section>
 
-<Section><Heading>Spiders</Heading>
-<Package>IMG</Package> contains an implementation of the
+<Section><Heading>Sphere machines</Heading>
+Sphere machines are simply group FR machines (see Section <Ref
+Label="FRMachine" BookName="FR"/>) whose underlying <Ref
+Oper="StateSet" BookName="FR"/> is a sphere group.
+
+<#Include Label="SphereMachine">
+</Section>
+
+<Section><Heading>Polynomial sphere machines</Heading>
+Polynomial sphere machines have a special extra attribute, an <Ref
+Attr="AddingElement"/>. This is an element of the underlying FR group,
+which acts as an adding element on the machine's alphabet. It
+represents a fixed point of a Thurston map of maximal ramification;
+typically, the point <M>\infty</M> of a polynomial.
+
+<#Include Label="SphereOperations">
+
+<#Include Label="PolynomialFRMachine">
+
+<#Include Label="RotatedSpider">
+
+<#Include Label="Conversions">
+</Section>
+
+<Section><Heading>Automorphisms of sphere machines</Heading>
+Consider a sphere group <M>G</M> and its automorphism group
+<M>A</M>. If <M>M</M> is a sphere machine for the group <M>G</M>, then
+pre- and post-composition by automorphisms in <M>A</M> gives new
+sphere machines. The set of such sphere machines is naturally
+described by a machine for the group <M>A</M>.
+
+<#Include Label="AutomorphismsFRMachines">
+</Section>
+
+</Chapter>
+
+<Chapter><Heading>Holomorphic maps</Heading>
+
+A large part of <Package>IMG</Package> consists of code that
+manipulates rational maps and complex coordinates on spheres.
+
+<Section><Heading><M>\mathbb P^1</M> points</Heading>
+Points on the sphere are represented by complex numbers, possibly
+infinity. These complex numbers are encapsulated in <Ref
+Oper="P1Point"/> objects.
+
+<#Include Label="P1Points">
+</Section>
+
+<Section><Heading>Triangulations</Heading>
+The next objects are finite triangulations of the sphere. They are
+represented by lists of points, edges and faces, and all adjacency
+relations between them. Each point, edge and face has a <Ref
+Oper="P1Point"/> as position, and furthermore edges come with a
+parametrization <M>\gamma([0,1])</M> for a Möbius transformation
+<M>\gamma</M>.
+
+<#Include Label="Triangulations">
+</Section>
+
+<Section><Heading>Marked spheres</Heading>
+
+Marked spheres should be thought of as punctured complex spheres, with
+a explicit identification of a sphere group with their fundamental
+group. They model points in Teichmüller space.
+
+<P/> Marked spheres are given by a triangulation and a sphere group
+whose generators are in bijection with the triangulation's
+vertices. Internally, the marked sphere keeps track of a group element
+at each edge, stored as <C>GroupElement(e)</C>. This is the group
+element by which one should multiply as the edge is crossed
+transversally. In particular, the product of the edges going out of
+vertex <M>v</M> is conjugate to generator number <M>v</M>.
+
+<P/> Given a marked sphere and a rational map (given by coefficients),
+a procedure computes the "lifted marked sphere" and a wreath recursion
+between their respective groups, i.e. a homomorphism <M>G_0 \to G_1
+\wr \mathop{Sym}(d)</M>. The procedure will probably fail unless the
+critical values are close to the feet. There, the algorithm is already
+subtle: edges of the dual graph are represented by arcs of great
+circles.
+
+<P/> One first computes the full preimage of the feet, and a
+triangulation spanning them on a sphere "above" the original marked
+sphere. Then, for each edge of the "down" dual graph, its preimage on
+the "up" sphere is an algebraic curve. One computes its intersections
+with all edges of the "up" dual graph, by finding zeroes of real
+polynomials, to determine from which triangle to which one the lifted
+edges go.
+
+<P/> Because of rounding errors, one has to be careful as to when a
+real polynomial is supposed to have a zero, or when a point is
+supposed to be in a triangle. E.g., if <M>T</M> is a triangle and its
+sides are given by arcs of great circles, represented as
+<M>\gamma_i([0,1])</M> for Möbius maps <M>\gamma_i, i=1,2,3</M>, then
+the test <M>\Im(\gamma_i(z))&gt;0 \forall i</M> determines whether
+<M>z</M> is in the triangle. This test is really coded as
+<M>\Im(\gamma_i(z)) / (1+|\gamma_i(z)|^2) &gt; -@IMG.p1eps</M> to take
+care of rounding errors.
+
+<#Include Label="MarkedSpheres">
+</Section>
+
+<Section><Heading>The Hurwitz problem</Heading>
+Given a marked sphere and a permutation representation of its group, a
+procedure computes a rational map with that monodromy. If the
+representation has degree <M>2</M>, or is bicritical, or a few other cases
+easily coded by hand, then the rational map is computed
+algebraically.
+
+<P/> Otherwise, the "hard" part of the algorithm comes into play. A
+fresh marked sphere is constructed with only the feet with non-trivial
+permutation. The triangulation is then combinatorially lifted, using
+the permutation representation. In particular, the feet are now
+labeled by cycles of the permutations. It is a purely combinatorial
+triangulation, at this point; but one remembers that its edges have a
+length inherited from the sphere metric. The triangulation is then
+refined by repeatedly adding circumcentres of triangles, till every
+edge (say from <M>v</M> to <M>w</M>) has length <M>\le
+@IMG.hurwitzmesh ^ Maximum(cycle length at v, cycle length at w)</M>.
+
+<P/> Now an external C program, "layout", is called. It seeks a
+discrete conformal map, given by a function <M>u: \{feet\} \to \mathbb
+R</M>, such that if edge <M>e</M> (from <M>v</M> to <M>w</M>) has its
+length scaled by <M>u(v)\cdot u(w)</M> then the
+sum-of-angles=2<M>\pi</M> condition holds at each vertex (with special
+treatment for a vertex at infinity; I skip details). Then the
+triangulation can be laid out on the plane, and projected back
+stereographically to the sphere. In this manner, we got good
+approximations of where the feet should be.
+
+<P/> Now we run Newton's method on the feet positions, using as
+variables the lifted-feet positions. This is the external program
+"hsolve". It is assumed that the down-feet contain <M>0</M> and
+<M>\infty</M>, so that the rational map we are looking for is of the
+form <M>f(z) = C\cdot\prod(z-c_i)^{d_i}</M> for known integers
+<M>d_i</M>. The <M>c_i</M> are the lifted-feet above <M>0</M> and
+<M>\infty</M>, and the equations in Newton's method say that the
+log-derivative of <M>f</M> must vanish at appropriate lifted-feet, and
+that <M>f</M> must map these lifted-feet to the down-feet.
+
+<#Include Label="Hurwitz">
+</Section>
+
+<Section><Heading>The spider algorithm</Heading>
+
+<Package>IMG</Package> implements an algorith, extending the
 Thurston-Hubbard-Schleicher "spider algorithm" <Cite Key="MR1315537"/>
 that constructs a rational map from an IMG recursion. This
 implementation does not give rigourous results, but relies of
 floating-point approximation. In particular, various floating-point
 parameters control the proper functioning of the algorithm. They are
-stored in a record, <C>EPS@fr</C>. Their meaning and default values
+stored in a record, <C>IMG@</C>. Their meaning and default values
 are:<List>
 <Mark><C>EPS@fr.mesh := 10^-1</C></Mark> <Item> If points on the unit sphere
   are that close, the triangulation mesh should be refined.</Item>
-<Mark><C>EPS@fr.prec := 10^-6</C></Mark> <Item> If points on the unit
+<Mark><C>EPS@fr.p1eps := 10^-8</C></Mark> <Item> If points on the unit
   sphere are that close, they are considered equal.</Item>
 <Mark><C>EPS@fr.obst := 10^-1</C></Mark> <Item> If points on the unit sphere
   are that close, they are suspected to form a Thurston obstruction.</Item>
-<Mark><C>EPS@fr.juliaiter := 10^3</C></Mark> <Item> In computing
-  images of the Julia set, never recur deeper than that.</Item>
 <Mark><C>EPS@fr.fast := 10^-1</C></Mark> <Item> If the spider moved
   less than that amount in the last iteration, try speeding up by
   only wiggling the spider's legs, without recomputing it.</Item>
-<Mark><C>EPS@fr.ratprec := 10^-10</C></Mark> <Item> The desired
-  precision on the coefficients of the rational function.</Item>
+<Mark><C>EPS@fr.ratprec := 10^-8</C></Mark> <Item> The minimal
+  acceptable precision on the coefficients of the rational function.</Item>
 </List>
 
-.....
-(a) there is a concept of "marked sphere". It is made of an N-generated group, a collection of N elements of P^1(C) called "feet", a triangulation of the sphere that includes these elements among its vertices, and a marking of the edges by elements of the group in such a manner that a loop around point i is conjugate to generator i. To keep track of "loops around things", the triangulation also remembers its dual graph.
+For Thurston's algorithm, one starts by an arbitrary marked sphere (I
+chose its feet on the real axis, at equal small angles); computes a
+rational map using <Ref Oper="BranchedCoveringByMonodromy"/>, computes
+its sphere machine using <Ref
+Oper="SphereMachineOfBranchedCovering"/>, and matches the original
+sphere machine with the lifted one. This tells us which feet of the
+lifted marked sphere we should keep.
 
-(b) given a marked sphere and a rational map (given by coefficients), a procedure computes the "lifted marked sphere" and a wreath recursion between their respective groups, i.e. a homomorphism G_{below} \to G_{above} wr sym(d). The procedure will probably fail unless the critical values are close to the feet. There, the algorithm is already subtle: edges of the dual graph are represented by arcs of great circles. One first computes the full preimage of the feet, and a triangulation spanning them on a sphere "above" the original marked sphere. Then, for each edge of the "down" dual graph, its preimage on the "up" sphere is an algebraic curve. One computes its intersections with all edges of the "up" dual graph, by finding zeroes of real polynomials, to determine from which triangle to which one the lifted edges go. Because of rounding errors, one has to be careful as to when a real polynomial is supposed to have a zero, or when a point is supposed to be in a triangle. E.g., if T is a triangle and its sides are given by arcs of great circles, represented as gamma_i([0,1]) for Moebius maps gamma_i, i=1,2,3, then the test "Im(gamma_i(z))&gt;0 forall i" determines whether z is in the triangle. This test is really coded as "Im(gamma_i(z)) / (1+|gamma_i(z)|^2) &gt; -@IMG.p1eps" to take care of rounding errors.
+<P/> One then computes a normalized position for the sub-marked
+sphere: its last foot is put at <M>\infty</M>, another one (chosen
+cleverly) is on the positive real axis, and the center of mass of all
+feet (in <M>\mathbb R^3</M>) is <M>(0,0,0)</M>. This is much more
+stable, numerically, than putting three points at
+<M>0,1,\infty</M>. One has a Möbius transformation that puts the
+sub-marked sphere in normalized position, and again using <Ref
+Oper="SphereMachineOfBranchedCovering"/> one computes its machine. One
+then composes the machines, and compares the product again to the
+original machine to determine the marking of the edges of the new
+marked sphere by group elements.
 
-(c) given a marked sphere and a permutation representation of its group, a procedure computes a rational map with that monodromy. If the representation has degree 2, or is bicritical, or a few other cases easily coded by hand, then the rational map is computed algebraically. Otherwise, the "hard" part of the algorithm comes into play. A fresh marked sphere is constructed with only the feet with non-trivial permutation. The triangulation is then combinatorially lifted, using the permutation representation. In particular, the feet are now labeled by cycles of the permutations. It is a purely combinatorial triangulation, at this point; but one remembers that its edges have a length inherited from the sphere metric. The triangulation is then refined by repeatedly adding circumcentres of triangles, till every edge (say from v to w) has length \le @IMG.hurwitzmesh ^ Maximum(cycle length at v, cycle length at w). Now an external C program, "layout", is called. It seeks a discrete conformal map, given by a function u: {feet} \to R, such that if edge e (from v to w) has its length scaled by u(v)*u(w) then the sum-of-angles=2pi condition holds at each vertex (with special treatment for a vertex at infinity; I skip details). Then the triangulation can be laid out on the plane, and projected back stereographically to the sphere. In this manner, we got good approximations of where the feet should be. Now we run Newton's method on the feet positions, using as variables the lifted-feet positions. This is the external program "hsolve". It is assumed that the down-feet contain 0 and infinity, so that the rational map we are looking for is of the form f(z) = const*prod((z-c_i)^{d_i}) for known integers d_i. The c_i are the lifted-feet above 0 and infinity, and the equations in Newton's method say that the log-derivative of f must vanish at appropriate lifted-feet, and that f must map these lifted-feet to the down-feet.
+<P/> Then, one searches for all quadruples with large cross-ratio, and
+computes group-theoretically the curve separating the post-critical
+set in two parts that are well separated. One saturates the resulting
+curve into an invariant multicurve (aborting if there is an
+intersection between lifts), computes the Thurston matrix, and finds
+out (again algebraically) if there is an eigenvalue <M>\geq
+1</M>. There is no parameter in this part of the code, all quadruples
+are examined; this is a weakness of the current implementation,
+sometimes most of the computational time is spent on searching for
+obstructions when it's "clear" there are none.
 
-(d) For Thurston's algorithm, one starts by an arbitrary marked sphere (I chose its feet on the real axis, at equal small angles); computes a rational map using (c), computes [*] its biset using (b), and matches the original biset with the lifted one. This tells us which feet of the lifted biset we should keep. One then computes a normalized position for the sub-marked sphere: its last foot is at infinity, another one (chosen cleverly) is on the positive real axis, and the center of mass of all feet (in R^3) is (0,0,0). This is much more stable, numerically, than putting 3 points at 0,1,infty. One has a Moebius transformation that puts the sub-marked sphere in normalized position, and by (b) computes its biset. One then composes the bisets, and compares it again to the original biset to determine the marking of the edges of the new marked sphere by group elements. Then, one searches for all quadruples with large cross-ratio, and computes group-theoretically the curve separating the post-critical set in two parts that are well separated. One saturates the resulting curve into an invariant multicurve (aborting if there is an intersection between lifts), computes the Thurston matrix, and finds out (again algebraically) if there is an eigenvalue \geq 1. There is no parameter in this part of the code, all quadruples are examined; this is a weakness of the current implementation, sometimes most of the computational time is spent on searching for obstructions when it's "clear" there are none. The distance between two marked spheres (marked by the same group) is computed as follows: if their feet are close in the sense that the sum of the spherical distances between them is less that @IMG.fast, then wiggle one of the spiders to make its feet match that of the other; and check that the identity map gives, by (b), the identity biset. In that case, the sum of the feet distances is the distance between the spheres. Otherwise, add to it some formula involving the entries in the biset, which gives large integer distances. The Thurston algorithm stops when an obstruction is found or when the marked sphere moved less than @IMG.ratprec. Inside the main iteration of the algorithm, if the spider moved less that @IMG.fast, then skip step [*], and try guessing which of the lifts should be kept. Check the guess: if it is incorrect, go back to the usual method. This is useful if the biset has low degree but high post-critical set size, and useless if the biset has high degree and low post-critical set size, but I haven't taken care to disable it in that case (yet).
+<P/> The distance between two marked spheres (marked by the same
+group) is computed as follows: if their feet are close in the sense
+that the sum of the spherical distances between them is less that
+<C>@IMG.fast</C>, then wiggle one of the spiders to make its feet
+match that of the other; and check that the identity map gives, by
+<Ref Oper="SphereMachineOfBranchedCovering"/>, the identity
+machine. In that case, the sum of the feet distances is the distance
+between the spheres. Otherwise, add to it some formula involving the
+entries in the biset, which gives large integer distances.
 
-Another speedup which I should implement, but haven't gotten to, is in (c) to remember the previously computed rational map and/or triangulated sphere, and to directly try Newton's method without doing the "layout" part.
-.....
+<P/> The Thurston algorithm stops when an obstruction is found or when
+the marked sphere moved less than <C>@IMG.ratprec</C>. Inside the main
+iteration of the algorithm, if the spider moved less that
+<C>@IMG.fast</C>, then don't compute the branched covering by
+monodromy, and don't compute the bisets; but just adjust the branched
+covering and the vertex positions of the spheres, guessing which ones
+should be kept. Check the guess: if it is incorrect, go back to the
+usual slow method.
 
-<#Include Label="Triangulations">
-<#Include Label="MarkedSpheres">
-<#Include Label="RotatedSpider">
-<#Include Label="Hurwitz">
-<#Include Label="Conversions">
+<#Include Label="Thurston">
 </Section>
+
 </Chapter>
 
 <Chapter Label="imgexamples"><Heading>Examples</Heading>
-<Package>IMG</Package> predefines a large collection of machines and
-groups. The groups are, whenever possible, defined as state closures
-of corresponding Mealy machines.
+<Package>IMG</Package> predefines a large collection of sphere
+machines, as well as the generic constructions of polynomials.
 
 <Section><Heading>Examples of groups</Heading>
 <#Include Label="Poirier">
-</Section>
-
-</Chapter>
-
-<Chapter><Heading>IMG implementation details</Heading>
-
-<Package>IMG</Package> creates new categories for the various objects
-considered in the package. The first category is ...
-
-<Section><Heading>Marked spheres</Heading>
-<Package>IMG</Package> contains algorithms that convert a rational
-function (with floating-point complex coefficients) to an IMG machine
-and back.
-
-<P/> Consider a rational map <M>f</M> of degree <M>d</M>. First, compute the
-post-critical set <M>P_f</M>; this is done by iterating <M>f</M> on
-critical points, and considering points at angle at
-most <M>EPS@.prec</M> from each other as equal.
-
-<P/> Then construct a spherical Delaunay triangulation <M>T</M>
-on <M>P_f</M>; and choose in it a minimal spanning tree; edges of that
-tree represent a generating set of the fundamental group <M>G</M>
-of <M>S^2\setminus P_f</M>.
-
-<P/> Lift first through <M>f</M> the edges of the dual tree in the
-dual tesselation of <M>T</M>; they will form <M>d</M> connected
-subgraphs, numbered <M>1,\ldots,d</M>. Lift then the edges crossing the
-minimal spanning tree, and read the elements of <M>F</M> that their
-lifts represent, as well as the subgraphs they start and end in. This
-data describes an FR machine.
-
-<P/> Choose then for each vertex in <M>P_f</M> an adjacent face
-in <M>T/</M>. This choice defines a generating family of <M>F</M> made
-up, for each vertex, of a path in the dual tree starting at a
-basepoint, a sequence of edges around a vertex starting at the chosen
-face, and a path back in the dual tree. The product, in an appropriate
-order, of these generators describes an IMG machine.
-
-<P/> There is an epimorphism from the group <M>G</M>, generated by
-these loops around vertices, to <M>F</M>; and this epimorphism becomes
-an isomorphism if one adds to <M>G/</M> the relation "product of
-generators in an appropriate order". Such a triangulation, with a
-given group <M>G</M> and a homomorphism from <M>G</M> to <M>F</M>, is
-called a <E>spider</E>.
-
-<P/> The inverse algorithm is quite similar. Consider an IMG
-machine <M>M</M>, with stateset <M>G</M>. Start by a "standard" set of
-points on the sphere, one per generator of <M>M</M>, and construct a
-spider <M>S</M> on them. Find a rational map <M>f</M> with critical
-values at the vertices of <M>S</M> and monodromy given by the
-activities of <M>M</M>, and lift <M>S</M> to a spider <M>T</M>, marked
-by a group <M>H</M>. The lifting gives a homomorphism <M>f^*:G\to H\wr
-\mathop{Sym}(d)</M>.
-
-<P/> By appropriately relabeling the alphabet, one can ensure that
-this homomorphism coincides with <M>M</M>'s recursion at the first
-level. Furthermore, it identifies each vertex <M>v_i</M> of <M>T</M>
-either with a vertex <M>w_j</M> of <M>S</M>, if for some <M>g\in G</M>
-a state in <M>M</M> of <M>g</M> is a conjugate <M>g_j</M>, while the
-corresponding entry of <M>f^*(g)</M> is a conjugate of <M>h_i</M>.
-
-<P/> Construct then a new triangulation <M>S'</M> by keeping only
-those vertices of <M>T</M> that were identified, and mapping them by a
-Möbius transformation <M>\mu</M> to "standard position". This means
-that the barycenter of the points is <M>0\in \mathbb R^3</M>, that the
-last point goes to <M>\infty</M>, and that the next-to-last goes
-to <M>\mathbb R_+</M>. Letting <M>F</M> denote the group on the
-minimal spanning tree of <M>S'</M>, there is a
-homomorphism <M>\mu_*:H\to F</M>.
-
-<P/> The decomposition <M>\phi</M> of <M>M</M> then produces a
-homomorphism <M>m:G\to F</M> such that <M>\mu_*f^*=m\phi</M>. This
-turns <M>S'</M> into a spider on <M>G</M>. Iterate then this process
-with <M>S'</M>.
-
-<P/> Either the spiders <M>S</M> converge, and then <M>\mu^{-1}f</M>
-is the desired rational function; or there is a Thurston obstruction,
-which is a non-contracting multicurve. Seek therefore clusters of
-vertices that are very close from each other, and compute the curve
-going around them; this defines a conjugacy class
-in <M>G</M>. In <M>M</M>, compute the iterated decomposition of this
-curve, and its associated transition matrix. If it has spectrum at
-least <M>1</M>, return the multicurve as an obstruction; otherwise,
-continue.
-
+<#Include Label="DBRationalIMGGroup">
 </Section>
 
 </Chapter>
@@ -346,11 +447,7 @@ continue.
 <#Include Label="complexnumbers">
 </Section>
 
-<Section><Heading>P1 points</Heading>
-<#Include Label="P1Points">
-</Section>
-
-<Section><Heading>Miscellanea</Heading>
+<Section><Heading>Helpers</Heading>
 <#Include Label="Helpers">
 </Section>
 

@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>GAP (IMG) - Chapter 4: Examples</title>
+<title>GAP (IMG) - Chapter 4: Holomorphic maps</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="GAPDoc2HTML" />
 <link rel="stylesheet" type="text/css" href="manual.css" />
@@ -19,31 +19,1238 @@
 
 <div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap5.html">[Next Chapter]</a>&nbsp;  </div>
 
-<p><a id="X7A489A5D79DA9E5C" name="X7A489A5D79DA9E5C"></a></p>
-<div class="ChapSects"><a href="chap4.html#X7A489A5D79DA9E5C">4 <span class="Heading">Examples</span></a>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X7AF5DEF08531AFA5">4.1 <span class="Heading">Examples of groups</span></a>
+<p><a id="X7F65DEF6819A5FFA" name="X7F65DEF6819A5FFA"></a></p>
+<div class="ChapSects"><a href="chap4.html#X7F65DEF6819A5FFA">4 <span class="Heading">Holomorphic maps</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X83FCA3797DF37146">4.1 <span class="Heading"><span class="SimpleMath">P^1</span> points</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8700DB2886B0A7E4">4.1-1 PoirierExamples</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X84AD618C7906AC92">4.1-1 IsP1Point</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B4DB6F9857B4DC5">4.1-2 P1Coordinate</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X80B00F0685209993">4.1-3 CleanedP1Point</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X87AC40C579500473">4.1-4 P1infinity</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X80DB7A677E1EF1F6">4.1-5 P1Antipode</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7E220B497FF24C98">4.1-6 P1Barycentre</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X83BD8B5C856DF570">4.1-7 P1Circumcentre</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7A3A339181EF9D24">4.1-8 P1Distance</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X86D3189D83BA09F8">4.1-9 P1Midpoint</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7FC042FA8032C1A5">4.1-10 P1Sphere</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X83072FCB86850BDA">4.1-11 SphereP1</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X87B815958442BA68">4.1-12 SphereP1Y</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7C50C284794F35A8">4.1-13 P1XRatio</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7EECAF1882342F6A">4.1-14 CollectedP1Points</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7D5DD0E48310B9E2">4.1-15 MatchP1Points</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X84C2C9428600FCFA">4.1-16 ClosestP1Point</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7E5D08E07C9994F8">4.1-17 IsP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X83D5E52A7FFB797D">4.1-18 MoebiusMap</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X78DF267B7FEDDB28">4.1-19 P1MapRotatingP1Points</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X86EE111D78C3E03E">4.1-20 P1MapNormalizingP1Points</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B5CBC0585889AC9">4.1-21 P1z</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X87337D3C7DAA4775">4.1-22 P1Monomial</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X87A94D82784C718C">4.1-23 CleanedP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8016D67A7E896C06">4.1-24 CompositionP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7BDFCBC5811CE899">4.1-25 InverseP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X83DA8114803C40B7">4.1-26 ComplexConjugate</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7C68BED87D1EC1AD">4.1-27 ConjugatedP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7AFFF43383BF5001">4.1-28 CoefficientsOfP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7DE9419F7E0FADE9">4.1-29 P1MapByCoefficients</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7910CB4483A00A51">4.1-30 NumeratorP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X854C1334812D83A3">4.1-31 P1MapByZerosPoles</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X78DBA65C7990FE8A">4.1-32 P1Path</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X78DB4F257D1E2E8B">4.1-33 DegreeOfP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X78BB00397DBDE5F5">4.1-34 P1Image</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8569241C7914A53C">4.1-35 P1PreImage</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8523E70785E32A8F">4.1-36 P1PreImages</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X80D5660286F32034">4.1-37 Primitive</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B670D5381F181A0">4.1-38 P1MapScaling</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X86B17B0881D4FAA9">4.1-39 CriticalPointsOfP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7D63FC067C742C7B">4.1-40 AsP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X83410A948102C845">4.1-41 P1MapSL2</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X840A9CD185F5519C">4.1-42 SL2P1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X874D59BD87D136D0">4.1-43 SetP1Points</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X83B817657B208EC3">4.2 <span class="Heading">Triangulations</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X81727B8B7A599605">4.2-1 IsSphereTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X833BA8217E601451">4.2-2 EdgePath</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X80C530E87B7FA7C4">4.2-3 DelaunayTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X82EB5B207B2C273E">4.2-4 AddToTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7A92BCE987775667">4.2-5 RemoveFromTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X866712E5799237C6">4.2-6 LocateFaceInTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7FA533EF78FF292B">4.2-7 WiggledTriangulation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X852EDAD3787E522D">4.2-8 EquidistributedP1Points</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X7F8F64548143DF99">4.3 <span class="Heading">Marked spheres</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7BCBD3A47B95CB12">4.3-1 IsMarkedSphere</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X859AFCB184D66E76">4.3-2 NewMarkedSphere</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8563CADF7AA37AA4">4.3-3 Draw</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B3ACCDC81180337">4.3-4 WiggledMarkedSphere</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7F86A9607DBDD8A9">4.3-5 SphereMachineOfBranchedCovering</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7E3708BD7AFB94A4">4.3-6 MonodromyOfP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X801927327E45A69D">4.3-7 SphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X860A9B5E7BC8640D">4.3-8 DistanceMarkedSpheres</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X85A42F18850FACA7">4.4 <span class="Heading">The Hurwitz problem</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7AEA7BA67950292B">4.4-1 BranchedCoveringByMonodromy</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X84FC673C7B104194">4.4-2 DessinByPermutations</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X7D2E2F1B808F320D">4.5 <span class="Heading">The spider algorithm</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X8283D95B7FE74991">4.5-1 NormalizedP1Map</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7E423D047DB95301">4.5-2 ThurstonAlgorithm</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7A6170147F1376F2">4.5-3 P1MapBySphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X807FAD4982B21B2A">4.5-4 ThurstonMatrix</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X787168378397C957">4.5-5 ThurstonObstruction</a></span>
 </div></div>
 </div>
 
-<h3>4 <span class="Heading">Examples</span></h3>
+<h3>4 <span class="Heading">Holomorphic maps</span></h3>
 
-<p><strong class="pkg">IMG</strong> predefines a large collection of machines and groups. The groups are, whenever possible, defined as state closures of corresponding Mealy machines.</p>
+<p>A large part of <strong class="pkg">IMG</strong> consists of code that manipulates rational maps and complex coordinates on spheres.</p>
 
-<p><a id="X7AF5DEF08531AFA5" name="X7AF5DEF08531AFA5"></a></p>
+<p><a id="X83FCA3797DF37146" name="X83FCA3797DF37146"></a></p>
 
-<h4>4.1 <span class="Heading">Examples of groups</span></h4>
+<h4>4.1 <span class="Heading"><span class="SimpleMath">P^1</span> points</span></h4>
 
-<p>DeclareGlobalFunction("PoirierExamples");</p>
+<p>Points on the sphere are represented by complex numbers, possibly infinity. These complex numbers are encapsulated in <code class="func">P1Point</code> (<a href="chap4.html#X84AD618C7906AC92"><span class="RefLink">4.1-1</span></a>) objects. DeclareCategory("IsP1Point",IsObject); DeclareCategoryCollections("IsP1Point"); DeclareCategoryCollections("IsP1PointCollection"); DeclareSynonym("IsP1PointList",IsP1PointCollection and IsList); DeclareCategory("IsIEEE754P1Point",IsP1Point); BindGlobal("P1PointsFamily",NewFamily("P1PointsFamily",IsP1Point)); BindGlobal("TYPE_P1POINT",NewType(P1PointsFamily,IsP1Point and IsPositionalObjectRep)); BindGlobal("TYPE_IEEE754P1POINT",NewType(P1PointsFamily,IsIEEE754P1Point and IsDataObjectRep)); DeclareOperation("P1Point",[IsFloat]); DeclareOperation("P1Point",[IsRat]); DeclareOperation("P1Point",[IsInfinity]); DeclareOperation("P1Point",[IsFloat,IsFloat]);</p>
 
-<p><a id="X8700DB2886B0A7E4" name="X8700DB2886B0A7E4"></a></p>
+<p><a id="X84AD618C7906AC92" name="X84AD618C7906AC92"></a></p>
 
-<h5>4.1-1 PoirierExamples</h5>
+<h5>4.1-1 IsP1Point</h5>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PoirierExamples</code>( <var class="Arg">...</var> )</td><td class="tdright">( function )</td></tr></table></div>
-<p>The examples from Poirier's paper <a href="chapBib.html#biBmath.DS/9305207">[Poi]</a>. See details under <code class="func">PolynomialSphereMachine</code> (<a href="chap3.html#X80E689F38412EE20"><span class="RefLink">3.1-27</span></a>); in particular, <code class="code">PoirierExamples(1)</code> is the Douady rabbit map.</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsP1Point</code></td><td class="tdright">( filter )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1PointsFamily</code></td><td class="tdright">( family )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Point</code>( <var class="Arg">complex</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Point</code>( <var class="Arg">real</var>, <var class="Arg">imag</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Point</code>( <var class="Arg">string</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>P1 points are complex numbers or infinity; fast methods are implemented to compute with them, and to apply rational maps to them.</p>
+
+<p>The first filter recognizes these objects. Next, the family they belong to. The next methods create a new P1 point.</p>
+
+<p>DeclareAttribute("P1Coordinate",IsP1Point);</p>
+
+<p><a id="X7B4DB6F9857B4DC5" name="X7B4DB6F9857B4DC5"></a></p>
+
+<h5>4.1-2 P1Coordinate</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Coordinate</code>( <var class="Arg">p</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The complex number represented by <var class="Arg">p</var>.</p>
+
+<p>DeclareOperation("CleanedP1Point",[IsP1Point,IsFloat]); DeclareOperation("CleanedP1Point",[IsP1Point]);</p>
+
+<p><a id="X80B00F0685209993" name="X80B00F0685209993"></a></p>
+
+<h5>4.1-3 CleanedP1Point</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CleanedP1Point</code>( <var class="Arg">p</var>[, <var class="Arg">prec</var>] )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: <var class="Arg">p</var>, rounded towards 0/1/infinity/reals at precision <var class="Arg">prec</var>.</p>
+
+<p>DeclareGlobalVariable("P1infinity"); DeclareOperation("P1INFINITY@",[IsP1Point]); DeclareGlobalVariable("P1one"); DeclareGlobalVariable("P1zero");</p>
+
+<p><a id="X87AC40C579500473" name="X87AC40C579500473"></a></p>
+
+<h5>4.1-4 P1infinity</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1infinity</code></td><td class="tdright">( global variable )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1one</code></td><td class="tdright">( global variable )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1zero</code></td><td class="tdright">( global variable )</td></tr></table></div>
+<p>The south, north and 'east' poles of the Riemann sphere.</p>
+
+<p>DeclareAttribute("P1Antipode",IsP1Point);</p>
+
+<p><a id="X80DB7A677E1EF1F6" name="X80DB7A677E1EF1F6"></a></p>
+
+<h5>4.1-5 P1Antipode</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Antipode</code>( <var class="Arg">p</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The antipode of <var class="Arg">p</var> on the Riemann sphere.</p>
+
+<p>DeclareOperation("P1Barycentre",[IsP1PointList]); DeclareOperation("P1Barycentre",[IsP1Point]); DeclareOperation("P1Barycentre",[IsP1Point,IsP1Point]); DeclareOperation("P1Barycentre",[IsP1Point,IsP1Point,IsP1Point]);</p>
+
+<p><a id="X7E220B497FF24C98" name="X7E220B497FF24C98"></a></p>
+
+<h5>4.1-6 P1Barycentre</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Barycentre</code>( <var class="Arg">points</var>, <var class="Arg">...</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The barycentre of its arguments (which can also be a list of P1 points).</p>
+
+<p>DeclareOperation("P1Circumcentre",[IsP1Point,IsP1Point,IsP1Point]);</p>
+
+<p><a id="X83BD8B5C856DF570" name="X83BD8B5C856DF570"></a></p>
+
+<h5>4.1-7 P1Circumcentre</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Circumcentre</code>( <var class="Arg">p</var>, <var class="Arg">q</var>, <var class="Arg">r</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The centre of the smallest disk containing <var class="Arg">p,q,r</var>.</p>
+
+<p>DeclareOperation("P1Distance",[IsP1Point,IsP1Point]);</p>
+
+<p><a id="X7A3A339181EF9D24" name="X7A3A339181EF9D24"></a></p>
+
+<h5>4.1-8 P1Distance</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Distance</code>( <var class="Arg">p</var>, <var class="Arg">q</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The spherical distance from <var class="Arg">p</var> to <var class="Arg">q</var>.</p>
+
+<p>DeclareOperation("P1Midpoint",[IsP1Point,IsP1Point]);</p>
+
+<p><a id="X86D3189D83BA09F8" name="X86D3189D83BA09F8"></a></p>
+
+<h5>4.1-9 P1Midpoint</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Midpoint</code>( <var class="Arg">p</var>, <var class="Arg">q</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The point between <var class="Arg">p</var> to <var class="Arg">q</var> (undefined if they are antipodes of each other).</p>
+
+<p>DeclareAttribute("P1Sphere",IsList);</p>
+
+<p><a id="X7FC042FA8032C1A5" name="X7FC042FA8032C1A5"></a></p>
+
+<h5>4.1-10 P1Sphere</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Sphere</code>( <var class="Arg">v</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The P1 point corresponding to <var class="Arg">v</var> in <span class="SimpleMath">R^3</span>.</p>
+
+<p>DeclareAttribute("SphereP1",IsP1Point);</p>
+
+<p><a id="X83072FCB86850BDA" name="X83072FCB86850BDA"></a></p>
+
+<h5>4.1-11 SphereP1</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SphereP1</code>( <var class="Arg">p</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The coordinates in <span class="SimpleMath">R^3</span> of <var class="Arg">p</var>.</p>
+
+<p>DeclareAttribute("SphereP1Y",IsP1Point);</p>
+
+<p><a id="X87B815958442BA68" name="X87B815958442BA68"></a></p>
+
+<h5>4.1-12 SphereP1Y</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SphereP1Y</code>( <var class="Arg">p</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The Y coordinate in <span class="SimpleMath">R^3</span> of <var class="Arg">p</var>.</p>
+
+<p>DeclareOperation("P1XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]); DeclareOperation("XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);</p>
+
+<p><a id="X7C50C284794F35A8" name="X7C50C284794F35A8"></a></p>
+
+<h5>4.1-13 P1XRatio</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1XRatio</code>( <var class="Arg">p</var>, <var class="Arg">q</var>, <var class="Arg">r</var>, <var class="Arg">s</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; XRatio</code>( <var class="Arg">p</var>, <var class="Arg">q</var>, <var class="Arg">r</var>, <var class="Arg">s</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The cross ratio of <var class="Arg">p, q, r, s</var>.</p>
+
+<p>The cross ratio of four points <var class="Arg">p,q,r,s</var> is defined as <code class="code">(p-r)(q-s)/(p-s)(q-r)</code>. The values <code class="code">P1zero,P1one,P1infinity</code> correspond respectively to the special cases <code class="code">(p=r or q=s)</code>, <code class="code">(p=q or r=s)</code>, <code class="code">(p=s or q=r)</code>.</p>
+
+<p>In the first form, the result is a P1 point. In the second form, it is a complex number.</p>
+
+<p>DeclareOperation("CollectedP1Points",[IsP1PointList]); DeclareOperation("CollectedP1Points",[IsP1PointList,IsFloat]);</p>
+
+<p><a id="X7EECAF1882342F6A" name="X7EECAF1882342F6A"></a></p>
+
+<h5>4.1-14 CollectedP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CollectedP1Points</code>( <var class="Arg">p1points</var>[, <var class="Arg">precision</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A list of pairs <code class="code">[point,multiplicity]</code>.</p>
+
+<p>Collects the points in <var class="Arg">p1points</var>; points at distance at most <var class="Arg">precision</var> are considered equal, and the barycentre of the clustered points is returned.</p>
+
+<p>If the argument <var class="Arg">precision</var> is not supplied, <code class="code">@IMG.p1eps</code> is taken.</p>
+
+<p>DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointCollColl,IsFloat]); DeclareOperation("MatchP1Points",[IsP1PointList,IsP1PointCollColl]);</p>
+
+<p><a id="X7D5DD0E48310B9E2" name="X7D5DD0E48310B9E2"></a></p>
+
+<h5>4.1-15 MatchP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MatchP1Points</code>( <var class="Arg">p1pointsA</var>, <var class="Arg">p1pointsB</var>[, <var class="Arg">separation</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A list of giving closest point in <var class="Arg">p1pointsB</var> to points in <var class="Arg">p1pointsA</var>, or <code class="keyw">fail</code>.</p>
+
+<p>Finds for each point <var class="Arg">p1pointsA[i]</var> the closest point <var class="Arg">p1pointB[p[i]]</var>. If the next-closest is at least <var class="Arg">separation</var> further away for all <code class="code">i</code>, then the list <code class="code">p</code> is returned. Otherwise, <code class="keyw">fail</code> is returned.</p>
+
+<p>If the argument <var class="Arg">separation</var> is not supplied, <code class="keyw">2</code> is taken.</p>
+
+<p>DeclareOperation("ClosestP1Point",[IsP1PointList,IsP1Point]);</p>
+
+<p><a id="X84C2C9428600FCFA" name="X84C2C9428600FCFA"></a></p>
+
+<h5>4.1-16 ClosestP1Point</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ClosestP1Point</code>( <var class="Arg">p1points</var>, <var class="Arg">p1point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The point in <var class="Arg">p1points</var> closest to <var class="Arg">p1point</var>.</p>
+
+<p>DeclareSynonym("IsP1Map",IsUnivariateRationalFunction and IsFloatRationalFunction); DeclareCategory("IsIEEE754P1Map",IsP1Map); BindGlobal("TYPE_IEEE754P1MAP", NewType(RationalFunctionsFamily(PMCOMPLEX_PSEUDOFIELD), IsIEEE754P1Map and IsDataObjectRep));</p>
+
+<p><a id="X7E5D08E07C9994F8" name="X7E5D08E07C9994F8"></a></p>
+
+<h5>4.1-17 IsP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsP1Map</code></td><td class="tdright">( filter )</td></tr></table></div>
+<p>P1 maps are stored more efficiently than rational functions, but are otherwise equivalent.</p>
+
+<p>DeclareOperation("MoebiusMap",[IsP1Point]); DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point]); DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point,IsP1Point]); DeclareOperation("MoebiusMap",[IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point,IsP1Point]); DeclareOperation("MoebiusMap",[IsP1PointList]); DeclareOperation("MoebiusMap",[IsP1PointList,IsP1PointList]);</p>
+
+<p><a id="X83D5E52A7FFB797D" name="X83D5E52A7FFB797D"></a></p>
+
+<h5>4.1-18 MoebiusMap</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MoebiusMap</code>( [<var class="Arg">sourcelist</var>, ]<var class="Arg">destlist</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MoebiusMap</code>( <var class="Arg">p</var>, <var class="Arg">q</var>, <var class="Arg">r</var>, <var class="Arg">s</var>, <var class="Arg">t</var>, <var class="Arg">u</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MoebiusMap</code>( <var class="Arg">p</var>, <var class="Arg">q</var>, <var class="Arg">r</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MoebiusMap</code>( <var class="Arg">p</var>, <var class="Arg">q</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MoebiusMap</code>( <var class="Arg">p</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: A new Möbius transformation.</p>
+
+<p>In the first case, this is the Möbius transformation sending <var class="Arg">p,q,r</var> to <var class="Arg">P,Q,R</var> respectively; in the second case, the map sending <code class="code">0,1,P1infinity</code> to <var class="Arg">p,q,r</var> respectively; in the third case, the map sending <code class="code">0,P1infinity</code> to <var class="Arg">p,q</var> respectively, and of the form <span class="SimpleMath">(z-p)/(z-q)</span>; and in the fourth case, a rotation sending <var class="Arg">P1infinity</var> to <var class="Arg">p</var>.</p>
+
+<p>DeclareOperation("P1ROTATION@",[IsP1Point,IsP1PointList,IsP1PointList]); DeclareGlobalFunction("P1MapRotatingP1Points");</p>
+
+<p><a id="X78DF267B7FEDDB28" name="X78DF267B7FEDDB28"></a></p>
+
+<h5>4.1-19 P1MapRotatingP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapRotatingP1Points</code>( <var class="Arg">points</var>[, <var class="Arg">oldpoints</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A Möbius rotation sending the last of <var class="Arg">points</var> to P1infinity.</p>
+
+<p>A Möbius rotation is computed that sends the last of <var class="Arg">points</var> to <code class="keyw">P1infinity</code> and, assuming the last point in <var class="Arg">oldpoints</var> is also <code class="keyw">P1infinity</code>, matches the points in <var class="Arg">points</var> and <var class="Arg">oldpoints</var> as closely as possible.</p>
+
+<p>DeclareOperation("P1MapNormalizingP1Points",[IsP1PointList]); DeclareOperation("P1MapNormalizingP1Points",[IsP1PointList,IsP1PointList]);</p>
+
+<p><a id="X86EE111D78C3E03E" name="X86EE111D78C3E03E"></a></p>
+
+<h5>4.1-20 P1MapNormalizingP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapNormalizingP1Points</code>( <var class="Arg">points</var>[, <var class="Arg">oldpoints</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A Möbius transformation sending the last of <var class="Arg">points</var> to P1infinity.</p>
+
+<p>A Möbius transformation is computed that sends the last of <var class="Arg">points</var> to <code class="keyw">P1infinity</code> and makes the barycentre of the points in <span class="SimpleMath">R^3</span> as close as possible to the origin. If a list <var class="Arg">oldpoints</var> is also given, the Möbius transformation computed rotates about infinity so as to match the points in <var class="Arg">points</var> and <var class="Arg">oldpoints</var> as closely as possible; this then determines the transformation uniquely.</p>
+
+<p>DeclareGlobalVariable("P1z");</p>
+
+<p><a id="X7B5CBC0585889AC9" name="X7B5CBC0585889AC9"></a></p>
+
+<h5>4.1-21 P1z</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1z</code></td><td class="tdright">( global variable )</td></tr></table></div>
+<p>The identity Möbius transformation.</p>
+
+<p>DeclareGlobalFunction("P1Monomial");</p>
+
+<p><a id="X87337D3C7DAA4775" name="X87337D3C7DAA4775"></a></p>
+
+<h5>4.1-22 P1Monomial</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Monomial</code>( <var class="Arg">n</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: The rational function <span class="SimpleMath">z^n</span>.</p>
+
+<p>DeclareOperation("CleanedP1Map",[IsP1Map,IsFloat]); DeclareOperation("CleanedP1Map",[IsP1Map]);</p>
+
+<p><a id="X87A94D82784C718C" name="X87A94D82784C718C"></a></p>
+
+<h5>4.1-23 CleanedP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CleanedP1Map</code>( <var class="Arg">map</var>[, <var class="Arg">prec</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: <var class="Arg">map</var>, with coefficients rounded using <var class="Arg">prec</var>.</p>
+
+<p>DeclareSynonym("CompositionP1Map",CompositionMapping2);</p>
+
+<p><a id="X8016D67A7E896C06" name="X8016D67A7E896C06"></a></p>
+
+<h5>4.1-24 CompositionP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CompositionP1Map</code>( <var class="Arg">map1</var>, <var class="Arg">...</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The composition of the maps passed as arguments, in the functional (<var class="Arg">map1</var> last) order.</p>
+
+<p>DeclareSynonym("InverseP1Map",InverseGeneralMapping);</p>
+
+<p><a id="X7BDFCBC5811CE899" name="X7BDFCBC5811CE899"></a></p>
+
+<h5>4.1-25 InverseP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; InverseP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The functional inverse of the Möbius transformation <var class="Arg">map</var>.</p>
+
+<p>DeclareAttribute("ComplexConjugate",IsP1Map); # already there for numerical objects</p>
+
+<p><a id="X83DA8114803C40B7" name="X83DA8114803C40B7"></a></p>
+
+<h5>4.1-26 ComplexConjugate</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ComplexConjugate</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The complex conjugated map.</p>
+
+<p>DeclareOperation("ConjugatedP1Map",[IsP1Map,IsP1Map]);</p>
+
+<p><a id="X7C68BED87D1EC1AD" name="X7C68BED87D1EC1AD"></a></p>
+
+<h5>4.1-27 ConjugatedP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ConjugatedP1Map</code>( <var class="Arg">map</var>, <var class="Arg">mobius</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The map <code class="code">CompositionP1Map(InverseP1Map(mobius),map,mobius)</code>.</p>
+
+<p>DeclareAttribute("CoefficientsOfP1Map",IsP1Map);</p>
+
+<p><a id="X7AFFF43383BF5001" name="X7AFFF43383BF5001"></a></p>
+
+<h5>4.1-28 CoefficientsOfP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CoefficientsOfP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: Coefficients of numerator and denominator of <var class="Arg">map</var>, lowest degree first.</p>
+
+<p>DeclareGlobalFunction("P1MapByCoefficients"); DeclareOperation("P1MAPBYCOEFFICIENTS2@",[IsObject,IsList,IsList]);</p>
+
+<p><a id="X7DE9419F7E0FADE9" name="X7DE9419F7E0FADE9"></a></p>
+
+<h5>4.1-29 P1MapByCoefficients</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapByCoefficients</code>( <var class="Arg">numer</var>, <var class="Arg">denom</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The P1 map with numerator coefficients <var class="Arg">numer</var> and denominator <var class="Arg">denom</var>, lowest degree first.</p>
+
+<p>DeclareAttribute("NumeratorP1Map",IsP1Map); DeclareAttribute("DenominatorP1Map",IsP1Map);</p>
+
+<p><a id="X7910CB4483A00A51" name="X7910CB4483A00A51"></a></p>
+
+<h5>4.1-30 NumeratorP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NumeratorP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DenominatorP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: The numerator/denominator of <var class="Arg">map</var>.</p>
+
+<p>DeclareOperation("P1MapByZerosPoles",[IsP1PointList,IsP1PointList,IsP1Point,IsP1Point]);</p>
+
+<p><a id="X854C1334812D83A3" name="X854C1334812D83A3"></a></p>
+
+<h5>4.1-31 P1MapByZerosPoles</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapByZerosPoles</code>( <var class="Arg">zeros</var>, <var class="Arg">poles</var>, <var class="Arg">src</var>, <var class="Arg">dest</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The P1 map with specified zeros and poles, and sending <var class="Arg">src</var> to <var class="Arg">dest</var>.</p>
+
+<p>DeclareOperation("P1Path",[IsP1Point,IsP1Point]);</p>
+
+<p><a id="X78DBA65C7990FE8A" name="X78DBA65C7990FE8A"></a></p>
+
+<h5>4.1-32 P1Path</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Path</code>( <var class="Arg">p</var>, <var class="Arg">q</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The P1 map sending <code class="code">0</code> to <var class="Arg">p</var> and <code class="code">1</code> to <var class="Arg">q</var>.</p>
+
+<p>DeclareAttribute("DegreeOfP1Map",IsP1Map);</p>
+
+<p><a id="X78DB4F257D1E2E8B" name="X78DB4F257D1E2E8B"></a></p>
+
+<h5>4.1-33 DegreeOfP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DegreeOfP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The degree of <var class="Arg">map</var>.</p>
+
+<p>DeclareSynonym("P1Image",ImageElm); DeclareOperation("ImageElm",[IsP1Map,IsP1Point]);</p>
+
+<p><a id="X78BB00397DBDE5F5" name="X78BB00397DBDE5F5"></a></p>
+
+<h5>4.1-34 P1Image</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1Image</code>( <var class="Arg">map</var>, <var class="Arg">p1point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The image of <var class="Arg">p1point</var> under <var class="Arg">map</var>.</p>
+
+<p>DeclareSynonym("P1PreImage",PreImageElm); DeclareOperation("PreImageElm",[IsP1Map,IsP1Point]);</p>
+
+<p><a id="X8569241C7914A53C" name="X8569241C7914A53C"></a></p>
+
+<h5>4.1-35 P1PreImage</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1PreImage</code>( <var class="Arg">map</var>, <var class="Arg">p1point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The preimage of <var class="Arg">p1point</var> under <var class="Arg">map</var>.</p>
+
+<p>DeclareSynonym("P1PreImages",PreImagesElm); DeclareOperation("PreImagesElm",[IsP1Map,IsP1Point]);</p>
+
+<p><a id="X8523E70785E32A8F" name="X8523E70785E32A8F"></a></p>
+
+<h5>4.1-36 P1PreImages</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1PreImages</code>( <var class="Arg">map</var>, <var class="Arg">p1point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The preimages of <var class="Arg">p1point</var> under <var class="Arg">map</var>.</p>
+
+<p>DeclareAttribute("Primitive",IsP1Map); DeclareAttribute("Derivative",IsP1Map);</p>
+
+<p><a id="X80D5660286F32034" name="X80D5660286F32034"></a></p>
+
+<h5>4.1-37 Primitive</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Primitive</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Derivative</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The [anti]derivative of the rational map <var class="Arg">map</var>.</p>
+
+<p>DeclareOperation("P1MapScaling",[IsP1Map,IsP1Point]);</p>
+
+<p><a id="X7B670D5381F181A0" name="X7B670D5381F181A0"></a></p>
+
+<h5>4.1-38 P1MapScaling</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapScaling</code>( <var class="Arg">map</var>, <var class="Arg">p1point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The scaling factor from <var class="Arg">point</var> to <var class="Arg">map(point)</var>.</p>
+
+<p>DeclareAttribute("CriticalPointsOfP1Map",IsP1Map);</p>
+
+<p><a id="X86B17B0881D4FAA9" name="X86B17B0881D4FAA9"></a></p>
+
+<h5>4.1-39 CriticalPointsOfP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CriticalPointsOfP1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<p>Returns: The critical points of <var class="Arg">map</var>.</p>
+
+<p>DeclareAttribute("AsP1Map",IsScalar);</p>
+
+<p><a id="X7D63FC067C742C7B" name="X7D63FC067C742C7B"></a></p>
+
+<h5>4.1-40 AsP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsP1Map</code>( <var class="Arg">rat</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The P1 map given by the rational function <var class="Arg">rat</var>.</p>
+
+<p>DeclareOperation("P1MapSL2",[IsMatrix]);</p>
+
+<p><a id="X83410A948102C845" name="X83410A948102C845"></a></p>
+
+<h5>4.1-41 P1MapSL2</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapSL2</code>( <var class="Arg">mat</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The Möbius P1 map given by the 2x2 matrix <var class="Arg">mat</var>.</p>
+
+<p>DeclareAttribute("SL2P1Map",IsP1Map);</p>
+
+<p><a id="X840A9CD185F5519C" name="X840A9CD185F5519C"></a></p>
+
+<h5>4.1-42 SL2P1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SL2P1Map</code>( <var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The matrix of the Möbius P1 map <var class="Arg">map</var>.</p>
+
+<p>DeclareGlobalFunction("SetP1Points");</p>
+
+<p><a id="X874D59BD87D136D0" name="X874D59BD87D136D0"></a></p>
+
+<h5>4.1-43 SetP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SetP1Points</code>( <var class="Arg">record</var>[, <var class="Arg">prec</var>] )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Installs a default implementation for P1 points. Fundamentally, a P1 point is a complex number or infinity, with a few extra methods. The argument <var class="Arg">record</var> is the record describing the floating-point implementation.</p>
+
+<p>Currently, one implementation (the default) is based on pairs of IEEE754 floateans. It is fast, but is limited to 53 bits of precision. It is loaded via <code class="code">SetP1Points(PMCOMPLEX);</code>.</p>
+
+<p>Another implementation, in case the package <strong class="pkg">Float</strong> is available, is based on MPC complex numbers. It offers unlimited precision, but is much slower. It is loaded via <code class="code">SetP1Points(MPC);</code> or <code class="code">SetP1Points(MPC,prec);</code>.</p>
+
+<p><a id="X83B817657B208EC3" name="X83B817657B208EC3"></a></p>
+
+<h4>4.2 <span class="Heading">Triangulations</span></h4>
+
+<p>The next objects are finite triangulations of the sphere. They are represented by lists of points, edges and faces, and all adjacency relations between them. Each point, edge and face has a <code class="func">P1Point</code> (<a href="chap4.html#X84AD618C7906AC92"><span class="RefLink">4.1-1</span></a>) as position, and furthermore edges come with a parametrization <span class="SimpleMath">γ([0,1])</span> for a Möbius transformation <span class="SimpleMath">γ</span>. DeclareCategory("IsSphereTriangulation", IsObject); BindGlobal("TRIANGULATION_FAMILY", NewFamily("SphereTriangulations", IsSphereTriangulation)); BindGlobal("TYPE_TRIANGULATION", NewType(TRIANGULATION_FAMILY, IsSphereTriangulation)); DeclareRepresentation("IsTriangulationObjectRep", IsComponentObjectRep and IsAttributeStoringRep,[]); DeclareCategory("IsTriangulationObject",IsTriangulationObjectRep); DeclareCategory("IsTriangulationVertex",IsTriangulationObject); DeclareCategory("IsTriangulationEdge",IsTriangulationObject); DeclareCategory("IsTriangulationFace",IsTriangulationObject); BindGlobal("TRIANGULATIONOBJECT_FAMILY", NewFamily("TriangulationFamily",IsTriangulationObject,CanEasilySortElements,CanEasilySortElements)); BindGlobal("TYPE_VERTEX", NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationVertex)); BindGlobal("TYPE_EDGE", NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationEdge)); BindGlobal("TYPE_FACE", NewType(TRIANGULATIONOBJECT_FAMILY,IsTriangulationFace)); DeclareAttribute("Neighbour", IsTriangulationVertex); DeclareOperation("Neighbours", [IsTriangulationVertex]); DeclareOperation("Neighbours", [IsTriangulationVertex,IsTriangulationEdge]); DeclareOperation("Valency", [IsTriangulationVertex]); DeclareAttribute("Pos", IsTriangulationVertex); DeclareOperation("ClosestFace", [IsTriangulationObject]); DeclareOperation("ClosestFaces", [IsTriangulationObject]); DeclareOperation("ClosestVertex", [IsTriangulationObject]); DeclareOperation("ClosestVertices", [IsTriangulationObject]); DeclareProperty("IsFake", IsTriangulationVertex); DeclareAttribute("Left", IsTriangulationEdge); DeclareAttribute("Right", IsTriangulationEdge); DeclareAttribute("To", IsTriangulationEdge); DeclareAttribute("From", IsTriangulationEdge); DeclareAttribute("Next", IsTriangulationEdge); DeclareAttribute("Prevopp", IsTriangulationEdge); DeclareAttribute("Opposite", IsTriangulationEdge); DeclareAttribute("Pos", IsTriangulationEdge); DeclareAttribute("FromPos", IsTriangulationEdge); DeclareAttribute("ToPos", IsTriangulationEdge); DeclareAttribute("Length", IsTriangulationEdge); DeclareAttribute("Map", IsTriangulationEdge); DeclareAttribute("GroupElement", IsTriangulationEdge, "mutable"); DeclareAttribute("Neighbour", IsTriangulationFace); DeclareOperation("Neighbours", [IsTriangulationFace]); DeclareOperation("Neighbours", [IsTriangulationFace,IsTriangulationEdge]); DeclareAttribute("Pos", IsTriangulationFace); DeclareAttribute("Radius", IsTriangulationFace); DeclareAttribute("Centre", IsTriangulationFace); DeclareOperation("Valency", [IsTriangulationFace]); DeclareOperation("Draw", [IsSphereTriangulation]);</p>
+
+<p><a id="X81727B8B7A599605" name="X81727B8B7A599605"></a></p>
+
+<h5>4.2-1 IsSphereTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsSphereTriangulation</code></td><td class="tdright">( filter )</td></tr></table></div>
+<p>The category of triangulated spheres (points in Moduli space).</p>
+
+<p>This triangulation is a collection of vertices, edges and faces. These are new GAP objects. The attributes for vertices are:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">Neighbour</code></strong></dt>
+<dd><p>any edge starting at the vertex</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Neighbours</code></strong></dt>
+<dd><p>a list of neighbours, in counterclockwise order (an optional adugument lets one specify the starting edge)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Valency</code></strong></dt>
+<dd><p>the number of neighbours</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Pos</code></strong></dt>
+<dd><p>The P1 point where the vertex is located</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertex</code></strong></dt>
+<dd><p>The vertex itself</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertices</code></strong></dt>
+<dd><p>A list containing the vertex itself</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFace</code></strong></dt>
+<dd><p>The face left of the first neighbour</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFaces</code></strong></dt>
+<dd><p>The faces that contain the vertex</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">IsFake</code></strong></dt>
+<dd><p>whether the vertex was added for refinement</p>
+
+</dd>
+</dl>
+<p>The edges come in opposite pairs, and are thought of as having a face on their left. Their possible attributes are:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">Left</code>, <code class="code">Right</code></strong></dt>
+<dd><p>The adjacent faces</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">To</code>, <code class="code">From</code></strong></dt>
+<dd><p>The vertices that the edge goes to/from</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Next</code></strong></dt>
+<dd><p>The edge after on the left face (starting where the present edge ends)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Prevopp</code></strong></dt>
+<dd><p>The opposite of the edge before on the left face (starting where the present edge starts)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Opposite</code></strong></dt>
+<dd><p>The opposite edge (with reversed orientation)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Pos</code></strong></dt>
+<dd><p>The position of the midpoint. <code class="code">FromPos</code> and <code class="code">ToPos</code> are shortcuts</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Length</code></strong></dt>
+<dt><strong class="Mark"><code class="code">Map</code></strong></dt>
+<dd><p>A P1 map sending <span class="SimpleMath">[0,1]</span> to the edge</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">GroupElement</code></strong></dt>
+<dd><p>A group element describing "crossing through the edge from the left to the right"</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertex</code></strong></dt>
+<dd><p>The from vertex</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertices</code></strong></dt>
+<dd><p>The two endpoints</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFace</code></strong></dt>
+<dd><p>The left neighbour</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFaces</code></strong></dt>
+<dd><p>The two adjacent faces</p>
+
+</dd>
+</dl>
+<p>The faces have the following possible attributes:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">Neighbour</code></strong></dt>
+<dd><p>Some edge with this face on its left</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Neighbours</code></strong></dt>
+<dd><p>The neighbours of the face, in counterclockwise order around the face (an optional argument lets one specify the starting edge)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Pos</code></strong></dt>
+<dd><p>The position of the face's barycentre</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Radius</code>, <code class="code">Centre</code></strong></dt>
+<dd><p>The circumradius and circumcentre of the face (assumed to be a triangle)</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">Valency</code></strong></dt>
+<dd><p>The number of neighbouring edges</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertex</code></strong></dt>
+<dd><p>The from of the first neighbour</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestVertices</code></strong></dt>
+<dd><p>The vertices that the face contains</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFace</code></strong></dt>
+<dd><p>The face itself</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">ClosestFaces</code></strong></dt>
+<dd><p>A list containing the face itself</p>
+
+</dd>
+</dl>
+<p>A triangulation may be plotted with <code class="code">Draw</code>; this requires <strong class="pkg">appletviewer</strong> to be installed. The command <code class="code">Draw(t:detach)</code> detaches the subprocess after it is started. The extra arguments <code class="code">Draw(t:lower)</code> or <code class="code">Draw(t:upper)</code> stretch the triangulation to the lower, respectively upper, hemisphere.</p>
+
+<p>DeclareOperation("EdgePath", [IsSphereTriangulation,IsTriangulationFace,IsTriangulationFace]);</p>
+
+<p><a id="X833BA8217E601451" name="X833BA8217E601451"></a></p>
+
+<h5>4.2-2 EdgePath</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; EdgePath</code>( <var class="Arg">t</var>, <var class="Arg">f0</var>, <var class="Arg">f1</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A sequence of edges taking <var class="Arg">f0</var> to <var class="Arg">f1</var>.</p>
+
+<p>DeclareOperation("DelaunayTriangulation", [IsList]); DeclareOperation("DelaunayTriangulation", [IsList, IsFloat]);</p>
+
+<p><a id="X80C530E87B7FA7C4" name="X80C530E87B7FA7C4"></a></p>
+
+<h5>4.2-3 DelaunayTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DelaunayTriangulation</code>( <var class="Arg">points</var>[, <var class="Arg">quality</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A Delaunay triangulation of the sphere.</p>
+
+<p>If <var class="Arg">points</var> is a list of points on the unit sphere, represented by their 3D coordinates, this function creates a triangulation of the sphere with these points as vertices. This triangulation satisfies the <em>Delaunay</em> condition that no point lies in the circumcircle of any face.</p>
+
+<p>If all points are aligned on a great circle, or if all points are in a hemisphere, some points are added so as to make the triangulation simplicial with all edges of length <span class="SimpleMath">&lt;π</span>. These vertices additionally have the <code class="code">IsFake</code> property set to <code class="keyw">true</code>.</p>
+
+<p>If the second argument <var class="Arg">quality</var>, which must be a floatean, is present, then all triangles in the resulting triangulation are guaranteed to have circumcircle ratio / minimal edge length at most <var class="Arg">quality</var>. Of course, additional vertices may need to be added to ensure that.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">octagon := Concatenation(IdentityMat(3),-IdentityMat(3))*1.0;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt := DelaunayTriangulation(octagon);</span>
+&lt;triangulation with 6 vertices, 24 edges and 8 faces&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt!.v;</span>
+[ &lt;vertex 1&gt;, &lt;vertex 2&gt;, &lt;vertex 3&gt;, &lt;vertex 4&gt;, &lt;vertex 5&gt;, &lt;vertex 6&gt; ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">last[1].n;</span>
+[ &lt;edge 17&gt;, &lt;edge 1&gt;, &lt;edge 2&gt;, &lt;edge 11&gt; ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">last[1].from;</span>
+&lt;vertex 1&gt;
+</pre></div>
+
+<p>DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point]); DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsP1Point,IsBool]); DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point]); DeclareOperation("AddToTriangulation", [IsSphereTriangulation,IsTriangulationFace,IsP1Point,IsBool]);</p>
+
+<p><a id="X82EB5B207B2C273E" name="X82EB5B207B2C273E"></a></p>
+
+<h5>4.2-4 AddToTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AddToTriangulation</code>( <var class="Arg">t</var>[, <var class="Arg">seed</var>], <var class="Arg">point</var>[, <var class="Arg">delaunay</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>This command adds the P1 point <var class="Arg">point</var> to the triangulation <var class="Arg">t</var>. If a face <var class="Arg">seed</var> is provided, it will speed up the search for the triangle in which the point is to be added. The other optional boolean argument <var class="Arg">delaunay</var> specifies whether the Delaunay condition is to be fulfilled (by flipping diagonals of some quadrilaterals made of two neighbouring triangles) after the addition.</p>
+
+<p>DeclareOperation("RemoveFromTriangulation", [IsSphereTriangulation,IsTriangulationVertex]);</p>
+
+<p><a id="X7A92BCE987775667" name="X7A92BCE987775667"></a></p>
+
+<h5>4.2-5 RemoveFromTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RemoveFromTriangulation</code>( <var class="Arg">t</var>, <var class="Arg">vertex</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>This command removes the vertex <var class="Arg">vertex</var> from the triangulation <var class="Arg">t</var>.</p>
+
+<p>DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsP1Point]); DeclareOperation("LocateFaceInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]); DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsP1Point]); DeclareOperation("LocateInTriangulation", [IsSphereTriangulation,IsObject,IsP1Point]);</p>
+
+<p><a id="X866712E5799237C6" name="X866712E5799237C6"></a></p>
+
+<h5>4.2-6 LocateFaceInTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocateFaceInTriangulation</code>( <var class="Arg">t</var>[, <var class="Arg">seed</var>], <var class="Arg">point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocateInTriangulation</code>( <var class="Arg">t</var>[, <var class="Arg">seed</var>], <var class="Arg">point</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The face(t) in <var class="Arg">t</var> containing <var class="Arg">point</var>.</p>
+
+<p>This command locates the face in <var class="Arg">t</var> that contains <var class="Arg">point</var>; in the second form, if <var class="Arg">point</var> lies on an edge or a vertex, it returns that edge or vertex.</p>
+
+<p>The optional second argument specifies a starting vertex, edge, face, or vertex index from which to start the search. Its only effect is to speed up the algorithm.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cube := Tuples([-1,1],3)/Sqrt(3.0);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">dt := DelaunayTriangulation(cube);</span>
+&lt;triangulation with 8 vertices, 36 edges and 12 faces&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocateInTriangulation(dt,dt!.v[1].pos);</span>
+&lt;vertex 1&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocateInTriangulation(dt,[3/5,0,4/5]*1.0);</span>
+&lt;face 9&gt;
+</pre></div>
+
+<p>DeclareOperation("WiggledTriangulation", [IsSphereTriangulation,IsObject]);</p>
+
+<p><a id="X7FA533EF78FF292B" name="X7FA533EF78FF292B"></a></p>
+
+<h5>4.2-7 WiggledTriangulation</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; WiggledTriangulation</code>( <var class="Arg">t</var>, <var class="Arg">moebiusmap</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; WiggledTriangulation</code>( <var class="Arg">t</var>, <var class="Arg">newpoints</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A new triangulation, with moved vertices.</p>
+
+<p>This command creates a new triangulation, in which only the P1 coordinates are changed. If the second argument <var class="Arg">moebiusmap</var> is a Möbius transformation, then it is applied to the vertices and barycentres of faces and edges. If the second argument <var class="Arg">newpoints</var> is a list of P1 points, then they are taken as new coordinates of the vertices.</p>
+
+<p>DeclareGlobalFunction("EquidistributedP1Points");</p>
+
+<p><a id="X852EDAD3787E522D" name="X852EDAD3787E522D"></a></p>
+
+<h5>4.2-8 EquidistributedP1Points</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; EquidistributedP1Points</code>( <var class="Arg">N</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: A list of <var class="Arg">N</var> P1 points that are reasonably well spaced.</p>
+
+<p><a id="X7F8F64548143DF99" name="X7F8F64548143DF99"></a></p>
+
+<h4>4.3 <span class="Heading">Marked spheres</span></h4>
+
+<p>Marked spheres should be thought of as punctured complex spheres, with a explicit identification of a sphere group with their fundamental group. They model points in Teichmüller space.</p>
+
+<p>Marked spheres are given by a triangulation and a sphere group whose generators are in bijection with the triangulation's vertices. Internally, the marked sphere keeps track of a group element at each edge, stored as <code class="code">GroupElement(e)</code>. This is the group element by which one should multiply as the edge is crossed transversally. In particular, the product of the edges going out of vertex <span class="SimpleMath">v</span> is conjugate to generator number <span class="SimpleMath">v</span>.</p>
+
+<p>Given a marked sphere and a rational map (given by coefficients), a procedure computes the "lifted marked sphere" and a wreath recursion between their respective groups, i.e. a homomorphism <span class="SimpleMath">G_0 -&gt; G_1 ≀ Sym(d)</span>. The procedure will probably fail unless the critical values are close to the feet. There, the algorithm is already subtle: edges of the dual graph are represented by arcs of great circles.</p>
+
+<p>One first computes the full preimage of the feet, and a triangulation spanning them on a sphere "above" the original marked sphere. Then, for each edge of the "down" dual graph, its preimage on the "up" sphere is an algebraic curve. One computes its intersections with all edges of the "up" dual graph, by finding zeroes of real polynomials, to determine from which triangle to which one the lifted edges go.</p>
+
+<p>Because of rounding errors, one has to be careful as to when a real polynomial is supposed to have a zero, or when a point is supposed to be in a triangle. E.g., if <span class="SimpleMath">T</span> is a triangle and its sides are given by arcs of great circles, represented as <span class="SimpleMath">γ_i([0,1])</span> for Möbius maps <span class="SimpleMath">γ_i, i=1,2,3</span>, then the test <span class="SimpleMath">ℑ(γ_i(z))&gt;0 ∀ i</span> determines whether <span class="SimpleMath">z</span> is in the triangle. This test is really coded as <span class="SimpleMath">ℑ(γ_i(z)) / (1+|γ_i(z)|^2) &gt; -@IMG.p1eps</span> to take care of rounding errors. DeclareCategory("IsMarkedSphere", IsObject); BindGlobal("MARKEDSPHERES_FAMILY", NewFamily("MarkedSpheres", IsMarkedSphere)); BindGlobal("TYPE_MARKEDSPHERE", NewType(MARKEDSPHERES_FAMILY, IsMarkedSphere)); DeclareAttribute("MarkedSphere", IsSphereMachine); DeclareAttribute("MarkedSphere", IsP1Map); undocumented for now DeclareAttribute("VerticesOfMarkedSphere", IsMarkedSphere); DeclareAttribute("SpanningTreeBoundary", IsMarkedSphere);</p>
+
+<p><a id="X7BCBD3A47B95CB12" name="X7BCBD3A47B95CB12"></a></p>
+
+<h5>4.3-1 IsMarkedSphere</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsMarkedSphere</code></td><td class="tdright">( filter )</td></tr></table></div>
+<p>The category of marked, triangulated spheres (points in Teichmüller space).</p>
+
+<p>DeclareOperation("NewMarkedSphere", [IsP1PointCollection,IsSphereGroup]); DeclareOperation("NewMarkedSphere", [IsP1PointCollection]);</p>
+
+<p><a id="X859AFCB184D66E76" name="X859AFCB184D66E76"></a></p>
+
+<h5>4.3-2 NewMarkedSphere</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewMarkedSphere</code>( <var class="Arg">points</var>[, <var class="Arg">group</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A new marked sphere on points <var class="Arg">points</var>.</p>
+
+<p>This function creates a new marked sphere, based on the Delaunay triangulation on <var class="Arg">points</var>. If a sphere group <var class="Arg">group</var> is specified, it is used to mark the sphere; otherwise a new sphere group is created.</p>
+
+<p>DeclareOperation("Draw", [IsMarkedSphere]);</p>
+
+<p><a id="X8563CADF7AA37AA4" name="X8563CADF7AA37AA4"></a></p>
+
+<h5>4.3-3 Draw</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Draw</code>( <var class="Arg">s</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>This command plots the marked sphere <var class="Arg">s</var> in a separate window. It displays the complex sphere, big dots at the post-critical set (feet of the spider), and the arcs and dual arcs of the triangulation connecting the feet.</p>
+
+<p>If the option <code class="keyw">julia:=&lt;gridsize&gt;</code> (if no grid size is specified, it is 500 by default), then the Julia set of the map associated with the spider is also displayed. Points attracted to attracting cycles are coloured in pastel tones, and unattracted points are coloured black.</p>
+
+<p>If the option <code class="keyw">noarcs</code> is specified, the printing of the arcs and dual arcs is disabled.</p>
+
+<p>The options <code class="keyw">upper</code>, <code class="keyw">lower</code> and <code class="keyw">detach</code> also apply.</p>
+
+<p>DeclareOperation("WiggledMarkedSphere", [IsMarkedSphere,IsObject]);</p>
+
+<p><a id="X7B3ACCDC81180337" name="X7B3ACCDC81180337"></a></p>
+
+<h5>4.3-4 WiggledMarkedSphere</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; WiggledMarkedSphere</code>( <var class="Arg">sphere</var>, <var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A new marked sphere.</p>
+
+<p>This operation moves the vertices of the marked sphere <var class="Arg">sphere</var>, preserving its marking. The argument <var class="Arg">m</var>, which specifies a movement of the vertices, is either a Möbius transformation (to be applied to all vertices) or a list of new positions for them.</p>
+
+<p>DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map,IsBool]); DeclareOperation("SphereMachineOfBranchedCovering", [IsMarkedSphere,IsMarkedSphere,IsP1Map]); DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map,IsBool]); DeclareOperation("SphereMachineAndSphereOfBranchedCovering", [IsMarkedSphere,IsP1Map]);</p>
+
+<p><a id="X7F86A9607DBDD8A9" name="X7F86A9607DBDD8A9"></a></p>
+
+<h5>4.3-5 SphereMachineOfBranchedCovering</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SphereMachineOfBranchedCovering</code>( <var class="Arg">down</var>, <var class="Arg">up</var>, <var class="Arg">map</var>[, <var class="Arg">poly</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SphereMachineAndSphereOfBranchedCovering</code>( <var class="Arg">down</var>, <var class="Arg">map</var>[, <var class="Arg">poly</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A sphere machine or [machine,marked sphere].</p>
+
+<p>The first function computes, out of a marked sphere <var class="Arg">down</var> in the range of the P1 map <var class="Arg">map</var> and a marked sphere <var class="Arg">up</var> in its domain, the sphere machine representing the monodromy action of the map. Its input stateset is the model group of <var class="Arg">down</var>, while its output stateset is the model group of <var class="Arg">up</var>.</p>
+
+<p>The second function first computes a marked sphere on the full preimage by <var class="Arg">map</var> of the vertices of <var class="Arg">down</var>, then computes the sphere machine, and finally returns a list containing the machine and the sphere at the source of <var class="Arg">map</var>.</p>
+
+<p>The optional parameter <var class="Arg">poly</var> specifies that the map <var class="Arg">map</var> is to be treated as a polynomial, and that the machine is to be normalized so that its last generator is an adding machine in standard form.</p>
+
+<p>DeclareOperation("MonodromyOfP1Map", [IsMarkedSphere,IsP1Map]); DeclareOperation("MonodromyOfP1Map", [IsP1PointCollection,IsP1Map]); DeclareOperation("MonodromyOfP1Map", [IsP1Map]);</p>
+
+<p><a id="X7E3708BD7AFB94A4" name="X7E3708BD7AFB94A4"></a></p>
+
+<h5>4.3-6 MonodromyOfP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; MonodromyOfP1Map</code>( [<var class="Arg">marking</var>, ]<var class="Arg">map</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The monodromy action of <var class="Arg">map</var>.</p>
+
+<p>This function computes the monodromy of the P1 map <var class="Arg">map</var>; this is simply the activity of the sphere machine associated with the map.</p>
+
+<p>The optional first argument <var class="Arg">marking</var> may be a marked sphere, in which case the monodromy is returned as a homomorphism from the marked sphere's marking. It may also be a list of P1 points, in which case the monodromy is returned as a list of permutations, one per point. If the first argument is missing, it is assumed to be the list of critical values of <var class="Arg">map</var>.</p>
+
+<p>DeclareAttribute("SphereMachine", IsP1Map);</p>
+
+<p><a id="X801927327E45A69D" name="X801927327E45A69D"></a></p>
+
+<h5>4.3-7 SphereMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SphereMachine</code>( <var class="Arg">f</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A sphere machine.</p>
+
+<p>This function computes a triangulation of the sphere, on the post-critical set of <var class="Arg">f</var>, and lifts it through the map <var class="Arg">f</var>. the action of the fundamental group of the punctured sphere is then read into an sphere machine <code class="code">m</code>, which is returned.</p>
+
+<p>This machine has a preset attribute <code class="code">MarkedSphere(m)</code>.</p>
+
+<p>An approximation of the Julia set of <var class="Arg">f</var> can be computed, and plotted on the spider, with the form <code class="code">IMGMachine(f:julia)</code> or <code class="code">IMGMachine(f:julia:=gridsize)</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SphereMachine(P1z^2-1);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f2*f1*f3 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Display(last);</span>
+ G  |            1        2
+----+---------------+--------+
+ f1 |          f2,2   &lt;id&gt;,1
+ f2 | f3^-1*f1*f3,1   &lt;id&gt;,2
+ f3 |        &lt;id&gt;,2     f3,1
+----+---------------+--------+
+Relator: f2*f1*f3
+</pre></div>
+
+<p>DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere]); DeclareOperation("DistanceMarkedSpheres", [IsMarkedSphere, IsMarkedSphere, IsBool]);</p>
+
+<p><a id="X860A9B5E7BC8640D" name="X860A9B5E7BC8640D"></a></p>
+
+<h5>4.3-8 DistanceMarkedSpheres</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DistanceMarkedSpheres</code>( <var class="Arg">sphere1</var>, <var class="Arg">sphere2</var>[, <var class="Arg">fast</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The approximate distance between the marked spheres.</p>
+
+<p>This function approximates coarsely the Teichmüller distance between marked spheres with same model group. If the vertices of <var class="Arg">sphere1</var> can be wiggled to the vertices of <var class="Arg">sphere2</var> in such a manner that the markings coincide, then the distance is the sum of the movements of the vertices. Otherwise, it is <span class="SimpleMath">1+</span> the sum of the lengths of the images of a sphere group automorphism that carries the marking of <var class="Arg">sphere1</var> to that of <var class="Arg">sphere2</var>.</p>
+
+<p><a id="X85A42F18850FACA7" name="X85A42F18850FACA7"></a></p>
+
+<h4>4.4 <span class="Heading">The Hurwitz problem</span></h4>
+
+<p>Given a marked sphere and a permutation representation of its group, a procedure computes a rational map with that monodromy. If the representation has degree <span class="SimpleMath">2</span>, or is bicritical, or a few other cases easily coded by hand, then the rational map is computed algebraically.</p>
+
+<p>Otherwise, the "hard" part of the algorithm comes into play. A fresh marked sphere is constructed with only the feet with non-trivial permutation. The triangulation is then combinatorially lifted, using the permutation representation. In particular, the feet are now labeled by cycles of the permutations. It is a purely combinatorial triangulation, at this point; but one remembers that its edges have a length inherited from the sphere metric. The triangulation is then refined by repeatedly adding circumcentres of triangles, till every edge (say from <span class="SimpleMath">v</span> to <span class="SimpleMath">w</span>) has length <span class="SimpleMath">le @IMG.hurwitzmesh ^ Maximum(cycle length at v, cycle length at w)</span>.</p>
+
+<p>Now an external C program, "layout", is called. It seeks a discrete conformal map, given by a function <span class="SimpleMath">u: {feet} -&gt; R</span>, such that if edge <span class="SimpleMath">e</span> (from <span class="SimpleMath">v</span> to <span class="SimpleMath">w</span>) has its length scaled by <span class="SimpleMath">u(v)⋅ u(w)</span> then the sum-of-angles=2<span class="SimpleMath">π</span> condition holds at each vertex (with special treatment for a vertex at infinity; I skip details). Then the triangulation can be laid out on the plane, and projected back stereographically to the sphere. In this manner, we got good approximations of where the feet should be.</p>
+
+<p>Now we run Newton's method on the feet positions, using as variables the lifted-feet positions. This is the external program "hsolve". It is assumed that the down-feet contain <span class="SimpleMath">0</span> and <span class="SimpleMath">∞</span>, so that the rational map we are looking for is of the form <span class="SimpleMath">f(z) = C⋅∏(z-c_i)^d_i</span> for known integers <span class="SimpleMath">d_i</span>. The <span class="SimpleMath">c_i</span> are the lifted-feet above <span class="SimpleMath">0</span> and <span class="SimpleMath">∞</span>, and the equations in Newton's method say that the log-derivative of <span class="SimpleMath">f</span> must vanish at appropriate lifted-feet, and that <span class="SimpleMath">f</span> must map these lifted-feet to the down-feet. DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism]); DeclareOperation("BranchedCoveringByMonodromy", [IsMarkedSphere,IsGroupHomomorphism,IsRecord]);</p>
+
+<p><a id="X7AEA7BA67950292B" name="X7AEA7BA67950292B"></a></p>
+
+<h5>4.4-1 BranchedCoveringByMonodromy</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; BranchedCoveringByMonodromy</code>( <var class="Arg">sphere</var>, <var class="Arg">monodromy</var>[, <var class="Arg">last</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A record describing a Hurwitz map.</p>
+
+<p>If <var class="Arg">sphere</var> is a marked sphere, marked by a group <span class="SimpleMath">G</span>, and <var class="Arg">monodromy</var> is a homomorphism from <span class="SimpleMath">G</span> to a permutation group, this function computes a rational map whose critical values are the vertices of <var class="Arg">sphere</var> and whose monodromy about these critical values is given by <var class="Arg">monodromy</var>.</p>
+
+<p>The returned data are in a record with a field <code class="code">degree</code>, the degree of the map; two fields <code class="code">map</code> and <code class="code">post</code>, describing the desired <span class="SimpleMath">P^1</span>-map --- <code class="code">post</code> is a Möbius transformation, and the composition of <code class="code">map</code> and <code class="code">post</code> is the desired map; and lists <code class="code">zeros</code>, <code class="code">poles</code> and <code class="code">cp</code> describing the zeros, poles and critical points of the map. Each entry in these lists is a record with entries <code class="code">degree</code>, <code class="code">pos</code> and <code class="code">to</code> giving, for each point in the source of <code class="code">map</code>, the local degree and the vertex in <var class="Arg">sphere</var> it maps to.</p>
+
+<p>If a third argument is supplied, it should be a record similar to the return value of the command. If the result is close enough to the supplied record, it will be used to speed up the calculation.</p>
+
+<p>This function requires external programs in the subdirectory "hurwitz" to have been compiled.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># we'll construct 2d-2 points on the equator, and permutations</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># in order (1,2),...,(d-1,d),(d-1,d),...,(1,2) for these points.</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># first, the marked sphere</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">d := 20;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := List([0..2*d-3], i-&gt;P1Point(Exp(i*PMCOMPLEX.constants.2IPI/(2*d-2))));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">g := SphereGroup(2*d-2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">sphere := NewMarkedSphere(z,g);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># next, the permutation representation</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">perms := List([1..d-1],i-&gt;(i,i+1));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Append(perms,Reversed(perms));</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">perms := GroupHomomorphismByImages(g,SymmetricGroup(d),GeneratorsOfGroup(g),perms);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># now compute the map</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">BranchedCoveringByMonodromy(sphere,perms);</span>
+rec( cp := [ rec( degree := 2, pos := &lt;1.0022-0.0099955i&gt;, to := &lt;vertex 19[ 9, 132, 13, 125 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0022-0.0099939i&gt;, to := &lt;vertex 20[ 136, 128, 129, 11 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0039-0.0027487i&gt;, to := &lt;vertex 10[ 73, 74, 16, 82 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0006-0.0027266i&gt;, to := &lt;vertex 29[ 185, 20, 179, 21 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0045-7.772e-05i&gt;, to := &lt;vertex 9[ 24, 77, 17, 72 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.1739+0.33627i&gt;, to := &lt;vertex 2[ 31, 32, 41, 28 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0546+0.12276i&gt;, to := &lt;vertex 3[ 37, 38, 33, 46 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.026+0.061128i&gt;, to := &lt;vertex 4[ 43, 39, 52, 45 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0148+0.03305i&gt;, to := &lt;vertex 5[ 49, 44, 58, 51 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0098+0.018122i&gt;, to := &lt;vertex 6[ 55, 50, 64, 57 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0071+0.0093947i&gt;, to := &lt;vertex 7[ 61, 62, 71, 59 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0055+0.0037559i&gt;, to := &lt;vertex 8[ 67, 68, 63, 69 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0035-0.0047633i&gt;, to := &lt;vertex 11[ 79, 75, 88, 81 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0031-0.0062329i&gt;, to := &lt;vertex 12[ 85, 80, 94, 87 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0029-0.0073311i&gt;, to := &lt;vertex 13[ 91, 86, 100, 93 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0027-0.008187i&gt;, to := &lt;vertex 14[ 97, 92, 106, 99 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0026-0.008824i&gt;, to := &lt;vertex 15[ 103, 98, 112, 105 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0025-0.0092966i&gt;, to := &lt;vertex 16[ 109, 104, 118, 111 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0024-0.0096345i&gt;, to := &lt;vertex 17[ 115, 110, 124, 117 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0023-0.0098698i&gt;, to := &lt;vertex 18[ 121, 116, 122, 123 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0021-0.0098672i&gt;, to := &lt;vertex 21[ 133, 127, 142, 135 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.002-0.0096298i&gt;, to := &lt;vertex 22[ 139, 134, 148, 141 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.002-0.0092884i&gt;, to := &lt;vertex 23[ 145, 140, 154, 147 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0019-0.0088147i&gt;, to := &lt;vertex 24[ 151, 146, 160, 153 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0017-0.008166i&gt;, to := &lt;vertex 25[ 157, 152, 166, 159 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0016-0.0073244i&gt;, to := &lt;vertex 26[ 163, 158, 172, 165 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0014-0.0061985i&gt;, to := &lt;vertex 27[ 169, 164, 178, 171 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1.0011-0.0047031i&gt;, to := &lt;vertex 28[ 175, 170, 176, 177 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99908+0.0038448i&gt;, to := &lt;vertex 31[ 187, 183, 196, 189 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99759+0.0094326i&gt;, to := &lt;vertex 32[ 193, 188, 202, 195 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.99461+0.018114i&gt;, to := &lt;vertex 33[ 199, 194, 208, 201 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.98944+0.032796i&gt;, to := &lt;vertex 34[ 205, 200, 214, 207 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.9772+0.058259i&gt;, to := &lt;vertex 35[ 211, 206, 220, 213 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.94133+0.11243i&gt;, to := &lt;vertex 36[ 217, 212, 226, 219 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0.79629+0.23807i&gt;, to := &lt;vertex 37[ 223, 224, 225, 221 ]&gt; ), 
+      rec( degree := 2, pos := &lt;1+0i&gt;, to := &lt;vertex 30[ 181, 182, 6, 190 ]&gt; ) ], degree := 20, 
+  map := &lt;((-0.32271060393507572-4.3599244721894763i_z)*z^20+(3.8941736874493795+78.415744809040405\
+i_z)*z^19+(-16.808157937605603-665.79436908026275i_z)*z^18+(2.6572296014719168+3545.861245383101i_z\
+)*z^17+(316.57668022762243-13273.931613611372i_z)*z^16+(-1801.6631038749117+37090.818733740503i_z)*\
+z^15+(5888.6033008259928-80172.972599556582i_z)*z^14+(-13500.864941314803+137069.10015838256i_z)*z^\
+13+(23251.436304923012-187900.36507913063i_z)*z^12+(-31048.192131502536+208077.63047409133i_z)*z^11\
++(32639.349270133433-186578.17493860485i_z)*z^10+(-27155.791223040047+135145.40893002271i_z)*z^9+(1\
+7836.343164500577-78489.005444299968i_z)*z^8+(-9153.842142530224+36053.895961137248i_z)*z^7+(3598.6\
+408777659944-12810.65497539577i_z)*z^6+(-1047.541279063196+3397.470068169695i_z)*z^5+(212.906725643\
+0024-633.29691376653466i_z)*z^4+(-26.989372105307872+74.040615571896637i_z)*z^3+(1.6073346640110264\
+-4.0860733899027055i_z)*z^2)/(z^18+(-18.034645372692019-0.45671993287358581i_z)*z^17+(153.540499397\
+49956+7.7811506405054889i_z)*z^16+(-819.9344323563339-62.384270590463998i_z)*z^15+(3077.71530771320\
+75+312.59552100187739i_z)*z^14+(-8623.1225834872057-1096.4398001099003i_z)*z^13+(18689.34396825033+\
+2856.8568878158458i_z)*z^12+(-32038.568184053798-5725.9186424029094i_z)*z^11+(44038.148375498437+90\
+17.0162876593004i_z)*z^10+(-48898.555649389084-11295.156285052604i_z)*z^9+(43964.579894637543+11318\
+.997395732025i_z)*z^8+(-31931.403449371515-9074.2344933443364i_z)*z^7+(18595.347261301522+5786.6036\
+424805825i_z)*z^6+(-8565.0823844971637-2899.3353634270734i_z)*z^5+(3051.6919509143086+1117.44496422\
+99487i_z)*z^4+(-811.56293104533825-319.93036282549667i_z)*z^3+(151.69784956523344+64.11787684283315\
+5i_z)*z^2+(-17.785127700028404-8.0311759305108268i_z)*z+(0.98427999507354302+0.47338721325094818i_z\
+))&gt;, poles := [ rec( degree := 1, pos := &lt;0.99517+0.30343i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0021+0.11512i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0028+0.05702i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0026+0.030964i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0025+0.016951i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0024+0.0085784i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0024+0.003208i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.00046905i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0030802i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0049913i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0023-0.0064163i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0074855i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0082954i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0089048i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0093543i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0096742i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0098869i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0099988i&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ), 
+      rec( degree := 2, pos := &lt;P1infinity&gt;, to := &lt;vertex 1[ 26, 27, 1, 34 ]&gt; ) ], 
+  post := &lt;((-0.91742065452766763+0.99658449300666985i_z)*z+(0.74087581626192234-1.1339948562200648\
+i_z))/((-0.75451451285920013+0.96940026593933015i_z)*z+(0.75451451285920013-0.96940026593933015i_z)\
+)&gt;, zeros := [ rec( degree := 1, pos := &lt;0.92957+0.28362i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;0.99173+0.11408i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;0.99985+0.056874i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0014+0.030945i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.002+0.016938i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022+0.0085785i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022+0.0032076i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.00046827i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0030802i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0049908i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.006416i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0074855i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0082953i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0089047i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0093542i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0096742i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0098869i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 1, pos := &lt;1.0022-0.0099988i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ), 
+      rec( degree := 2, pos := &lt;0+0i&gt;, to := &lt;vertex 38[ 30, 3, 228, 7 ]&gt; ) ] )
+</pre></div>
+
+<p>DeclareOperation("DessinByPermutations", [IsPerm,IsPerm]); DeclareOperation("DessinByPermutations", [IsPerm,IsPerm,IsPerm]);</p>
+
+<p><a id="X84FC673C7B104194" name="X84FC673C7B104194"></a></p>
+
+<h5>4.4-2 DessinByPermutations</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DessinByPermutations</code>( <var class="Arg">s0</var>, <var class="Arg">s1</var>[, <var class="Arg">sinf</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: A rational map (see <code class="func">BranchedCoveringByMonodromy</code> (<a href="chap4.html#X7AEA7BA67950292B"><span class="RefLink">4.4-1</span></a>)) with monodromies <var class="Arg">s,t</var>.</p>
+
+<p>This command computes the Hurwitz map associated with the spanning tree <span class="SimpleMath">[0,1]∪[1,∞]</span>; the monodromy representation is by the permutation <var class="Arg">s0</var> at <span class="SimpleMath">0</span> and <var class="Arg">s1</var> at <span class="SimpleMath">1</span>. The optional third argument <var class="Arg">sinf</var> is the monodromy at <span class="SimpleMath">∞</span>, and must equal <span class="SimpleMath">s_0^-1s_1^-1</span>.</p>
+
+<p>The data is returned as a record, with entries <code class="code">degree</code>, <code class="code">map</code>, <code class="code">post</code>, and lists <code class="code">poles</code>, <code class="code">zeros</code>, and <code class="code">above1</code>. Each entry in the list is a record with entries <code class="code">pos</code> and <code class="code">degree</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DessinByPermutations((1,2),(2,3));</span>
+rec( above1 := [ rec( degree := 2, pos := &lt;1+0i&gt; ),
+                 rec( degree := 1, pos := &lt;-0.5-1.808e-14i&gt; ) ],
+     degree := 3, 
+     map := &lt;(-1.9999999999946754+2.1696575743432764e-13i_z)*z^3+(2.9999999999946754-2.1696575743432764e-13i_z)*z^2&gt;,
+     poles := [ rec( degree := 3, pos := &lt;P1infinity&gt; ) ],
+     post := &lt;z&gt;, 
+     zeros := [ rec( degree := 1, pos := &lt;1.5+5.4241e-14i&gt; ),
+                rec( degree := 2, pos := &lt;0+0i&gt; ) ] )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the Cui example</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DessinByPermutations((1,3,12,4)(5,9)(6,7)(10,13,11)(2,8),</span>
+           (1,5,13,6)(7,10)(2,3)(8,11,12)(4,9),
+           (1,7,11,2)(3,8)(4,5)(9,12,13)(6,10));
+rec( 
+  above1 := [ rec( degree := 2, pos := &lt;1.9952-0.79619i&gt; ), 
+      rec( degree := 2, pos := &lt;0.43236-0.17254i&gt; ), rec( degree := 2, pos := &lt;-0.9863-0.16498i&gt; ),
+      rec( degree := 3, pos := &lt;-0.12749-0.99184i&gt; ), rec( degree := 4, pos := &lt;1+0i&gt; ) ], 
+  degree := 13, 
+  map := &lt;((-6.9809917616400366e-12+0.13002709490708636i_z)*z^13+(-0.68172329304137969-0.8451761169\
+2062078i_z)*z^12+(4.0903397584184269+0.30979932084028583i_z)*z^11+(-6.3643009040280925+7.5930410215\
+99336i_z)*z^10+(-5.1732765988942884-16.738910009700096i_z)*z^9+(21.528087032174511+6.11354599010482\
+5i_z)*z^8+(-15.258776392407746+13.657687016998921i_z)*z^7+(-1.6403496019814323-13.453316297094229i_\
+z)*z^6+(4.4999999996894351+3.3633290741375781i_z)*z^5+(-0.99999999990279009+2.5538451239904557e-11i\
+_z)*z^4)/(z^9+(-4.4999999999400613+3.3633290744267983i_z)*z^8+(1.6403496020557891-13.45331629745540\
+7i_z)*z^7+(15.258776391831654+13.657687016903173i_z)*z^6+(-21.528087030670253+6.1135459892162567i_z\
+)*z^5+(5.1732765986730511-16.738910007513041i_z)*z^4+(6.3643009027133139+7.593041020468557i_z)*z^3+\
+(-4.0903397575324512+0.30979932067785648i_z)*z^2+(0.68172329288354727-0.8451761166966415i_z)*z+(5.0\
+734454343833585e-12+0.13002709487107747i_z))&gt;, 
+  poles := [ rec( degree := 2, pos := &lt;1.6127-0.49018i&gt; ), 
+      rec( degree := 2, pos := &lt;0.5-0.04153i&gt; ), rec( degree := 2, pos := &lt;-0.61269-0.49018i&gt; ), 
+      rec( degree := 3, pos := &lt;0.5-0.43985i&gt; ), rec( degree := 4, pos := &lt;P1infinity&gt; ) ], 
+  post := &lt;-z+1._z&gt;, 
+  zeros := [ rec( degree := 2, pos := &lt;1.9863-0.16498i&gt; ), 
+      rec( degree := 3, pos := &lt;1.1275-0.99184i&gt; ), rec( degree := 2, pos := &lt;0.56764-0.17254i&gt; ), 
+      rec( degree := 2, pos := &lt;-0.99516-0.79619i&gt; ), rec( degree := 4, pos := &lt;0+0i&gt; ) ] )
+</pre></div>
+
+<p>gap&gt; # IV.5.2 in Granboulan's PhD, the automorphism group of the Mathieu group M_22 gap&gt; autm22 := Group((1,2,3,4,5,6,7,8,9,10,11)(12,13,14,15,16,17,18,19,20,21,22), (1,9,3,2)(4,8,17,21)(5,20,19,6)(12,22,16,13)(7,18)(10,11)(14,15), (3,8)(4,20)(6,18)(7,17)(9,11)(13,15)(16,21));; gap&gt; IsomorphismGroups(DerivedSubgroup(autm22),MathieuGroup(22))&lt;&gt;fail; true gap&gt; DessinByPermutations(autm22.1,autm22.2,autm22.3); ... gap&gt; # IV.5.3 in Granboulan's PhD, the "extraterrestrial" dessin with group M_24 gap&gt; m24_ET := Group((1,2,3)(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24), (1,7,5)(2,4,23)(3,22,8)(9,21,19)(10,18,12)(13,17,15), (1,4)(2,22)(3,7)(5,6)(8,21)(9,18)(10,11)(12,17)(13,14)(15,16)(19,20)(23,24));; gap&gt; IsomorphismGroups(m24_ET,MathieuGroup(24))&lt;&gt;fail; true gap&gt; @IMG.hurwitzmesh := 0.4;; # need finer precision gap&gt; DessinByPermutations(m24_ET.1,m24_ET.2,m24_ET.3); ...</p>
+
+<p><a id="X7D2E2F1B808F320D" name="X7D2E2F1B808F320D"></a></p>
+
+<h4>4.5 <span class="Heading">The spider algorithm</span></h4>
+
+<p><strong class="pkg">IMG</strong> implements an algorith, extending the Thurston-Hubbard-Schleicher "spider algorithm" <a href="chapBib.html#biBMR1315537">[HS94]</a> that constructs a rational map from an IMG recursion. This implementation does not give rigourous results, but relies of floating-point approximation. In particular, various floating-point parameters control the proper functioning of the algorithm. They are stored in a record, <code class="code">IMG@</code>. Their meaning and default values are:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">EPS@fr.mesh := 10^-1</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, the triangulation mesh should be refined.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.p1eps := 10^-8</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, they are considered equal.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.obst := 10^-1</code></strong></dt>
+<dd><p>If points on the unit sphere are that close, they are suspected to form a Thurston obstruction.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.fast := 10^-1</code></strong></dt>
+<dd><p>If the spider moved less than that amount in the last iteration, try speeding up by only wiggling the spider's legs, without recomputing it.</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">EPS@fr.ratprec := 10^-8</code></strong></dt>
+<dd><p>The minimal acceptable precision on the coefficients of the rational function.</p>
+
+</dd>
+</dl>
+<p>For Thurston's algorithm, one starts by an arbitrary marked sphere (I chose its feet on the real axis, at equal small angles); computes a rational map using <code class="func">BranchedCoveringByMonodromy</code> (<a href="chap4.html#X7AEA7BA67950292B"><span class="RefLink">4.4-1</span></a>), computes its sphere machine using <code class="func">SphereMachineOfBranchedCovering</code> (<a href="chap4.html#X7F86A9607DBDD8A9"><span class="RefLink">4.3-5</span></a>), and matches the original sphere machine with the lifted one. This tells us which feet of the lifted marked sphere we should keep.</p>
+
+<p>One then computes a normalized position for the sub-marked sphere: its last foot is put at <span class="SimpleMath">∞</span>, another one (chosen cleverly) is on the positive real axis, and the center of mass of all feet (in <span class="SimpleMath">R^3</span>) is <span class="SimpleMath">(0,0,0)</span>. This is much more stable, numerically, than putting three points at <span class="SimpleMath">0,1,∞</span>. One has a Möbius transformation that puts the sub-marked sphere in normalized position, and again using <code class="func">SphereMachineOfBranchedCovering</code> (<a href="chap4.html#X7F86A9607DBDD8A9"><span class="RefLink">4.3-5</span></a>) one computes its machine. One then composes the machines, and compares the product again to the original machine to determine the marking of the edges of the new marked sphere by group elements.</p>
+
+<p>Then, one searches for all quadruples with large cross-ratio, and computes group-theoretically the curve separating the post-critical set in two parts that are well separated. One saturates the resulting curve into an invariant multicurve (aborting if there is an intersection between lifts), computes the Thurston matrix, and finds out (again algebraically) if there is an eigenvalue <span class="SimpleMath">≥ 1</span>. There is no parameter in this part of the code, all quadruples are examined; this is a weakness of the current implementation, sometimes most of the computational time is spent on searching for obstructions when it's "clear" there are none.</p>
+
+<p>The distance between two marked spheres (marked by the same group) is computed as follows: if their feet are close in the sense that the sum of the spherical distances between them is less that <code class="code">@IMG.fast</code>, then wiggle one of the spiders to make its feet match that of the other; and check that the identity map gives, by <code class="func">SphereMachineOfBranchedCovering</code> (<a href="chap4.html#X7F86A9607DBDD8A9"><span class="RefLink">4.3-5</span></a>), the identity machine. In that case, the sum of the feet distances is the distance between the spheres. Otherwise, add to it some formula involving the entries in the biset, which gives large integer distances.</p>
+
+<p>The Thurston algorithm stops when an obstruction is found or when the marked sphere moved less than <code class="code">@IMG.ratprec</code>. Inside the main iteration of the algorithm, if the spider moved less that <code class="code">@IMG.fast</code>, then don't compute the branched covering by monodromy, and don't compute the bisets; but just adjust the branched covering and the vertex positions of the spheres, guessing which ones should be kept. Check the guess: if it is incorrect, go back to the usual slow method. DeclareGlobalFunction("NormalizedP1Map"); DeclareProperty("IsBicritical", IsObject);</p>
+
+<p><a id="X8283D95B7FE74991" name="X8283D95B7FE74991"></a></p>
+
+<h5>4.5-1 NormalizedP1Map</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NormalizedP1Map</code>( <var class="Arg">f</var>, <var class="Arg">M</var>, <var class="Arg">param</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns: [A canonical conjugate of <var class="Arg">f</var>,the conjugator].</p>
+
+<p>The last argument <var class="Arg">param</var> is either <code class="code">IsPolynomial</code>, <code class="code">IsBicritical</code> or a positive integer.</p>
+
+<p>In the first case, the map <var class="Arg">f</var> is assumed conjugate to a polynomial. It is conjugated by a Möbius transformation that makes it a <em>centered</em> polynomial, namely a polynomial of the form <span class="SimpleMath">z^d+a_d-2z^d-2+dots+a_0</span>.</p>
+
+<p>In the second case, the map <var class="Arg">f</var> is assumed to have only two critical values; it is normalized as <span class="SimpleMath">(az^d+b)/(cz^d+e)</span>.</p>
+
+<p>In the third case, the map <var class="Arg">f</var> is assumed to have degree <span class="SimpleMath">2</span>; it is normalized in the form <span class="SimpleMath">1+a/z+b/z^2</span>, such that <span class="SimpleMath">0</span> is on a cycle of length <var class="Arg">param</var>.</p>
+
+<p>DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);</p>
+
+<p><a id="X7E423D047DB95301" name="X7E423D047DB95301"></a></p>
+
+<h5>4.5-2 ThurstonAlgorithm</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ThurstonAlgorithm</code>( <var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: rec(map := f, machine := M, markedsphere := s).</p>
+
+<p>This command runs Thurston's algorithm on the sphere machine <var class="Arg">m</var>. It either returns a record with the P1 map <code class="code">f</code> to which the algorithm converged, as well as the marked sphere with <code class="code">f</code>'s post-critical set and a simplified machine equivalent to <var class="Arg">m</var>; or a record returned by <code class="func">ThurstonObstruction</code> (<a href="chap4.html#X787168378397C957"><span class="RefLink">4.5-5</span></a>).</p>
+
+<p>DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);</p>
+
+<p><a id="X7A6170147F1376F2" name="X7A6170147F1376F2"></a></p>
+
+<h5>4.5-3 P1MapBySphereMachine</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; P1MapBySphereMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: Either a map or an obstruction.</p>
+
+<p>This command returs either the map computed by <code class="func">ThurstonAlgorithm</code> (<a href="chap4.html#X7E423D047DB95301"><span class="RefLink">4.5-2</span></a>) or a Thurston obstruction.</p>
+
+<p>It runs a modification of Hubbard and Schleicher's "spider algorithm" <a href="chapBib.html#biBMR1315537">[HS94]</a> on the sphere machine <var class="Arg">m</var>.</p>
+
+<p>The command accepts the following options, to return a map in a given normalization:</p>
+
+
+<dl>
+<dt><strong class="Mark"><code class="code">P1MapBySphereMachine(m:param:=IsPolynomial)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=z^d+A_d-2z^d-2+⋯+A_0</span>;</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">P1MapBySphereMachine(m:param:=IsBicritical)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=((pz+q)/(rz+s)^d</span>, with <span class="SimpleMath">1</span>postcritical;</p>
+
+</dd>
+<dt><strong class="Mark"><code class="code">P1MapBySphereMachine(m:param:=n)</code></strong></dt>
+<dd><p>returns <span class="SimpleMath">f=1+a/z+b/z^2</span> or <span class="SimpleMath">f=a/(z^2+2z)</span> if <code class="code">n=2</code>.</p>
+
+</dd>
+</dl>
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := PolynomialSphereMachine(2,[1/3],[]);</span>
+&lt;FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMachine(m);</span>
+0.866025*z^2+(-1)*z+(-0.288675)
+</pre></div>
+
+<p>DeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);</p>
+
+<p><a id="X807FAD4982B21B2A" name="X807FAD4982B21B2A"></a></p>
+
+<h5>4.5-4 ThurstonMatrix</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ThurstonMatrix</code>( <var class="Arg">m</var>, <var class="Arg">multicurve</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: The transition matrix of the multicurve.</p>
+
+<p>This command computes the iterated preimages of the multicurve <var class="Arg">multicurve</var> till it obtains a backwards-invariant multicurve or some preimages intersect. In the latter case, <code class="keyw">fail</code> returned, while in the former case the Thurston matrix of the multicurve is returned.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := PolynomialSphereMachine(2,[],[1/6]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">F := StateSet(r);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">twist := GroupHomomorphismByImages(F,F,GeneratorsOfGroup(F),[F.1,F.2^(F.3*F.2),F.3^F.2,F.4]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SupportingRays(r*twist^-1);</span>
+rec( machine := &lt;FR machine with alphabet [ 1, 2 ] on F/[ f4*f1*f2*f3 ]&gt;,
+     twist := [ f1, f2, f3, f4 ] -&gt; [ f1, f3^-1*f2*f3, f3^-1*f2^-1*f3*f2*f3, f4 ],
+     obstruction := "Dehn twist" )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">ThurstonMatrix(last.machine,[ConjugacyClass(F.2*F.3)]);</span>
+[ [ 1 ] ]
+</pre></div>
+
+<p>DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);</p>
+
+<p><a id="X787168378397C957" name="X787168378397C957"></a></p>
+
+<h5>4.5-5 ThurstonObstruction</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ThurstonObstruction</code>( <var class="Arg">m</var>, <var class="Arg">sphere</var> )</td><td class="tdright">( operation )</td></tr></table></div>
+<p>Returns: rec(multicurve := mc, matrix := m) or <code class="keyw">fail</code>.</p>
+
+<p>This command tries to find a Thurston obstruction (multicurve such that its Thurston matrix has spectral radius at least <span class="SimpleMath">1</span>); it either returns <code class="keyw">fail</code> if the search was inconclusive, or a record describing the obstruction.</p>
+
+<p>The obstruction is searched for by considering small subtrees of the minimal spanning tree of <var class="Arg">sphere</var>, computing loops surrounding these subtrees, and saturating them into a multicurve by taking their iterated preimages, see <code class="func">ThurstonMatrix</code> (<a href="chap4.html#X807FAD4982B21B2A"><span class="RefLink">4.5-4</span></a>).</p>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap5.html">[Next Chapter]</a>&nbsp;  </div>
