@@ -11,7 +11,6 @@ LT_PREREQ([2.4.2])
 AC_INIT(img,,laurent.bartholdi@gmail.com)
 AC_CONFIG_SRCDIR([src/img_dll.c])
 AC_CONFIG_AUX_DIR([cnf])
-AC_CONFIG_MACRO_DIR([cnf/m4])
 AC_CONFIG_HEADERS([src/config.h:cnf/config.h.in])
 LT_INIT([disable-static dlopen win32-dll])
 

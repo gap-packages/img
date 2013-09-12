@@ -39,7 +39,8 @@ LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	if [[ ! -f $(EXTERN)/include/dogleg.h ]]; then \\
 		$(MAKE) CC="$CC $CHOLMOD_INCLUDE $CHOLMOD_LIBS" -B -C $(LIBDOGLEG) && \\
 		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
-		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/; \\
+		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
+		if [[ $(uname) = Darwin ]]; then install_name_tool $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
 	fi\n'`
 
 MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"
