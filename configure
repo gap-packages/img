@@ -2381,7 +2381,6 @@ ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
-
 ac_config_headers="$ac_config_headers src/config.h:cnf/config.h.in"
 
 case `pwd` in
@@ -15187,7 +15186,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 15190 "configure" */
+/* #line 15189 "configure" */
 public class Test {
 }
 EOF
@@ -16685,9 +16684,10 @@ EXTERN="\$(CURDIR)/bin/$TARGET/extern"
 MAKE_LIBTARGETS=""
 
 
-lm_LIBS="$LIBS"
-
-LEVMAR=yes
+temp_LIBS="$LIBS"
+temp_CPPFLAGS="$CPPFLAGS"
+temp_LDFLAGS="$LDFLAGS"
+LEVMAR=unknown
 LEVMAR_CFLAGS=""
 LEVMAR_LDFLAGS=""
 
@@ -16697,6 +16697,7 @@ if test "${with_levmar+set}" = set; then :
   withval=$with_levmar; if test "$withval" = extern -o "$withval" = yes -o "$withval" = no; then
     LEVMAR="$withval"
   else
+    LEVMAR=yes
     LEVMAR_CFLAGS="-I$withval/include"; LEVMAR_LDFLAGS="-L$withval/lib"
   fi
 
@@ -16706,7 +16707,7 @@ fi
 
 # Check whether --with-levmar-include was given.
 if test "${with_levmar_include+set}" = set; then :
-  withval=$with_levmar_include; LEVMAR_CFLAGS="-I$withval"
+  withval=$with_levmar_include; LEVMAR=yes; LEVMAR_CFLAGS="-I$withval"
 
 fi
 
@@ -16714,34 +16715,16 @@ fi
 
 # Check whether --with-levmar-lib was given.
 if test "${with_levmar_lib+set}" = set; then :
-  withval=$with_levmar_lib; LEVMAR_LDFLAGS="-L$withval"
+  withval=$with_levmar_lib; LEVMAR=yes; LEVMAR_LDFLAGS="-L$withval"
 
 fi
 
 
+if test "$LEVMAR" != no; then
+
 LEVMAR_LIBS="-llevmar -llapack -lblas"
 
-if test "$LEVMAR" = extern; then
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for levmar" >&5
-$as_echo_n "checking for levmar... " >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: extern" >&5
-$as_echo "extern" >&6; }
-LEVMAR_MAKELIB=`printf 'liblevmar:
-	mkdir -p $(EXTERN)/include $(EXTERN)/lib
-	if [ ! -f $(EXTERN)/include/levmar.h ]; then \\
-		cmake $(LEVMAR); \\
-		$(MAKE) -C $(LEVMAR) levmar C_FLAGS=-fPIC; \\
-		cp $(LEVMAR)/liblevmar.a $(EXTERN)/lib/; \\
-		cp $(LEVMAR)/levmar.h $(EXTERN)/include/; \\
-	fi\n'`
-
-MAKE_LIBTARGETS="$MAKE_LIBTARGETS liblevmar"
-
-LEVMAR_CFLAGS='-I$(EXTERN)/include'
-LEVMAR_LDFLAGS='-L$(EXTERN)/lib'
-
-elif test "$LEVMAR" != no; then
+if test "$LEVMAR" != extern; then
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -16749,21 +16732,16 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-
-lm_CPPFLAGS=$CPPFLAGS
+temp_status=true
 CPPFLAGS="$CPPFLAGS $LEVMAR_CFLAGS"
 ac_fn_c_check_header_mongrel "$LINENO" "levmar.h" "ac_cv_header_levmar_h" "$ac_includes_default"
 if test "x$ac_cv_header_levmar_h" = xyes; then :
 
 else
-  as_fn_error $? "levmar.h not found. Specify its location using --with-levmar.
-The package may be downloaded from http://www.ics.forth.gr/~lourakis/levmar/" "$LINENO" 5
+  temp_status=false
 fi
 
 
-CPPFLAGS=$lm_CPPFLAGS
-
-lm_LDFLAGS=$LDFLAGS
 LDFLAGS="$LDFLAGS $LEVMAR_LDFLAGS"
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for dlevmar_dif in -llevmar" >&5
 $as_echo_n "checking for dlevmar_dif in -llevmar... " >&6; }
@@ -16809,10 +16787,8 @@ _ACEOF
   LIBS="-llevmar $LIBS"
 
 else
-  as_fn_error $? "liblevmar not found. Specify its location using --with-levmar." "$LINENO" 5
+  temp_status=false
 fi
-
-LDFLAGS=$lm_LDFLAGS
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -16821,9 +16797,48 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+if test "$temp_status" = false; then
+    if test "$LEVMAR" = yes; then
+        as_fn_error $? "levmar.h not found. Using --with-levmar, specify its location, \"extern\" to compile it locally, or \"no\" to disable it.
+The package may be downloaded from http://www.ics.forth.gr/~lourakis/levmar/" "$LINENO" 5
+    else
+	LEVMAR=extern
+    fi
+else
+    LEVMAR=yes
 fi
 
-LIBS="$lm_LIBS"
+if test "$LEVMAR" = extern; then
+
+LEVMAR_MAKELIB=`printf 'liblevmar:
+	mkdir -p $(EXTERN)/include $(EXTERN)/lib
+	if [ ! -f $(EXTERN)/include/levmar.h ]; then \\
+		(cd $(LEVMAR) && cmake .) && \\
+		$(MAKE) -C $(LEVMAR) levmar C_FLAGS=-fPIC && \\
+		cp $(LEVMAR)/liblevmar.a $(EXTERN)/lib/ && \\
+		cp $(LEVMAR)/levmar.h $(EXTERN)/include/; \\
+	fi\n'`
+
+MAKE_LIBTARGETS="$MAKE_LIBTARGETS liblevmar"
+
+LEVMAR_CFLAGS='-I$(EXTERN)/include'
+LEVMAR_LDFLAGS='-L$(EXTERN)/lib'
+
+fi
+
+fi
+
+fi
+
+CPPFLAGS="$temp_CPPFLAGS"
+LDFLAGS="$temp_LDFLAGS"
+LIBS="$temp_LIBS"
+
+if test "$LEVMAR" != no; then
+    $as_echo "#define USE_LEVMAR 1" >>confdefs.h
+
+fi
+
 
 
 
@@ -16892,7 +16907,7 @@ LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
 for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
-unset ac_cv_lib_cholmod_cholmod_allocate_triplet
+    unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
 $as_echo_n "checking for cholmod_allocate_triplet in -lcholmod... " >&6; }
@@ -16960,6 +16975,135 @@ LIBS="$cm_LIBS"
 
 
 
+
+cm_LIBS="$LIBS"
+cm_CPPFLAGS="$CPPFLAGS"
+cm_LDFLAGS="$LDFLAGS"
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+CHOLMOD=yes
+CHOLMOD_CFLAGS=""
+CHOLMOD_LDFLAGS=""
+
+
+# Check whether --with-cholmod was given.
+if test "${with_cholmod+set}" = set; then :
+  withval=$with_cholmod; CHOLMOD_CFLAGS="-I$withval/include"; CHOLMOD_LDFLAGS="-L$withval/lib"
+
+fi
+
+
+
+# Check whether --with-cholmod-include was given.
+if test "${with_cholmod_include+set}" = set; then :
+  withval=$with_cholmod_include; CHOLMOD_CFLAGS="-I$withval"
+
+fi
+
+
+
+# Check whether --with-cholmod-lib was given.
+if test "${with_cholmod_lib+set}" = set; then :
+  withval=$with_cholmod_lib; CHOLMOD_LDFLAGS="-L$withval"
+
+fi
+
+
+if test "$CHOLMOD_CFLAGS" = ""; then
+    ac_fn_c_check_header_mongrel "$LINENO" "suitesparse/cholmod.h" "ac_cv_header_suitesparse_cholmod_h" "$ac_includes_default"
+if test "x$ac_cv_header_suitesparse_cholmod_h" = xyes; then :
+  CHOLMOD_CFLAGS="-I/usr/include/suitesparse"
+fi
+
+
+fi
+
+CPPFLAGS="$CPPFLAGS $CHOLMOD_CFLAGS"
+ac_fn_c_check_header_mongrel "$LINENO" "cholmod.h" "ac_cv_header_cholmod_h" "$ac_includes_default"
+if test "x$ac_cv_header_cholmod_h" = xyes; then :
+
+else
+  as_fn_error $? "cholmod.h not found. Specify its location using --with-cholmod." "$LINENO" 5
+fi
+
+
+
+LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
+CHOLMOD_LIBS=""
+
+for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+    unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
+    CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
+$as_echo_n "checking for cholmod_allocate_triplet in -lcholmod... " >&6; }
+if ${ac_cv_lib_cholmod_cholmod_allocate_triplet+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lcholmod $CHOLMOD_LIBS $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char cholmod_allocate_triplet ();
+int
+main ()
+{
+return cholmod_allocate_triplet ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_cholmod_cholmod_allocate_triplet=yes
+else
+  ac_cv_lib_cholmod_cholmod_allocate_triplet=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_cholmod_cholmod_allocate_triplet" >&5
+$as_echo "$ac_cv_lib_cholmod_cholmod_allocate_triplet" >&6; }
+if test "x$ac_cv_lib_cholmod_cholmod_allocate_triplet" = xyes; then :
+  cm_found=true
+else
+  cm_found=false
+fi
+
+    if test $cm_found = true; then break; fi
+done
+
+if test $cm_found = false; then
+    as_fn_error $? "libcholmod not found. Specify its location using --with-cholmod." "$LINENO" 5
+fi
+
+CHOLMOD_LIBS="-lcholmod $CHOLMOD_LIBS"
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+CPPFLAGS="$cm_CPPFLAGS"
+LDFLAGS="$cm_LDFLAGS"
+LIBS="$cm_LIBS"
+
+
+
+
+
 extern_libs=false
 
 # Check whether --with-libdogleg was given.
@@ -16999,9 +17143,10 @@ $as_echo "extern" >&6; }
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib
 	if [ ! -f $(EXTERN)/include/dogleg.h ]; then \\
-		$(MAKE) -B -C $(LIBDOGLEG); \\
-		cp $(LIBDOGLEG)/libdogleg.* $(EXTERN)/lib/; \\
-		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/; \\
+		$(MAKE) -B -C $(LIBDOGLEG) && \\
+		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
+		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
+		if [ "$(shell uname)" = Darwin ]; then install_name_tool $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
 	fi\n'`
 
 MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"

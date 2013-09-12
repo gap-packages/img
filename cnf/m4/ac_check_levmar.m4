@@ -78,6 +78,8 @@ fi
 
 fi
 
+fi
+
 CPPFLAGS="$temp_CPPFLAGS"
 LDFLAGS="$temp_LDFLAGS"
 LIBS="$temp_LIBS"
