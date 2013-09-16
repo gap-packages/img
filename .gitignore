@@ -11,7 +11,7 @@ sandbox
 imgbib.xml.bib
 autom4te.cache
 .DS_Store
-doc/chap*txt
+doc/chap*
 doc/manual.*
 doc/*.aux
 doc/*.pnr
