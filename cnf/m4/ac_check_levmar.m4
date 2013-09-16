@@ -8,6 +8,7 @@ temp_LDFLAGS="$LDFLAGS"
 LEVMAR=unknown
 LEVMAR_CFLAGS=""
 LEVMAR_LDFLAGS=""
+LEVMAR_LIBS=""
 
 AC_ARG_WITH(levmar,
  [  --with-levmar=<location>
@@ -61,6 +62,8 @@ fi
 fi
 
 if test "$LEVMAR" = extern; then
+
+AC_MSG_NOTICE([I will compile levmar for you from the extern/ directory])
 
 LEVMAR_MAKELIB=`printf 'liblevmar:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib

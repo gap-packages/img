@@ -16974,6 +16974,13 @@ LIBS="$cm_LIBS"
 
 
 
+temp_LIBS="$LIBS"
+temp_CPPFLAGS="$CPPFLAGS"
+temp_LDFLAGS="$LDFLAGS"
+LIBDOGLEG=unknown
+LIBDOGLEG_CFLAGS=""
+LIBDOGLEG_LDFLAGS=""
+LIBDOGLEG_LIBS=""
 
 
 cm_LIBS="$LIBS"
@@ -17104,13 +17111,13 @@ LIBS="$cm_LIBS"
 
 
 
-extern_libs=false
 
 # Check whether --with-libdogleg was given.
 if test "${with_libdogleg+set}" = set; then :
-  withval=$with_libdogleg; if test "$withval" = extern; then
-    extern_libs=true
+  withval=$with_libdogleg; if test "$withval" = extern -o "$withval" = yes -o "$withval" = no; then
+    LIBDOGLEG="$withval"
   else
+    LIBDOGLEG=yes
     LIBDOGLEG_CFLAGS="-I$withval/include"; LIBDOGLEG_LDFLAGS="-L$withval/lib"
   fi
 
@@ -17120,7 +17127,7 @@ fi
 
 # Check whether --with-libdogleg-include was given.
 if test "${with_libdogleg_include+set}" = set; then :
-  withval=$with_libdogleg_include; LIBDOGLEG_CFLAGS="-I$withval"
+  withval=$with_libdogleg_include; LIBDOGLEG=yes; LIBDOGLEG_CFLAGS="-I$withval"
 
 fi
 
@@ -17128,32 +17135,16 @@ fi
 
 # Check whether --with-libdogleg-lib was given.
 if test "${with_libdogleg_lib+set}" = set; then :
-  withval=$with_libdogleg_lib; LIBDOGLEG_LDFLAGS="-L$withval"
+  withval=$with_libdogleg_lib; LIBDOGLEG=yes; LIBDOGLEG_LDFLAGS="-L$withval"
 
 fi
 
 
+if test "$LIBDOGLEG" != no; then
+
 LIBDOGLEG_LIBS="-lcholmod -ldogleg"
 
-if test "$extern_libs" = true; then
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libdogleg" >&5
-$as_echo_n "checking for libdogleg... " >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: extern" >&5
-$as_echo "extern" >&6; }
-LIBDOGLEG_MAKELIB=`printf 'libdogleg:
-	mkdir -p $(EXTERN)/include $(EXTERN)/lib
-	if [ ! -f $(EXTERN)/include/dogleg.h ]; then \\
-		$(MAKE) -B -C $(LIBDOGLEG) && \\
-		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
-		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
-		if [ "$(shell uname)" = Darwin ]; then install_name_tool $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
-	fi\n'`
-
-MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"
-LIBDOGLEG_CFLAGS='-I$(EXTERN)/include'
-LIBDOGLEG_LDFLAGS='-L$(EXTERN)/lib'
-
-else
+if test "$LIBDOGLEG" != extern; then
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -17161,21 +17152,16 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-
-ldl_CPPFLAGS=$CPPFLAGS
+temp_status=true
 CPPFLAGS="$CPPFLAGS $LIBDOGLEG_CFLAGS"
 ac_fn_c_check_header_mongrel "$LINENO" "dogleg.h" "ac_cv_header_dogleg_h" "$ac_includes_default"
 if test "x$ac_cv_header_dogleg_h" = xyes; then :
 
 else
-  as_fn_error $? "dogleg.h not found. Specify its location using --with-libdogleg.
-The package may be downloaded from https://github.com/Oblong/libdogleg.git" "$LINENO" 5
+  temp_status=false
 fi
 
 
-CPPFLAGS=$ldl_CPPFLAGS
-
-ldl_LDFLAGS=$LDFLAGS
 LDFLAGS="$LDFLAGS $LIBDOGLEG_LDFLAGS"
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for dogleg_optimize in -ldogleg" >&5
 $as_echo_n "checking for dogleg_optimize in -ldogleg... " >&6; }
@@ -17221,10 +17207,8 @@ _ACEOF
   LIBS="-ldogleg $LIBS"
 
 else
-  as_fn_error $? "libdogleg not found. Specify its location using --with-libdogleg." "$LINENO" 5
+  temp_status=false
 fi
-
-LDFLAGS=$ldl_LDFLAGS
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -17232,6 +17216,49 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+if test "$temp_status" = false; then
+    if test "$LIBDOGLEG" = yes; then
+        as_fn_error $? "dogleg.h not found. Using --with-libdogleg, specify its location, \"extern\" to compile it locally, or \"no\" to disable it.
+The package may be downloaded from https://github.com/Oblong/libdogleg.git" "$LINENO" 5
+    else
+	LIBDOGLEG=extern
+    fi
+else
+    LIBDOGLEG=yes
+fi
+
+fi
+
+if test "$LIBDOGLEG" = extern; then
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: I will compile libdogleg for you from the extern/ directory" >&5
+$as_echo "$as_me: I will compile libdogleg for you from the extern/ directory" >&6;}
+
+LIBDOGLEG_MAKELIB=`printf 'libdogleg:
+	mkdir -p "$(EXTERN)/include" "$(EXTERN)/lib"
+	if [ ! -f "$(EXTERN)/include/dogleg.h" ]; then \\
+		$(MAKE) -B -C "$(LIBDOGLEG)" && \\
+		cp "$(LIBDOGLEG)/libdogleg.a" "$(EXTERN)/lib/" && \\
+		cp "$(LIBDOGLEG)/dogleg.h" "$(EXTERN)/include/" && \\
+		if [ "$(shell uname)" = Darwin ]; then install_name_tool -id "$(EXTERN)/lib/libdogleg.dylib" "$(EXTERN)/lib/libdogleg.dylib"; fi; \\
+	fi\n'`
+
+MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"
+
+LIBDOGLEG_CFLAGS='-I$(EXTERN)/include'
+LIBDOGLEG_LDFLAGS='-L$(EXTERN)/lib'
+
+fi
+
+fi
+
+CPPFLAGS="$temp_CPPFLAGS"
+LDFLAGS="$temp_LDFLAGS"
+LIBS="$temp_LIBS"
+
+if test "$LIBDOGLEG" != no; then
+    $as_echo "#define USE_LIBDOGLEG 1" >>confdefs.h
 
 fi
 
