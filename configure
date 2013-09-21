@@ -16690,6 +16690,7 @@ temp_LDFLAGS="$LDFLAGS"
 LEVMAR=unknown
 LEVMAR_CFLAGS=""
 LEVMAR_LDFLAGS=""
+LEVMAR_LIBS=""
 
 
 # Check whether --with-levmar was given.
@@ -16811,6 +16812,9 @@ fi
 fi
 
 if test "$LEVMAR" = extern; then
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: I will compile levmar for you from the extern/ directory" >&5
+$as_echo "$as_me: I will compile levmar for you from the extern/ directory" >&6;}
 
 LEVMAR_MAKELIB=`printf 'liblevmar:
 	mkdir -p $(EXTERN)/include $(EXTERN)/lib
@@ -17238,10 +17242,10 @@ $as_echo "$as_me: I will compile libdogleg for you from the extern/ directory" >
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p "$(EXTERN)/include" "$(EXTERN)/lib"
 	if [ ! -f "$(EXTERN)/include/dogleg.h" ]; then \\
-		$(MAKE) -B -C "$(LIBDOGLEG)" && \\
-		cp "$(LIBDOGLEG)/libdogleg.a" "$(EXTERN)/lib/" && \\
-		cp "$(LIBDOGLEG)/dogleg.h" "$(EXTERN)/include/" && \\
-		if [ "$(shell uname)" = Darwin ]; then install_name_tool -id "$(EXTERN)/lib/libdogleg.dylib" "$(EXTERN)/lib/libdogleg.dylib"; fi; \\
+		$(MAKE) CFLAGS="$(CHOLMOD_CFLAGS)" -B -C $(LIBDOGLEG) && \\
+		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
+		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
+		if [ "$(shell uname)" = Darwin ]; then install_name_tool -id $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
 	fi\n'`
 
 MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"

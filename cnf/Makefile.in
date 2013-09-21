@@ -71,7 +71,7 @@ clean:
 mrproper: clean
 	rm Makefile config.h
 
-configure: cnf/Makefile.in cnf/configure.ac
+configure: cnf/Makefile.in cnf/configure.ac cnf/m4/*
 	(cd cnf; aclocal -Im4; autoconf; mv -f configure ..)
 
 doc: doc/chap0.html
