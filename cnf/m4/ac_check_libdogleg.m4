@@ -71,10 +71,10 @@ AC_MSG_NOTICE([I will compile libdogleg for you from the extern/ directory])
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p "$(EXTERN)/include" "$(EXTERN)/lib"
 	if [[ ! -f "$(EXTERN)/include/dogleg.h" ]]; then \\
-		$(MAKE) -B -C "$(LIBDOGLEG)" && \\
-		cp "$(LIBDOGLEG)/libdogleg.a" "$(EXTERN)/lib/" && \\
-		cp "$(LIBDOGLEG)/dogleg.h" "$(EXTERN)/include/" && \\
-		if [[ "$(shell uname)" = Darwin ]]; then install_name_tool -id "$(EXTERN)/lib/libdogleg.dylib" "$(EXTERN)/lib/libdogleg.dylib"; fi; \\
+		$(MAKE) CFLAGS="$(CHOLMOD_CFLAGS)" -B -C $(LIBDOGLEG) && \\
+		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
+		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
+		if [[ "$(shell uname)" = Darwin ]]; then install_name_tool -id $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
 	fi\n'`
 
 MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"
