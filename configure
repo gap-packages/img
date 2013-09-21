@@ -17242,7 +17242,7 @@ $as_echo "$as_me: I will compile libdogleg for you from the extern/ directory" >
 LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 	mkdir -p "$(EXTERN)/include" "$(EXTERN)/lib"
 	if [ ! -f "$(EXTERN)/include/dogleg.h" ]; then \\
-		$(MAKE) CFLAGS="$(CHOLMOD_CFLAGS)" -B -C $(LIBDOGLEG) && \\
+		$(MAKE) CC="$(CC) $(CHOLMOD_CFLAGS)" -B -C $(LIBDOGLEG) && \\
 		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
 		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
 		if [ "$(shell uname)" = Darwin ]; then install_name_tool -id $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
