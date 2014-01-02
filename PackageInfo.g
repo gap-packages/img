@@ -5,11 +5,11 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.1.0",
-Date := "12/09/2013",
+Version := "0.1.1",
+Date := "02/01/2014",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.1.0">
-## <!ENTITY Date "12/09/2013">
+## <!ENTITY Version "0.1.1">
+## <!ENTITY Date "02/01/2014">
 ## <#/GAPDoc>
 ArchiveURL := Concatenation("https://github.com/laurentbartholdi/img/archive/",~.Version),
 ArchiveFormats := ".tar.gz",

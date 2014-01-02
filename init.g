@@ -57,7 +57,8 @@ CallFuncList(function()
                 "P1MAPNUMER","P1ROTATION_IEEE754","P1MAPDENOM",
                 "P1MAPISPOLYNOMIAL","STRINGS2P1POINT","DEGREEOFP1MAP",
                 "P1MAPNUMERATOR","P1MAPDENOMINATOR","P1MAP_SUM","P1MAP_DIFF",
-                "P1MAP_PROD","P1MAP_QUO","P1MAP_INV","P1MAP_AINV"] do
+                "P1MAP_PROD","P1MAP_QUO","P1MAP_INV","P1MAP_AINV",
+		"P1MAPSCALING"] do
             CallFuncList(function(w)
                 BindGlobal(w, function(arg)
                     Error("You need to compile ",dll," before using ",w,"\nYou may compile it with './configure && make' in ",PackageInfo("img")[1].InstallationPath,"\n...");

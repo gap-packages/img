@@ -119,4 +119,11 @@ DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 ## </ManSection>
 ## <#/GAPDoc>
 
+# cui example:
+#gap> s := NewSphereMachine("g0=<,g0,,,,,,g1^-1,,g0^-1,,,g8^-1>(1,2)(3,5,4)(6,7)(8,9,10,13)(11,12)",
+#> "g1=<g0^-1,,,,,,,,g1,,,g0,>(1,8,12,5)(2,3)(4,10,7)(6,9)(11,13)",
+#> "g8=<,,,,g0^-1,,,,,,g0,g8,>(1,3)(2,4,6,8)(5,11,10)(7,9)(12,13)","g0*g1*g8");
+
+# pilgrim example:
+
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

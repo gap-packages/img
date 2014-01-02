@@ -17245,7 +17245,7 @@ LIBDOGLEG_MAKELIB=`printf 'libdogleg:
 		$(MAKE) CC="$(CC) $(CHOLMOD_CFLAGS)" -B -C $(LIBDOGLEG) && \\
 		cp $(LIBDOGLEG)/libdogleg.a $(EXTERN)/lib/ && \\
 		cp $(LIBDOGLEG)/dogleg.h $(EXTERN)/include/ && \\
-		if [ "$(shell uname)" = Darwin ]; then install_name_tool -id $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
+		if [ "$(shell uname)" = Darwin ]; then cp $(LIBDOGLEG)/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; install_name_tool -id $(EXTERN)/lib/libdogleg.dylib $(EXTERN)/lib/libdogleg.dylib; fi; \\
 	fi\n'`
 
 MAKE_LIBTARGETS="$MAKE_LIBTARGETS libdogleg"
