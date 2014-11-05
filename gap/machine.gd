@@ -41,9 +41,9 @@ DeclareProperty("IsSphereMachine", IsFRMachine);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("AsSphereMachine", IsFRMachine);
-DeclareOperation("AsSphereMachine", [IsFRMachine, IsWord]);
-DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);
+DeclareAttribute("AsSphereMachine", IsGroupFRMachine);
+DeclareOperation("AsSphereMachine", [IsGroupFRMachine, IsWord]);
+DeclareOperation("AsSphereMachine", [IsGroupFRMachine, IsSphereGroup]);
 ## <ManSection>
 ##   <Oper Name="AsSphereMachine" Arg="m[,w]"/>
 ##   <Returns>A sphere machine.</Returns>
@@ -120,7 +120,7 @@ DeclareGlobalFunction("NewSphereMachine");
 ## gap> <FR machine with alphabet [ 1, 2, 3, 4, 5, 6 ] on Group( [ a, b, A, B ] )/[ a*B*A*b ]>                                
 ## gap> fold2 := NewSphereMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>",
 ##      "A=(1,6)(2,5)(3,4)","B=<B*A,,,b*a,,>(1,4)(2,6)(3,5)","a*B*A*b");;
-## gap> RationalFunction(fold1); RationalFunction(fold2);
+## gap> P1MapBySphereMachine(fold1); P1MapBySphereMachine(fold2);
 ## ...
 ## ]]></Example>
 ##   </Description>
@@ -187,7 +187,7 @@ DeclareAttribute("AddingElement", IsSphereMachine);
 ##     of the airplane and the rabbit. In the machine <C>m</C>, an
 ##     airplane is represented by <C>Group(a,b,c)</C> and a rabbit is
 ##     represented by <C>Group(x,y,z)</C>; in the machine <C>newm</C>,
-##     it is the other way round. The effect of <C>CleanedIMGMachine</C>
+##     it is the other way round. The effect of <C>CleanedSphereMachine</C>
 ##     was to remove unnecessary instances of the IMG relator from
 ##     <C>newm</C>'s recursion.
 ## <Example><![CDATA[
@@ -528,12 +528,12 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 ## gap> cm := List(c,c->SphereMachine(z^3+c));;
 ## gap> m := ListX(am,cm,Mating);;
 ## gap> # m[2] is realizable
-## gap> RationalFunction(m[2]);
+## gap> P1MapBySphereMachine(m[2]);
 ## ((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z
 ##   +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2
 ##   +(1.61715+I*1.50244)*z+1)
 ## gap> # m[6] is obstructed
-## gap> RationalFunction(m[6]);
+## gap> P1MapBySphereMachine(m[6]);
 ## rec( matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], machine := <FR machine with alphabet
 ##     [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] )/[ f2*f3*f1*g1*g3*g2 ]>,
 ##   obstruction := [ f1^-1*f3^-1*f2^-1*f1*f2*f3*f1*g2^-1*g3^-1*f1^-1*f3^-1*f2^-1,

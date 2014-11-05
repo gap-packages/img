@@ -468,9 +468,9 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
     if n=2 then # special handling, space is not hyperbolic
         i := Sum(List(Transitions(M,1),ExponentSums));
         if i[1]-i[2]=1 then
-            return P1Monomial(deg);
+            return rec(map := P1Monomial(deg));
         elif i[1]-i[2]=-1 then
-            return P1Monomial(-deg);
+            return rec(map := P1Monomial(-deg));
         else
             Error(M," is not a legal sphere machine");
         fi;
@@ -484,6 +484,7 @@ InstallMethod(ThurstonAlgorithm, "(IMG) for a sphere machine",
         # on positive real axis, tending to infinity
         f := Exp(@.2ipi*(i-1)/(2*n-2));
         Add(v,P1Point(@.o*ImaginaryPart(f)/(@.ro+RealPart(f))));
+# !!!! a formula adding random points: Add(v,P1Point((f+2)^3));
     od;
     downsphere := NewMarkedSphere(v,model);
 

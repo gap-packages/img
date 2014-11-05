@@ -138,8 +138,8 @@ DeclareAttribute("SphereMachine", IsP1Map);
 ##   <P/> This machine has a preset attribute <C>MarkedSphere(m)</C>.
 ##
 ##   <P/> An approximation of the Julia set of <A>f</A> can be computed,
-##   and plotted on the spider, with the form <C>IMGMachine(f:julia)</C>
-##   or <C>IMGMachine(f:julia:=gridsize)</C>.
+##   and plotted on the spider, with the form <C>SphereMachine(f:julia)</C>
+##   or <C>SphereMachine(f:julia:=gridsize)</C>.
 ## <Example><![CDATA[
 ## gap> SphereMachine(P1z^2-1);
 ## <FR machine with alphabet [ 1, 2 ] on Group( [ f1, f2, f3 ] )/[ f2*f1*f3 ]>

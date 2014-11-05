@@ -113,62 +113,38 @@ BindGlobal("NFFUNCTION_FR", function(rel,dir,word)
 end);
 fi;
 
-# a homomorphism from the free group with 1 relation to a genuinely free group
-BindGlobal("ISOMORPHISMSIMPLIFIEDIMGGROUP@", function(src, rel)
-    local f, srcfam, ffam;
-    
-#    rel := MAKENFREL@(rel); # disabled for now, anyways we won't use this
-    f := FreeGroup(RankOfFreeGroup(src)-1);
-    srcfam := FamilyObj(Representative(src));
-    ffam := FamilyObj(Representative(f));
-    return GroupHomomorphismByFunction(src,f,
-                   x->AssocWordByLetterRep(ffam,NFFUNCTION_FR(rel,false,LetterRepAssocWord(x))),
-                   y->AssocWordByLetterRep(srcfam,NFFUNCTION_FR(rel,true,LetterRepAssocWord(y))));
-end);
-
 # takes into account the IMG relator to try harder to express a machine
 # as a subfrmachine
 InstallMethod(SubFRMachine, "(IMG) for a sphere machine and a map",
-#!!!!
         [IsSphereMachine, IsGroupHomomorphism],
         function(M,f)
-    local S, trans, out, i, pi, x, rel, g, h;
+    local S, trans, out, gen, pi, machine, decomp, adder;
+
     S := StateSet(M);
-    while S<>Range(f) do
-        Error("SubFRMachine: range and stateset must be the same\n");
+    while S<>Range(f) or not IsSphereGroup(Source(f)) do
+        Error("SubFRMachine: map must be homomorphism from sphere group to stateset of machine\n");
     od;
     pi := WreathRecursion(M);
-    rel := RelatorsOfFpGroup(S)[1]; #!!!
     trans := [];
     out := [];
-    x := LetterRepAssocWord(rel);
-    if [1..RankOfFreeGroup(S)] in [SortedList(x),SortedList(-x)] then
-        h := ISOMORPHISMSIMPLIFIEDIMGGROUP@(S,rel);
-        g := f*h;
-    else
-        h := IdentityMapping(S);
-        g := f;
-    fi;
     
-    for i in GeneratorsOfGroup(Source(f)) do
-        x := pi(i^f);
-        x[1] := List(x[1],x->PreImagesRepresentative(g,x^h));
-        if fail in x[1] then return fail; fi;
-        Add(trans,x[1]);
-        Add(out,x[2]);
+    for gen in GeneratorsOfGroup(Source(f)) do
+        decomp := pi(gen^f);
+        Add(out,decomp[2]);
+        decomp := List(decomp[1],x->PreImagesRepresentative(f,x));
+        if fail in decomp then return fail; fi;
+        Add(trans,decomp);
     od;
-    x := FRMachineNC(FamilyObj(M),Source(f),trans,out);
-    i := PreImagesRepresentative(f,rel);
-    if i<>fail then
-        x := CleanedSphereMachine(x);
-    fi;
+    machine := FRMachineNC(FamilyObj(M),Source(f),trans,out);
+    IsSphereMachine(machine);
+
     if HasAddingElement(M) then
-        i := PreImagesRepresentative(f,InitialState(AddingElement(M)));
-        if i<>fail then
-            SetAddingElement(x,FRElement(x,i));
+        adder := PreImagesRepresentative(f,InitialState(AddingElement(M)));
+        if adder<>fail then
+            SetAddingElement(machine,FRElement(machine,adder));
         fi;
     fi;
-    return x;
+    return machine;
 end);
 
 InstallMethod(ViewString, "(IMG) for a sphere machine",
@@ -387,7 +363,8 @@ BindGlobal("COPYADDER@", function(M,N)
     SetAddingElement(M,FRElement(M,InitialState(AddingElement(N))));
 end);
 
-#!!! we don't use this anymore -- it seems actually to slow things down
+if false then
+# we don't use this anymore -- it seems actually to slow things down
 BindGlobal("NORMALIZEHOMOMORPHISM@", function(f)
     local g, mapi, sf, rf, gens;
     if not HasMappingGeneratorsImages(f) then
@@ -404,7 +381,8 @@ BindGlobal("NORMALIZEHOMOMORPHISM@", function(f)
     mapi := mapi[2];
     return GroupHomomorphismByImagesNC(sf,rf,gens,List(gens,x->Product(AsWordLetterRepInGenerators(x,g),i->mapi[AbsInt(i)]^SignInt(i),One(rf))));
 end);
-                       
+fi;
+
 InstallMethod(\*, "(IMG) for an FR machine and a mapping",
         [IsFRMachine and IsFRMachineStdRep, IsMapping],
         function(M,f)
@@ -559,6 +537,14 @@ InstallMethod(ChangeFRMachineBasis, [IsPolynomialSphereMachine, IsCollection, Is
     newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
     IsSphereMachine(newm);
     SetAddingElement(newm,FRElement(newm,InitialState(AddingElement(m))));
+    return newm;
+end);
+
+InstallMethod(ChangeFRMachineBasis, [IsSphereMachine, IsCollection, IsPerm],
+        function(m,c,p)
+    local newm;
+    newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
+    IsSphereMachine(newm);
     return newm;
 end);
 
@@ -787,7 +773,7 @@ end);
 #M PolynomialMealyMachine
 #M PolynomialSphereMachine
 ##
-BindGlobal("KM$INPART@", function(part,x)
+BindGlobal("KM_INPART@", function(part,x)
     # part is a list of subsets of [0,1) given as a list of pairs [lo,hi).
     # returns the index of the subset that contains x
     local i, j;
@@ -800,13 +786,13 @@ BindGlobal("KM$INPART@", function(part,x)
     od;
 end);
 
-BindGlobal("KM$SPLITPART@", function(part,p,epsilon)
+BindGlobal("KM_SPLITPART@", function(part,p,epsilon)
     # part is a list of subsets as above.
     # p is a list of points on [0,1).
     # intersect part with the partition cutting [0,1) at all p[i]-epsilon.
     local ind, i, j, newp;
 
-    ind := List(p,x->KM$INPART@(part,x-epsilon));
+    ind := List(p,x->KM_INPART@(part,x-epsilon));
     if Size(Set(ind))<>1 then
         Error("Some parts cross");
     fi;
@@ -945,9 +931,9 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
     part := [[[0,1]]];
     for i in C do
         if i[2]=FJ@[1] then
-            KM$SPLITPART@(part,i[1],0);
+            KM_SPLITPART@(part,i[1],0);
         else
-            KM$SPLITPART@(part,i[1],epsilon);
+            KM_SPLITPART@(part,i[1],epsilon);
         fi;
     od;
         
@@ -955,7 +941,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
         Error("F and J describe a map of wrong degree");
     od;
     
-    part := part{List([0..d-1]/d,x->KM$INPART@(part,x))};
+    part := part{List([0..d-1]/d,x->KM_INPART@(part,x))};
 
     if machtype.mealy then
         gens := [1..rank+1];
@@ -984,7 +970,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
                 p := p[1][Position(p[1],q) mod Length(p[1])+1];
             fi;
             if machtype.mealy or not machtype.adding then
-                o[KM$INPART@(part,q)] := KM$INPART@(part,p);
+                o[KM_INPART@(part,q)] := KM_INPART@(part,p);
 
                 p := Position(pcp,[q,i[2]]);
                 if p<>fail then
@@ -992,7 +978,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
                 else
                     p := one;
                 fi;
-                t[KM$INPART@(part,q)] := p;
+                t[KM_INPART@(part,q)] := p;
             else
                 if p<>q then
                     Add(o,1+(j+d*(p-q)) mod d);
@@ -1029,6 +1015,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
         machine := FRMachine(f,trans,out);
         SetAddingElement(machine,FRElement(machine,gens[Length(gens)]));
         SetCorrespondence(machine,pcp);
+        IsSphereMachine(machine);
     fi;
 
     if not (machtype.formal or machtype.mealy) then
@@ -1042,7 +1029,7 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
                     if ForAny(C,r->t[i] in r[1]) then # it's critical, separate it
                         Add(o,[i]);
                     else
-                        Add(o[KM$INPART@(part,t[i])],i); # see its address
+                        Add(o[KM_INPART@(part,t[i])],i); # see its address
                     fi;
                 od;
                 UniteSet(q,o);
@@ -1072,7 +1059,6 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
         fi;
     fi;
 
-    IsSphereMachine(machine);
     return machine;
 end);
 
@@ -1342,7 +1328,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
     inneract := function(machine,g) return DISTILLATE@(InnerAutomorphism(states,g^-1)*machine)[1]; end;
     pmcg := PUREMCG@(states);
     orbit := Orbit(pmcg,DISTILLATE@(M)[1],act);
-    
+
     # sort orbit so that consecutive blocks are related by inner automorphisms
     orbit := OrbitsDomain(states,orbit,inneract);
     reps := List(orbit,o->RepresentativeAction(pmcg,orbit[1][1],o[1],act)*List(o,machine->InnerAutomorphism(states,RepresentativeAction(states,o[1],machine,inneract))));

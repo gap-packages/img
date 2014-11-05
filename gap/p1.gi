@@ -725,6 +725,27 @@ InstallMethod(CriticalPointsOfP1Map, "(IMG) generic P1 map", [IsP1Map],
     return roots;
 end);
 
+InstallMethod(P1MapScaling, "(IMG) generic P1 map and point", [IsP1Map,IsP1Point],
+        function(map,z)
+    local numer, denom, n, d, diff;
+
+    numer := NumeratorOfRationalFunction(map);
+    denom := DenominatorOfRationalFunction(map);
+
+    if IsXInfinity(z) then
+        d := DegreeOfP1Map(map); 
+        diff := numer[d+1]*denom[d] - numer[d]*denom[d+1];
+        diff := diff / (Norm(numer[d+1]) + Norm(denom[d+1]));
+    else
+        d := POLY_EVAL@(denom, z);
+        n := POLY_EVAL@(numer, z);
+        diff := DPOLY_EVAL@(numer, z)*d - DPOLY_EVAL@(denom, z)*n;
+        diff := diff * (1.0 + Norm(z)) / (Norm(d) + Norm(n));
+    fi;
+    
+    return AbsoluteValue(diff);
+end);
+
 InstallMethod(P1MapByZerosPoles, "(IMG) generic P1 map", [IsP1PointList,IsP1PointList,IsP1Point,IsP1Point],
         function(zeros,poles,src,dst)
     # construct a rational map with specified zeros and poles, and sending
@@ -898,7 +919,7 @@ InstallMethod(P1ROTATION@, "(IMG) generic P1 points",
     fi;
     theta := theta / AbsoluteValue(theta); # make it of norm 1
     
-    return P1MapByCoefficients([@.rz,theta],[@.ro]);
+    return P1MapByCoefficients([@.z,theta],[@.o]);
 end);
 
 BindGlobal("FINDTHREEPOINTS@", function(points)
@@ -926,6 +947,7 @@ end);
 
 BindGlobal("P1NORMALIZINGMAP@", function(points)
     local map, barycenter, dilate, rpoints;
+    # highly buggy! we should improve on the precision returned by the IEEE754 routine !!!
 
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
     barycenter := FIND_BARYCENTER(rpoints,100);
@@ -937,7 +959,7 @@ BindGlobal("P1NORMALIZINGMAP@", function(points)
     if dilate = @.rz then
         map := P1z;
     else
-        map := InverseP1Map(MoebiusMap(P1Sphere(-barycenter/dilate)))*(@.ro-dilate);
+        map := InverseP1Map(MoebiusMap(P1Sphere(-barycenter/dilate)))*(@.o-dilate);
     fi;
     return map;
 end);

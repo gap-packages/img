@@ -345,11 +345,11 @@ BindGlobal("TRICRITICAL@", function(deg,perm)
         data := rec(map := P1Monomial(cl[1])*p[1]/p[3],
                     points := [[[P1zero,cl[1]]],[[P1one,cl[2]]],[[P1infinity,cl[3]]]]);
         for j in [1..3] do
-            Append(data.points[j],List(RootsFloat(p[j]),z->[P1Point(z),1]));
+            Append(data.points[j],List(P1PreImages(p[j],P1zero),z->[z,1]));
         od;
 
     # [[m,n],[m,n],[3]]
-    elif Size(Set(cl))<=2 and ForAll(cl,x->DifferenceLists(x,[1])=[3] or Length(x)=2) then
+    elif Length(cl)=3 and Size(Set(cl))=2 and Number(cl,x->Length(x)=2)=2 and Number(cl,x->DifferenceLists(x,[1])=[3])=1 then
         i := PositionProperty(cl,x->DifferenceLists(x,[1])=[3]);
         m := cl[1+(i mod 3)];
         data := rec(map := P1z^m[2]*((m[1]-m[2])*P1z+(m[1]+m[2]))^m[1]/((m[1]+m[2])*P1z+(m[1]-m[2]))^m[1],

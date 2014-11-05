@@ -387,9 +387,10 @@ BindGlobal("FIXDELAUNAY@", function(t)
     repeat
         idle := true;
         for e in t!.e do
-            if YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.rz then
+            if YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.reps then
                 FLIPEDGE@(e,true);
                 fixes := fixes + 1;
+                Info(InfoIMG,3,"Flipping edge ",e);
                 idle := false;
             fi;
         od;
@@ -588,7 +589,7 @@ InstallMethod(DelaunayTriangulation, "(IMG) for a list of points and a quality",
     # now add the other points
     for i in [7..Length(points)] do
         p := points[order[i]];
-        im := LOCATE@(t,fail,points[order[i]]);
+        im := LOCATE@(t,fail,p);
         while Length(im)=4 do # vertex
             Error("Two vertices coincide: ",p," and ",im[4]);
         od;

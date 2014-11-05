@@ -348,7 +348,7 @@ InstallOtherMethod(ExponentSums, "(IMG) for a sphere group element",
         function(g)
     local l, power, i;
     
-    power := ExponentsOfSphereGroup(g);
+    power := FamilyObj(g)!.power;
     l := ExponentSums(UnderlyingElement(g));
     if 0 in power then
         l := l-Minimum(l);
@@ -582,9 +582,9 @@ InstallMethod(IntersectionNumber, "(IMG) for sphere conjugacy classes",
             fi;
         od;
     od;
-    
+   
     # A6. Count the equivalence classes
-    rel := EquivalenceRelationByPairs(Domain(Cartesian([1..m],[1..n])),rel);
+    rel := EquivalenceRelationByPairs(Domain(FamilyObj([1,1]),Cartesian([1..m],[1..n])),rel);
     pairs := Set(pairs,p->EquivalenceClassOfElement(rel,p));
     return Size(pairs);
 end);
