@@ -33,7 +33,7 @@
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7ECF53F97DC06E4C">3.1-7 IsomorphismFreeGroup</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7DBBD32080770BD7">3.1-8 SphereGroup</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8120094A7BFA9C48">3.1-9 IsSphereConjugacyClass</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8123456781234567">3.1-10 </a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X852B1E9C822D34B5">3.1-10 IsPeripheral</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X867DE11A7E9E02E7">3.1-11 PeripheralClasses</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X822BA8867B084B6C">3.1-12 IntersectionNumber</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X87677B0787B4461A">3.1-13 AutomorphismGroup</a></span>
@@ -79,7 +79,7 @@
 
 <h4>3.1 <span class="Heading">Sphere groups</span></h4>
 
-<p>Fundamental groups of punctured spheres, and of sphere orbifolds, are defined in <strong class="pkg">IMG</strong> as a special class of finitely presented groups. The generators of the group represent the punctures of the sphere, or more generally its orbispace points. DeclareProperty("IsSphereGroup", IsFpGroup); DeclareCategory("IsElementOfSphereGroup", IsElementOfFpGroup and IsAssocWord); DeclareCategoryCollections("IsElementOfSphereGroup"); DeclareCategoryCollections("IsElementOfSphereGroupCollection"); DeclareProperty("IsElementOfSphereGroupFamily", IsElementOfFpGroupFamily); DeclareOperation("ElementOfSphereGroup", [IsFamily, IsAssocWordWithInverse]);</p>
+<p>Fundamental groups of punctured spheres, and of sphere orbifolds, are defined in <strong class="pkg">IMG</strong> as a special class of finitely presented groups. The generators of the group represent the punctures of the sphere, or more generally its orbispace points.</p>
 
 <p><a id="X834FE6AC798A520F" name="X834FE6AC798A520F"></a></p>
 
@@ -90,8 +90,6 @@
 
 <p>Sphere groups are used to represent the fundamental groups of punctured spheres, or more generally orbifolds whose underlying space is a sphere.</p>
 
-<p>DeclareAttribute("IsomorphismSphereGroup", IsFpGroup); DeclareAttribute("AsSphereGroup", IsFpGroup);</p>
-
 <p><a id="X87E99FEC8598B845" name="X87E99FEC8598B845"></a></p>
 
 <h5>3.1-2 IsomorphismSphereGroup</h5>
@@ -99,8 +97,6 @@
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsomorphismSphereGroup</code>( <var class="Arg">g</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsSphereGroup</code>( <var class="Arg">g</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <p>These functions compute an isomorphism from <var class="Arg">g</var> to a sphere group; the first form returns the isomorphism, while the second one returns its image.</p>
-
-<p>DeclareAttribute("EulerCharacteristic", IsGroup);</p>
 
 <p><a id="X8307F8DB85F145AE" name="X8307F8DB85F145AE"></a></p>
 
@@ -111,16 +107,12 @@
 
 <p>The Euler characteristic of a free group of rank <span class="SimpleMath">n</span> is <span class="SimpleMath">1-n</span>; and it multiplies by the index on subgroups. A sphere group is finite if and only if its Euler characteristic is positive, and is virtually abelian if and only if its Euler characteristic is <span class="SimpleMath">0</span>.</p>
 
-<p>DeclareAttribute("RankOfSphereGroup", IsSphereGroup);</p>
-
 <p><a id="X81B9BA1586981067" name="X81B9BA1586981067"></a></p>
 
 <h5>3.1-4 RankOfSphereGroup</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RankOfSphereGroup</code>( <var class="Arg">g</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <p>Returns: The number of generators of <var class="Arg">g</var>.</p>
-
-<p>DeclareAttribute("OrderingOfSphereGroup", IsSphereGroup);</p>
 
 <p><a id="X79A08D5C8532F976" name="X79A08D5C8532F976"></a></p>
 
@@ -131,8 +123,6 @@
 
 <p>This attribute has the property that <code class="code">Product(GeneratorsOfGroup(g){OrderingOfSphereGroup(g)})</code> is the identity.</p>
 
-<p>DeclareAttribute("ExponentsOfSphereGroup", IsSphereGroup);</p>
-
 <p><a id="X7D973ED3816A1CBD" name="X7D973ED3816A1CBD"></a></p>
 
 <h5>3.1-6 ExponentsOfSphereGroup</h5>
@@ -142,8 +132,6 @@
 
 <p>This attribute has the property that <code class="code">GeneratorsOfGroup(g)[i]^ExponentsOfSphereGroup(g)[i]</code> is the identity for all <code class="code">i</code>. If an element has infinite order, the value stored is <code class="code">0</code>.</p>
 
-<p>DeclareAttribute("IsomorphismFreeGroup", IsSphereGroup);</p>
-
 <p><a id="X7ECF53F97DC06E4C" name="X7ECF53F97DC06E4C"></a></p>
 
 <h5>3.1-7 IsomorphismFreeGroup</h5>
@@ -152,8 +140,6 @@
 <p>Returns: An isomorphism to a free group, if it exists.</p>
 
 <p>If <var class="Arg">g</var> was created as a sphere group with all exponents infinity, then <var class="Arg">g</var> is isomorphic to a free group on all the generators but one; this attribute stores such an isomorphism.</p>
-
-<p>DeclareGlobalFunction("SphereGroup");</p>
 
 <p><a id="X7DBBD32080770BD7" name="X7DBBD32080770BD7"></a></p>
 
@@ -166,8 +152,6 @@
 
 <p>The optional second argument <var class="Arg">exponent</var> is a list of integers describing the exponents of the generators. The value <code class="code">0</code> specifies a generator of infinite order.</p>
 
-<p>DeclareProperty("IsSphereConjugacyClass", IsAssociativeElementCollection and IsMultiplicativeElementWithInverseCollection); DeclareProperty("IsSphereConjugacyClassCollection", IsAssociativeElementCollColl and IsMultiplicativeElementWithInverseCollColl); DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection); DeclareOperation("InverseMutable", [IsSphereConjugacyClass]); DeclareOperation("InverseSameMutability", [IsSphereConjugacyClass]); DeclareAttribute("InverseImmutable", IsSphereConjugacyClass); DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);</p>
-
 <p><a id="X8120094A7BFA9C48" name="X8120094A7BFA9C48"></a></p>
 
 <h5>3.1-9 IsSphereConjugacyClass</h5>
@@ -177,18 +161,14 @@
 
 <p>Conjugacy classes may be raised to integer powers; the <span class="SimpleMath">n</span>th power of a conjugacy class is the conjugacy class of the <span class="SimpleMath">n</span>th power of an element.</p>
 
-<p>DeclareProperty("IsPeripheral", IsElementOfSphereGroup); DeclareProperty("IsPeripheral", IsSphereConjugacyClass);</p>
+<p><a id="X852B1E9C822D34B5" name="X852B1E9C822D34B5"></a></p>
 
-<p><a id="X8123456781234567" name="X8123456781234567"></a></p>
+<h5>3.1-10 IsPeripheral</h5>
 
-<h5>3.1-10 </h5>
-
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; </code>( <var class="Arg">c</var> )</td><td class="tdright">( property )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPeripheral</code>( <var class="Arg">c</var> )</td><td class="tdright">( property )</td></tr></table></div>
 <p>Returns: Whether the conjugacy class <var class="Arg">c</var> is peripheral.</p>
 
 <p>A conjugacy class is <em>peripheral</em> if it contains a generator of the sphere group.</p>
-
-<p>DeclareAttribute("PeripheralClasses", IsSphereGroup);</p>
 
 <p><a id="X867DE11A7E9E02E7" name="X867DE11A7E9E02E7"></a></p>
 
@@ -196,8 +176,6 @@
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PeripheralClasses</code>( <var class="Arg">g</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <p>Returns: The peripheral conjugacy classes of <var class="Arg">g</var>.</p>
-
-<p>DeclareOperation("IntersectionNumber", [IsSphereConjugacyClass,IsSphereConjugacyClass]); DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);</p>
 
 <p><a id="X822BA8867B084B6C" name="X822BA8867B084B6C"></a></p>
 
@@ -208,8 +186,6 @@
 
 <p>The <em>geometric intersection number</em> of two loops is the minimal number of intersections they may have. The <em>self-intersection number</em> of a loop is the intersection number of the loop with a small translate.</p>
 
-<p>DeclareProperty("IsAutomorphismGroupOfSphereGroup", IsAutomorphismGroup); InstallTrueMethod(IsAutomorphismGroup, IsAutomorphismGroupOfSphereGroup); DeclareAttribute("EpimorphismToOut", IsAutomorphismGroupOfSphereGroup);</p>
-
 <p><a id="X87677B0787B4461A" name="X87677B0787B4461A"></a></p>
 
 <h5>3.1-13 AutomorphismGroup</h5>
@@ -219,8 +195,6 @@
 <p>This function computes the <em>pure</em> automorphism group of the sphere group <var class="Arg">g</var>, namely the group of automorphisms that preserves all the peripheral conjugacy classes (conjugacy classes of generators).</p>
 
 <p>The attribute <code class="code">EpimorphismToOut</code> stores an epimorphism from the automorphism group to the group of outer automorphisms.</p>
-
-<p>DeclareOperation("AmalgamatedFreeProduct", [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup]); DeclareAttribute("EmbeddingsOfAmalgamatedFreeProduct", IsSphereGroup);</p>
 
 <p><a id="X7A205FFD86D128B9" name="X7A205FFD86D128B9"></a></p>
 
@@ -249,7 +223,7 @@
 
 <p>The last category is the intersection of the first two.</p>
 
-<p>DeclareAttribute("AsSphereMachine", IsFRMachine); DeclareOperation("AsSphereMachine", [IsFRMachine, IsWord]); DeclareOperation("AsSphereMachine", [IsFRMachine, IsSphereGroup]);</p>
+<p>DeclareAttribute("AsSphereMachine", IsGroupFRMachine); DeclareOperation("AsSphereMachine", [IsGroupFRMachine, IsWord]); DeclareOperation("AsSphereMachine", [IsGroupFRMachine, IsSphereGroup]);</p>
 
 <p><a id="X86CAE06C7EBAFB00" name="X86CAE06C7EBAFB00"></a></p>
 
@@ -315,7 +289,7 @@ Relator: f1*f2*t
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">&lt;FR machine with alphabet [ 1, 2, 3, 4, 5, 6 ] on Group( [ a, b, A, B ] )/[ a*B*A*b ]&gt;                                </span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">fold2 := NewSphereMachine("a=&lt;,,b,,,B&gt;(1,2,3)(4,5,6)","b=&lt;,,b*a/b,,,B*A/B&gt;",</span>
      "A=(1,6)(2,5)(3,4)","B=&lt;B*A,,,b*a,,&gt;(1,4)(2,6)(3,5)","a*B*A*b");;
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(fold1); RationalFunction(fold2);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMachine(fold1); P1MapBySphereMachine(fold2);</span>
 ...
 </pre></div>
 
@@ -526,13 +500,15 @@ Relator: f4*f1*f2*f3
 true
 </pre></div>
 
-<p>DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]); DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]);</p>
+<p>DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]); DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]); DeclareAttribute("EquatorElement",IsSphereMachine); DeclareAttribute("EquatorTwist",IsSphereMachine);</p>
 
 <p><a id="X7AB029AE8590964E" name="X7AB029AE8590964E"></a></p>
 
 <h5>3.3-5 Mating</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Mating</code>( <var class="Arg">m1</var>, <var class="Arg">m2</var>[, <var class="Arg">formal</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; EquatorElement</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; EquatorTwist</code>( <var class="Arg">m</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <p>Returns: A sphere machine.</p>
 
 <p>This function "mates" two polynomial sphere machines.</p>
@@ -543,32 +519,40 @@ true
 
 <p>The attribute <code class="code">Correspondence</code> is a pair of homomorphisms, from the statesets of <var class="Arg">m1,m2</var> respectively to the stateset of the mating.</p>
 
+<p>The attribute <code class="code">EquatorElement</code> is set, and records the original adding elements of <var class="Arg">m1,m2</var>, which have become the equator of the mating.</p>
+
+<p>Note that there are <span class="SimpleMath">d-1</span> different matings between polynomials of degree <span class="SimpleMath">d</span>: each has <span class="SimpleMath">d-1</span> fixed rays at angles <span class="SimpleMath">2π ik/(d-1)</span>. This command constructs the mating in which rays at angle <span class="SimpleMath">0</span> are matched to each other. To obtain the other matings, multiply the machine by a power of its <code class="code">EquatorTwist</code>.</p>
+
 
 <div class="example"><pre>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the Tan-Shishikura examples</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(MPC_PSEUDOFIELD);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">c := RootsFloat((z^3+z)^3+z);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">c := RootsFloat((z^2+1)^3*z^2+1);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">am := List(a,a-&gt;SphereMachine((a-1)*(3*z^2-2*z^3)+1));;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cm := List(c,c-&gt;SphereMachine(z^3+c));;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := ListX(am,cm,Mating);;</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[2] is realizable</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(m[2]);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[1] is realizable</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMachine(m[1]);</span>
 ((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z
   +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2
   +(1.61715+I*1.50244)*z+1)
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[6] is obstructed</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RationalFunction(m[6]);</span>
-rec( matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], machine := &lt;FR machine with alphabet
-    [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] )/[ f2*f3*f1*g1*g3*g2 ]&gt;,
-  obstruction := [ f1^-1*f3^-1*f2^-1*f1*f2*f3*f1*g2^-1*g3^-1*f1^-1*f3^-1*f2^-1,
-      f2*f3*f1*f2*f3*f1*g2*f1^-1*f3^-1*f2^-1*f1^-1*f3^-1 ],
-  spider := &lt;spider on &lt;triangulation with 8 vertices, 36 edges and
-    12 faces&gt; marked by GroupHomomorphismByImages( Group( [ f1, f2, f3, g1, g2, g3
-     ] ), Group( [ f1, f2, f3, f4, f5 ] ), [ f1, f2, f3, g1, g2, g3 ],
-    [ f1*f4*f2^-1*f1*f4^-1*f1^-1, f1*f4*f2^-1*f1*f4*f5^-1*f1^-1*f2*f4^-1*f1^-1,
-      f1*f4*f2^-1*f1*f5*f1^-1*f2*f4^-1*f1^-1, f2*f4^-1*f1^-1*f2*f1*f4*f2^-1,
-      f2*f4^-1*f3*f2^-1, f2*f4^-1*f1^-1*f3^-1*f4*f2^-1 ] )&gt; )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[29] is obstructed, and is the original Tan-Shishikura map</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMachine(m[29]);</span>
+rec(
+  machine := &lt;sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2,\
+ g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]&gt;, matrix := [ [ 1, 1/2 ], [ 1, 0 ] ],
+  multicurve := [ (f1*f3*f2)^2*f1*g1^-1*(g3*g2*g1)^3*f2^-1*f3*f2^G,
+      f1^-1*f2^-1*(f3*f2*f1)^4*g2*(g3*g2*g1)^3^G ] )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">but the other mating of the same polynomials is not obstructed:</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMatrix(m[29]*EquatorTwist(m[29]));</span>
+&lt;((-1.4495156808145406+0.44648102591936722i_z)*z^3+
+(-1.1286550578708263-0.40162285610021786i_z)*z^2+
+(1.0326873942952213-0.11770300021984977i_z)*z+
+(1.0940864612174037+0.24650956710141259i_z))/
+((0.85917327990384307-0.8755042485587835i_z)*z^3+
+(0.9573881709899621-0.14875521653926685i_z)*z^2+
+(-0.68923589444039035+0.48120812618585479i_z)*z+1._z)&gt;
 </pre></div>
 
 <p>DeclareProperty("IsKneadingMachine",IsFRMachine); DeclareProperty("IsPlanarKneadingMachine",IsFRMachine); InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine); InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);</p>
@@ -613,7 +597,7 @@ false
 
 <p>This attribute stores the product of generators that is an adding machine. In essence, it records an ordering of the generators whose product corresponds to the Carathéodory loop around infinity.</p>
 
-<p>The following example illustrates Wittner's shared mating of the airplane and the rabbit. In the machine <code class="code">m</code>, an airplane is represented by <code class="code">Group(a,b,c)</code> and a rabbit is represented by <code class="code">Group(x,y,z)</code>; in the machine <code class="code">newm</code>, it is the other way round. The effect of <code class="code">CleanedIMGMachine</code> was to remove unnecessary instances of the IMG relator from <code class="code">newm</code>'s recursion.</p>
+<p>The following example illustrates Wittner's shared mating of the airplane and the rabbit. In the machine <code class="code">m</code>, an airplane is represented by <code class="code">Group(a,b,c)</code> and a rabbit is represented by <code class="code">Group(x,y,z)</code>; in the machine <code class="code">newm</code>, it is the other way round. The effect of <code class="code">CleanedSphereMachine</code> was to remove unnecessary instances of the IMG relator from <code class="code">newm</code>'s recursion.</p>
 
 
 <div class="example"><pre>

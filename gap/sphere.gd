@@ -10,13 +10,52 @@
 ##
 #############################################################################
 
-## <#GAPDoc Label="SphereGroups">
 DeclareProperty("IsSphereGroup", IsFpGroup);
 DeclareCategory("IsElementOfSphereGroup", IsElementOfFpGroup and IsAssocWord);
 DeclareCategoryCollections("IsElementOfSphereGroup");
 DeclareCategoryCollections("IsElementOfSphereGroupCollection");
 DeclareProperty("IsElementOfSphereGroupFamily", IsElementOfFpGroupFamily);
 DeclareOperation("ElementOfSphereGroup", [IsFamily, IsAssocWordWithInverse]);
+
+DeclareAttribute("IsomorphismSphereGroup", IsFpGroup);
+DeclareAttribute("AsSphereGroup", IsFpGroup);
+
+DeclareAttribute("EulerCharacteristic", IsGroup);
+
+DeclareAttribute("RankOfSphereGroup", IsSphereGroup);
+
+DeclareAttribute("OrderingOfSphereGroup", IsSphereGroup);
+
+DeclareAttribute("ExponentsOfSphereGroup", IsSphereGroup);
+
+DeclareAttribute("IsomorphismFreeGroup", IsSphereGroup);
+
+DeclareGlobalFunction("SphereGroup");
+
+DeclareProperty("IsSphereConjugacyClass", IsAssociativeElementCollection and IsMultiplicativeElementWithInverseCollection);
+DeclareProperty("IsSphereConjugacyClassCollection", IsAssociativeElementCollColl and IsMultiplicativeElementWithInverseCollColl);
+DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection);
+DeclareOperation("InverseMutable", [IsSphereConjugacyClass]);
+DeclareOperation("InverseSameMutability", [IsSphereConjugacyClass]);
+DeclareAttribute("InverseImmutable", IsSphereConjugacyClass);
+DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);
+
+DeclareProperty("IsPeripheral", IsElementOfSphereGroup);
+DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
+
+DeclareAttribute("PeripheralClasses", IsSphereGroup);
+
+DeclareOperation("IntersectionNumber", [IsSphereConjugacyClass,IsSphereConjugacyClass]);
+DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);
+
+DeclareProperty("IsAutomorphismGroupOfSphereGroup", IsAutomorphismGroup);
+InstallTrueMethod(IsAutomorphismGroup, IsAutomorphismGroupOfSphereGroup);
+DeclareAttribute("EpimorphismToOut", IsAutomorphismGroupOfSphereGroup);
+
+DeclareOperation("AmalgamatedFreeProduct", [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup]);
+DeclareAttribute("EmbeddingsOfAmalgamatedFreeProduct", IsSphereGroup);
+
+## <#GAPDoc Label="SphereGroups">
 ## <ManSection>
 ##   <Filt Name="IsSphereGroup"/>
 ##   <Description>
@@ -31,8 +70,6 @@ DeclareOperation("ElementOfSphereGroup", [IsFamily, IsAssocWordWithInverse]);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("IsomorphismSphereGroup", IsFpGroup);
-DeclareAttribute("AsSphereGroup", IsFpGroup);
 ## <ManSection>
 ##   <Attr Name="IsomorphismSphereGroup" Arg="g"/>
 ##   <Attr Name="AsSphereGroup" Arg="g"/>
@@ -43,7 +80,6 @@ DeclareAttribute("AsSphereGroup", IsFpGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("EulerCharacteristic", IsGroup);
 ## <ManSection>
 ##   <Attr Name="EulerCharacteristic" Arg="g"/>
 ##   <Returns>The Euler characteristic of <A>g</A>.</Returns>
@@ -56,13 +92,11 @@ DeclareAttribute("EulerCharacteristic", IsGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("RankOfSphereGroup", IsSphereGroup);
 ## <ManSection>
 ##   <Attr Name="RankOfSphereGroup" Arg="g"/>
 ##   <Returns>The number of generators of <A>g</A>.</Returns>
 ## </ManSection>
 ##
-DeclareAttribute("OrderingOfSphereGroup", IsSphereGroup);
 ## <ManSection>
 ##   <Attr Name="OrderingOfSphereGroup" Arg="g"/>
 ##   <Returns>The list of the orders of the generators.</Returns>
@@ -73,7 +107,6 @@ DeclareAttribute("OrderingOfSphereGroup", IsSphereGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("ExponentsOfSphereGroup", IsSphereGroup);
 ## <ManSection>
 ##   <Attr Name="ExponentsOfSphereGroup" Arg="g"/>
 ##   <Returns>The list of exponents of the generators.</Returns>
@@ -85,7 +118,6 @@ DeclareAttribute("ExponentsOfSphereGroup", IsSphereGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("IsomorphismFreeGroup", IsSphereGroup);
 ## <ManSection>
 ##   <Attr Name="IsomorphismFreeGroup" Arg="g"/>
 ##   <Returns>An isomorphism to a free group, if it exists.</Returns>
@@ -96,7 +128,6 @@ DeclareAttribute("IsomorphismFreeGroup", IsSphereGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareGlobalFunction("SphereGroup");
 ## <ManSection>
 ##   <Func Name="SphereGroup" Arg="ordering, [exponent]"/>
 ##   <Returns>A new sphere group.</Returns>
@@ -111,13 +142,6 @@ DeclareGlobalFunction("SphereGroup");
 ##   </Description>
 ## </ManSection>
 ##
-DeclareProperty("IsSphereConjugacyClass", IsAssociativeElementCollection and IsMultiplicativeElementWithInverseCollection);
-DeclareProperty("IsSphereConjugacyClassCollection", IsAssociativeElementCollColl and IsMultiplicativeElementWithInverseCollColl);
-DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection);
-DeclareOperation("InverseMutable", [IsSphereConjugacyClass]);
-DeclareOperation("InverseSameMutability", [IsSphereConjugacyClass]);
-DeclareAttribute("InverseImmutable", IsSphereConjugacyClass);
-DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);
 ## <ManSection>
 ##   <Filt Name="IsSphereConjugacyClass"/>
 ##   <Description>
@@ -132,10 +156,8 @@ DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareProperty("IsPeripheral", IsElementOfSphereGroup);
-DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
 ## <ManSection>
-##   <Prop Name="" Arg="c"/>
+##   <Prop Name="IsPeripheral" Arg="c"/>
 ##   <Returns>Whether the conjugacy class <A>c</A> is peripheral.</Returns>
 ##   <Description>
 ##     A conjugacy class is <E>peripheral</E> if it contains a generator of
@@ -143,15 +165,11 @@ DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("PeripheralClasses", IsSphereGroup);
 ## <ManSection>
 ##   <Attr Name="PeripheralClasses" Arg="g"/>
 ##   <Returns>The peripheral conjugacy classes of <A>g</A>.</Returns>
 ## </ManSection>
 ##
-##
-DeclareOperation("IntersectionNumber", [IsSphereConjugacyClass,IsSphereConjugacyClass]);
-DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);
 ## <ManSection>
 ##   <Attr Name="IntersectionNumber" Arg="c, d"/>
 ##   <Returns>The intersection number of the conjugacy classes <A>c</A> and <A>d</A>.</Returns>
@@ -163,9 +181,6 @@ DeclareOperation("SelfIntersectionNumber", [IsSphereConjugacyClass]);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareProperty("IsAutomorphismGroupOfSphereGroup", IsAutomorphismGroup);
-InstallTrueMethod(IsAutomorphismGroup, IsAutomorphismGroupOfSphereGroup);
-DeclareAttribute("EpimorphismToOut", IsAutomorphismGroupOfSphereGroup);
 ## <ManSection>
 ##   <Attr Name="AutomorphismGroup" Arg="g"/>
 ##   <Attr Name="EpimorphismToOut" Arg="a"/>
@@ -179,8 +194,6 @@ DeclareAttribute("EpimorphismToOut", IsAutomorphismGroupOfSphereGroup);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareOperation("AmalgamatedFreeProduct", [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup]);
-DeclareAttribute("EmbeddingsOfAmalgamatedFreeProduct", IsSphereGroup);
 ## <ManSection>
 ##   <Oper Name="AmalgamateFreeProduct" Arg="g, h, x, y"/>
 ##   <Description>

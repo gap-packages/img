@@ -102,16 +102,14 @@ gap> f := RationalFunction(PolynomialIMGMachine(2,[],[7/16]):param_unicritical);
 gap> 
 gap> Info(InfoFR,1,"Testing Pilgrim's obstructed blowup of the torus");
 #I  Testing Pilgrim's obstructed blowup of the torus
-gap> F := FreeGroup("a","b","c","d");
-<free group on the generators [ a, b, c, d ]>
-gap> Unbind(a); Unbind(b); Unbind(c); Unbind(d);
+gap> F := SphereGroup(4,[0,0,0,0],FreeGroup("a","b","c","d"));
+<fp group of size infinity on the generators [ a, b, c, d ]>
 gap> AssignGeneratorVariables(F); o := One(F);;
 #I  Assigned the global variables [ a, b, c, d ]
 gap> M := FRMachine(F,[[c^-1,o,o,o,c],[o,o,o,d,d^-1],[a,o,o,a^-1,o],[b,o,d,a,c]],
 >                   [(1,5)(2,4,3),(1,2)(4,5),(1,4)(2,3,5),()]);
 <FR machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] )>
-gap> SetIMGRelator(M,d*c*b*a);
-gap> RationalFunction(M);
+gap> P1MapBySphereMachine(M);
 rec(
   machine := <FR machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] )/[\
  d*c*b*a ]>, matrix := [ [ 1 ] ], obstruction := [ a^-1*c^-1 ],

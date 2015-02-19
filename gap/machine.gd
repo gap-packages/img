@@ -498,8 +498,12 @@ DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);
 ##
 DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine]);
 DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,IsBool]);
+DeclareAttribute("EquatorElement",IsSphereMachine);
+DeclareAttribute("EquatorTwist",IsSphereMachine);
 ## <ManSection>
 ##   <Oper Name="Mating" Arg="m1,m2 [,formal]"/>
+##   <Attr Name="EquatorElement" Arg="m"/>
+##   <Attr Name="EquatorTwist" Arg="m"/>
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##     This function "mates" two polynomial sphere machines.
@@ -519,31 +523,46 @@ DeclareOperation("Mating",[IsPolynomialSphereMachine,IsPolynomialSphereMachine,I
 ##     <P/> The attribute <C>Correspondence</C> is a pair of homomorphisms,
 ##     from the statesets of <A>m1,m2</A> respectively to the stateset of the
 ##     mating.
+##
+##     <P/> The attribute <C>EquatorElement</C> is set, and records the
+##     original adding elements of <A>m1,m2</A>, which have become the equator
+##     of the mating.
+##
+##     <P/> Note that there are <M>d-1</M> different matings between
+##     polynomials of degree <M>d</M>: each has <M>d-1</M> fixed rays at
+##     angles <M>2\pi ik/(d-1)</M>. This command constructs the mating in
+##     which rays at angle <M>0</M> are matched to each other. To obtain the
+##     other matings, multiply the machine by a power of its
+##     <C>EquatorTwist</C>.
 ## <Example><![CDATA[
 ## gap> # the Tan-Shishikura examples
 ## gap> z := Indeterminate(MPC_PSEUDOFIELD);;
 ## gap> a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;
-## gap> c := RootsFloat((z^3+z)^3+z);;
+## gap> c := RootsFloat((z^2+1)^3*z^2+1);;
 ## gap> am := List(a,a->SphereMachine((a-1)*(3*z^2-2*z^3)+1));;
 ## gap> cm := List(c,c->SphereMachine(z^3+c));;
 ## gap> m := ListX(am,cm,Mating);;
-## gap> # m[2] is realizable
-## gap> P1MapBySphereMachine(m[2]);
+## gap> # m[1] is realizable
+## gap> P1MapBySphereMachine(m[1]);
 ## ((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z
 ##   +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2
 ##   +(1.61715+I*1.50244)*z+1)
-## gap> # m[6] is obstructed
-## gap> P1MapBySphereMachine(m[6]);
-## rec( matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], machine := <FR machine with alphabet
-##     [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] )/[ f2*f3*f1*g1*g3*g2 ]>,
-##   obstruction := [ f1^-1*f3^-1*f2^-1*f1*f2*f3*f1*g2^-1*g3^-1*f1^-1*f3^-1*f2^-1,
-##       f2*f3*f1*f2*f3*f1*g2*f1^-1*f3^-1*f2^-1*f1^-1*f3^-1 ],
-##   spider := <spider on <triangulation with 8 vertices, 36 edges and
-##     12 faces> marked by GroupHomomorphismByImages( Group( [ f1, f2, f3, g1, g2, g3
-##      ] ), Group( [ f1, f2, f3, f4, f5 ] ), [ f1, f2, f3, g1, g2, g3 ],
-##     [ f1*f4*f2^-1*f1*f4^-1*f1^-1, f1*f4*f2^-1*f1*f4*f5^-1*f1^-1*f2*f4^-1*f1^-1,
-##       f1*f4*f2^-1*f1*f5*f1^-1*f2*f4^-1*f1^-1, f2*f4^-1*f1^-1*f2*f1*f4*f2^-1,
-##       f2*f4^-1*f3*f2^-1, f2*f4^-1*f1^-1*f3^-1*f4*f2^-1 ] )> )
+## gap> # m[29] is obstructed, and is the original Tan-Shishikura map
+## gap> P1MapBySphereMachine(m[29]);
+## rec(
+##   machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2,\
+##  g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1, 1/2 ], [ 1, 0 ] ],
+##   multicurve := [ (f1*f3*f2)^2*f1*g1^-1*(g3*g2*g1)^3*f2^-1*f3*f2^G,
+##       f1^-1*f2^-1*(f3*f2*f1)^4*g2*(g3*g2*g1)^3^G ] )
+## gap> but the other mating of the same polynomials is not obstructed:
+## gap> P1MapBySphereMatrix(m[29]*EquatorTwist(m[29]));
+## <((-1.4495156808145406+0.44648102591936722i_z)*z^3+
+## (-1.1286550578708263-0.40162285610021786i_z)*z^2+
+## (1.0326873942952213-0.11770300021984977i_z)*z+
+## (1.0940864612174037+0.24650956710141259i_z))/
+## ((0.85917327990384307-0.8755042485587835i_z)*z^3+
+## (0.9573881709899621-0.14875521653926685i_z)*z^2+
+## (-0.68923589444039035+0.48120812618585479i_z)*z+1._z)>
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>

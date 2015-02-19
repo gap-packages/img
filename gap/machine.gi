@@ -1132,7 +1132,11 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
     od;
     sum := FRMachineNC(FamilyObj(machines[1]),amalgam,trans,out);
     IsSphereMachine(sum);
-
+    
+    SetEquatorElement(sum,adders[1]^embed[1]);
+    SetEquatorTwist(sum,GroupHomomorphismByImages(amalgam,amalgam,
+            Concatenation(GeneratorsOfGroup(amalgam){[1..RankOfSphereGroup(states[1])-1]},List(GeneratorsOfGroup(amalgam){[RankOfSphereGroup(states[1])..RankOfSphereGroup(amalgam)]},x->x^EquatorElement(sum)))));
+    
     if not formal then
         Error("Non-formal matings are not yet implemented. Complain to laurent.bartholdi@gmail.com");
     fi;
