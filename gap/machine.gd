@@ -245,7 +245,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ##
 ## <Example><![CDATA[
 ## gap> M := PolynomialMealyMachine(2,[1/7],[]);
-## !!!
+## <Mealy machine on alphabet [ 1 .. 2 ] with 4 states>
 ## gap> Mi := AsPolynomialSphereMachine(M);
 ## !!!
 ## ]]></Example>
@@ -267,7 +267,7 @@ DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]);
 DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
 ## <ManSection>
-##   <Oper Name="PolynomialSphereMachine" Arg="d,per[,pre]"/>
+##   <Oper Name="PolynomialSphereMachine" Arg="d,per[,pre][,options]"/>
 ##   <Oper Name="PolynomialMealyMachine" Arg="d,per[,pre]"/>
 ##   <Returns>A sphere or Mealy machine.</Returns>
 ##   <Description>
@@ -294,7 +294,14 @@ DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
 ##     that disk).
 ##
 ##     <P/> In constructing a polynomial sphere machine, one may specify a
-##     boolean flag <A>formal</A>, which defaults to <K>true</K>. In
+##     record <A>options</A>, which may contain the following fields:
+##     <C>mealy</C> (boolean, default <K>false</K>) specifies if a formal
+##     construction is required; <C>adding</C> specifying that the adding
+##     machine should have the most compact representation; and
+##     <C>orbispace</C> (boolean, default <K>false</K>) asking the
+##     constructed group to have orbispace points of minimal degree.
+##
+##     <P/> In
 ##     a <E>formal</E> recursion, distinct angles give distinct generators;
 ##     while in a non-formal recursion, distinct angles, which land at the
 ##     same point in the Julia set, give a single generator. The simplest
@@ -341,14 +348,13 @@ DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);
 ## ----+---------------+---------+
 ## Relator: f4*f3*f2*f1
 ## gap> PolynomialSphereMachine(2,[],[5/12]);
-## gap> PolynomialSphereMachine(2,[],[5/12]);
-## <FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]>
-## gap> Correspondence(last);
-## [ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
-## gap> PolynomialSphereMachine(2,[],[5/12],false);
 ## <FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>
 ## gap> Correspondence(last);
 ## [ [ [ 1/3, 2/3 ], "Julia" ], [ [ 5/12 ], "Julia" ], [ [ 5/6 ], "Julia" ] ]
+## gap> PolynomialSphereMachine(2,[],[5/12],rec(formal:=true));
+## <FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]>
+## gap> Correspondence(last);
+## [ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
 ## ]]></Example>
 ##     The following construct the examples in Poirier's paper:
 ## <Listing><![CDATA[
@@ -536,11 +542,11 @@ DeclareAttribute("EquatorTwist",IsSphereMachine);
 ##     <C>EquatorTwist</C>.
 ## <Example><![CDATA[
 ## gap> # the Tan-Shishikura examples
-## gap> z := Indeterminate(MPC_PSEUDOFIELD);;
+## gap> z := Indeterminate(PMCOMPLEX_PSEUDOFIELD);; # or even MPC_PSEUDOFIELD
 ## gap> a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;
 ## gap> c := RootsFloat((z^2+1)^3*z^2+1);;
-## gap> am := List(a,a->SphereMachine((a-1)*(3*z^2-2*z^3)+1));;
-## gap> cm := List(c,c->SphereMachine(z^3+c));;
+## gap> am := List(a,a->SphereMachine((a-1)*(3*P1z^2-2*P1z^3)+1));;
+## gap> cm := List(c,c->SphereMachine(P1z^3+c));;
 ## gap> m := ListX(am,cm,Mating);;
 ## gap> # m[1] is realizable
 ## gap> P1MapBySphereMachine(m[1]);

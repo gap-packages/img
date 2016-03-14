@@ -125,5 +125,5 @@ DeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);
 #> "g8=<,,,,g0^-1,,,,,,g0,g8,>(1,3)(2,4,6,8)(5,11,10)(7,9)(12,13)","g0*g1*g8");
 
 # pilgrim example:
-
+#gap> p := NewSphereMachine("a=<c^-1,,,,c>(1,5)(2,4,3)","b=<,,,d,d^-1>(1,2)(4,5)","c=<a,,,a^-1,>(1,4)(2,3,5)","d=<b,,d,a,c>","d*c*b*a");
 #E thurston.gd . . . . . . . . . . . . . . . . . . . . . . . . . . .ends here

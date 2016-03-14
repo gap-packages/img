@@ -19,7 +19,7 @@ DeclareGlobalFunction("Mandel");
 ##   <Description>
 ##     This function starts the external program <File>mandel</File>, by Wolf Jung.
 ##     The program is searched for along the standard PATH; alternatively,
-##     its location can be set in the string variable EXEC@FR.mandel.
+##     its location can be set in the string variable EXEC@fr.mandel.
 ##
 ##     <P/> When called with no arguments, this command returns starts
 ##     <File>mandel</File> in its default mode. With a rational map as argument, it

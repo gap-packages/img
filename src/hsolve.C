@@ -11,7 +11,7 @@ using namespace std;
 
 typedef complex<double> cdouble;
 
-#define MAXDEGREE 100
+#define MAXDEGREE 1000
 
 const int maxiter = 2000;
 

@@ -369,12 +369,17 @@ end);
 InstallMethod(PeripheralClasses, "(IMG) for a sphere group",
         [IsSphereGroup],
         function(g)
-    return List(GeneratorsOfGroup(g),x->ConjugacyClass(g,x));
+    local p;
+    p := List(GeneratorsOfGroup(g),x->ConjugacyClass(g,x));
+    IsSSortedList(p);
+    return p;
 end);
 
 BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     # returns [m,x] with m minimal representative such that m^x=g
     local w, fam, length, i, m, x, minm, minx;
+    
+    #!!! optimize! This is O(|g|^2)
     
     w := UnderlyingElement(g);
     fam := FamilyObj(g);
@@ -431,6 +436,21 @@ InstallMethod(Order, "(IMG) for a sphere group element",
     else
         return infinity;
     fi;
+end);
+
+InstallOtherMethod(ConjugacyClass, "(IMG) for a group and sphere group element",
+        IsCollsElms, [IsSphereGroup,IsElementOfSphereGroup],
+        function(G,g)
+    local  fam, filter, cl;
+    fam := FamilyObj( G );
+    if not IsBound( fam!.defaultClassType )  then
+        fam!.defaultClassType := NewType( FamilyObj( G ), IsConjugacyClassGroupRep and HasActingDomain and HasRepresentative and HasFunctionAction );
+    fi;
+    g := CyclicallyReducedWord(g);
+    cl := rec( start := [g] );
+    ObjectifyWithAttributes( cl, fam!.defaultClassType, ActingDomain, G, Representative, g, FunctionAction, OnPoints );
+    SetIsSphereConjugacyClass(cl,true);
+    return cl;
 end);
 
 InstallOtherMethod(ConjugacyClass, "(IMG) for a sphere group element",
@@ -630,21 +650,40 @@ InstallMethod(AutomorphismGroup, "(IMG) for a sphere group",
 end);
 
 BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertible)
-    local epi, out;
+    local epi, srcggens, srcmgens, dstmgens, one, out;
 
     epi := EpimorphismFromFreeGroup(a);
+    srcggens := GeneratorsOfGroup(Source(epi));
+    srcmgens := GeneratorsOfMonoid(Source(epi));
+    dstmgens := List(srcmgens,x->x^epi);
+    one := One(Source(epi));
     out := GroupHomomorphismByFunction(a,fp,function(x)
-        local w, n, newx, newn, g;
-        w := One(Source(epi));
-        n := infinity;
-        while n>0 do
-            for g in Source(epi) do
-                newx := x*g^epi;
-                newn := Sum(ggens,s->Length(s^newx)-1);
-                if newn < n then x := newx; w := g^-1*w; n := newn; break; fi;
+        local w, n, img, t, try, i;
+        w := one;
+        img := List(ggens,s->s^x);
+        n := Sum(img,Length);
+        while n>Length(img) do
+            try := [];
+            for i in [1..Length(srcmgens)] do
+                t := [srcmgens[i],List(img,x->x^dstmgens[i])];
+                Add(t,Sum(t[2],Length));
+                Add(t,0.7^(t[3]-n));
+                Add(try,t);
             od;
+            t := Random([0..1000000000])/1000000000.0*Sum(try,x->x[4]);
+            for i in [1..Length(try)] do
+                if t<try[i][4] then
+                    Print("Took ",i," with proba ",try[i][4],"/",Sum(try,x->x[4]),"...");
+                    w := LeftQuotient(try[i][1],w);
+                    img := try[i][2];
+                    n := try[i][3];
+                    break;
+                fi;
+                t := t-try[i][4];
+            od;
+            Print("Current word ",w," n=",n,"\n");
         od;
-        return MappedWord(w,GeneratorsOfGroup(Source(epi)),extgens);
+        return MappedWord(w,srcggens,extgens);
     end,invertible,w->MappedWord(w,gens,outergens));
 
     return out;

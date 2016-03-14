@@ -149,11 +149,11 @@ end);
 
 InstallMethod(ViewString, "(IMG) for a sphere machine",
         [IsSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@FR("<sphere machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), " / ",RelatorsOfFpGroup(StateSet(M)),">"));
+        M->CONCAT@fr("<sphere machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), " / ",RelatorsOfFpGroup(StateSet(M)),">"));
 
 InstallMethod(DisplayString, "(IMG) for a sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),"Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
+        M->CONCAT@fr(DISPLAYFRMACHINE@fr(M),"Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
 #############################################################################
 
 #############################################################################
@@ -193,16 +193,16 @@ InstallGlobalFunction(NewSphereMachine,
 #    fi;
     
     machine := CallFuncList(NewGroupFRMachine,arg{[1..len]});
-    data := rec(holdername := RANDOMNAME@FR());
+    data := rec(holdername := RANDOMNAME@fr());
     BindGlobal(data.holdername, StateSet(machine));
-    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
+    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@fr(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
     states := AsSphereGroup(StateSet(machine)/relators);
     
 #    if adder<>fail then
 #        MakeReadWriteGlobal(data.holdername);
 #        UnbindGlobal(data.holdername);
 #        BindGlobal(data.holdername, states);
-#        adder := STRING_WORD2GAP@FR(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
+#        adder := STRING_WORD2GAP@fr(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
 #    fi;
     
     MakeReadWriteGlobal(data.holdername);
@@ -210,7 +210,7 @@ InstallGlobalFunction(NewSphereMachine,
     
     for r in relators do
         rr := WreathRecursion(machine)(r);
-        while not ISONE@FR(rr[2]) or ForAny(rr[1],w->not IsOne(ElementOfSphereGroup(FamilyObj(One(states)),w))) do
+        while not ISONE@fr(rr[2]) or ForAny(rr[1],w->not IsOne(ElementOfSphereGroup(FamilyObj(One(states)),w))) do
             Error("Relation ",r," does not hold in the machine");
         od;
     od;
@@ -461,11 +461,11 @@ end);
 ##
 InstallMethod(ViewString, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@FR("<sphere machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/", RelatorsOfFpGroup(StateSet(M)),">"));
+        M->CONCAT@fr("<sphere machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/", RelatorsOfFpGroup(StateSet(M)),">"));
 
 InstallMethod(DisplayString, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),
+        M->CONCAT@fr(DISPLAYFRMACHINE@fr(M),
                 "Adding element: ",AddingElement(M),"\n",
                 "Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
 
@@ -534,7 +534,7 @@ end);
 InstallMethod(ChangeFRMachineBasis, [IsPolynomialSphereMachine, IsCollection, IsPerm],
         function(m,c,p)
     local newm;
-    newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
+    newm := CHANGEFRMACHINEBASIS@fr(m,c,p);
     IsSphereMachine(newm);
     SetAddingElement(newm,FRElement(newm,InitialState(AddingElement(m))));
     return newm;
@@ -543,7 +543,7 @@ end);
 InstallMethod(ChangeFRMachineBasis, [IsSphereMachine, IsCollection, IsPerm],
         function(m,c,p)
     local newm;
-    newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
+    newm := CHANGEFRMACHINEBASIS@fr(m,c,p);
     IsSphereMachine(newm);
     return newm;
 end);
@@ -1230,11 +1230,14 @@ InstallMethod(AutomorphismVirtualEndomorphism, "(IMG) for a virtual endo",
     return GroupHomomorphismByFunction(mch,mcg,a->GroupHomomorphismByImages(g,g,List(GeneratorsOfGroup(g),x->PreImage(isog,((PreImage(isoh,(x^isog)^vinverse)^a)^isoh)^v))));        
 end);
 
-BindGlobal("DISTILLATE@", function(M)
+BindGlobal("DISTILLATE@", function(dict,M)
     # distillates the machine M to a machine with at most one non-trivial
     # transition on each cycle; which is at the beginning of the cycle
     # and is a generator.
-    # returns [new machine, free group automorphism encoding distillation]
+    # dict is a dictionary storing distillated machines, and a
+    # standard representative for each distillation.
+    # returns [standard machine,free group automorphism]
+    # such that M=standard*automorphism
     local G, perm, trans, cc, zero, g, i, j, c, cg, aut;
     
     G := StateSet(M);
@@ -1249,17 +1252,25 @@ BindGlobal("DISTILLATE@", function(M)
             g := One(G);
             for j in c do
                 g := g*trans[i][j];
-                trans[i][j] := One(G);
+                Unbind(trans[i][j]);
             od;
             cg := ConjugacyClass(G,g);
             if cg<>zero then
                 j := Position(cc,cg);
-                trans[i][c[1]] := GeneratorsOfFRMachine(M)[j];
+                trans[i][c[1]] := cg;
                 aut[j] := g;
             fi;
         od;
     od;
-    return [FRMachineNC(FamilyObj(M),G,trans,perm),GroupHomomorphismByImages(G,G,aut)];
+    c := LookupDictionary(dict,trans);
+    if c=fail then
+        AddDictionary(dict,trans,[M,aut]);
+        return [M,IdentityMapping(G)];
+    else
+#j := GroupHomomorphismByImages(G,G,c[2],aut); if j=fail then
+#    Error("1"); fi; return [c[1],j];
+        return [c[1],GroupHomomorphismByImages(G,G,c[2],aut)];
+    fi;
 end);
 
 BindGlobal("MOTIONGROUP@", function(G)
@@ -1324,48 +1335,75 @@ end);
 InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
         [IsSphereMachine],
         function(M)
-    local orbit, act, inneract, pmcg, states, output, transition, o, t,
-          reps, transversal, epi, a, b, d, g, newM, recur;
+    local orbit, oorbits, act, inneract, pmcg, states,
+          output, transition, o, t,
+          iso, epi, isoepi, a, b, c, d, g, newM, distillations;
     
     states := StateSet(M);
-    act := function(machine,aut) return DISTILLATE@(aut^-1*machine)[1]; end;
-    inneract := function(machine,g) return DISTILLATE@(InnerAutomorphism(states,g^-1)*machine)[1]; end;
-    pmcg := PUREMCG@(states);
-    orbit := Orbit(pmcg,DISTILLATE@(M)[1],act);
+    distillations := NewDictionary([],true);
+    act := function(machine,aut) return DISTILLATE@(distillations,aut^-1*machine)[1]; end;
+    inneract := function(machine,g) return DISTILLATE@(distillations,InnerAutomorphism(states,g^-1)*machine)[1]; end;
+    pmcg := AutomorphismGroup(states);
+    orbit := Orbit(pmcg,DISTILLATE@(distillations,M)[1],act);
 
     # sort orbit so that consecutive blocks are related by inner automorphisms
-    orbit := OrbitsDomain(states,orbit,inneract);
-    reps := List(orbit,o->RepresentativeAction(pmcg,orbit[1][1],o[1],act)*List(o,machine->InnerAutomorphism(states,RepresentativeAction(states,o[1],machine,inneract))));
-    transversal := List([1..Length(orbit)],i->List([1..Length(orbit[i])],j->reps[i][j]^-1*M));
-    # now orbit[i][j] is a distilled machine;
-    # orbit[i][j] and orbit[i][k] are related by inner automorphisms
-    # act(M,reps[i][j]) = orbit[i][j]
-    # transversal[i][j] = reps[i][j]^-1*M
-    # distil(transversal[i][j])=orbit[i][j]
+    oorbits := OrbitsDomain(states,orbit,inneract);
+    orbit := Concatenation(oorbits);
+    
+    # now oorbits[i][j] is a distilled machine;
+    # oorbits[i][j] and oorbits[i][k] are related by inner automorphisms
 
-    epi := EpimorphismFromFreeGroup(pmcg);
+if false then
+    epi := IsomorphismFpGroup(pmcg); # really to a free group (!!!)
+    
+    # todo:
+    # 1) fix bugs in MATCHMARKINGS that delete inner auts
+    # 2) construct machine for quotient, on smaller alphabet; construct embedding of original machine too
+    # 3) find irredundant gens of pure sphere braid group? i.e. giving correct abelianization rank?
     
     output := [];
     transition := [];
     
-    for g in GeneratorsOfGroup(Source(epi)) do
+    for g in GeneratorsOfGroup(Range(epi)) do
+        g := PreImagesRepresentative(epi,g)^-1;
         o := [];
         t := [];
         for a in [1..Length(orbit)] do
-            newM := (g^-1)^epi*transversal[a][1];
-            d := DISTILLATE@(newM)[1];
-            b := [PositionProperty(orbit,o->d in o)];
-            Add(b,Position(orbit[b[1]],d));
-            Add(o,b[1]);
-            d := transversal[b[1]][b[2]];
-            d := MATCHMARKINGS@(newM,states,d);
-            Add(t,FACTORIZEAUT@(epi,M,d));
+            newM := g*orbit[a];
+            b := Position(orbit,DISTILLATE@(distillations,newM)[1]);
+            Add(o,b);
+            Add(t,ImagesRepresentative(epi,MATCHMARKINGS@(newM,orbit[b])));
         od;
         Add(output,o);
         Add(transition,t);
     od;
-    a := FRMachine(Source(epi),transition,output);
-    SetCorrespondence(a,pmcg);
+else
+    iso := IsomorphismFpGroup(pmcg); # really to a free group
+    epi := EpimorphismToOut(pmcg); # really to a free group
+    isoepi := GroupHomomorphismByImages(Range(iso),Range(epi),List(GeneratorsOfGroup(pmcg),x->x^iso),List(GeneratorsOfGroup(pmcg),x->x^epi));
+
+    output := [];
+    transition := [];
+    
+    for g in GeneratorsOfGroup(Range(epi)) do
+        o := [];
+        t := [];
+        for a in [1..Length(oorbits)] do
+            newM := PreImagesRepresentative(epi,g)^-1*oorbits[a][1];
+            d := DISTILLATE@(distillations,newM);
+            b := PositionProperty(oorbits,o->d[1] in o);
+            c := RepresentativeAction(states,d[1],oorbits[b][1],inneract);
+            newM := InnerAutomorphism(states,c^-1)*newM;
+            Add(o,b);
+            Add(t,ImagesRepresentative(epi,MATCHMARKINGS@(newM,oorbits[b][1])));
+        od;
+        Add(output,o);
+        Add(transition,t);
+    od;
+fi;
+
+    a := FRMachine(Range(epi),transition,output);
+    SetCorrespondence(a,[oorbits,epi]);
     return a;
 end);
 #############################################################################
