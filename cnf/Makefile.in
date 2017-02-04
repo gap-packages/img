@@ -20,7 +20,7 @@ VERSION:=$(shell grep '^Version :=' PackageInfo.g | cut -f2 -d'"')
 LOCALBIN=bin/@GAPARCH@
 EXTERN=$(CURDIR)/bin/@GAPARCH@/extern
 LEVMAR=extern/levmar-2.6
-LIBDOGLEG=extern/libdogleg-0.08
+LIBDOGLEG=extern/libdogleg-0.09
 
 MYCC=./libtool --mode=compile --tag=CC $(CC) $(CFLAGS) @CFLAGS@ @GAP_CPPFLAGS@ -std=c99 -g -Wall
 MYLD=./libtool --mode=link --tag=CC $(CC) $(CFLAGS) -g
