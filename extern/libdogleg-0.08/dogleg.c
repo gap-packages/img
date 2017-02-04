@@ -729,7 +729,8 @@ static void set_cholmod_options(cholmod_common* common)
 
 
   // I want all output to go to STDERR, not STDOUT
-  common->print_function = cholmod_error_callback;
+//  common->print_function = cholmod_error_callback;
+// SuiteSparse.print_func = cholmod_error_callback;
 }
 
 void dogleg_freeContext(dogleg_solverContext_t** ctx)

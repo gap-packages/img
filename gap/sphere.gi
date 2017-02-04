@@ -780,7 +780,7 @@ InstallMethod(AmalgamatedFreeProduct, "(IMG) for two sphere groups and two eleme
         [IsSphereGroup,IsSphereGroup,IsElementOfSphereGroup,IsElementOfSphereGroup],
         function(G1,G2,x1,x2)
     # free product of G1 and G2 modulo relation x1x2=1
-    local A, G, x, gens, order, exp, embed, img, i, c, names;
+    local A, G, x, gens, order, exp, embed, img, i, c, names, pos;
 
     G := [G1,G2];
     x := [x1,x2];
@@ -791,19 +791,25 @@ InstallMethod(AmalgamatedFreeProduct, "(IMG) for two sphere groups and two eleme
         Error("Amalgamated free products work (for now) only along infinite-order generators");
     od;
 
-    x := List([1..2],i->Position(gens[i],x[i]));
+    pos := List([1..2],i->Position(gens[i],x[i]));
     img := [];
     for i in [1..2] do
-        Remove(gens[i],x[i]); Remove(exp[i],x[i]);
+        Remove(gens[i],pos[i]); Remove(exp[i],pos[i]);
         img[i] := [];
-        img[i]{Difference([1..Length(gens[i])+1],[x[i]])} := (i-1)*Length(gens[1])+[1..Length(gens[i])];
+        img[i]{Difference([1..Length(gens[i])+1],[pos[i]])} := (i-1)*Length(gens[1])+[1..Length(gens[i])];
     od;
-    x := List([1..2],i->Position(order[i],x[i]));
+    x := List([1..2],i->Position(order[i],pos[i]));
     
     order := List([1..2],i->Concatenation(order[i]{[x[i]+1..Length(order[i])]},order[i]{[1..x[i]-1]}));
 
     A := SphereGroup(Concatenation(List([1..2],i->img[i]{order[i]})),Concatenation(exp));
-    embed := List([1..2],i->GroupHomomorphismByImages(G[i],A,gens[i],GeneratorsOfGroup(A){(i-1)*Length(gens[1])+[1..Length(gens[i])]}));
+
+    x := [GeneratorsOfGroup(A){[1..Length(gens[1])]},GeneratorsOfGroup(A){[1..Length(gens[2])]+Length(gens[1])}];
+    for i in [1..2] do
+        Add(x[i],fail,pos[i]);
+        x[i][pos[i]] := Product(x[i]{order[i]})^-1;
+    od;
+    embed := List([1..2],i->GroupHomomorphismByImages(G[i],A,GeneratorsOfGroup(G[i]),x[i]));
     SetEmbeddingsOfAmalgamatedFreeProduct(A,embed);
 
 # a hack, now: rename the generators more nicely

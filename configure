@@ -648,8 +648,6 @@ LEVMAR_LDFLAGS
 LEVMAR_CFLAGS
 SYS_IS_CYGWIN_FALSE
 SYS_IS_CYGWIN_TRUE
-GMP_ROOT
-GAP_EXEC
 GAP_CPPFLAGS
 GAPROOT
 GAPARCH
@@ -15186,7 +15184,7 @@ else
 JAVA_TEST=Test.java
 CLASS_TEST=Test.class
 cat << \EOF > $JAVA_TEST
-/* #line 15189 "configure" */
+/* #line 15187 "configure" */
 public class Test {
 }
 EOF
@@ -16448,14 +16446,10 @@ $as_echo_n "checking for CONFIGNAME... " >&6; }
 
   if test "x$CONFIGNAME" = "x"; then
     SYSINFO="sysinfo.gap"
-    GAP_MAKEFILE="Makefile"
-    GAP_EXEC="gap.sh"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: none" >&5
 $as_echo "none" >&6; }
   else
     SYSINFO="sysinfo.gap-$CONFIGNAME"
-    GAP_MAKEFILE="Makefile-$CONFIGNAME"
-    GAP_EXEC="gap-$CONFIGNAME.sh"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CONFIGNAME" >&5
 $as_echo "$CONFIGNAME" >&6; }
   fi
@@ -16465,7 +16459,7 @@ $as_echo "$CONFIGNAME" >&6; }
   # checking for the sysinfo.gap file
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GAP root directory" >&5
 $as_echo_n "checking for GAP root directory... " >&6; }
-  DEFAULT_GAPROOTS="../.. /usr/local/src/gap /usr/local/gap4r5"
+  DEFAULT_GAPROOTS="../.."
 
   #Allow the user to specify the location of GAP
   #
@@ -16548,13 +16542,6 @@ $as_echo "${GAPARCH}" >&6; }
     as_fn_error $? "Unable to find plausible GAParch information." "$LINENO" 5
   fi
 
-  GAPARCH_SYSTEM_GUESS="`$ac_aux_dir/config.guess`-$CC-`echo $GAPARCH | sed 's/.*-//'`"
-  if test "$GAPARCH_SYSTEM_GUESS" != "$GAParch_system"; then
-    echo "********************************************************************"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: The guessed target $GAPARCH_SYSTEM_GUESS is not the gap target $GAParch_system. Cross your fingers" >&5
-$as_echo "$as_me: WARNING: The guessed target $GAPARCH_SYSTEM_GUESS is not the gap target $GAParch_system. Cross your fingers" >&2;}
-    echo "********************************************************************"
-  fi
 
   #####################################
   # Now check for the GAP header files
@@ -16610,22 +16597,12 @@ $as_echo "Not found" >&6; }
 $as_echo_n "checking for GAP's gmp.h location... " >&6; }
   if test -r "$ARCHPATH/extern/gmp/include/gmp.h"; then
     GAP_CPPFLAGS="$GAP_CPPFLAGS -I$ARCHPATH/extern/gmp/include"
-    GMP_ROOT="$ARCHPATH/extern/gmp"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ARCHPATH/extern/gmp/include/gmp.h" >&5
 $as_echo "$ARCHPATH/extern/gmp/include/gmp.h" >&6; }
-  elif `grep -q 'define USE_GMP 1' $ARCHPATH/config.h`; then
-    eval `grep '^GMP_CFLAGS=' $GAPROOT/$GAP_MAKEFILE`
-    GAP_CPPFLAGS="$GAP_CPPFLAGS $GMP_CFLAGS"
-    GMP_ROOT=`echo "$GMP_CFLAGS" | cut -c3- | sed 's,/include$,,'`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GMP_ROOT/include/gmp.h" >&5
-$as_echo "$GMP_ROOT/include/gmp.h" >&6; }
   else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found, GAP was compiled without GMP" >&5
-$as_echo "not found, GAP was compiled without GMP" >&6; }
-  fi
-
-  GAP_EXEC="$GAPROOT/bin/$GAP_EXEC"
-
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found, GAP was compiled without its own GMP" >&5
+$as_echo "not found, GAP was compiled without its own GMP" >&6; }
+  fi;
 
 
 
@@ -16910,7 +16887,7 @@ fi
 LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
-for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+for cm_extra in "" -llapack -lcolamd -lsuitesparseconfig -lamd -lrt -lblas; do
     unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
@@ -17047,7 +17024,7 @@ fi
 LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
-for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt; do
+for cm_extra in "" -llapack -lcolamd -lsuitesparseconfig -lamd -lrt -lblas; do
     unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cholmod_allocate_triplet in -lcholmod" >&5
@@ -17327,12 +17304,8 @@ fi
 mkdir -p bin/$GAPARCH
 CONFIG_STATUS=bin/$GAPARCH/config.status
 
-ac_config_files="$ac_config_files $GAP_MAKEFILE:cnf/Makefile.in bin/$GAPARCH/files.g:cnf/files.g.in"
+ac_config_files="$ac_config_files Makefile:cnf/Makefile.in bin/$GAPARCH/files.g:cnf/files.g.in"
 
-
-if test "$GAP_MAKEFILE" != Makefile; then
-    ln -sf "$GAP_MAKEFILE" Makefile
-fi
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18415,7 +18388,7 @@ do
   case $ac_config_target in
     "src/config.h") CONFIG_HEADERS="$CONFIG_HEADERS src/config.h:cnf/config.h.in" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
-    "$GAP_MAKEFILE") CONFIG_FILES="$CONFIG_FILES $GAP_MAKEFILE:cnf/Makefile.in" ;;
+    "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile:cnf/Makefile.in" ;;
     "bin/$GAPARCH/files.g") CONFIG_FILES="$CONFIG_FILES bin/$GAPARCH/files.g:cnf/files.g.in" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

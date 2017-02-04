@@ -111,28 +111,28 @@ InstallMethod(P1Coordinate, "(IMG) generic P1 point", [IsP1Point],
         x->x![1]);
 
 InstallMethod(DisplayString, "(IMG) generic P1 point", [IsP1Point],
-        x->DisplayString(x![1]));
+        x->DisplayString(P1Coordinate(x)));
 
 InstallMethod(ViewString, "(IMG) generic P1 point", [IsP1Point],
-        x->Concatenation("<",ViewString(x![1]),">"));
+        x->Concatenation("<",ViewString(P1Coordinate(x)),">"));
 
 InstallMethod(String, "(IMG) generic P1 point", [IsP1Point],
-        x->Concatenation("P1Point(",String(x![1]),")"));
+        x->Concatenation("P1Point(",String(P1Coordinate(x)),")"));
 
 INSTALLPRINTERS@(IsP1Point);
 
 InstallMethod(EQ, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
-    return p![1]=q![1];
+    return P1Coordinate(p)=P1Coordinate(q);
 end);
 
 InstallMethod(LT, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
-    return p![1]<q![1];
+    return P1Coordinate(p)<P1Coordinate(q);
 end);
 
 BindGlobal("C2_P1POINT@", function(p)
-    p := p![1];
+    p := P1Coordinate(p);
     if IsXInfinity(p) then
         return [@.o,@.z];
     elif Norm(p) <= @.ro then
@@ -157,7 +157,7 @@ end);
 InstallMethod(SphereP1, "(IMG) generic P1 point", [IsP1Point],
         function(p)
     local n;
-    p := p![1];
+    p := P1Coordinate(p);
     if IsXInfinity(p) then
         return [@.rz,@.rz,-@.ro];
     else
@@ -168,7 +168,7 @@ end);
 
 InstallMethod(SphereP1Y, "(IMG) generic P1 point", [IsP1Point],
         function(p)
-    p := p![1];
+    p := P1Coordinate(p);
     if IsXInfinity(p) then
         return @.rz;
     else
@@ -178,7 +178,7 @@ end);
 
 InstallMethod(P1Antipode, "(IMG) generic P1 point", [IsP1Point],
         function(p)
-    p := p![1];
+    p := P1Coordinate(p);
     if p=@.z then
         return P1infinity;
     elif IsXInfinity(p) then
@@ -222,7 +222,7 @@ end);
 InstallMethod(CleanedP1Point, "(IMG) generic P1 point", [IsP1Point,IsFloat],
         function(p,prec)
     local z, w, n;
-    z := p![1];
+    z := P1Coordinate(p);
     w := CLEAN_CX@(z,prec);
     n := Norm(w);
     if n*2*prec*prec > @.ro then
@@ -253,8 +253,8 @@ InstallMethod(P1Barycentre, "(IMG) generic P1 point", [IsP1Point,IsP1Point,IsP1P
 InstallMethod(P1Midpoint, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     local a, d;
-    p := p![1];
-    q := q![1];
+    p := P1Coordinate(p);
+    q := P1Coordinate(q);
     if IsXInfinity(p) and IsXInfinity(q) then
         return P1infinity;
     elif IsXInfinity(p) then
@@ -273,8 +273,8 @@ end);
 InstallMethod(P1Distance, "(IMG) generic P1 point", [IsP1Point,IsP1Point],
         function(p,q)
     local v, d;
-    p := p![1];
-    q := q![1];
+    p := P1Coordinate(p);
+    q := P1Coordinate(q);
     if p=q then
         return @.rz;
     elif IsXInfinity(p) then
@@ -673,7 +673,7 @@ end);
 InstallMethod(P1Image, "(IMG) generic P1 map", [IsP1Map,IsP1Point],
         function(map,z)
     map := CoefficientsOfP1Map(map);
-    return P1Point(RATMAP_EVAL@(map[1],map[2],z![1]));
+    return P1Point(RATMAP_EVAL@(map[1],map[2],P1Coordinate(z)));
 end);
 
 InstallOtherMethod(POW, "(IMG) generic P1 map", [IsP1Point,IsP1Map],
@@ -756,13 +756,13 @@ InstallMethod(P1MapByZerosPoles, "(IMG) generic P1 map", [IsP1PointList,IsP1Poin
         Error("P1MapByZerosPoles: first 2 arguments must be lists of same length of zeros and poles");
     od;
     
-    num := [@.o]; for z in zeros do num := POLY_MULZMINUSB@(num,z![1]); od;
-    den := [@.o]; for z in poles do den := POLY_MULZMINUSB@(den,z![1]); od;
+    num := [@.o]; for z in zeros do num := POLY_MULZMINUSB@(num,P1Coordinate(z)); od;
+    den := [@.o]; for z in poles do den := POLY_MULZMINUSB@(den,P1Coordinate(z)); od;
     
     if dst=P1infinity then
-        num := num * src![1];
+        num := num * P1Coordinate(src);
     else
-        num := num * dst![1] / RATMAP_EVAL@(num,den,src![1]);
+        num := num * P1Coordinate(dst) / RATMAP_EVAL@(num,den,P1Coordinate(src));
     fi;
 
     return P1MapByCoefficients(num,den);
@@ -893,7 +893,7 @@ InstallMethod(P1ROTATION@, "(IMG) generic P1 points",
     theta := @.z;    
     n := @.z;
     for i in [1..Length(points)] do
-        p := extra[i]![1];
+        p := P1Coordinate(extra[i]);
         if IsXInfinity(p) then
             oldproj := @.z;
         else

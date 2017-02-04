@@ -40,7 +40,7 @@ AC_CHECK_HEADER(cholmod.h,,AC_MSG_ERROR([cholmod.h not found. Specify its locati
 LDFLAGS="$LDFLAGS $CHOLMOD_LDFLAGS"
 CHOLMOD_LIBS=""
 
-for cm_extra in -llapack -lcolamd -lsuitesparseconfig -lamd -lrt -lblas; do
+for cm_extra in "" -llapack -lcolamd -lsuitesparseconfig -lamd -lrt -lblas; do
     unset ac_cv_lib_cholmod_cholmod_allocate_triplet # wipe cached value
     CHOLMOD_LIBS="$CHOLMOD_LIBS $cm_extra"
     AC_CHECK_LIB(cholmod,cholmod_allocate_triplet,[cm_found=true],[cm_found=false],[$CHOLMOD_LIBS])

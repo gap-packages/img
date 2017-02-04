@@ -97,7 +97,6 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
 
     # get rid of the elements going to 1
     epi := PARABOLICQUOTIENT@(outstates2,w);
-
     return [epi*GroupHomomorphismByImages(Range(epi),instates,List(dst,x->x^epi),src),w];
 end);
 

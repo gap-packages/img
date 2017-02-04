@@ -12,11 +12,11 @@
 
 #undef VERY_LONG_DOUBLES
 
+/* #define sigjmp_buf int */
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
 #include <setjmp.h>
-typedef jmp_buf sigjmp_buf;
 #include "src/compiled.h"
 #include "src/macfloat.h"
 #include "poly.h"

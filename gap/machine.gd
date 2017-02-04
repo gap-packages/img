@@ -542,7 +542,8 @@ DeclareAttribute("EquatorTwist",IsSphereMachine);
 ##     <C>EquatorTwist</C>.
 ## <Example><![CDATA[
 ## gap> # the Tan-Shishikura examples
-## gap> z := Indeterminate(PMCOMPLEX_PSEUDOFIELD);; # or even MPC_PSEUDOFIELD
+## gap> SetP1Points(PMCOMPLEX);
+## gap> z := Indeterminate(@IMG.field);;
 ## gap> a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;
 ## gap> c := RootsFloat((z^2+1)^3*z^2+1);;
 ## gap> am := List(a,a->SphereMachine((a-1)*(3*P1z^2-2*P1z^3)+1));;
@@ -606,7 +607,8 @@ DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);
 ##     Dehn twists of the generators of <A>G</A>.
 ##
 ## <Example><![CDATA[
-## gap> z := Indeterminate(COMPLEX_FIELD);;
+## gap> SetP1Points(PMCOMPLEX);
+## gap> z := Indeterminate(@IMG.field);;
 ## gap> # a Sierpinski carpet map without multicurves
 ## gap> m := SphereMachine((z^2-z^-2)/2/COMPLEX_I);
 ## <FR machine with alphabet [ 1, 2, 3, 4 ] on Group( [ f1, f2, f3, f4 ] )/[ f3*f2*f1*f4 ]>
