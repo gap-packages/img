@@ -951,6 +951,9 @@ BindGlobal("P1NORMALIZINGMAP@", function(points)
 
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
     barycenter := FIND_BARYCENTER(rpoints,100);
+    while barycenter[3]=100 do
+	Error("FIND_BARYCENTER did not converge");
+    od;
     Info(InfoIMG,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");
     
     barycenter := List(barycenter[1],x->NewFloat(@.isr,x));
@@ -973,7 +976,15 @@ InstallOtherMethod(P1MapNormalizingP1Points, "(IMG) for two lists of points",
     # oldpoints is allowed to be 'fail', in which case we just return a good
     # möbius transformation.
     local map;
-    
+
+    if Length(points)<=3 then # special cases
+	if Length(points)=2 then
+	    return InverseP1Map(MoebiusMap(points[1],points[2]));
+	else
+	    return MoebiusMap(points[1],points[2],points[3],P1Point(Sqrt(@.o/3)),P1Point(Sqrt(@.o/-3)),P1infinity);
+	fi;
+    fi;
+
     # assuming oldpoints[n]=infinity and there are l,m such that
     # oldpoints[l] is not far from 0 and oldpoints[m] is not far from 1,
     # returns the Möbius transformation that sends points[n] to infinity,
