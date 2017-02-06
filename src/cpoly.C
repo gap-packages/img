@@ -46,7 +46,7 @@ static xcomplex cauchy(const int deg, xcomplex *P)
   dx = x;
    
    // Do Newton iteration until x converges to two decimal places
-  while(fabs(dx / x) > 0.005) {
+  while(fabsl(dx / x) > 0.005) {
     f  = tmp[0];
     df = 0.0;
     for(int i = 1; i <= deg; i++){

@@ -31,7 +31,9 @@ static void baby_please_dont_go (void) {
 }
 
 /* in code:
-
+...
+#include <setjmp.h>
+...
    atexit (baby_please_dont_go);
    if (setjmp(e_t_go_home))
      return __result;
@@ -176,7 +178,9 @@ static Obj REAL_ROOTS (Obj self, Obj coeffs)
       p = INT_INTOBJ(ELM_PLIST(negind,-v));			\
   }
 
-#define EXP_LETTER(v) (INT_INTOBJ(ELM_PLIST(exp,abs(v))))
+Int Intabs(Int v) { return v > 0 ? v : -v; }
+
+#define EXP_LETTER(v) (INT_INTOBJ(ELM_PLIST(exp,Intabs(v))))
 
 #define FIND_MATCH(match,matchlen) {					\
   matchlen = 1;								\
@@ -230,7 +234,7 @@ static Obj NFFUNCTION(Obj self, Obj rel, Obj exp, Obj dir, Obj word)
     */
     Int vi = INT_INTOBJ(ELM_PLIST(word,i));
     if (EXP_LETTER(vi)==2)
-      vi = abs(vi);
+      vi = Intabs(vi);
     Int idle;
 
     if (vi == -vlast) { /* pop letter */

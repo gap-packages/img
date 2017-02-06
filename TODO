@@ -10,3 +10,4 @@ These are the things I'll get to do when I get to do them:
 
   * "prenucleus" using just the states, not the action to compare. possibly return also the relations that are needed to make it a nucleus, something like the "triangles".
   * abstract triangulations: just work with pairs/triples of conjugacy classes. do the lifting symbolically. train tracks.
+  * submachines, esp. with subalphabets
