@@ -20,7 +20,7 @@ InstallMethod(ViewString, "(IMG) for a point in Teichmuller space",
 
 InstallMethod(DisplayString, "(IMG) for a point in Teichmuller space",
         [IsMarkedSphere],
-        s->CONCAT@fr(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r!.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
+        s->CONCAT@FR(DisplayString(s!.cut),"Spanning tree on edges ",List(s!.treeedge,r->r!.index)," costing ",s!.treecost,"\nMarking ",s!.marking,"\n"));
 
 InstallMethod(String, "(IMG) for a point in Teichmuller space",
         [IsMarkedSphere],
@@ -29,13 +29,13 @@ InstallMethod(String, "(IMG) for a point in Teichmuller space",
 INSTALLPRINTERS@(IsMarkedSphere);
 
 BindGlobal("STRINGCOMPLEX@",
-    z->CONCAT@fr(RealPart(z)," ",ImaginaryPart(z)));
+    z->CONCAT@FR(RealPart(z)," ",ImaginaryPart(z)));
 
 InstallMethod(Draw, "(IMG) for a point in Teichmuller space",
         [IsMarkedSphere],
         function(spider)
     local a, i, j, k, s, f, t, points, arcs;
-    s := ""; f := OUTPUTTEXTSTRING@fr(s);
+    s := ""; f := OUTPUTTEXTSTRING@FR(s);
     
     if ValueOption("upper")<>fail then
         PrintTo(f,"UPPER\n");

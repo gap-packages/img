@@ -13,11 +13,11 @@
 ################################################################
 
 InstallMethod(ViewString, [IsTriangulationVertex],
-        v->CONCAT@fr("<vertex ",v!.index,List(Neighbours(v),e->e!.index),">"));
+        v->CONCAT@FR("<vertex ",v!.index,List(Neighbours(v),e->e!.index),">"));
 InstallMethod(ViewString, [IsTriangulationEdge],
-        e->CONCAT@fr("<edge ",e!.index,List([From(e),To(e)],v->v!.index),">"));
+        e->CONCAT@FR("<edge ",e!.index,List([From(e),To(e)],v->v!.index),">"));
 InstallMethod(ViewString, [IsTriangulationFace],
-        f->CONCAT@fr("<face ",f!.index,List(Neighbours(f),e->e!.index),">"));
+        f->CONCAT@FR("<face ",f!.index,List(Neighbours(f),e->e!.index),">"));
 InstallMethod(PrintString, [IsTriangulationObject], ViewString);
 InstallMethod(String, [IsTriangulationObject], ViewString);
 InstallMethod(DisplayString, [IsTriangulationObject], ViewString);
@@ -121,7 +121,7 @@ end);
 
 InstallMethod(ViewString, "(IMG) for a triangulation",
         [IsSphereTriangulation],
-        t->CONCAT@fr("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
+        t->CONCAT@FR("<triangulation with ",Length(t!.v)," vertices, ",Length(t!.e)," edges and ",Length(t!.f)," faces>"));
 
 InstallMethod(String, "(IMG) for a triangulation",
         [IsSphereTriangulation],
@@ -134,18 +134,18 @@ InstallMethod(DisplayString, "(IMG) for a triangulation",
     s := "   vertex | position                                 | neighbours\n";
     Append(s,"----------+------------------------------------------+-----------------\n");
     for i in t!.v do
-        Append(s,String(CONCAT@fr("Vertex ",i!.index),9));
+        Append(s,String(CONCAT@FR("Vertex ",i!.index),9));
         Append(s," | ");
         Append(s,String(Pos(i),-40));
         Append(s," |");
-        for j in Neighbours(i) do APPEND@fr(s," ",j!.index); od;
+        for j in Neighbours(i) do APPEND@FR(s," ",j!.index); od;
         Append(s,"\n");
     od;
     Append(s,"----------+------------------------------------------+-----------------\n");
     Append(s,"     edge | position                                 |frm to lt rt rev\n");
     Append(s,"----------+------------------------------------------+-----------------\n");
     for i in t!.e do
-        Append(s,String(CONCAT@fr("Edge ",i!.index),9));
+        Append(s,String(CONCAT@FR("Edge ",i!.index),9));
         Append(s," | ");
         Append(s,String(Pos(i),-40));
         Append(s," |");
@@ -156,7 +156,7 @@ InstallMethod(DisplayString, "(IMG) for a triangulation",
     Append(s,"     face | position                                 | radius   | neighbours\n");
     Append(s,"----------+------------------------------------------+----------+-----------\n");
     for i in t!.f do
-        Append(s,String(CONCAT@fr("Face ",i!.index),9));
+        Append(s,String(CONCAT@FR("Face ",i!.index),9));
         Append(s," | ");
         Append(s,String(Pos(i),-40));
         Append(s," |");
@@ -831,7 +831,7 @@ InstallMethod(Draw, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         function(t)
     local s, f;
-    s := ""; f := OUTPUTTEXTSTRING@fr(s);
+    s := ""; f := OUTPUTTEXTSTRING@FR(s);
     
     if ValueOption("upper")<>fail then
         PrintTo(f,"UPPER");

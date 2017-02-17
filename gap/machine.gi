@@ -149,11 +149,11 @@ end);
 
 InstallMethod(ViewString, "(IMG) for a sphere machine",
         [IsSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@fr("<sphere machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), " / ",RelatorsOfFpGroup(StateSet(M)),">"));
+        M->CONCAT@FR("<sphere machine with alphabet ", AlphabetOfFRObject(M), " on ", StateSet(M), " / ",RelatorsOfFpGroup(StateSet(M)),">"));
 
 InstallMethod(DisplayString, "(IMG) for a sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@fr(DISPLAYFRMACHINE@fr(M),"Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
+        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),"Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
 #############################################################################
 
 #############################################################################
@@ -193,16 +193,16 @@ InstallGlobalFunction(NewSphereMachine,
 #    fi;
     
     machine := CallFuncList(NewGroupFRMachine,arg{[1..len]});
-    data := rec(holdername := RANDOMNAME@fr());
+    data := rec(holdername := RANDOMNAME@FR());
     BindGlobal(data.holdername, StateSet(machine));
-    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@fr(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
+    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
     states := AsSphereGroup(StateSet(machine)/relators);
     
 #    if adder<>fail then
 #        MakeReadWriteGlobal(data.holdername);
 #        UnbindGlobal(data.holdername);
 #        BindGlobal(data.holdername, states);
-#        adder := STRING_WORD2GAP@fr(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
+#        adder := STRING_WORD2GAP@FR(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
 #    fi;
     
     MakeReadWriteGlobal(data.holdername);
@@ -210,7 +210,7 @@ InstallGlobalFunction(NewSphereMachine,
     
     for r in relators do
         rr := WreathRecursion(machine)(r);
-        while not ISONE@fr(rr[2]) or ForAny(rr[1],w->not IsOne(ElementOfSphereGroup(FamilyObj(One(states)),w))) do
+        while not ISONE@FR(rr[2]) or ForAny(rr[1],w->not IsOne(ElementOfSphereGroup(FamilyObj(One(states)),w))) do
             Error("Relation ",r," does not hold in the machine");
         od;
     od;
@@ -461,11 +461,11 @@ end);
 ##
 InstallMethod(ViewString, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@fr("<sphere machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/", RelatorsOfFpGroup(StateSet(M)),">"));
+        M->CONCAT@FR("<sphere machine with alphabet ", AlphabetOfFRObject(M), " and adder ", AddingElement(M), " on ", StateSet(M), "/", RelatorsOfFpGroup(StateSet(M)),">"));
 
 InstallMethod(DisplayString, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine and IsFRMachineStdRep],
-        M->CONCAT@fr(DISPLAYFRMACHINE@fr(M),
+        M->CONCAT@FR(DISPLAYFRMACHINE@FR(M),
                 "Adding element: ",AddingElement(M),"\n",
                 "Relators: ",RelatorsOfFpGroup(StateSet(M)),"\n"));
 
@@ -534,7 +534,7 @@ end);
 InstallMethod(ChangeFRMachineBasis, [IsPolynomialSphereMachine, IsCollection, IsPerm],
         function(m,c,p)
     local newm;
-    newm := CHANGEFRMACHINEBASIS@fr(m,c,p);
+    newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
     IsSphereMachine(newm);
     SetAddingElement(newm,FRElement(newm,InitialState(AddingElement(m))));
     return newm;
@@ -543,7 +543,7 @@ end);
 InstallMethod(ChangeFRMachineBasis, [IsSphereMachine, IsCollection, IsPerm],
         function(m,c,p)
     local newm;
-    newm := CHANGEFRMACHINEBASIS@fr(m,c,p);
+    newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
     IsSphereMachine(newm);
     return newm;
 end);
@@ -1167,7 +1167,7 @@ BindGlobal("PUREMCG@", function(arg)
         relator := arg[2];
         maker := w->w;
     else
-        Error("PUREMCG@fr: requires a fp group or a free group and a relator");
+        Error("PUREMCG@FR: requires a fp group or a free group and a relator");
     fi;
     gens := GeneratorsOfGroup(G);
         
