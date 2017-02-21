@@ -1,21 +1,23 @@
 /****************************************************************************
  *
- * fr_dll.h                                                 Laurent Bartholdi
+ * img.h                                                    Laurent Bartholdi
  *
  * Copyright (C) 2010-2013, Laurent Bartholdi
  *
  ****************************************************************************
  *
- * header / type declarations for FR DLL add-on
+ * header / type declarations for IMG DLL add-on
  *
  ****************************************************************************/
 
 #undef VERY_LONG_DOUBLES
 
+#define _GNU_SOURCE
+#include "src/compiled.h"
+
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
-#include "src/compiled.h"
 #include "src/macfloat.h"
 #include "poly.h"
 
@@ -54,4 +56,4 @@ static void set_elm_plist(Obj list, UInt pos, Obj obj) /* safe to nest */
   CHANGED_BAG(list);
 }
 
-/* fr_dll.h . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */
+/* img.h . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */

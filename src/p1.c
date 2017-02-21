@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <complex.h>
-#include "img_dll.h"
+#include "img.h"
 #define IS_MACFLOAT(obj) (TNUM_OBJ(obj) == T_MACFLOAT)
 
 typedef long double ldouble;
@@ -1123,7 +1123,7 @@ static Obj P1ROTATION(Obj self, Obj points, Obj oldpoints)
   return NEW_P1MAP(1, numer, denom);
 }
 
-/* data to be passed to fr_dll */
+/* data to be passed to img */
 static StructGVarFunc GVarFuncs[] = {
   { "P1POINT2C2", 1, "p1point", P1POINT2C2, "p1.c:P1POINT2C2" },
   { "C22P1POINT", 2, "num, den", C22P1POINT, "p1.c:C22P1POINT" },

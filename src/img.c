@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * img_dll.c                                                 Laurent Bartholdi
+ * img.c                                                    Laurent Bartholdi
  *
  * Copyright (c) 2009-2012, Laurent Bartholdi
  *
@@ -13,7 +13,7 @@
 
 #undef DEBUG_COMPLEX_ROOTS
 
-#include "img_dll.h"
+#include "img.h"
 #include <complex.h>
 
 #ifdef MALLOC_HACK
@@ -465,10 +465,10 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_iter)
  * interface to GAP
  ****************************************************************************/
 static StructGVarFunc GVarFuncs [] = {
-  { "COMPLEX_ROOTS_FR", 1, "coeffs", COMPLEX_ROOTS, "img_dll.c:COMPLEX_ROOTS" },
-  { "REAL_ROOTS_FR", 1, "coeffs", REAL_ROOTS, "img_dll.c:REAL_ROOTS" },
-  { "NFFUNCTION_FR", 4, "rel, exp, dir, word", NFFUNCTION, "img_dll.c:NFFUNCTION" },
-  { "FIND_BARYCENTER", 2, "points, iter", FIND_BARYCENTER, "img_dll.c:FIND_BARYCENTER" },
+  { "COMPLEX_ROOTS_FR", 1, "coeffs", COMPLEX_ROOTS, "img.c:COMPLEX_ROOTS" },
+  { "REAL_ROOTS_FR", 1, "coeffs", REAL_ROOTS, "img.c:REAL_ROOTS" },
+  { "NFFUNCTION_FR", 4, "rel, exp, dir, word", NFFUNCTION, "img.c:NFFUNCTION" },
+  { "FIND_BARYCENTER", 2, "points, iter", FIND_BARYCENTER, "img.c:FIND_BARYCENTER" },
   { 0 }
 };
 
@@ -489,7 +489,7 @@ static Int InitLibrary ( StructInitInfo * module )
 
 static StructInitInfo module = {
  /* type        = */ MODULE_DYNAMIC,
- /* name        = */ "img_dll.c",
+ /* name        = */ "img.c",
  /* revision_c  = */ 0,
  /* revision_h  = */ 0,
  /* version     = */ 0,
@@ -506,4 +506,4 @@ StructInitInfo * Init__Dynamic ( void )
 {
  return &module;
 }
-/* img_dll.c . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */
+/* img.c . . . . . . . . . . . . . . . . . . . . . . . . . . . ends here */

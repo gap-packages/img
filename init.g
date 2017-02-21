@@ -40,9 +40,10 @@ ReadPackage("img", "gap/examples.gd");
 CallFuncList(function()
     local dirs, dll, w;
     dirs := DirectoriesPackagePrograms("img");
-    dll := Filename(dirs,"img_dll.so");
+    dll := Filename(dirs,"img.so");
     if dll=fail then
-        dll := Filename(dirs[1],"img_dll.so");
+	Info(InfoPackageLoading,1,"img.so not found -- you may want to compile it with './configure && make' in ",PackageInfo("img")[1].InstallationPath,"\n...");
+	dll := Filename(dirs[1],"img.so");
         for w in ["FIND_BARYCENTER","FIND_RATIONALFUNCTION",
                 "C22P1POINT","P1POINT2C2","P1POINT2STRING","EQ_P1POINT",
                 "P1SPHERE","SPHEREP1","SPHEREP1Y","P1BARYCENTRE",

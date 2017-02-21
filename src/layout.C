@@ -17,7 +17,7 @@
 #define PRINT_STATS
 #define PRINT_OPTIMUM
 
-#include "config.h"
+#include "pkgconfig.h"
 #include <iostream>
 #include <queue>
 #include <map>

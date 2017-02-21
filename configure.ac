@@ -6,50 +6,55 @@
 ##
 #############################################################################
 
+# autoconf
 AC_PREREQ(2.68)
-LT_PREREQ([2.4.2])
-AC_INIT(img,,laurent.bartholdi@gmail.com)
-AC_CONFIG_SRCDIR([src/img_dll.c])
+AC_INIT([img],m4_esyscmd([tr -d '\n' < VERSION]),[https://github.com/laurentbartholdi/img/issues],[https://laurentbartholdi.github.io/img])
+AC_CONFIG_SRCDIR([src/img.c])
 AC_CONFIG_AUX_DIR([cnf])
-AC_CONFIG_HEADERS([src/config.h:cnf/config.h.in])
+AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])
+AC_CONFIG_MACRO_DIR([m4])
+
+# automake
+AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects])
+## AM_SILENT_RULES([yes])
+AM_MAINTAINER_MODE
+AM_PROG_AR
+
+# libtool
+LT_PREREQ([2.4.6])
 LT_INIT([disable-static dlopen win32-dll])
 
-### AC_PREFIX_DEFAULT([${PWD}])
-
-# Checks for programs.
+# compilers
 AC_PROG_CC
 AC_PROG_CXX
 AX_CC_MAXOPT
 AC_PROG_JAVAC
-### AC_CANONICAL_TARGET
 
+# gap
 AC_FIND_GAP
 
-# Checks for header files.
+# C
 AC_HEADER_STDC
 AC_CHECK_HEADERS([float.h stdlib.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
-
-# Checks for standard C++ stuff
 AC_CHECK_HEADERS(malloc/malloc.h)
 AC_CHECK_HEADERS(malloc.h)
-
+AC_CHECK_SIZEOF([void **])
 AC_CHECK_LIB(m,sincos,AC_DEFINE(HAVE_SINCOS,1,do we have sincos?))
 
-# Locates GAP
-
 AC_CYGWIN
+AM_CONDITIONAL([SYS_IS_CYGWIN], [test "$CYGWIN" = "yes"])
+if test "$CYGWIN" = "yes"; then
+  AC_DEFINE(SYS_IS_CYGWIN32, 1, are we on CYGWIN?)
+else
+  AC_DEFINE(SYS_IS_CYGWIN32, 0, are we on CYGWIN?)
+fi
 
-# External libraries configuration
-EXTERN="\$(CURDIR)/bin/$TARGET/extern"
-MAKE_LIBTARGETS=""
-
-AC_CHECK_LEVMAR
+# AC_CHECK_LEVMAR
 AC_CHECK_CHOLMOD
-AC_CHECK_LIBDOGLEG
+# AX_BLAS # too heavy, requires F77
+# AC_CHECK_LIBDOGLEG
 
 # External programs configuration
 
@@ -62,9 +67,5 @@ fi
 ################################################################
 # generate files
 
-mkdir -p bin/$GAPARCH
-CONFIG_STATUS=bin/$GAPARCH/config.status
-
-AC_CONFIG_FILES([Makefile:cnf/Makefile.in bin/$GAPARCH/files.g:cnf/files.g.in])
-
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

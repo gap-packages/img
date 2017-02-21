@@ -3,8 +3,6 @@
  * cpoly.C                                                       René Hartung
  *                                                          Laurent Bartholdi
  *
- *   @(#)$id: fr_dll.c,v 1.18 2010/10/26 05:19:40 gap exp $
- *
  * Copyright (c) 2011, Laurent Bartholdi
  *
  ****************************************************************************
