@@ -1,0 +1,109 @@
+  
+  [1X2 [33X[0;0YIMG package[133X[101X
+  
+  
+  [1X2.1 [33X[0;0YA brief mathematical introduction[133X[101X
+  
+  [33X[0;0YThis  chapter  assumes  that you have no familiarity with iterated monodromy
+  groups.  If  you do, and wish to see their usage within [5XGAP[105X through a sample
+  session,  please  skip  to Section [14X2.2[114X. For a more thourough introduction on
+  self-similar groups and iterated monodromy groups, see [BGN03] or [Nek05].[133X
+  
+  [33X[0;0YBasic  knowledge  of the package [5XFR[105X is assumed, however. Please refer to its
+  online documentation, or the same references as above.[133X
+  
+  [33X[0;0YThe  fundamental  objects  are [13XThurston maps[113X: branched self-coverings of the
+  sphere  [22XS^2[122X.  These  are  continuous  maps  [22Xf:S^2->  S^2[122X  that, locally, are
+  modelled  on  the complex map [22Xz↦ z^n[122X. The [13Xcritical points[113X are those points [22Xz[122X
+  at  which  the map is modelled on [22Xz↦ z^n[122X for some [22Xn>1[122X. The [13Xpost-critical set[113X
+  is  the union [22XP[122X of strictly forward orbits of critical points. It is assumed
+  finite.[133X
+  
+  [33X[0;0YTwo    Thurston   maps   [22Xf:(S^2,P)->(S^2,P)[122X   and   [22Xg:(S^2,Q)->(S^2,Q)[122X   are
+  [13Xcombinatorially   equivalent[113X   if   they   are  isotopic  through  isotopies
+  [22X(S^2,P)->(S^2,Q)[122X that are constant on [22XP[122X.[133X
+  
+  [33X[0;0YDenote  by  [22XG[122X  the  fundamental  group  [22Xπ_1(S^2∖ P,*)[122X at a basepoint [22X*[122X. Then
+  combinatorial  equivalence classes of Thurston maps are classified by wreath
+  recursions  for [22XG[122X, namely homomorphisms [22Xϕ:G-> G≀ Sym_d[122X. They are encoded, in
+  [5XIMG[105X, by a new kind of FR machine, called a [13Xsphere machine[113X. Generators of the
+  machine  correspond  to  loops  in  the  fundamental  group  of  the  sphere
+  (punctured  at  post-critical  points),  that  circle once counter-clockwise
+  around a post-critical point.[133X
+  
+  [33X[0;0YBy  a  fundamental theorem of Thurston, every Thurston map (apart from a few
+  low-complexity  examples) is either combinatorially equivalent to a rational
+  map,  or  is [13Xobstructed[113X: there exists a system of curves on [22XS^2∖ P[122X with some
+  appropriate non-contraction property.[133X
+  
+  [33X[0;0YThe  operations  in  this  package  let one manipulate Thurston maps, and in
+  particular[133X
+  
+  [30X    [33X[0;6Ycompute the rational map, or the obstruction, associated with a sphere
+        machine;[133X
+  
+  [30X    [33X[0;6Ycompute the sphere machine associated with a rational map;[133X
+  
+  [30X    [33X[0;6Yconstruct   sphere   machines   algebraically,   and   identify  their
+        combinatorial parameters, in the case of polynomial maps;[133X
+  
+  [30X    [33X[0;6Ycompute combinations of sphere machines, such as matings.[133X
+  
+  
+  [1X2.2 [33X[0;0YAn example session[133X[101X
+  
+  [33X[0;0YThis  is a brief introduction describing some of the simpler features of the
+  [5XIMG[105X  package. It assumes you have some familiarity with the theory of groups
+  defined  by  automata, and of holomorphic dynamical systems; if not, a brief
+  mathematical  introduction  may  be  found  in Section [14X2.1[114X. We show here and
+  comment a typical use of the package.[133X
+  
+  [33X[0;0YThe  package  is installed by unpacking the archive in the [11Xpkg/[111X directory of
+  your  [5XGAP[105X  installation.  It  can also be placed in a local directory, which
+  must be added to the load-path by invoking [10Xgap[110X with the [10X-l[110X option.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XLoadPackage("img");[127X[104X
+    [4X[28Xtrue[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YMany maps and sphere machines are predefined by the [5XIMG[105X, see Chapter [14X5[114X.[133X
+  
+  [33X[0;0YWe may start by defining a machine by its polynomial:[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xbasilica := PolynomialSphereMachine(2,[1/3]);[127X[104X
+    [4X[28X<sphere machine with alphabet [ 1 .. 2 ] and adder FRElement(...,f3) on Group( [ f1, f2, f3 ] )/[ f\[128X[104X
+    [4X[28X3*f2*f1 ]>[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(basilica);[127X[104X
+    [4X[28X G  |      1         2[128X[104X
+    [4X[28X----+---------+---------+[128X[104X
+    [4X[28X f1 | f1^-1,2   f3^-1,1[128X[104X
+    [4X[28X f2 |    f1,1    <id>,2[128X[104X
+    [4X[28X f3 |    f3,2    <id>,1[128X[104X
+    [4X[28X----+---------+---------+[128X[104X
+    [4X[28XAdding element: FRElement(...,f3)[128X[104X
+    [4X[28XRelators: [ f3*f2*f1 ][128X[104X
+    [4X[25Xgap>[125X [27XP1MapBySphereMachine(basilica);[127X[104X
+    [4X[28X<z^2-1._z>[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YWe  have just created the basilica machine, with group [22XG=⟨ f1,f2,f3|f3f2f1⟩[122X,
+  and computed the corresponding rational map.[133X
+  
+  [33X[0;0YWe  now compute the mating of the basilica with itself: that is the Thurston
+  map  which  acts  as [22Xz^2-1[122X on the upper hemisphere, by angle doubling on the
+  equator,  and  also as [22Xz^2-1[122X on the lower hemisphere. It turns out that this
+  map  is  obstructed, i.e. does not have a realization as a rational map. The
+  obstruction  consists  of  a  curve  separating  the points [22X-1[122X and [22X0[122X on both
+  hemispheres:[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xbasilica2 := Mating(basilica,basilica);[127X[104X
+    [4X[28X<sphere machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2, g1, g2 ] ) / [ f2*f1*g2*g1 ]>[128X[104X
+    [4X[25Xgap>[125X [27XP1MapBySphereMachine(last);[127X[104X
+    [4X[28Xrec([128X[104X
+    [4X[28X  machine := <sphere machine with alphabet [ 1, 2 ] on Group( [ f1, f2, g1, g2 ] ) / [ f2*f1*g2*g1 \[128X[104X
+    [4X[28X]>, matrix := [ [ 1 ] ], multicurve := [ f1*g1^G ] )[128X[104X
+  [4X[32X[104X
+  

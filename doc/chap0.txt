@@ -1,1 +1,192 @@
-Placeholder
+  
+  
+                           [1XIterated monodromy groups[101X
+  
+  
+                                 Version 0.1.1
+  
+  
+                                   02/01/2014
+  
+  
+                               Laurent Bartholdi
+  
+  
+  
+            [33X[0;10YGroups and dynamical systems[133X
+  
+  
+  
+  Laurent Bartholdi
+      Email:    [7Xmailto:laurent.bartholdi@gmail.com[107X
+      Homepage: [7Xhttp://www.uni-math.gwdg.de/laurent/[107X
+  
+  
+  Address: [33X[0;9YMathematisches Institut[133X
+           [33X[0;9YBunsenstraße 3-5[133X
+           [33X[0;9YD-37073 Göttingen[133X
+           [33X[0;9YGermany[133X
+  
+  
+  -------------------------------------------------------
+  [1XAbstract[101X
+  [33X[0;0YThis  document  describes  the  package  [5XIMG[105X,  which  implements  in [5XGAP[105X the
+  iterated monodromy groups of Nekrashevych. It depends on the package [5XFR[105X.[133X
+  
+  [33X[0;0YFor  comments or questions on [5XIMG[105X please contact the author; this package is
+  still under development.[133X
+  
+  
+  -------------------------------------------------------
+  [1XCopyright[101X
+  [33X[0;0Y© 2006-2013 by Laurent Bartholdi[133X
+  
+  
+  -------------------------------------------------------
+  [1XAcknowledgements[101X
+  [33X[0;0YPart of this work is/was supported by the "German Science Foundation".[133X
+  
+  
+  -------------------------------------------------------
+  [1XColophon[101X
+  [33X[0;0YThis  project  started  as a part of the [5XGAP[105X package [5XFR[105X. It expanded so much
+  that I decided in 2012 to split it off, so as to keep more cleanly separated
+  the group theory on one side, and the complex analysis, on the other side.[133X
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (IMG)[101X
+  
+  1 [33X[0;0YLicensing[133X
+  2 [33X[0;0YIMG package[133X
+    2.1 [33X[0;0YA brief mathematical introduction[133X
+    2.2 [33X[0;0YAn example session[133X
+  3 [33X[0;0YSphere groups and machines[133X
+    3.1 [33X[0;0YSphere groups[133X
+      3.1-1 IsSphereGroup
+      3.1-2 IsomorphismSphereGroup
+      3.1-3 EulerCharacteristic
+      3.1-4 RankOfSphereGroup
+      3.1-5 OrderingOfSphereGroup
+      3.1-6 ExponentsOfSphereGroup
+      3.1-7 IsomorphismFreeGroup
+      3.1-8 SphereGroup
+      3.1-9 IsSphereConjugacyClass
+      3.1-10 IsPeripheral
+      3.1-11 PeripheralClasses
+      3.1-12 IntersectionNumber
+      3.1-13 AutomorphismGroup
+      3.1-14 AmalgamateFreeProduct
+    3.2 [33X[0;0YSphere machines[133X
+      3.2-1 IsSphereMachine
+      3.2-2 AsSphereMachine
+      3.2-3 CleanedSphereMachine
+      3.2-4 NewSphereMachine
+    3.3 [33X[0;0YPolynomial sphere machines[133X
+      3.3-1 PolynomialSphereMachine
+      3.3-2 SupportingRays
+      3.3-3 NormalizedPolynomialSphereMachine
+      3.3-4 SimplifiedSphereMachine
+      3.3-5 Mating
+      3.3-6 IsKneadingMachine
+      3.3-7 AddingElement
+      3.3-8 AsPolynomialSphereMachine
+      3.3-9 LiftOfConjugacyClass
+      3.3-10 ComplexConjugate
+      3.3-11 RotatedSpider
+      3.3-12 KneadingSequence
+      3.3-13 AllInternalAddresses
+      3.3-14 ExternalAnglesRelation
+      3.3-15 ExternalAngle
+    3.4 [33X[0;0YAutomorphisms of sphere machines[133X
+      3.4-1 AutomorphismVirtualEndomorphism
+  4 [33X[0;0YHolomorphic maps[133X
+    4.1 [33X[0;0Y[22XP^1[122X points[133X
+      4.1-1 IsP1Point
+      4.1-2 P1Coordinate
+      4.1-3 CleanedP1Point
+      4.1-4 P1infinity
+      4.1-5 P1Antipode
+      4.1-6 P1Barycentre
+      4.1-7 P1Circumcentre
+      4.1-8 P1Distance
+      4.1-9 P1Midpoint
+      4.1-10 P1Sphere
+      4.1-11 SphereP1
+      4.1-12 SphereP1Y
+      4.1-13 P1XRatio
+      4.1-14 CollectedP1Points
+      4.1-15 MatchP1Points
+      4.1-16 ClosestP1Point
+      4.1-17 IsP1Map
+      4.1-18 MoebiusMap
+      4.1-19 P1MapRotatingP1Points
+      4.1-20 P1MapNormalizingP1Points
+      4.1-21 P1z
+      4.1-22 P1Monomial
+      4.1-23 CleanedP1Map
+      4.1-24 CompositionP1Map
+      4.1-25 InverseP1Map
+      4.1-26 ComplexConjugate
+      4.1-27 ConjugatedP1Map
+      4.1-28 CoefficientsOfP1Map
+      4.1-29 P1MapByCoefficients
+      4.1-30 NumeratorP1Map
+      4.1-31 P1MapByZerosPoles
+      4.1-32 P1Path
+      4.1-33 DegreeOfP1Map
+      4.1-34 P1Image
+      4.1-35 P1PreImage
+      4.1-36 P1PreImages
+      4.1-37 Primitive
+      4.1-38 P1MapScaling
+      4.1-39 CriticalPointsOfP1Map
+      4.1-40 AsP1Map
+      4.1-41 P1MapSL2
+      4.1-42 SL2P1Map
+      4.1-43 SetP1Points
+    4.2 [33X[0;0YTriangulations[133X
+      4.2-1 IsSphereTriangulation
+      4.2-2 EdgePath
+      4.2-3 DelaunayTriangulation
+      4.2-4 AddToTriangulation
+      4.2-5 RemoveFromTriangulation
+      4.2-6 LocateFaceInTriangulation
+      4.2-7 WiggledTriangulation
+      4.2-8 EquidistributedP1Points
+    4.3 [33X[0;0YMarked spheres[133X
+      4.3-1 IsMarkedSphere
+      4.3-2 NewMarkedSphere
+      4.3-3 Draw
+      4.3-4 WiggledMarkedSphere
+      4.3-5 SphereMachineOfBranchedCovering
+      4.3-6 MonodromyOfP1Map
+      4.3-7 SphereMachine
+      4.3-8 DistanceMarkedSpheres
+    4.4 [33X[0;0YThe Hurwitz problem[133X
+      4.4-1 BranchedCoveringByMonodromy
+      4.4-2 DessinByPermutations
+    4.5 [33X[0;0YThe spider algorithm[133X
+      4.5-1 NormalizedP1Map
+      4.5-2 ThurstonAlgorithm
+      4.5-3 P1MapBySphereMachine
+      4.5-4 ThurstonMatrix
+      4.5-5 ThurstonObstruction
+  5 [33X[0;0YExamples[133X
+    5.1 [33X[0;0YExamples of groups[133X
+      5.1-1 PoirierExamples
+      5.1-2 DBRationalIMGGroup
+      5.1-3 PostCriticalMachine
+  6 [33X[0;0YMiscellanea[133X
+    6.1 [33X[0;0YComplex numbers[133X
+      6.1-1 IsPMComplex
+    6.2 [33X[0;0YHelpers[133X
+      6.2-1 Mandel
+      6.2-2 NonContractingSubmatrix
+    6.3 [33X[0;0YUser settings[133X
+      6.3-1 InfoIMG
+  
+  
+  [32X

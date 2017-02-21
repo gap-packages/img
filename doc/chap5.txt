@@ -1,0 +1,87 @@
+  
+  [1X5 [33X[0;0YExamples[133X[101X
+  
+  [33X[0;0Y[5XIMG[105X predefines a large collection of sphere machines, as well as the generic
+  constructions of polynomials.[133X
+  
+  
+  [1X5.1 [33X[0;0YExamples of groups[133X[101X
+  
+  [33X[0;0YDeclareGlobalFunction("PoirierExamples");[133X
+  
+  [1X5.1-1 PoirierExamples[101X
+  
+  [29X[2XPoirierExamples[102X( [3X...[103X ) [32X function
+  
+  [33X[0;0YThe    examples    from   Poirier's   paper   [Poi].   See   details   under
+  [2XPolynomialSphereMachine[102X  ([14X3.3-1[114X);  in  particular, [10XPoirierExamples(1)[110X is the
+  Douady rabbit map.[133X
+  
+  [33X[0;0YDeclareGlobalFunction("DBRationalIMGGroup");[133X
+  
+  [1X5.1-2 DBRationalIMGGroup[101X
+  
+  [29X[2XDBRationalIMGGroup[102X( [3Xsequence/map[103X ) [32X function
+  [6XReturns:[106X  [33X[0;10YAn IMG group from Dau's database.[133X
+  
+  [33X[0;0YThis function returns the iterated monodromy group from a database of groups
+  associated  to  quadratic  rational maps. This database has been compiled by
+  Dau Truong Tan [Tan02].[133X
+  
+  [33X[0;0YWhen called with no arguments, this command returns the database contents in
+  raw form.[133X
+  
+  [33X[0;0YThe  argments  can  be  a  sequence;  the  first  integer is the size of the
+  postcritical  set,  the  second  argument  is  an index for the postcritical
+  graph,  and  sometimes a third argument distinguishes between maps with same
+  post-critical graph.[133X
+  
+  [33X[0;0YIf the argument is a rational map, the command returns the IMG group of that
+  map,  assuming  its  canonical  quadratic  rational  form form exists in the
+  database.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XDBRationalIMGGroup(z^2-1);[127X[104X
+    [4X[28XIMG((z-1)^2)[128X[104X
+    [4X[25Xgap>[125X [27XDBRationalIMGGroup(z^2+1); # not post-critically finite[127X[104X
+    [4X[28Xfail[128X[104X
+    [4X[25Xgap>[125X [27XDBRationalIMGGroup(4,1,1);[127X[104X
+    [4X[28XIMG((z/h+1)^2|2h^3+2h^2+2h+1=0,h~-0.64)[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YDeclareGlobalFunction("PostCriticalMachine");[133X
+  
+  [1X5.1-3 PostCriticalMachine[101X
+  
+  [29X[2XPostCriticalMachine[102X( [3Xf[103X ) [32X function
+  [6XReturns:[106X  [33X[0;10YThe Mealy machine of [3Xf[103X's post-critical orbit.[133X
+  
+  [33X[0;0YThis  function  constructs  a  Mealy  machine  [10XP[110X  on the alphabet [10X[1][110X, which
+  describes  the  post-critical set of [3Xf[103X. It is in fact an oriented graph with
+  constant out-degree 1. It is most conveniently passed to [2XDraw[102X ([14XFR: Draw[114X).[133X
+  
+  [33X[0;0YThe  attribute  [10XCorrespondence(P)[110X  is the list of values associated with the
+  stateset of [10XP[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xz := Indeterminate(Rationals,"z");;[127X[104X
+    [4X[25Xgap>[125X [27Xm := PostCriticalMachine(z^2);[127X[104X
+    [4X[28X<Mealy machine on alphabet [ 1 ] with 2 states>[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(m);[127X[104X
+    [4X[28X   |  1[128X[104X
+    [4X[28X---+-----+[128X[104X
+    [4X[28X a | a,1[128X[104X
+    [4X[28X b | b,1[128X[104X
+    [4X[28X---+-----+[128X[104X
+    [4X[25Xgap>[125X [27XCorrespondence(m);[127X[104X
+    [4X[28X[ 0, infinity ][128X[104X
+    [4X[25Xgap>[125X [27Xm := PostCriticalMachine(z^2-1);; Display(m); Correspondence(m);[127X[104X
+    [4X[28X   |  1[128X[104X
+    [4X[28X---+-----+[128X[104X
+    [4X[28X a | c,1[128X[104X
+    [4X[28X b | b,1[128X[104X
+    [4X[28X c | a,1[128X[104X
+    [4X[28X---+-----+[128X[104X
+    [4X[28X[ -1, infinity, 0 ][128X[104X
+  [4X[32X[104X
+  

@@ -1,0 +1,141 @@
+  
+  
+  [1XIndex[101X
+  
+  [2XAddingElement[102X  3.3-7
+  [2XAddToTriangulation[102X  4.2-4
+  [2XAllInternalAddresses[102X  3.3-13
+  [2XAmalgamateFreeProduct[102X  3.1-14
+  [2XAsP1Map[102X  4.1-40
+  [2XAsPolynomialSphereMachine[102X  3.3-8
+  [2XAsSphereGroup[102X  3.1-2
+  [2XAsSphereMachine[102X  3.2-2
+  [2XAutomorphismGroup[102X  3.1-13
+  [2XAutomorphismSphereMachine[102X  3.4-1
+  [2XAutomorphismVirtualEndomorphism[102X  3.4-1
+  [2XBranchedCoveringByMonodromy[102X  4.4-1
+  [2XCleanedP1Map[102X  4.1-23
+  [2XCleanedP1Point[102X  4.1-3
+  [2XCleanedSphereMachine[102X  3.2-3
+  [2XClosestP1Point[102X  4.1-16
+  [2XCoefficientsOfP1Map[102X  4.1-28
+  [2XCollectedP1Points[102X  4.1-14
+  [2XComplexConjugate[102X  3.3-10
+  [2XComplexConjugate[102X (P1 map)  4.1-26
+  [2XCompositionP1Map[102X  4.1-24
+  [2XConjugatedP1Map[102X  4.1-27
+  [2XCriticalPointsOfP1Map[102X  4.1-39
+  [2XDBRationalIMGGroup[102X  5.1-2
+  [2XDegreeOfP1Map[102X  4.1-33
+  [2XDelaunayTriangulation[102X  4.2-3
+  [2XDenominatorP1Map[102X  4.1-30
+  [2XDerivative[102X  4.1-37
+  [2XDessinByPermutations[102X  4.4-2
+  [2XDistanceMarkedSpheres[102X  4.3-8
+  [2XDraw[102X (spider)  4.3-3
+  [2XEdgePath[102X  4.2-2
+  [2XEpimorphismToOut[102X  3.1-13
+  [2XEquatorElement[102X  3.3-5
+  [2XEquatorTwist[102X  3.3-5
+  [2XEquidistributedP1Points[102X  4.2-8
+  [2XEulerCharacteristic[102X  3.1-3
+  [2XExponentsOfSphereGroup[102X  3.1-6
+  [2XExternalAngle[102X  3.3-15
+  [2XExternalAnglesRelation[102X  3.3-14
+  [2XInfoIMG[102X  6.3-1
+  [2XIntersectionNumber[102X  3.1-12
+  [2XInverseP1Map[102X  4.1-25
+  [2XIsKneadingMachine[102X  3.3-6
+  [2XIsMarkedSphere[102X  4.3-1
+  [2XIsomorphismFreeGroup[102X  3.1-7
+  [2XIsomorphismSphereGroup[102X  3.1-2
+  [2XIsP1Map[102X  4.1-17
+  [2XIsP1Point[102X  4.1-1
+  [2XIsPeripheral[102X  3.1-10
+  [2XIsPlanarKneadingMachine[102X  3.3-6
+  [2XIsPMComplex[102X  6.1-1
+  [2XIsPolynomialSphereMachine[102X  3.2-1
+  [2XIsSphereConjugacyClass[102X  3.1-9
+  [2XIsSphereGroup[102X  3.1-1
+  [2XIsSphereMachine[102X  3.2-1
+  [2XIsSphereTriangulation[102X  4.2-1
+  [2XKneadingSequence[102X (angle)  3.3-12
+  [2XLiftOfConjugacyClass[102X  3.3-9
+  [2XLocateFaceInTriangulation[102X  4.2-6
+  [2XLocateInTriangulation[102X  4.2-6
+  [2XMandel[102X  6.2-1
+  [2XMatchP1Points[102X  4.1-15
+  [2XMating[102X  3.3-5
+  [2XMoebiusMap[102X  4.1-18
+  [2XMoebiusMap[102X (1)  4.1-18
+  [2XMoebiusMap[102X (2)  4.1-18
+  [2XMoebiusMap[102X (3)  4.1-18
+  [2XMoebiusMap[102X (6)  4.1-18
+  [2XMonodromyOfP1Map[102X  4.3-6
+  [2XNewMarkedSphere[102X  4.3-2
+  [2XNewSphereMachine[102X  3.2-4
+  [2XNonContractingSubmatrix[102X  6.2-2
+  [2XNormalizedP1Map[102X  4.5-1
+  [2XNormalizedPolynomialSphereMachine[102X  3.3-3
+  [2XNumeratorP1Map[102X  4.1-30
+  [2XOrderingOfSphereGroup[102X  3.1-5
+  [2XP1Antipode[102X  4.1-5
+  [2XP1Barycentre[102X  4.1-6
+  [2XP1Circumcentre[102X  4.1-7
+  [2XP1Coordinate[102X  4.1-2
+  [2XP1Distance[102X  4.1-8
+  [2XP1Image[102X  4.1-34
+  [2XP1infinity[102X  4.1-4
+  [2XP1MapByCoefficients[102X  4.1-29
+  [2XP1MapBySphereMachine[102X  4.5-3
+  [2XP1MapByZerosPoles[102X  4.1-31
+  [2XP1MapNormalizingP1Points[102X  4.1-20
+  [2XP1MapRotatingP1Points[102X  4.1-19
+  [2XP1MapScaling[102X  4.1-38
+  [2XP1MapSL2[102X  4.1-41
+  [2XP1Midpoint[102X  4.1-9
+  [2XP1Monomial[102X  4.1-22
+  [2XP1one[102X  4.1-4
+  [2XP1Path[102X  4.1-32
+  [2XP1Point[102X  4.1-1
+  [2XP1Point[102X (ri)  4.1-1
+  [2XP1Point[102X (s)  4.1-1
+  [2XP1PointsFamily[102X  4.1-1
+  [2XP1PreImage[102X  4.1-35
+  [2XP1PreImages[102X  4.1-36
+  [2XP1Sphere[102X  4.1-10
+  [2XP1XRatio[102X  4.1-13
+  [2XP1z[102X  4.1-21
+  [2XP1zero[102X  4.1-4
+  [2XPeripheralClasses[102X  3.1-11
+  [2XPMCOMPLEX[102X  6.1-1
+  [2XPMCOMPLEX_FAMILY[102X  6.1-1
+  [2XPMCOMPLEX_PSEUDOFIELD[102X  6.1-1
+  [2XPoirierExamples[102X  5.1-1
+  [2XPolynomialMealyMachine[102X  3.3-1
+  [2XPolynomialSphereMachine[102X  3.3-1
+  [2XPostCriticalMachine[102X  5.1-3
+  [2XPrimitive[102X  4.1-37
+  [2XRankOfSphereGroup[102X  3.1-4
+  [2XRemoveFromTriangulation[102X  4.2-5
+  [2XRotatedSpider[102X  3.3-11
+  [2XSetP1Points[102X  4.1-43
+  [2XSimplifiedSphereMachine[102X  3.3-4
+  [2XSL2P1Map[102X  4.1-42
+  [2XSphereGroup[102X  3.1-8
+  [2XSphereMachine[102X (rational function)  4.3-7
+  [2XSphereMachineAndSphereOfBranchedCovering[102X  4.3-5
+  [2XSphereMachineOfBranchedCovering[102X  4.3-5
+  [2XSphereP1[102X  4.1-11
+  [2XSphereP1Y[102X  4.1-12
+  [2XSupportingRays[102X  3.3-2
+  [2XThurstonAlgorithm[102X  4.5-2
+  [2XThurstonMatrix[102X  4.5-4
+  [2XThurstonObstruction[102X  4.5-5
+  [2XWiggledMarkedSphere[102X  4.3-4
+  [2XWiggledTriangulation[102X (wiggle moebius)  4.2-7
+  [2XWiggledTriangulation[102X (wiggle points)  4.2-7
+  [2XXRatio[102X  4.1-13
+  
+  
+  -------------------------------------------------------
