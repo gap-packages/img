@@ -330,7 +330,7 @@ int cpoly(int degree, const xcomplex poly[], xcomplex Roots[])
   unsigned int conv = 0;
 
   for (int i = 0; i <= degree; i++)
-    if (isnan(poly[i]))
+    if (isnan(__real(poly[i])) || isnan(__imag__(poly[i])))
       return -1; // otherwise we may get stuck in infinite loops
 
   while(poly[0] == xdata.ZERO) {
