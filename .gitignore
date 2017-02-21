@@ -1,3 +1,10 @@
+cnf/ar-lib
+cnf/compile
+cnf/depcomp
+cnf/missing
+gh-pages/
+src/stamp-h1
+tmp/
 Makefile
 confdefs.h
 config.log
