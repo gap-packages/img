@@ -1,3 +1,5 @@
+configure
+rsserver
 cnf/ar-lib
 cnf/compile
 cnf/depcomp
