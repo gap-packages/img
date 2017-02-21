@@ -41,6 +41,12 @@ AbstractHTML := "The <span class=\"pkgname\">IMG</span> package allows \
    GAP to manipulate iterated monodromy groups",
 PackageWWWHome := "http://laurentbartholdi.github.com/img/",
 
+SourceRepository := rec( 
+  Type := "git", 
+  URL := "https://github.com/laurentbartholdi/img"
+),
+IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+
 PackageDoc := rec(
   BookName  := "IMG",
   HTMLStart := "doc/chap0.html",

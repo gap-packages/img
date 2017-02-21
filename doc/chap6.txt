@@ -71,7 +71,7 @@
   
   [33X[0;0YThis  function starts the external program [11Xmandel[111X, by Wolf Jung. The program
   is  searched for along the standard PATH; alternatively, its location can be
-  set in the string variable EXEC@FR.mandel.[133X
+  set in the string variable EXEC@fr.mandel.[133X
   
   [33X[0;0YWhen  called  with  no  arguments, this command returns starts [11Xmandel[111X in its
   default  mode. With a rational map as argument, it starts [11Xmandel[111X pointing at

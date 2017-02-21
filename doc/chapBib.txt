@@ -2,35 +2,38 @@
   
   [1XReferences[101X
   
-  [[20XBGN03[120X]  [16XBartholdi,  L., Grigorchuk, R. I. and Nekrashevych, V.[116X, [17XFrom fractal groups
-  to  fractal  sets[117X, in Fractals in Graz 2001, Birkhäuser, Trends Math., Basel (2003),
-  25--118.
+  [[20XBGN03[120X]  [16XBartholdi, L., Grigorchuk, R. I. and Nekrashevych, V.[116X, [17XFrom fractal
+  groups  to fractal sets[117X, in Fractals in Graz 2001, Birkhäuser, Trends Math.,
+  Basel (2003), 25--118.
   
-  [[20XBFH92[120X]  [16XBielefeld, B., Fisher, Y. and Hubbard, J.[116X, [17XThe classification of critically
-  preperiodic  polynomials  as  dynamical  systems[117X,  [18XJ. Amer. Math. Soc.[118X, [19X5[119X, 4 (1992),
-  721--762.
+  [[20XBFH92[120X]  [16XBielefeld,  B.,  Fisher,  Y. and Hubbard, J.[116X, [17XThe classification of
+  critically  preperiodic  polynomials  as  dynamical  systems[117X, [18XJ. Amer. Math.
+  Soc.[118X, [19X5[119X, 4 (1992), 721--762.
   
-  [[20XDH84[120X]  [16XDouady,  A.  and  Hubbard,  J.  H.[116X, [17XÉtude dynamique des polynômes complexes.
-  Partie I[117X, Université de Paris-Sud, Département de Mathématiques, Orsay, Publications
-  Mathématiques d'Orsay [Mathematical Publications of Orsay], [19X84[119X (1984), 75 pages.
+  [[20XDH84[120X]  [16XDouady,  A.  and  Hubbard,  J.  H.[116X,  [17XÉtude  dynamique  des polynômes
+  complexes.  Partie I[117X, Université de Paris-Sud, Département de Mathématiques,
+  Orsay,  Publications  Mathématiques  d'Orsay  [Mathematical  Publications of
+  Orsay], [19X84[119X (1984), 75 pages.
   
-  [[20XDH85[120X]  [16XDouady,  A.  and  Hubbard,  J.  H.[116X, [17XÉtude dynamique des polynômes complexes.
-  Partie   II[117X,   Université   de   Paris-Sud,  Département  de  Mathématiques,  Orsay,
-  Publications  Mathématiques d'Orsay [Mathematical Publications of Orsay], [19X85[119X (1985),
-  v+154 pages, ((With the collaboration of P. Lavaurs, Tan Lei and P. Sentenac)).
+  [[20XDH85[120X]  [16XDouady,  A.  and  Hubbard,  J.  H.[116X,  [17XÉtude  dynamique  des polynômes
+  complexes. Partie II[117X, Université de Paris-Sud, Département de Mathématiques,
+  Orsay,  Publications  Mathématiques  d'Orsay  [Mathematical  Publications of
+  Orsay],  [19X85[119X (1985), v+154 pages, ((With the collaboration of P. Lavaurs, Tan
+  Lei and P. Sentenac)).
   
-  [[20XHS94[120X] [16XHubbard, J. H. and Schleicher, D.[116X, [17XThe spider algorithm[117X, in Complex dynamical
-  systems  (Cincinnati,  OH,  1994),  Amer. Math. Soc., Proc. Sympos. Appl. Math., [19X49[119X,
-  Providence, RI (1994), 155--180.
+  [[20XHS94[120X]  [16XHubbard,  J. H. and Schleicher, D.[116X, [17XThe spider algorithm[117X, in Complex
+  dynamical  systems  (Cincinnati,  OH, 1994), Amer. Math. Soc., Proc. Sympos.
+  Appl. Math., [19X49[119X, Providence, RI (1994), 155--180.
   
-  [[20XNek05[120X]  [16XNekrashevych,  V.[116X,  [17XSelf-similar  groups[117X,  American  Mathematical  Society,
-  Mathematical Surveys and Monographs, [19X117[119X, Providence, RI (2005), xii+231 pages.
+  [[20XNek05[120X]   [16XNekrashevych,   V.[116X,  [17XSelf-similar  groups[117X,  American  Mathematical
+  Society,  Mathematical  Surveys  and Monographs, [19X117[119X, Providence, RI (2005),
+  xii+231 pages.
   
-  [[20XPoi[120X] [16XPoirier, A.[116X, [17XOn postcritically finite polynomials, part 1: critical portraits[117X,
-  Stony Brook IMS 1993/5.
+  [[20XPoi[120X]  [16XPoirier,  A.[116X,  [17XOn postcritically finite polynomials, part 1: critical
+  portraits[117X, Stony Brook IMS 1993/5.
   
-  [[20XTan02[120X]  [16XTan,  D.  T.[116X, [17XQuadratische Morphismen[117X (2002), ((Diplomarbeit at ETHZ, under
-  the supervision of R. Pink)).
+  [[20XTan02[120X]  [16XTan, D. T.[116X, [17XQuadratische Morphismen[117X (2002), ((Diplomarbeit at ETHZ,
+  under the supervision of R. Pink)).
   
   
   

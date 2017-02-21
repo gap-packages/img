@@ -58,7 +58,7 @@
   
   [33X[0;0YThis  function  constructs  a  Mealy  machine  [10XP[110X  on the alphabet [10X[1][110X, which
   describes  the  post-critical set of [3Xf[103X. It is in fact an oriented graph with
-  constant out-degree 1. It is most conveniently passed to [2XDraw[102X ([14XFR: Draw[114X).[133X
+  constant out-degree 1. It is most conveniently passed to [2XDraw[102X ([14Xfr: Draw[114X).[133X
   
   [33X[0;0YThe  attribute  [10XCorrespondence(P)[110X  is the list of values associated with the
   stateset of [10XP[110X.[133X

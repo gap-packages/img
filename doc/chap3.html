@@ -209,7 +209,7 @@
 
 <h4>3.2 <span class="Heading">Sphere machines</span></h4>
 
-<p>Sphere machines are simply group FR machines (see Section <a href="/Users/laurent/.gap/pkg/fr/doc/chap3.html#X80D310EF7FD5EA44"><span class="RefLink">FR: FRMachineNC (family,free,listlist,list)</span></a>) whose underlying <code class="func">StateSet</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap3.html#X8000470D7DA7FFBD"><span class="RefLink">FR: StateSet (FR machine)</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsFRMachine);</p>
+<p>Sphere machines are simply group FR machines (see Section <a href="../../../pkg/fr/doc/chap3.html#X80D310EF7FD5EA44"><span class="RefLink">fr: FRMachineNC (family,free,listlist,list)</span></a>) whose underlying <code class="func">StateSet</code> (<a href="../../../pkg/fr/doc/chap3.html#X8000470D7DA7FFBD"><span class="RefLink">fr: StateSet (FR machine)</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsFRMachine);</p>
 
 <p><a id="X7A327CA47E574383" name="X7A327CA47E574383"></a></p>
 
@@ -234,7 +234,7 @@
 
 <p>This function creates a new sphere machine, starting from a group FR machine <var class="Arg">m</var>. If a state <var class="Arg">w</var> is specified, and that state defines the trivial FR element, then it is used as relator; if <var class="Arg">w</var> is a sphere group, then it is used as the new stateset. Finally, if no relator and no group is specified, and the product (in some ordering) of the generators is trivial, then that product is used as relator. In other cases, the method returns <code class="keyw">fail</code>.</p>
 
-<p>A standard FR machine can be recovered from a sphere machine by <code class="func">AsGroupFRMachine</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">FR: AsGroupFRMachine</span></a>), <code class="func">AsMonoidFRMachine</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">FR: AsMonoidFRMachine</span></a>), and <code class="func">AsSemigroupFRMachine</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">FR: AsSemigroupFRMachine</span></a>).</p>
+<p>A standard FR machine can be recovered from a sphere machine by <code class="func">AsGroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsGroupFRMachine</span></a>), <code class="func">AsMonoidFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsMonoidFRMachine</span></a>), and <code class="func">AsSemigroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsSemigroupFRMachine</span></a>).</p>
 
 
 <div class="example"><pre>
@@ -274,7 +274,7 @@ Relator: f1*f2*t
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewSphereMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">( attribute )</td></tr></table></div>
 <p>Returns: A new sphere machine, based on string descriptions.</p>
 
-<p>This command constructs a new sphere machine, in a format similar to <code class="func">FRGroup</code> (<a href="/Users/laurent/.gap/pkg/fr/doc/chap7.html#X7AE8F92383272329"><span class="RefLink">FR: FRGroup</span></a>); namely, the arguments are strings of the form "gen=&lt;word-1,...,word-d&gt;perm"; each <code class="code">word-i</code> is a word in the generators; and <code class="code">perm</code> is a transformation, either written in disjoint cycle or in images notation. The underlying group of the machine is a sphere group.</p>
+<p>This command constructs a new sphere machine, in a format similar to <code class="func">FRGroup</code> (<a href="../../../pkg/fr/doc/chap7.html#X7AE8F92383272329"><span class="RefLink">fr: FRGroup</span></a>); namely, the arguments are strings of the form "gen=&lt;word-1,...,word-d&gt;perm"; each <code class="code">word-i</code> is a word in the generators; and <code class="code">perm</code> is a transformation, either written in disjoint cycle or in images notation. The underlying group of the machine is a sphere group.</p>
 
 <p><code class="code">word-i</code> is allowed to be the empty string; and the "&lt;...&gt;" may be skipped altogether. Each <code class="code">word-i</code> may also contain inverses.</p>
 
@@ -303,7 +303,7 @@ Relator: f1*f2*t
 
 <h5>3.3-1 PolynomialSphereMachine</h5>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialSphereMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialSphereMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>][, <var class="Arg">options</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialMealyMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>] )</td><td class="tdright">( operation )</td></tr></table></div>
 <p>Returns: A sphere or Mealy machine.</p>
 
@@ -313,7 +313,9 @@ Relator: f1*f2*t
 
 <p>Note that, for sphere machines, the last generator of the machine produced is an adding machine, representing a loop going counterclockwise around infinity (in the compactification of <span class="SimpleMath">C</span> by a disk, this loop goes <em>clockwise</em> around that disk).</p>
 
-<p>In constructing a polynomial sphere machine, one may specify a boolean flag <var class="Arg">formal</var>, which defaults to <code class="keyw">true</code>. In a <em>formal</em> recursion, distinct angles give distinct generators; while in a non-formal recursion, distinct angles, which land at the same point in the Julia set, give a single generator. The simplest example where this occurs is angle <span class="SimpleMath">5/12</span> in the quadratic family, in which angles <span class="SimpleMath">1/3</span> and <span class="SimpleMath">2/3</span> land at the same point -- see the example below.</p>
+<p>In constructing a polynomial sphere machine, one may specify a record <var class="Arg">options</var>, which may contain the following fields: <code class="code">mealy</code> (boolean, default <code class="keyw">false</code>) specifies if a formal construction is required; <code class="code">adding</code> specifying that the adding machine should have the most compact representation; and <code class="code">orbispace</code> (boolean, default <code class="keyw">false</code>) asking the constructed group to have orbispace points of minimal degree.</p>
+
+<p>In a <em>formal</em> recursion, distinct angles give distinct generators; while in a non-formal recursion, distinct angles, which land at the same point in the Julia set, give a single generator. The simplest example where this occurs is angle <span class="SimpleMath">5/12</span> in the quadratic family, in which angles <span class="SimpleMath">1/3</span> and <span class="SimpleMath">2/3</span> land at the same point -- see the example below.</p>
 
 <p>The attribute <code class="code">Correspondence(m)</code> records the angles landing on the generators: <code class="code">Correspondence(m)[i]</code> is a list <code class="code">[a,s]</code> where <span class="SimpleMath">a</span> is an angle landing on generator <code class="code">i</code> and <span class="SimpleMath">s</span> is <code class="keyw">"Julia"</code> or <code class="keyw">"Fatou"</code>.</p>
 
@@ -350,14 +352,13 @@ Relator: f3*f2*f1
 ----+---------------+---------+
 Relator: f4*f3*f2*f1
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialSphereMachine(2,[],[5/12]);</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialSphereMachine(2,[],[5/12]);</span>
-&lt;FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]&gt;
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(last);</span>
-[ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialSphereMachine(2,[],[5/12],false);</span>
 &lt;FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]&gt;
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(last);</span>
 [ [ [ 1/3, 2/3 ], "Julia" ], [ [ 5/12 ], "Julia" ], [ [ 5/6 ], "Julia" ] ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">PolynomialSphereMachine(2,[],[5/12],rec(formal:=true));</span>
+&lt;FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Correspondence(last);</span>
+[ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ]
 </pre></div>
 
 <p>The following construct the examples in Poirier's paper:</p>
@@ -526,11 +527,12 @@ true
 
 <div class="example"><pre>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># the Tan-Shishikura examples</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(MPC_PSEUDOFIELD);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetP1Points(PMCOMPLEX);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(@IMG.field);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">c := RootsFloat((z^2+1)^3*z^2+1);;</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">am := List(a,a-&gt;SphereMachine((a-1)*(3*z^2-2*z^3)+1));;</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cm := List(c,c-&gt;SphereMachine(z^3+c));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">am := List(a,a-&gt;SphereMachine((a-1)*(3*P1z^2-2*P1z^3)+1));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">cm := List(c,c-&gt;SphereMachine(P1z^3+c));;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := ListX(am,cm,Mating);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># m[1] is realizable</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">P1MapBySphereMachine(m[1]);</span>
@@ -649,7 +651,7 @@ Relator: c*a*b*y*z*x
 
 <div class="example"><pre>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">M := PolynomialMealyMachine(2,[1/7],[]);</span>
-!!!
+&lt;Mealy machine on alphabet [ 1 .. 2 ] with 4 states&gt;
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Mi := AsPolynomialSphereMachine(M);</span>
 !!!
 </pre></div>
@@ -844,7 +846,8 @@ Relator: f3*f2*f1
 
 
 <div class="example"><pre>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(COMPLEX_FIELD);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetP1Points(PMCOMPLEX);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Indeterminate(@IMG.field);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput"># a Sierpinski carpet map without multicurves</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">m := SphereMachine((z^2-z^-2)/2/COMPLEX_I);</span>
 &lt;FR machine with alphabet [ 1, 2, 3, 4 ] on Group( [ f1, f2, f3, f4 ] )/[ f3*f2*f1*f4 ]&gt;

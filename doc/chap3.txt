@@ -140,8 +140,8 @@
   
   [1X3.2 [33X[0;0YSphere machines[133X[101X
   
-  [33X[0;0YSphere  machines  are  simply group FR machines (see Section [14XFR: FRMachineNC
-  (family,free,listlist,list)[114X)  whose  underlying  [2XStateSet[102X  ([14XFR: StateSet (FR
+  [33X[0;0YSphere  machines  are  simply group FR machines (see Section [14Xfr: FRMachineNC
+  (family,free,listlist,list)[114X)  whose  underlying  [2XStateSet[102X  ([14Xfr: StateSet (FR
   machine)[114X)    is    a    sphere   group.   DeclareProperty("IsSphereMachine",
   IsFRMachine);[133X
   
@@ -182,8 +182,8 @@
   is used as relator. In other cases, the method returns [9Xfail[109X.[133X
   
   [33X[0;0YA   standard   FR  machine  can  be  recovered  from  a  sphere  machine  by
-  [2XAsGroupFRMachine[102X     ([14XFR:    AsGroupFRMachine[114X),    [2XAsMonoidFRMachine[102X    ([14XFR:
-  AsMonoidFRMachine[114X), and [2XAsSemigroupFRMachine[102X ([14XFR: AsSemigroupFRMachine[114X).[133X
+  [2XAsGroupFRMachine[102X     ([14Xfr:    AsGroupFRMachine[114X),    [2XAsMonoidFRMachine[102X    ([14Xfr:
+  AsMonoidFRMachine[114X), and [2XAsSemigroupFRMachine[102X ([14Xfr: AsSemigroupFRMachine[114X).[133X
   
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27Xm := UnderlyingFRMachine(BasilicaGroup);[127X[104X
@@ -221,7 +221,7 @@
   [6XReturns:[106X  [33X[0;10YA new sphere machine, based on string descriptions.[133X
   
   [33X[0;0YThis command constructs a new sphere machine, in a format similar to [2XFRGroup[102X
-  ([14XFR:   FRGroup[114X);   namely,   the   arguments   are   strings   of  the  form
+  ([14Xfr:   FRGroup[114X);   namely,   the   arguments   are   strings   of  the  form
   "gen=<word-1,...,word-d>perm";  each [10Xword-i[110X is a word in the generators; and
   [10Xperm[110X  is  a  transformation,  either  written in disjoint cycle or in images
   notation. The underlying group of the machine is a sphere group.[133X
@@ -263,7 +263,7 @@
   
   [1X3.3-1 PolynomialSphereMachine[101X
   
-  [29X[2XPolynomialSphereMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X] ) [32X operation
+  [29X[2XPolynomialSphereMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X][, [3Xoptions[103X] ) [32X operation
   [29X[2XPolynomialMealyMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X] ) [32X operation
   [6XReturns:[106X  [33X[0;10YA sphere or Mealy machine.[133X
   
@@ -284,12 +284,18 @@
   infinity  (in  the compactification of [22XC[122X by a disk, this loop goes [13Xclockwise[113X
   around that disk).[133X
   
-  [33X[0;0YIn  constructing a polynomial sphere machine, one may specify a boolean flag
-  [3Xformal[103X,  which defaults to [9Xtrue[109X. In a [13Xformal[113X recursion, distinct angles give
-  distinct generators; while in a non-formal recursion, distinct angles, which
-  land  at  the  same  point  in  the  Julia set, give a single generator. The
-  simplest example where this occurs is angle [22X5/12[122X in the quadratic family, in
-  which angles [22X1/3[122X and [22X2/3[122X land at the same point -- see the example below.[133X
+  [33X[0;0YIn  constructing  a  polynomial  sphere  machine,  one  may specify a record
+  [3Xoptions[103X,  which  may  contain  the following fields: [10Xmealy[110X (boolean, default
+  [9Xfalse[109X)  specifies  if  a  formal construction is required; [10Xadding[110X specifying
+  that  the  adding  machine  should have the most compact representation; and
+  [10Xorbispace[110X  (boolean,  default  [9Xfalse[109X)  asking  the constructed group to have
+  orbispace points of minimal degree.[133X
+  
+  [33X[0;0YIn  a [13Xformal[113X recursion, distinct angles give distinct generators; while in a
+  non-formal  recursion,  distinct angles, which land at the same point in the
+  Julia  set,  give a single generator. The simplest example where this occurs
+  is  angle  [22X5/12[122X in the quadratic family, in which angles [22X1/3[122X and [22X2/3[122X land at
+  the same point -- see the example below.[133X
   
   [33X[0;0YThe   attribute   [10XCorrespondence(m)[110X   records  the  angles  landing  on  the
   generators: [10XCorrespondence(m)[i][110X is a list [10X[a,s][110X where [22Xa[122X is an angle landing
@@ -329,14 +335,13 @@
     [4X[28X----+---------------+---------+[128X[104X
     [4X[28XRelator: f4*f3*f2*f1[128X[104X
     [4X[25Xgap>[125X [27XPolynomialSphereMachine(2,[],[5/12]);[127X[104X
-    [4X[25Xgap>[125X [27XPolynomialSphereMachine(2,[],[5/12]);[127X[104X
-    [4X[28X<FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]>[128X[104X
-    [4X[25Xgap>[125X [27XCorrespondence(last);[127X[104X
-    [4X[28X[ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ][128X[104X
-    [4X[25Xgap>[125X [27XPolynomialSphereMachine(2,[],[5/12],false);[127X[104X
     [4X[28X<FR machine with alphabet [ 1, 2 ] and adder f4 on Group( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>[128X[104X
     [4X[25Xgap>[125X [27XCorrespondence(last);[127X[104X
     [4X[28X[ [ [ 1/3, 2/3 ], "Julia" ], [ [ 5/12 ], "Julia" ], [ [ 5/6 ], "Julia" ] ][128X[104X
+    [4X[25Xgap>[125X [27XPolynomialSphereMachine(2,[],[5/12],rec(formal:=true));[127X[104X
+    [4X[28X<FR machine with alphabet [ 1, 2 ] and adder f5 on Group( [ f1, f2, f3, f4, f5 ] )/[ f5*f4*f3*f2*f1 ]>[128X[104X
+    [4X[25Xgap>[125X [27XCorrespondence(last);[127X[104X
+    [4X[28X[ [ 1/3, "Julia" ], [ 5/12, "Julia" ], [ 2/3, "Julia" ], [ 5/6, "Julia" ] ][128X[104X
   [4X[32X[104X
   
   [33X[0;0YThe following construct the examples in Poirier's paper:[133X
@@ -520,11 +525,12 @@
   
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27X# the Tan-Shishikura examples[127X[104X
-    [4X[25Xgap>[125X [27Xz := Indeterminate(MPC_PSEUDOFIELD);;[127X[104X
+    [4X[25Xgap>[125X [27XSetP1Points(PMCOMPLEX);[127X[104X
+    [4X[25Xgap>[125X [27Xz := Indeterminate(@IMG.field);;[127X[104X
     [4X[25Xgap>[125X [27Xa := RootsFloat((z-1)*(3*z^2-2*z^3)+1);;[127X[104X
     [4X[25Xgap>[125X [27Xc := RootsFloat((z^2+1)^3*z^2+1);;[127X[104X
-    [4X[25Xgap>[125X [27Xam := List(a,a->SphereMachine((a-1)*(3*z^2-2*z^3)+1));;[127X[104X
-    [4X[25Xgap>[125X [27Xcm := List(c,c->SphereMachine(z^3+c));;[127X[104X
+    [4X[25Xgap>[125X [27Xam := List(a,a->SphereMachine((a-1)*(3*P1z^2-2*P1z^3)+1));;[127X[104X
+    [4X[25Xgap>[125X [27Xcm := List(c,c->SphereMachine(P1z^3+c));;[127X[104X
     [4X[25Xgap>[125X [27Xm := ListX(am,cm,Mating);;[127X[104X
     [4X[25Xgap>[125X [27X# m[1] is realizable[127X[104X
     [4X[25Xgap>[125X [27XP1MapBySphereMachine(m[1]);[127X[104X
@@ -660,7 +666,7 @@
   
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27XM := PolynomialMealyMachine(2,[1/7],[]);[127X[104X
-    [4X[28X!!![128X[104X
+    [4X[28X<Mealy machine on alphabet [ 1 .. 2 ] with 4 states>[128X[104X
     [4X[25Xgap>[125X [27XMi := AsPolynomialSphereMachine(M);[127X[104X
     [4X[28X!!![128X[104X
   [4X[32X[104X
@@ -872,7 +878,8 @@
   generators of [3XG[103X.[133X
   
   [4X[32X  Example  [32X[104X
-    [4X[25Xgap>[125X [27Xz := Indeterminate(COMPLEX_FIELD);;[127X[104X
+    [4X[25Xgap>[125X [27XSetP1Points(PMCOMPLEX);[127X[104X
+    [4X[25Xgap>[125X [27Xz := Indeterminate(@IMG.field);;[127X[104X
     [4X[25Xgap>[125X [27X# a Sierpinski carpet map without multicurves[127X[104X
     [4X[25Xgap>[125X [27Xm := SphereMachine((z^2-z^-2)/2/COMPLEX_I);[127X[104X
     [4X[28X<FR machine with alphabet [ 1, 2, 3, 4 ] on Group( [ f1, f2, f3, f4 ] )/[ f3*f2*f1*f4 ]>[128X[104X
