@@ -14,14 +14,16 @@ AC_CONFIG_AUX_DIR([cnf])
 AC_CONFIG_HEADERS([src/config.h:cnf/config.h.in])
 LT_INIT([disable-static dlopen win32-dll])
 
-AC_PREFIX_DEFAULT([${PWD}])
+### AC_PREFIX_DEFAULT([${PWD}])
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
-AC_PROG_JAVAC
-AC_CANONICAL_TARGET
 AX_CC_MAXOPT
+AC_PROG_JAVAC
+### AC_CANONICAL_TARGET
+
+AC_FIND_GAP
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -38,10 +40,8 @@ AC_CHECK_HEADERS(malloc.h)
 AC_CHECK_LIB(m,sincos,AC_DEFINE(HAVE_SINCOS,1,do we have sincos?))
 
 # Locates GAP
-AC_FIND_GAP
 
-AC_SYS_IS_CYGWIN
-AC_SYS_IS_DARWIN
+AC_CYGWIN
 
 # External libraries configuration
 EXTERN="\$(CURDIR)/bin/$TARGET/extern"
