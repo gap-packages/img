@@ -1,43 +1,89 @@
-RSS := rec(f := fail, server := fail);
+################################################################
+# interface to the Riemann Sphere Server
+
+#TODO:
+# -- acknowledge should be different from "create" message;
+#    have RSS.ack(filters) do that
+# -- make systematic use of RSS.session, sometimes of RSS.window
+# -- make better use of hooks: they should also trigger functions
+#    in case a button is pressed, e.g.
+# -- implement all commands: button, arc, etc. as high-level
+
+RSS := rec(f := fail, # the file descriptor
+           server := fail, # the daemon: rec(address,port,client-url)
+           queue := [], # messages waiting to be delivered
+           session := fail, # the default session id
+           window := fail, # the default window id
+           readhookslot := fail # the slot in OnCharReadHookInFuncs
+           );
+
+OnCharReadHookActive := true; # we'll use read hooks
 
 ################################################################ low level IO
-RSS.serve := function()
-    local s, i;
+RSS.startdaemon := function()
+    local server, s, i;
     if RSS.server<>fail then
         Error("Server seems already started");
     fi;
-    RSS.server := IO_Popen3(IO_FindExecutable("node"),[Filename(Directory(PackageInfo("img")[1].InstallationPath),"rsserver/rsserver.js")]);
+    server := IO_Popen3(IO_FindExecutable("node"),[Filename(Directory(PackageInfo("img")[1].InstallationPath),"rsserver/rsserver.js")]);
     for i in [1..3] do
-        s := SplitString(IO_ReadLine(RSS.server.stdout),"\n")[1];
+        s := IO_ReadLine(server.stdout);
+        if s<>"" then Remove(s); fi; # remove \n
         Info(InfoIMG,1,s);
         s := SplitString(s," ,");
         if i=2 then
-            if s{[1..5]}<>["WebSocket","server","is","running.","Type"] then
-                Error("Bad reply from server");
+            if Length(s)<5 or s{[1..5]}<>["WebSocket","server","is","running.","Type"] then
+                Error("Bad reply from daemon, no Websocket server");
             fi;
-            RSS.server.client := s[6];
+            server.client := s[6];
         elif i=3 then
-            if s{[1..5]}<>["TCP","server","is","running","at"] then
-                Error("Bad reply from server");
+            if Length(s)<5 or s{[1..5]}<>["TCP","server","is","running","at"] then
+                Error("Bad reply from daemon, no TCP server");
             fi;
-            RSS.server.address := s[6];
-            RSS.server.port := Int(s[9]);
+            server.address := s[6];
+            server.port := Int(s[9]);
         fi;
     od;
+    RSS.server := server;
 end;
 
-RSS.client := function()
-    local status;
-    if IO_fork()=0 then
-        #@ obviously the executable place should change
-        IO_execv("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",["http://127.0.0.1:1729"]);
-        IO_exit(-1);
+RSS.startclient := function(arg)
+    local status, url, cmd;
+    if arg=[] then
+        if IsRecord(RSS.server) then
+            url := RSS.server.client;
+        else
+            Error("Either start the daemon with RSS.startdaemon() or give a URL for the client-side of the daemon");
+        fi;
+    elif Length(arg)=1 and IsString(arg[1]) then
+        url := arg[1];
+    else
+        Error("Use: RSS.startclient([url::string])");
     fi;
+    
+    #@ do something smarter to find the executable
+    if POSITION_SUBSTRING(GAPInfo.Architecture,"darwin",0)=fail then
+        cmd := "chrome";
+    else
+        cmd := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    fi;
+    
+    status := IO_fork();
+    if status=0 then
+        IO_execv(cmd,[url]);
+        IO_exit(-1); # shouldn't happen
+    fi;
+    if status < 0 then
+        Error("Couldn't start the client ",cmd);
+    fi;
+    
     status := RSS.recv(true);
     if status.attributes.status<>"created" then
         Error("Couldn't create browser session");
     fi;
-    return rec(session:=status.attributes.session,window:=status.content[1].attributes.id);
+    
+    RSS.session := status.attributes.session;
+    RSS.window := status.content[1].attributes.id;
 end;
 
 RSS.open := function(arg)
@@ -45,7 +91,7 @@ RSS.open := function(arg)
     
     if arg=[] then
         if RSS.server=fail then
-            RSS.serve();
+            RSS.startdaemon();
         fi;
         address := RSS.server.address;
         port := RSS.server.port;
@@ -53,7 +99,7 @@ RSS.open := function(arg)
         address := arg[1];
         port := arg[2];
     else
-        Error("Use: RSS.open [<address> <port>]");
+        Error("Use: RSS.open([<address::string> <port::int>])");
     fi;
 
     if RSS.f <> fail then
@@ -64,21 +110,25 @@ RSS.open := function(arg)
 
     if IO_connect(t,IO_MakeIPAddressPort(address,port)) = fail then
         IO_close(t);
+        Error("Could not connect to daemon");
         return fail;
     fi;
     
     RSS.f := IO_WrapFD(t,16384,false); # need buffered IO for IO_ReadLine
     RSS.queue := []; # messages waiting to be delivered
     
+    RSS.readhookslot := Length(OnCharReadHookInFuncs)+1;
+    Add(OnCharReadHookInFuncs, function(slotindex) RSS.enqueue(); end);
+    Add(OnCharReadHookInFds, t);
+
     s := RSS.recv(true);
     
-    #@ what should we do in case multiple sessions are open?
-    #@ should we store the session / window id in RSS so they can be used by default by the commands?
-    if s.content=0 then
-        return rec(); # no open session
+    if RSS.session=fail or s.content=0 then
+        RSS.startclient();
     else
         s := s.content[1];
-        return rec(session:=s.attributes.id,window:=s.content[1].attributes.id);
+        RSS.session := s.attributes.id;
+        RSS.window := s.content[1].attributes.id;
     fi;
 end;
 
@@ -88,13 +138,24 @@ RSS.close := function()
     fi;
     
     IO_Close(RSS.f);
-    
+    Remove(OnCharReadHookInFuncs, RSS.readhookslot);
+    Remove(OnCharReadHookInFds, RSS.readhookslot);
     RSS.f := fail;
 end;
 
 RSS.send := function(a,r)
     IO_Write(RSS.f, StringXMLElement(rec(name := "downdata",
             attributes := a, content := r))[1]);
+end;
+
+RSS.enqueue := function()
+    local c, s;
+    c := IO_ReadLine(RSS.f);
+    for s in ParseTreeXMLString(c).content do
+        if s.name<>"PCDATA" then
+            Add(RSS.queue,s);
+        fi;
+    od;
 end;
 
 RSS.recv := function(arg)
@@ -110,12 +171,7 @@ RSS.recv := function(arg)
         
     while RSS.queue=[] do
         if not (blocking or IO_HasData(RSS.f)) then return fail; fi;
-        c := IO_ReadLine(RSS.f);
-        for s in ParseTreeXMLString(c).content do
-            if s.name<>"PCDATA" then
-                Add(RSS.queue,s);
-            fi;
-        od;
+        RSS.enqueue();
     od;
     s := Remove(RSS.queue,1);
     if s.name="error" then
@@ -214,27 +270,19 @@ RSS.releasebutton := function(sid,oid)
     return status.content[1].attributes.id;
 end;
 
-RSS.samplewindow := function(sid,wid,map)
+RSS.samplewindow := function(map)
     local cid;
-    RSS.releasebutton(sid,wid);
-    cid := RSS.newobject(sid,wid,"canvas");
-    RSS.populateobject(sid,cid,[map]);
-    RSS.populateobject(sid,cid,[rec(name:="point",attributes:=rec(),content:=[p1point2xml(P1Point(1.0,0.5))])]);
+    if IsP1Map(map) then map := function2xml(map); fi;
+    RSS.releasebutton(RSS.session,RSS.window);
+    cid := RSS.newobject(RSS.session,RSS.window,"canvas");
+    RSS.populateobject(RSS.session,cid,[map]);
+    RSS.populateobject(RSS.session,cid,[rec(name:="point",attributes:=rec(),content:=[p1point2xml(P1Point(1.0,0.5))])]);
 end;
-
-#RSS.serve();
-#RSS.open("localhost",1728);
 
 newton := n->rec(name:="function",attributes:=rec(type:="newton",degree:=String(n)),content:=[]);
 
-basilica := function2xml(P1z^2-1);
-
-inversebasilica := function2xml(CompositionP1Map(P1z^-1,P1z^2-1,P1z^-1));
-
-basilica1234 := fail;
-
-func13 := fail;
+#inversebasilica := function2xml(CompositionP1Map(P1z^-1,P1z^2-1,P1z^-1));
 
 # sample:
-# RSS.serve();
-# RSS.
+# RSS.open();
+# RSS.samplewindow(P1z^2-1);

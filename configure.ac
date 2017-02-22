@@ -21,11 +21,12 @@ AM_MAINTAINER_MODE
 AM_PROG_AR
 
 # libtool
-LT_PREREQ([2.4.6])
+LT_PREREQ([2.4.2])
 LT_INIT([disable-static dlopen win32-dll])
 
 # compilers
 AC_PROG_CC
+AC_PROG_CC_STDC
 AC_PROG_CXX
 AX_CC_MAXOPT
 AC_PROG_JAVAC

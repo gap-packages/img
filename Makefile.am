@@ -7,8 +7,9 @@ LEVMAR=extern/levmar-2.6
 LIBDOGLEG=extern/libdogleg-0.09
 
 lib_LTLIBRARIES = img.la
+img_la_DEPENDENCIES = liblevmar
 img_la_SOURCES = src/img.c src/p1.c src/rpoly.c
-img_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H
+img_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H -I$(LEVMAR)
 # Note that the latter is only for GAP 4.4.12
 img_la_LDFLAGS = -module -avoid-version -L$(BINARCHDIR)/lib -llevmar -llapack -lblas
 if SYS_IS_CYGWIN
@@ -18,7 +19,7 @@ endif
 bin_PROGRAMS = layout hsolve
 layout_DEPENDENCIES = libdogleg
 layout_SOURCES = src/layout.C
-layout_CPPFLAGS = -I$(LIBDOGLEG)
+layout_CPPFLAGS = -I$(LIBDOGLEG) $(CHOLMOD_CFLAGS)
 layout_LDFLAGS = -L$(BINARCHDIR)/lib
 layout_LDADD = -ldogleg -lcholmod
 
@@ -42,7 +43,7 @@ liblevmar:
 libdogleg:
 	mkdir -p "$(BINARCHDIR)/include" "$(BINARCHDIR)/lib"
 	if [[ ! -f "$(BINARCHDIR)/include/dogleg.h" ]]; then \
-	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS=$(CHOLMOD_CFLAGS) && \
+	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 $(CHOLMOD_CFLAGS)" && \
 	    cp $(LIBDOGLEG)/libdogleg.a $(BINARCHDIR)/lib/ && \
 	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/ && \
 	    if [[ "$(shell uname)" = Darwin ]]; then \

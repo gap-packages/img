@@ -63,6 +63,7 @@ ReadPackage("img", "gap/markedsphere.gi");
 ReadPackage("img", "gap/hurwitz.gi");
 ReadPackage("img", "gap/thurston.gi");
 ReadPackage("img", "gap/examples.gi");
+ReadPackage("img", "gap/rsserver.g");
 #############################################################################
 
 while not IsEmpty(POSTHOOK@img) do Remove(POSTHOOK@img)(); od;
