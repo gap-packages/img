@@ -28,6 +28,13 @@ typedef ldcomplex p1point;
 Obj TYPE_P1POINT, TYPE_P1MAP, IsP1Point, IsP1Map,
   NewFloat, IsPMComplex, P1infinity, P1zero;
 
+static Obj NEW_DATOBJ (size_t size, Obj type)
+{
+  Obj obj = NewBag(T_DATOBJ,sizeof(Obj)+size);
+  TYPE_DATOBJ(obj) = type;
+  return obj;
+}
+  
 static void guarantee(Obj filter, const char *name, Obj obj)
 {
   while (!IS_DATOBJ(obj) || DoFilter(filter, obj) != True) {
@@ -68,8 +75,7 @@ static p1point GET_P1POINT(Obj obj) {
 
 static Obj NEW_P1POINT (p1point p)
 {
-  Obj obj = NewBag(T_DATOBJ,sizeof(Obj)+sizeof p);
-  SET_TYPE_DATOBJ(obj,TYPE_P1POINT);
+  Obj obj = NEW_DATOBJ(sizeof p, TYPE_P1POINT);
   memcpy (ADDR_OBJ(obj)+1, &p, sizeof p);
   return obj;
 }
@@ -434,12 +440,9 @@ static ldcomplex *p1map_denom(Obj obj) {
 
 static Obj NEW_P1MAP (int degree, ldcomplex *oldnumer, ldcomplex *olddenom)
 {
-  Obj obj;
-  int i;
-  obj = NewBag(T_DATOBJ,sizeof(Obj)+(degree+1)*2*sizeof(ldcomplex));
-  SET_TYPE_DATOBJ(obj,TYPE_P1MAP);
+  Obj obj = NEW_DATOBJ((degree+1)*2*sizeof(ldcomplex), TYPE_P1MAP);
   ldcomplex *numer = p1map_numer(obj), *denom = p1map_denom(obj);
-  for (i = 0; i <= degree; i++)
+  for (int i = 0; i <= degree; i++)
     numer[i] = oldnumer[i], denom[i] = olddenom[i];
   return obj;
 }
