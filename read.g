@@ -33,7 +33,10 @@ end);
 #R Read the install files.
 ##
 ReadPackage("img", "gap/helpers.gi");
+ReadPackage("img", "gap/machine.gi");
+ReadPackage("img", "gap/sphere.gi");
 ReadPackage("img", "gap/complex.gi");
+ReadPackage("img", "gap/rsserver.g");
 ReadPackage("img", "gap/p1.gi");
 ReadPackage("img", "gap/p1_ieee754.gi");
 if @.dll then
@@ -55,15 +58,12 @@ else
     @.o := NewFloat(IsPMComplex,1);
     @.reps := IEEE754FLOAT.constants.EPSILON;
 fi;
-ReadPackage("img", "gap/sphere.gi");
 ReadPackage("img", "gap/triangulations.gi");
 ReadPackage("img", "gap/spider.gi");
-ReadPackage("img", "gap/machine.gi");
 ReadPackage("img", "gap/markedsphere.gi");
 ReadPackage("img", "gap/hurwitz.gi");
 ReadPackage("img", "gap/thurston.gi");
 ReadPackage("img", "gap/examples.gi");
-ReadPackage("img", "gap/rsserver.g");
 #############################################################################
 
 while not IsEmpty(POSTHOOK@img) do Remove(POSTHOOK@img)(); od;

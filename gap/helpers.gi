@@ -139,32 +139,6 @@ end);
 #############################################################################
 
 ################################################################
-# external programs
-@.javaopts := ["-J-Xmx512m"];
-
-BindGlobal("EXEC@", rec());
-CallFuncList(function(file)
-    if file<>fail then Read(file); fi;
-end,[Filename(DirectoriesPackagePrograms("img"),"files.g")]);
-
-BindGlobal("JAVAPLOT@", function(input)
-    local r, s;
-    CHECKEXEC@FR("appletviewer");
-
-    s := "";
-    r := Concatenation(@.javaopts,[Concatenation("-J-Djava.security.policy=",Filename(DirectoriesPackageLibrary("img","java"),"javaplot.pol")), Filename(DirectoriesPackageLibrary("img","java"),"javaplot.html")]);
-    if ValueOption("detach")<>fail then
-        r := EXECINSHELL@FR(input,Concatenation(EXEC@.appletviewer," ",r[1]," ",r[2]),true);
-    else
-        r := Process(DirectoryCurrent(), EXEC@.appletviewer, input,
-                     OUTPUTTEXTSTRING@FR(s), r);
-    fi;
-    if r<>"" and r<>0 then
-        Error("JAVAPLOT: error ",r,": ",s);
-    fi;
-end);
-
-################################################################
 # call Mandel
 InstallGlobalFunction(Mandel, function(arg)
     local f, a, b, c, d, cmd;

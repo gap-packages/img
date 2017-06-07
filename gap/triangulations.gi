@@ -771,81 +771,74 @@ BindGlobal("PRINTEDGE@", function(f,e,col,sep)
     od;    
 end);
 
-BindGlobal("PRINTPOINTS@", function(f,t,extrapt)
-    local i, x, n, arcs, labels;
+BindGlobal("DRAWPOINTS@", function(cid,t,extrapoints)
+    local i, label, arcs, labels;
+    
+    return;
     
     arcs := ValueOption("noarcs")=fail;
     labels := ValueOption("nolabels")=fail;
     
-    if arcs then
-        n := Length(t!.v)+Length(t!.f);
-    else
-        n := Number(t!.v,v->not IsFake(v));
-    fi;
-    PrintTo(f, "POINTS ",n+Length(extrapt),"\n");
     for i in t!.v do
         if IsFake(i) and arcs then
-            PRINTPT@(f, Pos(i), @.ro, " 0.5");
+            RSS.putpoint(cid, Pos(i), "", 0.5);
         elif not IsFake(i) then
             if labels then
-                x := ViewString(CleanedP1Point(Pos(i),@.p1eps));
-                RemoveCharacters(x,"<>");
-                x := Concatenation(" 2.0 ",x);
+                label := ViewString(CleanedP1Point(Pos(i),@.p1eps));
+                RemoveCharacters(label,"<>");
             else
-                x := " 2.0";
+                label := "";
             fi;
-            PRINTPT@(f, Pos(i), @.ro, x);
+            RSS.putpoint(cid, Pos(i), label, 2.0);
         fi;
     od;
     if arcs then
-        for i in t!.f do PRINTPT@(f, Pos(i), @.ro, " 1.0"); od;
+        for i in t!.f do RSS.putpoint(cid, Pos(i), 1.0); od;
     fi;
-    for i in extrapt do PRINTPT@(f, Pos(i), @.ro, " 0.5"); od;
+    for i in extrapoints do RSS.putpoint(cid, Pos(i), 0.5); od;
 end);
 
-BindGlobal("PRINTARCS@", function(f, edges, arcs, radius)
+BindGlobal("DRAWARCS@", function(f, edges, arcs)
     local a, e, j, k;
+    
     if ValueOption("noarcs")<>fail then
-        PrintTo(f, "ARCS 0\n");
-    else
-        PrintTo(f, "ARCS ", Length(edges)+Length(arcs),"\n");
-        for e in edges do
-            if From(e)!.index>To(e)!.index then # print only in 1 direction
-                continue;
-            fi;
-            j := [128,64,64];
-            k := [64,128,64];
-            if not (HasGroupElement(e) and IsOne(GroupElement(e))) then
-                j := [255,64,64];
-            else
-                k := [64,255,64];
-            fi;
-            PRINTEDGE@(f, e, j, radius);
-            PRINTARC@(f, [Pos(Left(e)),Pos(e),Pos(Right(e))], k, radius);
-        od;
-        for a in arcs do PRINTARC@(f, a[3], a[1], a[2], radius); od;
+        return;
     fi;
+    
+    return;
+    
+    PrintTo(f, "ARCS ", Length(edges)+Length(arcs),"\n");
+    for e in edges do
+        if From(e)!.index>To(e)!.index then # print only in 1 direction
+            continue;
+        fi;
+        j := [128,64,64];
+        k := [64,128,64];
+        if not (HasGroupElement(e) and IsOne(GroupElement(e))) then
+            j := [255,64,64];
+        else
+            k := [64,255,64];
+        fi;
+        PRINTEDGE@(f, e, j, 1.0);
+        PRINTARC@(f, [Pos(Left(e)),Pos(e),Pos(Right(e))], k, 1.0);
+    od;
+    for a in arcs do PRINTARC@(f, a[3], a[1], a[2], 1.0); od;
 end);
 
 InstallMethod(Draw, "(IMG) for a triangulation",
         [IsSphereTriangulation],
         function(t)
-    local s, f;
-    s := ""; f := OUTPUTTEXTSTRING@FR(s);
+    local cid;
     
-    if ValueOption("upper")<>fail then
-        PrintTo(f,"UPPER");
-    fi;
-    if ValueOption("lower")<>fail then
-        PrintTo(f,"LOWER");
-    fi;
-    
-    PRINTPOINTS@(f,t,[]);
-    PRINTARCS@(f,t!.e,[],@.ro);
-    
-    Info(InfoIMG,3,"calling javaplot with:\n",s);
-    JAVAPLOT@(InputTextString(s));
+    #if ValueOption("upper")<>fail then fi;
+    #if ValueOption("lower")<>fail then fi;
+
+    RSS.open();
+    cid := RSS.newcanvas();
+    DRAWPOINTS@(cid,t,[]);
+    DRAWARCS@(cid,t!.e,[]);
 end);
+
 ##############################################################################
 
 #E triangulations.gi . . . . . . . . . . . . . . . . . . . . . . . .ends here

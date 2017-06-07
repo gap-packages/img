@@ -28,66 +28,36 @@ InstallMethod(String, "(IMG) for a point in Teichmuller space",
 
 INSTALLPRINTERS@(IsMarkedSphere);
 
-BindGlobal("STRINGCOMPLEX@",
-    z->CONCAT@FR(RealPart(z)," ",ImaginaryPart(z)));
-
 InstallMethod(Draw, "(IMG) for a point in Teichmuller space",
         [IsMarkedSphere],
         function(spider)
-    local a, i, j, k, s, f, t, points, arcs;
-    s := ""; f := OUTPUTTEXTSTRING@FR(s);
+    local extrapoints, extraarcs, cid;
     
-    if ValueOption("upper")<>fail then
-        PrintTo(f,"UPPER\n");
-    fi;
-    if ValueOption("lower")<>fail then
-        PrintTo(f,"LOWER\n");
-    fi;
-    if IsBound(spider!.map) and ValueOption("julia")<>fail then
-        t := DegreeOfP1Map(spider!.map);
-        PrintTo(f,"FUNCTION");
-        a := List(CoefficientsOfP1Map(spider!.map),ShallowCopy);
-        for i in [1..t+1] do PrintTo(f," ",STRINGCOMPLEX@(a[1][i])); od;
-        for i in [1..t+1] do PrintTo(f," ",STRINGCOMPLEX@(a[2][i])); od;
-        PrintTo(f,"\nCYCLES");
-        if IsBound(spider!.cycle) then
-            for i in spider!.cycle do
-                if i[1]=P1infinity then
-                    PrintTo(f," Infinity any");
-                else
-                    PrintTo(f," ",STRINGCOMPLEX@(P1Coordinate(i[1])));
-                fi;
-                PrintTo(f," ",i[2]," ",i[3]);
-            od;
-        fi;
-        t := ValueOption("julia");
-        if IsList(t) then # size, maxiter
-            i := t[1]; j := t[1];
-        elif IsPosInt(t) then
-            i := t; j := 100;
-        else
-            i := 500; j := 100;
-        fi;
-        PrintTo(f,"\nIMAGE ",i," ",j,"\n");
+    RSS.open();
+    cid := RSS.newcanvas();
+    if IsBound(spider!.map) and ValueOption("nojulia")=fail then
+        RSS.putmap(cid,spider!.map);
     fi;
     
     if IsBound(spider!.points) then
-        points := spider!.points;
+        extrapoints := spider!.points;
     else
-        points := [];
+        extrapoints := [];
     fi;
     if IsBound(spider!.arcs) then
-        arcs := spider!.arcs;
+        extraarcs := spider!.arcs;
     else
-        arcs := [];
+        extraarcs := [];
     fi;
     
-    t := spider!.cut;
-    PRINTPOINTS@(f, t, points);
-    PRINTARCS@(f, t!.e, arcs, Float(101/100));
-    
-    Info(InfoIMG,3,"calling javaplot with:\n",s);
-    JAVAPLOT@(InputTextString(s));
+    DRAWPOINTS@(cid,spider!.cut,extrapoints);
+    DRAWARCS@(cid,spider!.cut!.e,extraarcs);
+end);
+
+InstallOtherMethod(Draw, "(IMG) for a P1 map",
+        [IsP1Map],
+        function(map)
+    Draw(MarkedSphere(SphereMachine(map)));
 end);
 
 BindGlobal("CHECKSPIDER@", function(s)
@@ -261,132 +231,6 @@ end);
 InstallMethod(ShallowCopy, "(IMG) for a marked sphere",
         [IsMarkedSphere],
         spider->WiggledMarkedSphere(spider,fail));
-##############################################################################
-
-##############################################################################
-##
-#M  Post-critical machine
-##
-BindGlobal("POSTCRITICALPOINTS@", function(f)
-    # return [poly,[critical points],[post-critical points],[transitions]]
-    # where poly=true/false says if there is a fixed point of maximal degree;
-    # it is then the last element of <post-critical points>
-    # critical points is a list of [point in P1,degree]
-    # post-critical points are points in P1
-    # post-critical graph is a list of [i,j,n] meaning pcp[i] maps to pcp[j]
-    # with local degree n>=1; or, if i<0, then cp[-i] maps to pcp[j].
-
-    local c, i, j, cp, pcp, n, deg, newdeg, poly, polypos,
-          transitions, src, dst;
-
-    deg := DegreeOfP1Map(f);
-    cp := CollectedP1Points(CriticalPointsOfP1Map(f));
-    cp := List(cp,x->[x[1],x[2]+1]);
-    poly := First([1..Length(cp)],i->cp[i][2]=deg and P1Distance(P1Image(f,cp[i][1]),cp[i][1])<@.p1eps);
-    
-    pcp := [];
-    transitions := [];
-    n := 0;
-    for i in [1..Length(cp)] do
-        c := cp[i][1];
-        src := -i;
-        deg := cp[i][2];
-        repeat
-            c := P1Image(f,c);
-            j := PositionProperty(cp,x->P1Distance(c,x[1])<@.p1eps);
-            if j<>fail then
-                c := cp[j][1];
-                newdeg := cp[j][2];
-            else
-                newdeg := 1;
-            fi;
-            dst := PositionProperty(pcp,d->P1Distance(c,d)<@.p1eps);
-            if dst=fail then
-                if j=fail then
-                    Add(pcp,c);
-                else
-                    Add(pcp,cp[j][1]);
-                fi;
-                if RemInt(Length(pcp),100)=0 then
-                    Info(InfoIMG,2,"Post-critical set contains at least ",Length(pcp)," points");
-                fi;
-                dst := Length(pcp);
-                Add(transitions,[src,dst,deg]);
-                n := n+1;
-                if IsInt(poly) and IsIdenticalObj(pcp[n],cp[poly][1]) then
-                    polypos := n;
-                    poly := true;
-                fi;
-            else
-                Add(transitions,[src,dst,deg]);
-                break;
-            fi;
-            deg := newdeg;
-            src := dst;
-        until false;
-    od;
-
-    if poly=fail then
-        poly := false;
-    else
-        Add(pcp,Remove(pcp,polypos)); # force infinity to be at end
-        for c in transitions do
-            for i in [1..2] do
-                if c[i]=polypos then
-                    c[i] := n;
-                elif c[i]>polypos then
-                    c[i] := c[i]-1;
-                fi;
-            od;
-        od;
-    fi;
-
-    return [poly,cp,pcp,transitions];
-end);
-
-InstallGlobalFunction(PostCriticalMachine, function(f)
-    local trans, i, pcp, machine;
-    trans := [];
-    pcp := POSTCRITICALPOINTS@(AsP1Map(f));
-    for i in pcp[4] do
-        if i[1]>0 then trans[i[1]] := [i[2]]; fi;
-    od;
-    machine := MealyMachineNC(FRMFamily([1]),trans,List(trans,x->[1]));
-    SetCorrespondence(machine,pcp[3]);
-    return machine;
-end);
-
-BindGlobal("PCDATAATTRACTINGCYCLES@", function(pcdata)
-    local cycle, period, len, next, i, j, jj, periodic, critical;
-    
-    cycle := [];
-    next := [];
-    period := [];
-    for i in [1..Length(pcdata[3])] do
-        critical := false; periodic := false;
-        j := i; jj := i;
-        repeat
-            jj := First(pcdata[4],x->x[1]=jj)[2];
-            jj := First(pcdata[4],x->x[1]=jj)[2];
-            j := First(pcdata[4],x->x[1]=j)[2];
-        until j=jj;
-        len := 0;
-        repeat
-            len := len+1;
-            periodic := periodic or i=j;
-            j := First(pcdata[4],x->x[1]=j);
-            critical := critical or j[3]>1;
-            j := j[2];
-        until j=jj;
-        if critical and periodic then
-            Add(cycle,pcdata[3][i]);
-            Add(next,i);
-            Add(period,len);
-        fi;
-    od;
-    next := List(next,i->Position(next,First(pcdata[4],x->x[1]=i)[2])-1);
-    return TransposedMat([cycle,next,period]);
-end);
 ##############################################################################
 
 ##############################################################################

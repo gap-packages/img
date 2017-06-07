@@ -398,19 +398,9 @@ BindGlobal("SUPPORTING_ANGLES@", function(machine, image, hyperbolic, addingelem
    return s; 
 end);
 
-BindGlobal("SPIDERALGORITHM@", function(machine)
-    # <machine> is a polynomial FR machine:
-    # StateSet(M) is a free group of rank m+1;
-    # generator AddingElement(M) is an adding element, and should be ignored.
-    # it returns either
-    # rec(minimal := true, machine, supportingangles, rayperiod, ordering, niter, transformation)
-    # in case the machine admits no obstruction; or
-    # rec(minimal := false, machine, submachine, homomorphism, relation, niter, transformation) 
-    # describing an obstruction and homomorphism to smaller machine
-    # here the equivalence "relation" describes which points coalesce;
-    # and submachine is the factorization of machine through homomorphism
-    # it returns fail when the machine is not an img-machine of a topological polynomial  
-    
+InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
+        [IsFRMachine],
+        function(machine)    
     local image, # which point maps to which one
           numcycles, # number of cycles in "image"
           preimage, # either inverse of image, for periodic points, or 0

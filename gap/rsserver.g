@@ -2,11 +2,6 @@
 # interface to the Riemann Sphere Server
 
 #TODO:
-# -- acknowledge should be different from "create" message;
-#    have RSS.ack(filters) do that
-# -- make systematic use of RSS.session, sometimes of RSS.window
-# -- make better use of hooks: they should also trigger functions
-#    in case a button is pressed, e.g.
 # -- implement all commands: button, arc, etc. as high-level
 
 RSS := rec(f := fail, # the file descriptor
@@ -14,7 +9,8 @@ RSS := rec(f := fail, # the file descriptor
            queue := [], # messages waiting to be delivered
            session := fail, # the default session id
            window := fail, # the default window id
-           readhookslot := fail # the slot in OnCharReadHookInFuncs
+           readhookslot := fail, # the slot in OnCharReadHookInFuncs
+           callback := rec() # functions to call when button pressed
            );
 
 OnCharReadHookActive := true; # we'll use read hooks
@@ -25,7 +21,8 @@ RSS.startdaemon := function()
     if RSS.server<>fail then
         Error("Server seems already started");
     fi;
-    server := IO_Popen3(IO_FindExecutable("node"),[Filename(Directory(PackageInfo("img")[1].InstallationPath),"rsserver/rsserver.js")]);
+    CHECKEXEC@FR("node");
+    server := IO_Popen3(EXEC@FR.node,[Filename(Directory(PackageInfo("img")[1].InstallationPath),"rsserver/rsserver.js")]);
     for i in [1..3] do
         s := IO_ReadLine(server.stdout);
         if s<>"" then Remove(s); fi; # remove \n
@@ -61,20 +58,15 @@ RSS.startclient := function(arg)
         Error("Use: RSS.startclient([url::string])");
     fi;
     
-    #@ do something smarter to find the executable
-    if POSITION_SUBSTRING(GAPInfo.Architecture,"darwin",0)=fail then
-        cmd := "chrome";
-    else
-        cmd := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    fi;
+    CHECKEXEC@FR("browser",["chrome"],["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"],["firefox"]);
     
     status := IO_fork();
     if status=0 then
-        IO_execv(cmd,[url]);
+        IO_execv(EXEC@FR.browser,[url]);
         IO_exit(-1); # shouldn't happen
     fi;
     if status < 0 then
-        Error("Couldn't start the client ",cmd);
+        Error("Couldn't start the client ",EXEC@FR.browser);
     fi;
     
     status := RSS.recv(true);
@@ -103,6 +95,7 @@ RSS.open := function(arg)
     fi;
 
     if RSS.f <> fail then
+        if arg=[] then return; fi; # already open, but we accept
         Error("Port seems already open");
     fi;
     
@@ -144,16 +137,25 @@ RSS.close := function()
 end;
 
 RSS.send := function(a,r)
-    IO_Write(RSS.f, StringXMLElement(rec(name := "downdata",
-            attributes := a, content := r))[1]);
+    local s;
+    s := StringXMLElement(rec(name := "downdata", attributes := a, content := r))[1];
+    Info(InfoIMG,2,"Sending XML string ",s);
+    IO_Write(RSS.f, s);
 end;
 
 RSS.enqueue := function()
     local c, s;
     c := IO_ReadLine(RSS.f);
     for s in ParseTreeXMLString(c).content do
-        if s.name<>"PCDATA" then
-            Add(RSS.queue,s);
+        if s.name="PCDATA" then # ignore
+        elif s.name="error" then
+            Error("RSS server error: ",s);
+        elif s.name="updata" then
+            if IsBound(s.attributes.status) and s.attributes.status="button-click" and IsBound(RSS.callback.(s.attributes.object)) then
+                RSS.callback.(s.attributes.object)(s);
+            else
+                Add(RSS.queue,s);
+            fi;
         fi;
     od;
 end;
@@ -173,33 +175,47 @@ RSS.recv := function(arg)
         if not (blocking or IO_HasData(RSS.f)) then return fail; fi;
         RSS.enqueue();
     od;
-    s := Remove(RSS.queue,1);
-    if s.name="error" then
-        Error("RSS server error: ",s);
-    elif s.name="updata" then
-        return s;
-    else
-        Error("RSS server unknown message: ",s);
-    fi;
+    return Remove(RSS.queue,1);
+end;
+
+RSS.flush := function()
+    repeat
+        RSS.queue := [];
+        RSS.recv(false);
+    until RSS.queue = [];
+end;
+
+RSS.ack := function(status, message)
+    local i;
+    
+    while true do
+        for i in [1..Length(RSS.queue)] do
+            if RSS.queue[i].attributes.status=status then
+                return Remove(RSS.queue,i);
+            fi;
+        od;
+        # queue exhausted, wait.
+        RSS.enqueue();
+    od;
 end;
 
 ################################################################ data handling
-complex2xml := function(c)
+COMPLEX2XML@ := function(c)
     local a;
     a := rec(re := String(RealPart(c)), im := String(ImaginaryPart(c)));
     return rec(name := "cn", attributes := a, content := 0);
 end;
 
-p1point2xml := function(p)
+P1POINT2XML@ := function(p)
     local a, c;
     if p=P1infinity then
         return rec(name := "cn", attributes := rec(name := "infinity"), content := 0);
     else
-        return complex2xml(P1Coordinate(p));
+        return COMPLEX2XML@(P1Coordinate(p));
     fi;
 end;
 
-function2xml := function(f)
+P1MAP2XML@ := function(f)
     local c, z, cycles;
     c := CoefficientsOfP1Map(f);
     z := PCDATAATTRACTINGCYCLES@IMG(POSTCRITICALPOINTS@IMG(f));
@@ -209,9 +225,9 @@ function2xml := function(f)
     #@ there was a typo, "nom" instead of "numer", which crashed node.
     return rec(name := "function",
                attributes := rec(degree := String(DegreeOfP1Map(f))),
-               content := Concatenation([rec(name := "numer", attributes := rec(), content := List(c[1],complex2xml)),
-                       rec(name := "denom", attributes := rec(), content := List(c[2],complex2xml))],
-                       List(cycles,c->rec(name := "cycle", attributes := rec(), content := List(c,i->p1point2xml(z[i]))))));
+               content := Concatenation([rec(name := "numer", attributes := rec(), content := List(c[1],COMPLEX2XML@)),
+                       rec(name := "denom", attributes := rec(), content := List(c[2],COMPLEX2XML@))],
+                       List(cycles,c->rec(name := "cycle", attributes := rec(), content := List(c,i->P1POINT2XML@(z[i]))))));
 end;
 
 ################################################################ interface
@@ -231,58 +247,69 @@ RSS.getsession := function(arg)
     return RSS.recv(true);
 end;
 
-RSS.newobject := function(sid,oid,type)
-    local status;
-    RSS.send(rec(session:=sid,object:=oid),[rec(name:=type,attributes:=rec(),content:=[])]);
-    status := RSS.recv(true);
-    if status.attributes.status<>"created" then
-        Error("Couldn't create new object");
-    fi;
+RSS.newobject := function(type,arg...)
+    local status, attr;
+    if arg=[] then attr := rec(); else attr := arg[1]; fi;
+    RSS.send(rec(session:=RSS.session,object:=RSS.window),[rec(name:=type,attributes:=attr,content:=[])]);
+    status := RSS.ack("created","newobject");
     return status.content[1].attributes.id;    
 end;
 
-RSS.removeobject := function(sid,oid)
-    local status;
-    RSS.send(rec(session:=sid,object:=oid,action:="remove"),[]);
-    status := RSS.recv(true);
-    if status.attributes.status<>"removed" then
-        Error("Couldn't remove object");
-    fi;
+RSS.removeobject := function(oid)
+    RSS.send(rec(session:=RSS.session,object:=oid,action:="remove"),[]);
+    RSS.ack("removed","removeobject");
 end;
 
-RSS.populateobject := function(sid,oid,content)
-    local status;
-    RSS.send(rec(session:=sid,object:=oid,action:="populate"),content);
-    status := RSS.recv(true);
-    if status.attributes.status<>"updated" then
-        Error("Couldn't populate object");
-    fi;
+RSS.populateobject := function(oid,content)
+    RSS.send(rec(session:=RSS.session,object:=oid,action:="populate"),content);
+    RSS.ack("updated","populateobject");
 end;
 
-################################################################ some tests
-RSS.releasebutton := function(sid,oid)
-    local status;
-    RSS.send(rec(session:=sid,object:=oid),[rec(name:="button",attributes:=rec(name:="Release ReadLine"),content:=[])]);
-    status := RSS.recv(true);
-    if status.attributes.status<>"created" then
-        Error("Couldn't create button");
-    fi;
-    return status.content[1].attributes.id;
+################################################################ top level
+RSS.newcanvas := function()
+    local status, killbutton, canvas;
+    killbutton := RSS.newobject("button",rec(name:="Close canvas"));
+    canvas := RSS.newobject("canvas");
+    RSS.callback.(killbutton) := function(s)
+        RSS.removeobject(killbutton);
+        RSS.removeobject(canvas);
+    end;
+    return canvas;
 end;
 
+RSS.putmap := function(cid,map)
+    RSS.populateobject(cid,[P1MAP2XML@(map)]);
+end;
+
+RSS.putarc := function(cid,arc)
+    RSS.populatoobject(cid,[]);
+end;
+
+RSS.putpoint := function(cid,point,arg...)
+    local a, attr, content;
+    attr := rec();
+    content := [P1POINT2XML@(point)];
+    for a in arg do
+        if IsFloat(a) then
+            attr.radius := a;
+        elif IsString(a) then
+            Add(content,rec(name:="label",attributes:=rec(),content:=a));
+        fi;
+    od;
+    RSS.populateobject(cid,[rec(name:="point",attributes:=attr,content:=content)]);
+end;
+
+################################################################ tests
 RSS.samplewindow := function(map)
     local cid;
-    if IsP1Map(map) then map := function2xml(map); fi;
-    RSS.releasebutton(RSS.session,RSS.window);
-    cid := RSS.newobject(RSS.session,RSS.window,"canvas");
-    RSS.populateobject(RSS.session,cid,[map]);
-    RSS.populateobject(RSS.session,cid,[rec(name:="point",attributes:=rec(),content:=[p1point2xml(P1Point(1.0,0.5))])]);
+
+    RSS.open();
+    if IsP1Map(map) then
+        map := P1MAP2XML@(map);
+    elif IsInt(map) then
+        map := rec(name:="function",attributes:=rec(type:="newton",degree:=String(map)),content:=[]);
+    fi;
+    cid := RSS.newobject(RSS.window,"canvas");
+    RSS.populateobject(cid,[map]);
+    RSS.putpoint(cid,P1Point(1.0,0.5));
 end;
-
-newton := n->rec(name:="function",attributes:=rec(type:="newton",degree:=String(n)),content:=[]);
-
-#inversebasilica := function2xml(CompositionP1Map(P1z^-1,P1z^2-1,P1z^-1));
-
-# sample:
-# RSS.open();
-# RSS.samplewindow(P1z^2-1);

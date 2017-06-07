@@ -47,6 +47,24 @@ DeclareOperation("ThurstonAlgorithm", [IsSphereMachine]);
 ##   </Description>
 ## </ManSection>
 ##
+DeclareOperation("SpiderAlgorithm", [IsFRMachine]);
+## <ManSection>
+##   <Oper Name="SpiderAlgorithm" Arg="m"/>
+##   <Returns>rec(...) or <K>fail</K>.</Returns>
+##   <Description>
+##     This command runs a symbolic algorithm on the FR machine <A>m</A>,
+##     attempting to interpret it as a polynomial sphere machine.
+##     It either returns <List>
+##     <Mark><K>fail</K></Mark>
+##       <Item>if <A>m</A> is not a sphere biset;</Item>
+##     <Mark><C>rec(minimal := true, machine, supportingangles, rayperiod, ordering, niter, transformation)</C></Mark>
+##       <Item>if <A>m</A> is a sphere biset with no obstruction; then <C>machine</C> is a polynomial sphere machine equivalent to <A>m</A>, <C>supportingangles</C> is a list of supporting rays in the sense of Poirier, see <Ref Oper="SupportingRays"/>; <C>rayperiod</C> gives the periods of the rays, <C>niter</C> is the number of iterations needed to produce the machine, and <C>transformation</C> is the isomorphism between the fundamental groups of the old and new machines;</Item>
+##     <Mark><C>rec(minimal := false, machine, submachine, homomorphism, relation, niter, transformation)</C></Mark>
+##       <Item>if <A>m</A> is a sphere biset with an obstruction; then <C>submachine</C> is the submachine obtained after removing the obstruction a sphere biset, <C>homomorphism</C> is the inclusion of the submachine's stateset into that of <C>machine</C>, <C>relation</C> is an equivalence relation describing which points coalesce, and the other parameters are as above.</Item>
+##     </List>
+##   </Description>
+## </ManSection>
+##
 DeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);
 ## <ManSection>
 ##   <Oper Name="P1MapBySphereMachine" Arg="m"/>
