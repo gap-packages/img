@@ -166,7 +166,7 @@ DeclareOperation("ClosestP1Point",[IsP1PointList,IsP1Point]);
 ##   <Returns>The point in <A>p1points</A> closest to <A>p1point</A>.</Returns>
 ## </ManSection>
 ##
-DeclareSynonym("IsP1Map",IsUnivariateRationalFunction and IsFloatRationalFunction);
+DeclareSynonym("IsP1Map",HasIsUnivariateRationalFunction and IsUnivariateRationalFunction and IsFloatRationalFunction);
 DeclareCategory("IsIEEE754P1Map",IsP1Map);
 BindGlobal("TYPE_IEEE754P1MAP", NewType(RationalFunctionsFamily(PMCOMPLEX_PSEUDOFIELD), IsIEEE754P1Map and IsDataObjectRep));
 ## <ManSection>

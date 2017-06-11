@@ -399,7 +399,7 @@ BindGlobal("SUPPORTING_ANGLES@", function(machine, image, hyperbolic, addingelem
 end);
 
 InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
-        [IsFRMachine],
+        [IsGroupFRMachine],
         function(machine)    
     local image, # which point maps to which one
           numcycles, # number of cycles in "image"
@@ -434,6 +434,8 @@ InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
           relation, # relation on the postcritical set describing Levy cycles
           basicrelation, # subhyperbolic points are equivalent, hyperbolic points are not  
           submachine, # the submachine, in case there is an obstruction
+          spheregroup, # the quotient of the sphere machine by the relation
+          spheremachine, # a sphere machine, on the sphere group
           i, j, k, p, t;
     
     # initialise constants
@@ -646,13 +648,28 @@ InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
     until extraniter>m; 
 
     suppangles := SUPPORTING_ANGLES@(machine, image, hyperbolic,addingelement, orbit, preimage, oldaddress, rayperiod, marked);
+    
+    if addingelement=false then
+        addingelement := m+1;
+        spheregroup := SphereGroup(Concatenation(ordering,[addingelement]));
+        tau := GroupHomomorphismByImages(group,spheregroup,GeneratorsOfGroup(spheregroup){[1..m]});
+    else
+        spheregroup := SphereGroup(ordering);
+        tau := GroupHomomorphismByImages(group,spheregroup);
+    fi;
+    spheremachine := machine^tau;
+    SetAddingElement(spheremachine,FRElement(spheremachine,GeneratorsOfGroup(spheregroup)[addingelement]));
+    SetCorrespondence(spheremachine,tau);
+
     return rec (minimal := true,
                 machine := machine,
                 supportingangles := suppangles,
                 rayperiod := rayperiod,
                 ordering := ordering,
                 niter := niter,
-                transformation := transformation);
+                transformation := transformation,
+                spheregroup := spheregroup,
+                spheremachine := spheremachine);
 end);
 
 # machine := PolynomialIMGMachine(12,[[1/(12^12-1),1/(12^12-1)+1/12,1/(12^12-1)+2/12,1/(12^12-1)+3/12,1/(12^12-1)+4/12,1/(12^12-1)+5/12,1/(12^12-1)+6/12,1/(12^12-1)+7/12,1/(12^12-1)+8/12,1/(12^12-1)+9/12,1/(12^12-1)+10/12,1/(12^12-1)+11/12]],[]);

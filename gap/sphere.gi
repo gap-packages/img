@@ -377,21 +377,42 @@ end);
 
 BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     # returns [m,x] with m minimal representative such that m^x=g
-    local w, fam, length, i, m, x, minm, minx;
-    
-    #!!! optimize! This is O(|g|^2)
+    local w, fam, length, i, gens, s, m, x, minm, minx;
     
     w := UnderlyingElement(g);
     fam := FamilyObj(g);
+    gens := GeneratorsOfSemigroup(FreeGroupOfFpGroup(fam!.group));
     length := Length(w);
     minm := g;
     minx := One(w);
     for i in [1..length] do
         x := Subword(w,i+1,length);
-        m := ElementOfSphereGroup(fam,x*Subword(w,1,i));
-        if m<minm then minm := m; minx := x; fi;
+        for s in gens do
+            m := ElementOfSphereGroup(fam,s*x*Subword(w,1,i)*s^-1);
+            if m<minm then minm := m; minx := s*x; fi;
+        od;
     od;
     return [minm,ElementOfSphereGroup(fam,minx)];
+    
+## optimize with the following python code [Kellogg S. Booth (1980). "Lexicographically least circular substrings". Information Processing Letters. Elsevier. 10 (4-5): 240–242. doi:10.1016/0020-0190(80)90149-0]
+##def lcs(S):
+##    S += S      # Concatenate string to it self to avoid modular arithmetic
+##    f = [-1] * len(S)     # Failure function
+##    k = 0       # Least rotation of string found so far
+##    for j in xrange(1,len(S)):
+##        sj = S[j]
+##        i = f[j-k-1]
+##        while i != -1 and sj != S[k+i+1]:
+##            if sj < S[k+i+1]:
+##                k = j-i-1
+##            i = f[i]
+##        if sj != S[k+i+1]: # if sj != S[k+i+1], then i == -1 
+##            if sj < S[k]: # k+i+1 = k
+##                k = j
+##            f[j-k] = -1
+##        else:
+##            f[j-k] = i+1
+##    return k
 end);
 
 InstallOtherMethod(CyclicallyReducedWord, "(IMG) for a sphere group element",

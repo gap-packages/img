@@ -383,15 +383,11 @@ BindGlobal("NORMALIZEHOMOMORPHISM@", function(f)
 end);
 fi;
 
-InstallMethod(\*, "(IMG) for an FR machine and a mapping",
-        [IsFRMachine and IsFRMachineStdRep, IsMapping],
+InstallMethod(\*, "(IMG) for a sphere machine and a mapping",
+        [IsSphereMachine, IsMapping], 2,
         function(M,f)
-    local S, N, x;
-    S := StateSet(M);
-    if S<>Source(f) or S<>Range(f) then
-        Error("\*: source, range and stateset must be the same\n");
-    fi;
-    N := FRMachineNC(FamilyObj(M),S,List(M!.transitions,r->List(r,x->x^f)),M!.output);
+    local N, x;
+    N := RIGHTACTMACHINE@FR(M,f);
     IsSphereMachine(N);
     if HasAddingElement(M) then
         x := InitialState(AddingElement(M));
@@ -400,24 +396,11 @@ InstallMethod(\*, "(IMG) for an FR machine and a mapping",
     return N;
 end);
 
-InstallMethod(\*, "(IMG) for a mapping and an FR machine",
-        [IsMapping, IsFRMachine and IsFRMachineStdRep],
+InstallMethod(\*, "(IMG) for a mapping and a sphere machine",
+        [IsMapping, IsSphereMachine], 2,
         function(f,M)
-    local S, trans, out, i, pi, x, N;
-    S := StateSet(M);
-    if S<>Source(f) or S<>Range(f) then
-        Error("\*: source, range and stateset must be the same\n");
-    fi;
-    pi := WreathRecursion(M);
-    trans := [];
-    out := [];
-    
-    for i in [1..Length(M!.output)] do
-        x := pi(GeneratorsOfFRMachine(M)[i]^f);
-        Add(trans,x[1]);
-        Add(out,x[2]);
-    od;
-    N := FRMachineNC(FamilyObj(M),S,trans,out);
+    local N, x;
+    N := RIGHTACTMACHINE@FR(f,M);
     IsSphereMachine(N);
     if HasAddingElement(M) then
         x := InitialState(AddingElement(M));
@@ -426,26 +409,11 @@ InstallMethod(\*, "(IMG) for a mapping and an FR machine",
     return N;
 end);
 
-InstallMethod(\^, "(IMG) for a group FR machine and a mapping",
-        [IsGroupFRMachine, IsMapping],
+InstallMethod(\^, "(IMG) for a sphere machine and a mapping",
+        [IsSphereMachine, IsMapping], 2,
         function(M,f)
-    local S, newS, trans, out, i, pi, x, finv, N;
-    S := StateSet(M);
-    if S<>Source(f) then
-        Error("\^: source and stateset must be the same\n");
-    fi;
-    newS := Range(f);
-    pi := WreathRecursion(M);
-    trans := [];
-    out := [];
-    finv := InverseGeneralMapping(f);
-    if finv=fail then return fail; fi;
-    for i in GeneratorsOfGroup(newS) do
-        x := pi(ImagesRepresentative(finv,i));
-        Add(trans,List(x[1],x->ImagesRepresentative(f,x)));
-        Add(out,x[2]);
-    od;
-    N := FRMachineNC(FamilyObj(M),newS,trans,out);
+    local N;
+    N := CONJACTMACHINE@FR(M,f);
     IsSphereMachine(N);
     if HasAddingElement(M) then
         SetAddingElement(N,FRElement(N,InitialState(AddingElement(M))^f));
@@ -635,7 +603,7 @@ InstallMethod(SupportingRays, "(IMG) for a polynomial sphere machine",
     local g, gens, img, adder, f, nf, trans, output, spider, newM;
     
     # put the adding element in standard form
-    M := NormalizedPolynomialSphereMachine(M);
+    M := SphereMachineWithNormalizedAdder(M);
     g := StateSet(M);
     gens := GeneratorsOfGroup(g);
     img := ShallowCopy(gens);
@@ -704,45 +672,47 @@ BindGlobal("REDUCEINNER@", function(img0,gen)
     return elt;
 end);
 
-InstallMethod(NormalizedPolynomialSphereMachine, "(IMG) for a polynomial FR machine",
-        [IsSphereMachine],
-        function(M)
+InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a sphere machine and an adder",
+        [IsSphereMachine,IsAssocWord],
+        function(M,adder)
     # conjugate the recursion so that the adding element t becomes of the form (t,...,1)s,
     # where s is the cycle i|->i-1 mod d.
     # adder is an element of <model>.
     # model is the ambient fundamental group.
-    local model, trans, out, adder, N, deg, perm, x, i, j, basis;
+    local model, N, deg, perm, x, i, basis;
     
     model := StateSet(M);
-    trans := List(M!.transitions,ShallowCopy);
-    deg := Length(trans[1]);
-    out := List(M!.output,ShallowCopy);
-    adder := InitialState(AddingElement(M));
+    deg := Length(AlphabetOfFRObject(M));
     
     while not ISADDER@(M,adder) do
         Error("Element ",adder," is not an adding element");
     od;
     
+    # first, put permutation in order (1,deg,deg-1,...,2)
     perm := PermList(Concatenation([deg],[1..deg-1]));
     perm := RepresentativeAction(SymmetricGroup(deg),PermList(Output(M,adder)),perm);
-    REORDERREC@([trans,out],perm);
-
+    N := ChangeFRMachineBasis(M,perm);
+    
+    # now change basis
     basis := [];
     x := One(model);
     for i in [deg,deg-1..1] do
-        basis[i] := x;
-        x := x*Transition(M,adder,i);
+        basis[i] := x^-1;
+        x := x*Transition(N,adder,i);
     od;
-    basis := RepresentativeAction(model,adder,x)*basis;
-    for i in [1..Length(trans)] do
-        for j in [1..deg] do
-            trans[i][j] := basis[j]*trans[i][j]/basis[out[i][j]];
-        od;
-    od;
-
-    N := FRMachineNC(FamilyObj(M),M!.free,trans,out);
-    COPYADDER@(N,M);
+    N := ChangeFRMachineBasis(N,basis*RepresentativeAction(model,x,adder));
+    
+    # set filter
     IsSphereMachine(N);
+    return N;
+end);
+
+InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a polynomial sphere machine",
+        [IsPolynomialSphereMachine],
+        function(M)
+    local N;
+    N := SphereMachineWithNormalizedAdder(M,InitialState(AddingElement(M)));
+    COPYADDER@(N,M);
     return N;
 end);
 
@@ -762,9 +732,32 @@ end);
 InstallMethod(SimplifiedSphereMachine, "(IMG) for a sphere machine",
         [IsSphereMachine],
         function(M)
-    local N;
+    local N, S, gens, s, i, norm, newnorm, idle, deg, b;
     Info(InfoIMG,1,"Simplification not yet implemented for general sphere machines");
-    return N;
+    S := StateSet(M);
+    gens := GeneratorsOfSemigroup(S);
+    deg := Length(AlphabetOfFRObject(M));
+    
+    # just try changing the basis
+    repeat
+        idle := true;
+        for i in [1..deg] do
+            norm := Sum(gens,g->Length(Transition(M,g,i)));
+            b := List([1..deg],i->One(S));
+            for s in gens do
+                b[i] := s;    
+                N := ChangeFRMachineBasis(M,b);
+                newnorm := Sum(gens,g->Length(Transition(N,g,i)));
+                if newnorm < norm then
+                    M := N;
+                    norm := newnorm;
+                    idle := false;
+                fi;
+            od;
+        od;
+    until idle;
+    
+    return M;
 end);
 #############################################################################
 
@@ -1239,7 +1232,7 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
     od;
     deg := deg[1];
            
-    machines := List(machines,NormalizedPolynomialSphereMachine);
+    machines := List(machines,SphereMachineWithNormalizedAdder);
     machines[2] := ChangeFRMachineBasis(machines[2],PermList([deg,deg-1..1])); # make it inverse
 
     states := List(machines,StateSet);

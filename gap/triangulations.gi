@@ -717,6 +717,7 @@ InstallMethod(ClosestVertices, [IsTriangulationVertex], x->[x]);
 InstallMethod(ClosestVertices, [IsTriangulationEdge], x->[From(x),To(x)]);
 InstallMethod(ClosestVertices, [IsTriangulationFace], x->List(Neighbours(x),From));
 
+if false then # now integrated inside RSS
 BindGlobal("INTERPOLATE_ARC@", function(l)
     # interpolate along points of l
     local r, i, p;
@@ -730,21 +731,6 @@ BindGlobal("INTERPOLATE_ARC@", function(l)
         fi;
     od;
     return r;
-end);
-
-BindGlobal("PRINTPT@", function(f,p1p,sep,s)
-    local p;
-    p := sep*SphereP1(p1p);
-    PrintTo(f, p[1], " ", p[2], " ", p[3], s, "\n");
-end);
-
-BindGlobal("PRINTARC@", function(f,a,col,sep)
-    local j;
-    a := INTERPOLATE_ARC@(a);
-    PrintTo(f, "ARC ",Length(a)," ",String(col[1])," ",String(col[2])," ",String(col[3]),"\n");
-    for j in a do
-        PRINTPT@(f, j, sep, "");
-    od;
 end);
 
 BindGlobal("PRINTEDGE@", function(f,e,col,sep)
@@ -770,6 +756,7 @@ BindGlobal("PRINTEDGE@", function(f,e,col,sep)
         PRINTPT@(f, j, sep, "");
     od;    
 end);
+fi;
 
 BindGlobal("DRAWPOINTS@", function(cid,t,extrapoints)
     local i, label, arcs, labels;
@@ -798,7 +785,7 @@ BindGlobal("DRAWPOINTS@", function(cid,t,extrapoints)
     for i in extrapoints do RSS.putpoint(cid, Pos(i), 0.5); od;
 end);
 
-BindGlobal("DRAWARCS@", function(f, edges, arcs)
+BindGlobal("DRAWARCS@", function(cid, edges, arcs)
     local a, e, j, k;
     
     if ValueOption("noarcs")<>fail then
@@ -807,7 +794,6 @@ BindGlobal("DRAWARCS@", function(f, edges, arcs)
     
     return;
     
-    PrintTo(f, "ARCS ", Length(edges)+Length(arcs),"\n");
     for e in edges do
         if From(e)!.index>To(e)!.index then # print only in 1 direction
             continue;
@@ -819,10 +805,10 @@ BindGlobal("DRAWARCS@", function(f, edges, arcs)
         else
             k := [64,255,64];
         fi;
-        PRINTEDGE@(f, e, j, 1.0);
-        PRINTARC@(f, [Pos(Left(e)),Pos(e),Pos(Right(e))], k, 1.0);
+        RSS.putarc(cid,[FromPos(e),Pos(e),ToPos(e)],j);
+        RSS.putarc(cid,[Pos(Left(e)),Pos(e),Pos(Right(e))],k);
     od;
-    for a in arcs do PRINTARC@(f, a[3], a[1], a[2], 1.0); od;
+    for a in arcs do RSS.putarc(cid,a); od;
 end);
 
 InstallMethod(Draw, "(IMG) for a triangulation",

@@ -277,14 +277,36 @@ RSS.newcanvas := function()
     return canvas;
 end;
 
+# map is a P1 map.
 RSS.putmap := function(cid,map)
     RSS.populateobject(cid,[P1MAP2XML@(map)]);
 end;
 
-RSS.putarc := function(cid,arc)
-    RSS.populatoobject(cid,[]);
+# arc is a sequence of P1 points
+RSS.putarc := function(cid,arc,arg...)
+    local a, attr, content;
+    attr := rec();
+    content := [];
+    for a in arg do
+        if IsList(a) then
+            attr.color := Concatenation("0x",HexStringInt(a[1]*256^2+a[2]*256+a[3]));
+        elif IsRecord(a) then
+            attr := a;
+        else
+            Error("Unknown argument ",a);
+        fi;
+    od;
+    if IsList(arc) then
+        content := List(arc,P1POINT2XML@);
+    else
+        Error("Arc in bad format: ",arc); # maybe allow an edge here?
+    fi;
+    
+    RSS.populatoobject(cid,[rec(name:="arc",attributes:=attr,content:=content)]);
 end;
 
+# point is a P1 point.
+# arg can be a floating-point numbers (radius), strings (label) or a list (RGB color)
 RSS.putpoint := function(cid,point,arg...)
     local a, attr, content;
     attr := rec();
@@ -294,6 +316,12 @@ RSS.putpoint := function(cid,point,arg...)
             attr.radius := a;
         elif IsString(a) then
             Add(content,rec(name:="label",attributes:=rec(),content:=a));
+        elif IsList(a) then
+            attr.color := Concatenation("0x",HexStringInt(a[1]*256^2+a[2]*256+a[3]));
+        elif IsRecord(a) then
+            attr := a;
+        else
+            Error("Unknown argument ",a);
         fi;
     od;
     RSS.populateobject(cid,[rec(name:="point",attributes:=attr,content:=content)]);
@@ -309,7 +337,7 @@ RSS.samplewindow := function(map)
     elif IsInt(map) then
         map := rec(name:="function",attributes:=rec(type:="newton",degree:=String(map)),content:=[]);
     fi;
-    cid := RSS.newobject(RSS.window,"canvas");
+    cid := RSS.newobject("canvas");
     RSS.populateobject(cid,[map]);
     RSS.putpoint(cid,P1Point(1.0,0.5));
 end;

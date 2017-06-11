@@ -80,18 +80,6 @@ DeclareOperation("AsSphereMachine", [IsGroupFRMachine, IsSphereGroup]);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("CleanedSphereMachine",IsSphereMachine);
-## <ManSection>
-##   <Attr Name="CleanedSphereMachine" Arg="m"/>
-##   <Returns>A cleaned-up version of <A>m</A>.</Returns>
-##   <Description>
-##     This command attempts to shorten the length of the transitions in
-##     <A>m</A>, and ensure (if possible) that the product along every cycle
-##     of the states of a generator is a conjugate of a generator. It returns
-##     the new machine.
-##   </Description>
-## </ManSection>
-##
 DeclareGlobalFunction("NewSphereMachine");
 ## <ManSection>
 ##   <Attr Name="NewSphereMachine" Arg="..."/>
@@ -187,9 +175,7 @@ DeclareAttribute("AddingElement", IsSphereMachine);
 ##     of the airplane and the rabbit. In the machine <C>m</C>, an
 ##     airplane is represented by <C>Group(a,b,c)</C> and a rabbit is
 ##     represented by <C>Group(x,y,z)</C>; in the machine <C>newm</C>,
-##     it is the other way round. The effect of <C>CleanedSphereMachine</C>
-##     was to remove unnecessary instances of the IMG relator from
-##     <C>newm</C>'s recursion.
+##     it is the other way round.
 ## <Example><![CDATA[
 ## gap> f := FreeGroup("a","b","c","x","y","z");;
 ## gap> AssignGeneratorVariables(f);
@@ -207,7 +193,7 @@ DeclareAttribute("AddingElement", IsSphereMachine);
 ## ---+---------+-------------+
 ## Relator: z*y*x*c*b*a
 ## gap> iso := GroupHomomorphismByImages(f,f,[a,b^(y^-1),c^(x^-1*y^-1*a^-1),x^(b*a*z*a^-1),y,z^(a^-1)],[a,b,c,x,y,z]);;
-## gap> newm := CleanedSphereMachine(ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]));;
+## gap> newm := ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]);;
 ## gap> Display(newm);
 ##  G |          1         2   
 ## ---+-------------+---------+
@@ -448,14 +434,17 @@ DeclareAttribute("SupportingRays",IsFRMachine);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);
+DeclareAttribute("SphereMachineWithNormalizedAdder",IsSphereMachine);
+DeclareOperation("SphereMachineWithNormalizedAdder",[IsSphereMachine,IsAssocWord]);
 ## <ManSection>
-##   <Attr Name="NormalizedPolynomialSphereMachine" Arg="m"/>
-##   <Returns>A polynomial sphere machine.</Returns>
+##   <Attr Name="NormalizedAdderSphereMachine" Arg="m [adder]"/>
+##   <Returns>A sphere machine.</Returns>
 ##   <Description>
 ##     This function returns a new sphere machine, in which the adding element
 ##     has been put into a standard form <M>t=[t,1,\dots,1]s</M>, where
-##     <M>s</M> is the long cycle <M>i\mapsto i-1</M>.
+##     <M>s</M> is the long cycle <M>i\mapsto i-1</M>. If the adding element
+##     <A>adder</A> is not specified, then <A>m</A> should be a polynomial
+##     sphere machine, and <A>adder</A> is its <C>AddingElement</C>.
 ##   </Description>
 ## </ManSection>
 ##
