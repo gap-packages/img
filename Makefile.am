@@ -21,7 +21,7 @@ layout_DEPENDENCIES = libdogleg
 layout_SOURCES = src/layout.C
 layout_CPPFLAGS = -I$(LIBDOGLEG) $(CHOLMOD_CFLAGS)
 layout_LDFLAGS = -L$(BINARCHDIR)/lib
-layout_LDADD = -ldogleg -lcholmod
+layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig
 
 hsolve_DEPENDENCIES = liblevmar
 hsolve_SOURCES = src/hsolve.C
@@ -45,11 +45,7 @@ libdogleg:
 	if [[ ! -f "$(BINARCHDIR)/include/dogleg.h" ]]; then \
 	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 $(CHOLMOD_CFLAGS)" && \
 	    cp $(LIBDOGLEG)/libdogleg.a $(BINARCHDIR)/lib/ && \
-	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/ && \
-	    if [[ "$(shell uname)" = Darwin ]]; then \
-		cp $(LIBDOGLEG)/libdogleg.dylib $(BINARCHDIR)/lib/libdogleg.dylib; \
-		install_name_tool -id $(BINARCHDIR)/lib/libdogleg.dylib $(BINARCHDIR)/lib/libdogleg.dylib; \
-	    fi; \
+	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/; \
 	fi
 
 $(GAPINSTALLLIB): img.la

@@ -240,7 +240,9 @@ end);
 InstallMethod(AsSphereMachine, "(IMG) for a group FR machine and a sphere group",
         [IsGroupFRMachine,IsSphereGroup],
         function(M,G)
-    return M^GroupHomomorphismByImages(StateSet(M),G);
+    M := M^GroupHomomorphismByImages(StateSet(M),G);
+    IsSphereMachine(M);
+    return M;
 end);   
 
 InstallMethod(AsSphereMachine, "(IMG) for a group FR machine",
