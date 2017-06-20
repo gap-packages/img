@@ -17,6 +17,12 @@
 ## <#GAPDoc Label="SphereMachine">
 ##
 DeclareProperty("IsSphereMachine", IsFRMachine);
+InstallImmediateMethod(IsSphereMachine,IsFRMachine,0,
+        function(m)
+    local g;
+    g := StateSet(m);
+    return HasIsSphereGroup(g) and IsSphereGroup(g);
+end);
 ## <ManSection>
 ##   <Filt Name="IsSphereMachine" Arg="m"/>
 ##   <Filt Name="IsPolynomialSphereMachine" Arg="m"/>
@@ -123,11 +129,14 @@ DeclareGlobalFunction("NewSphereMachine");
 ##
 ## <#GAPDoc Label="PolynomialFRMachine">
 DeclareProperty("IsKneadingMachine",IsFRMachine);
-DeclareProperty("IsPlanarKneadingMachine",IsFRMachine);
+DeclareAttribute("PlanarEmbeddingOfKneadingMachine",IsFRMachine);
+DeclareAttribute("PlanarEmbeddingsOfKneadingMachine",IsFRMachine);
+DeclareSynonym("IsPlanarKneadingMachine",HasPlanarEmbeddingOfKneadingMachine);
 InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine);
 InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
 ## <ManSection>
 ##   <Prop Name="IsKneadingMachine" Arg="m"/>
+##   <Attr Name="PlanarEmbeddingOfKneadingMachine" Arg="m"/>
 ##   <Prop Name="IsPlanarKneadingMachine" Arg="m"/>
 ##   <Returns>Whether <A>m</A> is a (planar) kneading machine.</Returns>
 ##   <Description>
@@ -155,6 +164,8 @@ InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);
 ## ---+-----+-----+
 ## gap> IsPlanarKneadingMachine(M);
 ## true
+## gap> PlanarEmbeddingOfKneadingMachine(M);
+## [ 1, 2 ]
 ## gap> IsPlanarKneadingMachine(GrigorchukMachine);
 ## false
 ## ]]></Example>
@@ -233,7 +244,7 @@ DeclareOperation("AsPolynomialSphereMachine",[IsFRMachine,IsWord]);
 ## gap> M := PolynomialMealyMachine(2,[1/7],[]);
 ## <Mealy machine on alphabet [ 1 .. 2 ] with 4 states>
 ## gap> Mi := AsPolynomialSphereMachine(M);
-## !!!
+## # (example still broken, have to fix spider algorithm)
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>
@@ -543,7 +554,7 @@ DeclareAttribute("EquatorTwist",IsSphereMachine);
 ## ((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z
 ##   +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2
 ##   +(1.61715+I*1.50244)*z+1)
-## gap> # m[29] is obstructed, and is the original Tan-Shishikura map
+## gap> # m[29] is obstructed, and has a Levy cycle
 ## gap> P1MapBySphereMachine(m[29]);
 ## rec(
 ##   machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2,\
@@ -559,6 +570,13 @@ DeclareAttribute("EquatorTwist",IsSphereMachine);
 ## ((0.85917327990384307-0.8755042485587835i_z)*z^3+
 ## (0.9573881709899621-0.14875521653926685i_z)*z^2+
 ## (-0.68923589444039035+0.48120812618585479i_z)*z+1._z)>
+## gap> # m[14] is the original Tan Lei-Shishikura example
+## gap> ThurstonAlgorithm(m[14]);
+## rec(
+##   machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] ) / [ f\
+## 3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ],
+##   multicurve := [ f1^-1*f3*f2*f1*f3*f2*f1*g1^-1*g3*g2*g1*g3*g2*g1^G,
+##                   f1^-1*f2*f1*f3*f2*f1*f3*f2*f1*g2*g3*g2*g1*g3*g2*g1^G ] )
 ## ]]></Example>
 ##   </Description>
 ## </ManSection>

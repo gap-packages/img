@@ -10,14 +10,6 @@
 ##
 #############################################################################
 
-InstallMethod(IsSphereMachine, "(IMG) for an FR machine",
-        [IsGroupFRMachine],
-        function(M)
-    local g;
-    g := StateSet(M);
-    return HasIsSphereGroup(g) and IsSphereGroup(g);
-end);
-
 if false then # optimized in C code
 BindGlobal("NFFUNCTION_FR", function(rel,dir,word)
     local push_letter, match_pos, posind, negind, result, resulti, i, j, match, matchlen, n, vi;
@@ -136,7 +128,6 @@ InstallMethod(SubFRMachine, "(IMG) for a sphere machine and a map",
         Add(trans,decomp);
     od;
     machine := FRMachineNC(FamilyObj(M),Source(f),trans,out);
-    IsSphereMachine(machine);
 
     if HasAddingElement(M) then
         adder := PreImagesRepresentative(f,InitialState(AddingElement(M)));
@@ -241,7 +232,6 @@ InstallMethod(AsSphereMachine, "(IMG) for a group FR machine and a sphere group"
         [IsGroupFRMachine,IsSphereGroup],
         function(M,G)
     M := M^GroupHomomorphismByImages(StateSet(M),G);
-    IsSphereMachine(M);
     return M;
 end);   
 
@@ -252,19 +242,14 @@ InstallMethod(AsSphereMachine, "(IMG) for a group FR machine",
     
     # try running a spider algorithm to discover a good ordering
     w := SpiderAlgorithm(M);
+    
+    if w<>fail then
+        return w.spheremachine;
+    fi;
+    
     f := M!.free;
 
-    perm := [fail];
-    if w<>fail and w.minimal then # try that ordering first
-        Add(perm,GeneratorsOfGroup(f){w.ordering},1);
-    fi;
-    for p in perm do
-        if p=fail then # add now all permutations fixing first letter
-            for p in SymmetricGroup([2..Length(GeneratorsOfGroup(f))]) do
-                Add(perm,Permuted(GeneratorsOfGroup(f),p));
-            od;
-            continue;
-        fi;
+    for p in List(SymmetricGroup([2..Length(GeneratorsOfGroup(f))]),p->Permuted(GeneratorsOfGroup(f),p)) do
         g := AsSphereGroup(f/[Product(p,One(StateSet(M)))]);
         epi := GroupHomomorphismByImages(f,g);
         N := M^epi;
@@ -306,7 +291,7 @@ InstallMethod(IsKneadingMachine, "(IMG) for a Mealy machine",
             fi;
         fi;
         for t in Cycles(PermList(Output(M,s)),AlphabetOfFRObject(M)) do
-            if Number(t,x->not IsOne(FRElement(M,Transition(M,s,t))))>1 then
+            if Number(t,x->not IsOne(FRElement(M,Transition(M,s,x))))>1 then
                 return false;
             fi;
         od;
@@ -341,19 +326,54 @@ BindGlobal("PLANAREMBEDDINGMEALYMACHINE@", function(M,justone)
     return result;
 end);
 
+InstallMethod(PlanarEmbeddingOfKneadingMachine, "(IMG) for a Mealy machine",
+        [IsMealyMachine],
+        function(M)
+    local e;
+    e := PLANAREMBEDDINGMEALYMACHINE@(M,true);
+    if e=[] then
+        return fail;
+    else
+        return e;
+    fi;
+end);
+
+InstallMethod(PlanarEmbeddingOfKneadingMachine, "(IMG) for a Mealy machine",
+        [IsMealyMachine and HasPlanarEmbeddingsOfKneadingMachine],
+        function(M)
+    local e;
+    e := PlanarEmbeddingsOfKneadingMachine(M);
+    if e=[] then
+        return fail; 
+    else
+        return e[1];
+    fi;
+end);
+
+InstallMethod(PlanarEmbeddingsOfKneadingMachine, "(IMG) for a Mealy machine",
+        [IsMealyMachine],
+        M->PLANAREMBEDDINGMEALYMACHINE@(M,false));
+
 InstallMethod(IsPlanarKneadingMachine, "(IMG) for a Mealy machine",
         [IsMealyMachine],
-        M->PLANAREMBEDDINGMEALYMACHINE@(M,true)<>[]);
+        M->PlanarEmbeddingOfKneadingMachine(M)<>fail);
 
 InstallMethod(AsPolynomialSphereMachine, "(IMG) for a Mealy machine",
         [IsMealyMachine],
         function(M)
-    local a;
-    a := PLANAREMBEDDINGMEALYMACHINE@(M,true);
-    if a=[] then return fail; fi;
+    local a, g, g0, iso, rk, N;
+    a := PlanarEmbeddingOfKneadingMachine(M);
+    if a=fail then return fail; fi;
     M := AsGroupFRMachine(M);
-    SetAddingElement(M,FRElement(M,Product(a,x->x^Correspondence(M))));
-    return M;
+    g0 := StateSet(M);
+    rk := RankOfFreeGroup(g0);
+    g := FreeGroup(Concatenation(List(GeneratorsOfGroup(g0),String),["f∞"]));
+    iso := GroupHomomorphismByImages(g0,g,GeneratorsOfGroup(g){[1..rk]});
+    g := AsSphereGroup(g/[Product(a,x->x^Correspondence(M))^iso*g.(rk+1)]);
+    N := M^iso;
+    SetAddingElement(N,FRElement(N,g.(rk+1)));
+    SetCorrespondence(N,Correspondence(M)*iso);
+    return N;
 end);
 #############################################################################
 
@@ -390,7 +410,6 @@ InstallMethod(\*, "(IMG) for a sphere machine and a mapping",
         function(M,f)
     local N, x;
     N := RIGHTACTMACHINE@FR(M,f);
-    IsSphereMachine(N);
     if HasAddingElement(M) then
         x := InitialState(AddingElement(M));
 	if x^f=x then COPYADDER@(N,M); fi;
@@ -402,8 +421,7 @@ InstallMethod(\*, "(IMG) for a mapping and a sphere machine",
         [IsMapping, IsSphereMachine], 2,
         function(f,M)
     local N, x;
-    N := RIGHTACTMACHINE@FR(f,M);
-    IsSphereMachine(N);
+    N := LEFTACTMACHINE@FR(f,M);
     if HasAddingElement(M) then
         x := InitialState(AddingElement(M));
 	if x^f=x then COPYADDER@(N,M); fi;
@@ -416,7 +434,6 @@ InstallMethod(\^, "(IMG) for a sphere machine and a mapping",
         function(M,f)
     local N;
     N := CONJACTMACHINE@FR(M,f);
-    IsSphereMachine(N);
     if HasAddingElement(M) then
         SetAddingElement(N,FRElement(N,InitialState(AddingElement(M))^f));
     fi;
@@ -505,7 +522,6 @@ InstallMethod(ChangeFRMachineBasis, [IsPolynomialSphereMachine, IsCollection, Is
         function(m,c,p)
     local newm;
     newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
-    IsSphereMachine(newm);
     SetAddingElement(newm,FRElement(newm,InitialState(AddingElement(m))));
     return newm;
 end);
@@ -514,7 +530,6 @@ InstallMethod(ChangeFRMachineBasis, [IsSphereMachine, IsCollection, IsPerm],
         function(m,c,p)
     local newm;
     newm := CHANGEFRMACHINEBASIS@FR(m,c,p);
-    IsSphereMachine(newm);
     return newm;
 end);
 
@@ -704,8 +719,6 @@ InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a sphere machine and 
     od;
     N := ChangeFRMachineBasis(N,basis*RepresentativeAction(model,x,adder));
     
-    # set filter
-    IsSphereMachine(N);
     return N;
 end);
 
@@ -1136,7 +1149,6 @@ InstallMethod(PolynomialSphereMachine, "(IMG) for a degree, Fatou and Julia prea
         machine := FRMachine(f,trans,out);
         SetAddingElement(machine,FRElement(machine,gens[Length(gens)]));
         SetCorrespondence(machine,pcp);
-        IsSphereMachine(machine);
     fi;
 
     if not (machtype.formal or machtype.mealy) then
@@ -1252,7 +1264,6 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
         od;
     od;
     sum := FRMachineNC(FamilyObj(machines[1]),amalgam,trans,out);
-    IsSphereMachine(sum);
     
     SetEquatorElement(sum,adders[1]^embed[1]);
     SetEquatorTwist(sum,GroupHomomorphismByImages(amalgam,amalgam,

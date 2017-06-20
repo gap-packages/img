@@ -313,11 +313,13 @@ RSS.putpoint := function(cid,point,arg...)
     content := [P1POINT2XML@(point)];
     for a in arg do
         if IsFloat(a) then
-            attr.radius := a;
+            attr.radius := String(a);
         elif IsString(a) then
             Add(content,rec(name:="label",attributes:=rec(),content:=a));
         elif IsList(a) then
-            attr.color := Concatenation("0x",HexStringInt(a[1]*256^2+a[2]*256+a[3]));
+            a := HexStringInt(16*256^3+a[1]*256^2+a[2]*256+a[3]);
+            a{[1,2]} := "0x";
+            attr.color := a;
         elif IsRecord(a) then
             attr := a;
         else

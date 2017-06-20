@@ -761,28 +761,34 @@ fi;
 BindGlobal("DRAWPOINTS@", function(cid,t,extrapoints)
     local i, label, arcs, labels;
     
-    return;
-    
     arcs := ValueOption("noarcs")=fail;
     labels := ValueOption("nolabels")=fail;
     
     for i in t!.v do
         if IsFake(i) and arcs then
-            RSS.putpoint(cid, Pos(i), "", 0.5);
+            RSS.putpoint(cid, Pos(i), "", 0.2);
         elif not IsFake(i) then
             if labels then
                 label := ViewString(CleanedP1Point(Pos(i),@.p1eps));
                 RemoveCharacters(label,"<>");
+                if label{[-2..0]+Length(label)}="+0i" then
+                    Remove(label); Remove(label); Remove(label);
+                fi;
+                if label[1]="0" and Length(label)>1 then
+                    if label[2]="+" then Remove(label,1); Remove(label,1); fi;
+                    if label[2]="-" then Remove(label,1); fi;
+                fi;
+                if Pos(i)=P1infinity then label := "∞"; fi;
             else
                 label := "";
             fi;
-            RSS.putpoint(cid, Pos(i), label, 2.0);
+            RSS.putpoint(cid, Pos(i), label, 0.5);
         fi;
     od;
     if arcs then
-        for i in t!.f do RSS.putpoint(cid, Pos(i), 1.0); od;
+        for i in t!.f do RSS.putpoint(cid, Pos(i), "", 0.2); od;
     fi;
-    for i in extrapoints do RSS.putpoint(cid, Pos(i), 0.5); od;
+    for i in extrapoints do RSS.putpoint(cid, Pos(i), "", 0.2); od;
 end);
 
 BindGlobal("DRAWARCS@", function(cid, edges, arcs)

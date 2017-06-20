@@ -946,12 +946,13 @@ BindGlobal("FINDTHREEPOINTS@", function(points)
 end);    
 
 BindGlobal("P1NORMALIZINGMAP@", function(points)
-    local map, barycenter, dilate, rpoints;
+    local map, barycenter, dilate, rpoints, numiter;
     # highly buggy! we should improve on the precision returned by the IEEE754 routine !!!
 
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
-    barycenter := FIND_BARYCENTER(rpoints,100);
-    while barycenter[3]=100 do
+    numiter := 50+10*Length(rpoints);
+    barycenter := FIND_BARYCENTER(rpoints,numiter);
+    while barycenter[3]=numiter do
 	Error("FIND_BARYCENTER did not converge");
     od;
     Info(InfoIMG,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");

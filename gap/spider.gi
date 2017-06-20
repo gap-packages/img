@@ -276,10 +276,10 @@ BindGlobal("NEWORDERING@", function(machine, preimageset, ordering, address, deg
     set := [];
     newordering := PREIMAGE_ORDERING@(preimageset, ordering, address, degree);
     sset := List([1..degree],i->[]); 
-    for s in [1..Length(gens)] do
-        for c in Cycles(PermList(Output(machine,gens[s])), AlphabetOfFRObject(machine)) do
+    for s in gens do
+        for c in Cycles(PermList(Output(machine,s)), AlphabetOfFRObject(machine)) do
             if Length(c)>1 then 
-                v := ExtRepOfObj(Transition(machine,gens[s],c[Length(c)]));
+                v := ExtRepOfObj(Transition(machine,s,c[Length(c)]));
                 v := v{[1,3..Length(v)-1]};
                 if not IsDuplicateFreeList(v) then return fail; fi;
                 if ISSUBCOLLECTION@(v, sset[c[Length(c)]]) then 
@@ -293,18 +293,17 @@ BindGlobal("NEWORDERING@", function(machine, preimageset, ordering, address, deg
 
         od;
     od;
-   if not ISSUBCOLLECTION@(sset[degree], newordering[degree]) then
+    
+    if not ISSUBCOLLECTION@(sset[degree], newordering[degree]) then
         sset[degree] := UNIONORDERING@(newordering[degree],sset[degree]);
         if sset[degree] = fail then return fail; fi; 
    fi;
-   i := degree;
 
-   while i>0 do
+   for i in [degree,degree-1..1] do
       if not ISSUBCOLLECTION@(set,sset[i]) then 
           set := UNIONORDERING@(set, sset[i]); 
           if set = fail then return fail; fi; 
       fi;
-      i := i-1;
    od;
 
     return set;

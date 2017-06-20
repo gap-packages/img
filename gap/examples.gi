@@ -233,4 +233,56 @@ InstallGlobalFunction(PoirierExamples, function(arg)
 end);
 #############################################################################
 
+#############################################################################
+##
+#E SphereTorusMap
+##
+InstallMethod(SphereTorusMap, "(IMG) for two integers",
+        [IsPosInt,IsPosInt],
+        function(m,n)
+    local i2p, p2i, s, a, b, f, g, trans, perm, t, p;
+    f := FreeGroup("sw","se","nw","ne");
+    f := AsSphereGroup(f/[f.1*f.2*f.3*f.4]);
+    i2p := function(i) return [1+RemInt(i-1,m),1+QuoInt(i-1,m)]; end;
+    p2i := function(a) return a[1]+m*(a[2]-1); end;
+    
+    trans := [];
+    perm := [];
+    for s in [[-1,-1],[1,-1],[1,1],[-1,1]] do
+        t := [];
+        p := [];
+        for a in Cartesian([1..m],[1..n]) do
+            if IsOddInt(a[2]) then
+                b := a+s;
+            else
+                b := a-s;
+            fi;
+            if b=[0,0] then
+                b := [1,1]; g := f.1;
+            elif b=[m+1,0] then
+                b := [m,1]; g := f.2;
+            elif b=[m+1,n+1] then
+                b := [m,n]; g := f.3;
+            elif b=[0,n+1] then
+                b := [1,n]; g := f.4;
+            elif b[1]=0 then
+                b[1] := m; g := f.1*f.2;
+            elif b[1]=m+1 then
+                b[1] := 1; g := f.3*f.4;
+            elif b[2]=0 then
+                b := [m+1-b[1],1]; g := f.2;
+            elif b[2]=n+1 then
+                b := [m+1-b[1],n]; g := f.3;
+            else
+                g := One(f);
+            fi;
+            p[p2i(a)] := p2i(b);
+            t[p2i(a)] := g;
+        od;
+        Add(trans,t);
+        Add(perm,p);
+    od;
+    return FRMachine(f,trans,perm);
+end);
+
 #E examples.gi. . . . . . . . . . . . . . . . . . . . . . . . . . . ends here

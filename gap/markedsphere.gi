@@ -52,12 +52,14 @@ InstallMethod(Draw, "(IMG) for a point in Teichmuller space",
     
     DRAWPOINTS@(cid,spider!.cut,extrapoints);
     DRAWARCS@(cid,spider!.cut!.e,extraarcs);
+    
+    return cid;
 end);
 
 InstallOtherMethod(Draw, "(IMG) for a P1 map",
         [IsP1Map],
         function(map)
-    Draw(MarkedSphere(SphereMachine(map)));
+    return Draw(MarkedSphere(SphereMachine(map)));
 end);
 
 BindGlobal("CHECKSPIDER@", function(s)
@@ -639,7 +641,6 @@ InstallMethod(SphereMachineOfBranchedCovering, "(IMG) for two marked spheres, a 
     fi;
 
     machine := FRMachine(src!.model,state,perm);
-    IsSphereMachine(machine); # set filter
 
     if poly then
         SetAddingElement(machine,FRElement(machine,src!.model.(Length(state))));

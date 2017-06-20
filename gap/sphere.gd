@@ -11,6 +11,7 @@
 #############################################################################
 
 DeclareProperty("IsSphereGroup", IsFpGroup);
+
 DeclareCategory("IsElementOfSphereGroup", IsElementOfFpGroup and IsAssocWord);
 DeclareCategoryCollections("IsElementOfSphereGroup");
 DeclareCategoryCollections("IsElementOfSphereGroupCollection");

@@ -257,6 +257,22 @@ InstallGlobalFunction(SphereGroup, function (arg)
     return G;
 end);
 
+InstallMethod(ViewString, "(IMG) for a sphere group",
+        [IsSphereGroup],
+        function(g)
+    local rel, s;
+    rel := RelatorsOfFpGroup(g);
+    s := Concatenation("<sphere group on generators ",ViewString(GeneratorsOfGroup(g)),", ");
+    if Length(rel)=1 then
+        Append(s,Concatenation("ordering ",String(rel[1])));
+    else
+        Append(s,Concatenation("relators ",String(rel)));
+    fi;
+    Append(s,">");
+    return s;
+end);
+InstallMethod(ViewObj, [IsSphereGroup], 100, function(g) Print(ViewString(g)); end); # FP group method has too high priority, and does not delegate to ViewString
+    
 InstallMethod(OrderingOfSphereGroup, "(IMG) for a sphere group, get family attribute",
         [IsSphereGroup],
         g->FamilyObj(One(g))!.ordering);
@@ -394,6 +410,7 @@ BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     od;
     return [minm,ElementOfSphereGroup(fam,minx)];
     
+##!!! TODO:
 ## optimize with the following python code [Kellogg S. Booth (1980). "Lexicographically least circular substrings". Information Processing Letters. Elsevier. 10 (4-5): 240–242. doi:10.1016/0020-0190(80)90149-0]
 ##def lcs(S):
 ##    S += S      # Concatenate string to it self to avoid modular arithmetic
