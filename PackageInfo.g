@@ -57,7 +57,8 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">=4.6.0",
   NeededOtherPackages := [["FR",">=2.0.0"],
-                      ["GAPDoc",">=1.0"]],
+                      ["GAPDoc",">=1.0"],
+		      ["IO",">=4.0"]],
   SuggestedOtherPackages := [["Float",">=0.4"]],
 
   # for compilation of the external module, one needs:

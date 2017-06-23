@@ -146,6 +146,7 @@ end;
 RSS.enqueue := function()
     local c, s;
     c := IO_ReadLine(RSS.f);
+    Info(InfoIMG,2,"Received ",c);
     for s in ParseTreeXMLString(c).content do
         if s.name="PCDATA" then # ignore
         elif s.name="error" then
@@ -248,9 +249,16 @@ RSS.getsession := function(arg)
 end;
 
 RSS.newobject := function(type,arg...)
-    local status, attr;
-    if arg=[] then attr := rec(); else attr := arg[1]; fi;
-    RSS.send(rec(session:=RSS.session,object:=RSS.window),[rec(name:=type,attributes:=attr,content:=[])]);
+    local status, a, attributes, content;
+    attributes := rec();
+    content := [];
+    for a in arg do
+        if IsList(a) then content := a;
+        elif IsRecord(a) then attributes := a;
+        else Error("Bad argument to newobject: ",a);
+        fi;
+    od;
+    RSS.send(rec(session:=RSS.session,object:=RSS.window),[rec(name:=type,attributes:=attributes,content:=content)]);
     status := RSS.ack("created","newobject");
     return status.content[1].attributes.id;    
 end;
@@ -269,7 +277,7 @@ end;
 RSS.newcanvas := function()
     local status, killbutton, canvas;
     killbutton := RSS.newobject("button",rec(name:="Close canvas"));
-    canvas := RSS.newobject("canvas");
+    canvas := RSS.newobject("canvas",[rec(name:="config",attributes:=rec(key:="showGrid",value:="false"),content:=[]),rec(name:="config",attributes:=rec(key:="showAbsGrid",value:="false"),content:=[]),rec(name:="config",attributes:=rec(key:="showArcs",value:="true"),content:=[])]);
     RSS.callback.(killbutton) := function(s)
         RSS.removeobject(killbutton);
         RSS.removeobject(canvas);
@@ -298,11 +306,14 @@ RSS.putarc := function(cid,arc,arg...)
     od;
     if IsList(arc) then
         content := List(arc,P1POINT2XML@);
+    elif IsP1Map(arc) then
+        content := List(Concatenation(CoefficientsOfP1Map(arc)),COMPLEX2XML@);
+        attr.type := "transformation";
     else
         Error("Arc in bad format: ",arc); # maybe allow an edge here?
     fi;
     
-    RSS.populatoobject(cid,[rec(name:="arc",attributes:=attr,content:=content)]);
+    RSS.populateobject(cid,[rec(name:="arc",attributes:=attr,content:=content)]);
 end;
 
 # point is a P1 point.

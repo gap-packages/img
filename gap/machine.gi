@@ -176,6 +176,8 @@ InstallGlobalFunction(NewSphereMachine,
 
     while '=' in arg[Length(arg)] do Error("I couldn't find any relator"); od;
     
+# disabled -- we only test if one of the generators is an adder
+###    
 #    adder := ValueOption("AddingElement");
 #    if adder<>fail then
 #        while not IsString(adder) do
@@ -214,10 +216,11 @@ InstallGlobalFunction(NewSphereMachine,
 #        od;
 #        SetAddingElement(machine,FRElement(machine,adder));
 #    fi;
-    len := Length(GeneratorsOfGroup(states));
-    if ISADDER@(machine,states.(len)) then
-        SetAddingElement(machine,FRElement(machine,states.(len)));
-    fi;
+    for adder in Reversed(GeneratorsOfGroup(states)) do
+        if ISADDER@(machine,adder) then
+            SetAddingElement(machine,FRElement(machine,adder));
+        fi;
+    od;
     
     return machine;
 end);
@@ -620,7 +623,7 @@ InstallMethod(SupportingRays, "(IMG) for a polynomial sphere machine",
     local g, gens, img, adder, f, nf, trans, output, spider, newM;
     
     # put the adding element in standard form
-    M := SphereMachineWithNormalizedAdder(M);
+    M := FRMachineWithNormalizedAdder(M);
     g := StateSet(M);
     gens := GeneratorsOfGroup(g);
     img := ShallowCopy(gens);
@@ -689,8 +692,8 @@ BindGlobal("REDUCEINNER@", function(img0,gen)
     return elt;
 end);
 
-InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a sphere machine and an adder",
-        [IsSphereMachine,IsAssocWord],
+InstallMethod(FRMachineWithNormalizedAdder, "(IMG) for a group FR machine and an adder",
+        [IsGroupFRMachine,IsAssocWord],
         function(M,adder)
     # conjugate the recursion so that the adding element t becomes of the form (t,...,1)s,
     # where s is the cycle i|->i-1 mod d.
@@ -722,11 +725,11 @@ InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a sphere machine and 
     return N;
 end);
 
-InstallMethod(SphereMachineWithNormalizedAdder, "(IMG) for a polynomial sphere machine",
+InstallMethod(FRMachineWithNormalizedAdder, "(IMG) for a polynomial sphere machine",
         [IsPolynomialSphereMachine],
         function(M)
     local N;
-    N := SphereMachineWithNormalizedAdder(M,InitialState(AddingElement(M)));
+    N := FRMachineWithNormalizedAdder(M,InitialState(AddingElement(M)));
     COPYADDER@(N,M);
     return N;
 end);
@@ -1246,7 +1249,7 @@ InstallMethod(Mating, "(IMG) for two polynomial sphere machines and a boolean",
     od;
     deg := deg[1];
            
-    machines := List(machines,SphereMachineWithNormalizedAdder);
+    machines := List(machines,FRMachineWithNormalizedAdder);
     machines[2] := ChangeFRMachineBasis(machines[2],PermList([deg,deg-1..1])); # make it inverse
 
     states := List(machines,StateSet);

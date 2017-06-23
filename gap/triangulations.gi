@@ -798,8 +798,6 @@ BindGlobal("DRAWARCS@", function(cid, edges, arcs)
         return;
     fi;
     
-    return;
-    
     for e in edges do
         if From(e)!.index>To(e)!.index then # print only in 1 direction
             continue;
@@ -811,7 +809,8 @@ BindGlobal("DRAWARCS@", function(cid, edges, arcs)
         else
             k := [64,255,64];
         fi;
-        RSS.putarc(cid,[FromPos(e),Pos(e),ToPos(e)],j);
+        RSS.putarc(cid,[Pos(From(e)),Pos(e),Pos(To(e))],j);
+#        RSS.putarc(cid,Map(e),j);
         RSS.putarc(cid,[Pos(Left(e)),Pos(e),Pos(Right(e))],k);
     od;
     for a in arcs do RSS.putarc(cid,a); od;

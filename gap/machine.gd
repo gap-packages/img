@@ -16,7 +16,7 @@
 ##
 ## <#GAPDoc Label="SphereMachine">
 ##
-DeclareProperty("IsSphereMachine", IsFRMachine);
+DeclareProperty("IsSphereMachine", IsGroupFRMachine);
 InstallImmediateMethod(IsSphereMachine,IsFRMachine,0,
         function(m)
     local g;
@@ -445,13 +445,13 @@ DeclareAttribute("SupportingRays",IsFRMachine);
 ##   </Description>
 ## </ManSection>
 ##
-DeclareAttribute("SphereMachineWithNormalizedAdder",IsSphereMachine);
-DeclareOperation("SphereMachineWithNormalizedAdder",[IsSphereMachine,IsAssocWord]);
+DeclareAttribute("FRMachineWithNormalizedAdder",IsGroupFRMachine);
+DeclareOperation("FRMachineWithNormalizedAdder",[IsGroupFRMachine,IsAssocWord]);
 ## <ManSection>
-##   <Attr Name="NormalizedAdderSphereMachine" Arg="m [adder]"/>
+##   <Attr Name="FRMachineWithNormalizedAdder" Arg="m [adder]"/>
 ##   <Returns>A sphere machine.</Returns>
 ##   <Description>
-##     This function returns a new sphere machine, in which the adding element
+##     This function returns a new FR machine, in which the adding element
 ##     has been put into a standard form <M>t=[t,1,\dots,1]s</M>, where
 ##     <M>s</M> is the long cycle <M>i\mapsto i-1</M>. If the adding element
 ##     <A>adder</A> is not specified, then <A>m</A> should be a polynomial

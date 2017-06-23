@@ -645,7 +645,11 @@ InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
         if ForAll([1..numcycles],i-> pass[i]=3) then extraniter := extraniter + 1; fi;
         
     until extraniter>m; 
-
+    
+    if Length(ordering)<m-1 then
+       return fail;
+    fi;
+    
     suppangles := SUPPORTING_ANGLES@(machine, image, hyperbolic,addingelement, orbit, preimage, oldaddress, rayperiod, marked);
     
     if addingelement=false then
