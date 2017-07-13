@@ -42,6 +42,20 @@ RSS.startdaemon := function()
         fi;
     od;
     RSS.server := server;
+    i := IO_fork();
+    if i=0 then # gobble all the debugging output from node
+        RSS.gobbleoutput();
+    else
+        InstallAtExit(function() IO_kill(i,IO.SIGTERM); end);
+    fi;
+end;
+
+RSS.gobbleoutput := function()
+    local s;
+    repeat
+        s := IO_ReadLine(RSS.server.stdout);
+        Info(InfoIMG,2,StripBeginEnd(s,"\n"));
+    until s="";
 end;
 
 RSS.startclient := function(arg)
@@ -139,14 +153,16 @@ end;
 RSS.send := function(a,r)
     local s;
     s := StringXMLElement(rec(name := "downdata", attributes := a, content := r))[1];
-    Info(InfoIMG,2,"Sending XML string ",s);
+    Info(InfoIMG,3,"Sending XML string ",s);
+    Add(s,'\n');
     IO_Write(RSS.f, s);
+    IO_Flush(RSS.f);
 end;
 
 RSS.enqueue := function()
     local c, s;
     c := IO_ReadLine(RSS.f);
-    Info(InfoIMG,2,"Received ",c);
+    Info(InfoIMG,3,"Received ",c);
     for s in ParseTreeXMLString(c).content do
         if s.name="PCDATA" then # ignore
         elif s.name="error" then
@@ -188,10 +204,11 @@ end;
 
 RSS.ack := function(status, message)
     local i;
-    
+    Info(InfoIMG,3,"Request ack ",status," for ",message);
     while true do
         for i in [1..Length(RSS.queue)] do
             if RSS.queue[i].attributes.status=status then
+                Info(InfoIMG,3,"Got ack ",RSS.queue[i]," for ",message);
                 return Remove(RSS.queue,i);
             fi;
         od;
@@ -223,7 +240,6 @@ P1MAP2XML@ := function(f)
     cycles := Cycles(PermList(z{[1..Length(z)]}[2]+1),[1..Length(z)]);
     z := z{[1..Length(z)]}[1];
     
-    #@ there was a typo, "nom" instead of "numer", which crashed node.
     return rec(name := "function",
                attributes := rec(degree := String(DegreeOfP1Map(f))),
                content := Concatenation([rec(name := "numer", attributes := rec(), content := List(c[1],COMPLEX2XML@)),
@@ -273,6 +289,14 @@ RSS.populateobject := function(oid,content)
     RSS.ack("updated","populateobject");
 end;
 
+RSS.addtocanvas := function(cid,content)
+    local status;
+    RSS.send(rec(session:=RSS.session,object:=cid,action:="populate"),content);
+    status := RSS.ack("created","addtocanvas");
+    RSS.ack("updated","addtocanvas");
+    return status.content[1].attributes.id;
+end;
+
 ################################################################ top level
 RSS.newcanvas := function()
     local status, killbutton, canvas;
@@ -298,6 +322,8 @@ RSS.putarc := function(cid,arc,arg...)
     for a in arg do
         if IsList(a) then
             attr.color := Concatenation("0x",HexStringInt(a[1]*256^2+a[2]*256+a[3]));
+        elif IsFloat(a) then
+            attr.width := String(a);
         elif IsRecord(a) then
             attr := a;
         else
@@ -306,14 +332,16 @@ RSS.putarc := function(cid,arc,arg...)
     od;
     if IsList(arc) then
         content := List(arc,P1POINT2XML@);
+        attr.type := "points";
     elif IsP1Map(arc) then
-        content := List(Concatenation(CoefficientsOfP1Map(arc)),COMPLEX2XML@);
+        a := CoefficientsOfP1Map(arc);
+        content := List([a[1][2],a[1][1],a[2][2],a[2][1]],COMPLEX2XML@);
         attr.type := "transformation";
     else
-        Error("Arc in bad format: ",arc); # maybe allow an edge here?
+        Error("Arc in bad format: ",arc);
     fi;
     
-    RSS.populateobject(cid,[rec(name:="arc",attributes:=attr,content:=content)]);
+    RSS.addtocanvas(cid,[rec(name:="arc",attributes:=attr,content:=content)]);
 end;
 
 # point is a P1 point.
@@ -337,7 +365,7 @@ RSS.putpoint := function(cid,point,arg...)
             Error("Unknown argument ",a);
         fi;
     od;
-    RSS.populateobject(cid,[rec(name:="point",attributes:=attr,content:=content)]);
+    RSS.addtocanvas(cid,[rec(name:="point",attributes:=attr,content:=content)]);
 end;
 
 ################################################################ tests

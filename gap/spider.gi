@@ -1,6 +1,6 @@
 #############################################################################
 ##
-#W spider.g                                 Laurent Bartholdi + Dzmitry Dudko
+#W spider.gi                                Laurent Bartholdi + Dzmitry Dudko
 ##
 #Y Copyright (C) 2010, Laurent Bartholdi + Dzmitry Dudko
 ##

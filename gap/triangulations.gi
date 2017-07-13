@@ -809,9 +809,8 @@ BindGlobal("DRAWARCS@", function(cid, edges, arcs)
         else
             k := [64,255,64];
         fi;
-        RSS.putarc(cid,[Pos(From(e)),Pos(e),Pos(To(e))],j);
-#        RSS.putarc(cid,Map(e),j);
-        RSS.putarc(cid,[Pos(Left(e)),Pos(e),Pos(Right(e))],k);
+        RSS.putarc(cid,Map(e),j,4.0);
+        RSS.putarc(cid,[Pos(Left(e)),Pos(e),Pos(Right(e))],k,4.0);
     od;
     for a in arcs do RSS.putarc(cid,a); od;
 end);
