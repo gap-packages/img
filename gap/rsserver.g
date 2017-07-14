@@ -17,45 +17,78 @@ OnCharReadHookActive := true; # we'll use read hooks
 
 ################################################################ low level IO
 RSS.startdaemon := function()
-    local server, s, i;
+    local server, s, i, debug, suckerror, dumpoutput;
+    
+    suckerror := function()
+        local s, e;
+        e := "";
+        while IO_HasData(server.stderr) do
+            s := IO_ReadLine(server.stderr);
+            if s="" then break; fi;
+            Append(e,s);
+        od;
+        return e;
+    end;
+    
+    dumpoutput := function()
+        local s;
+        repeat
+            s := IO_ReadLine(RSS.server.stdout);
+            Info(InfoIMG,2,StripBeginEnd(s,"\n"));
+        until s="";
+    end;
+
     if RSS.server<>fail then
         Error("Server seems already started");
     fi;
+    debug := ValueOption("debugnode");
+    if debug=fail then
+        debug := 0;
+    elif debug=true then
+        debug := 1;
+    fi;
+    if debug>0 then
+        server := Concatenation("rsserver-debug",String(debug),".js");
+    else
+        server := "rsserver.js";
+    fi;
     CHECKEXEC@FR("node");
-    server := IO_Popen3(EXEC@FR.node,[Filename(Directory(PackageInfo("img")[1].InstallationPath),"rsserver/rsserver.js")]);
+    server := IO_Popen3(EXEC@FR.node,[Filename(Directory(PackageInfo("img")[1].InstallationPath),Concatenation("rsserver/",server))]);
+    
     for i in [1..3] do
         s := IO_ReadLine(server.stdout);
         if s<>"" then Remove(s); fi; # remove \n
-        Info(InfoIMG,1,s);
+        Info(InfoIMG,2,s);
         s := SplitString(s," ,");
         if i=2 then
             if Length(s)<5 or s{[1..5]}<>["WebSocket","server","is","running.","Type"] then
-                Error("Bad reply from daemon, no Websocket server");
+                Error("Bad reply from daemon, no Websocket server\n",suckerror());
             fi;
             server.client := s[6];
         elif i=3 then
             if Length(s)<5 or s{[1..5]}<>["TCP","server","is","running","at"] then
-                Error("Bad reply from daemon, no TCP server");
+                Error("Bad reply from daemon, no TCP server\n",suckerror());
             fi;
             server.address := s[6];
             server.port := Int(s[9]);
         fi;
-    od;
-    RSS.server := server;
-    i := IO_fork();
-    if i=0 then # gobble all the debugging output from node
-        RSS.gobbleoutput();
-    else
-        InstallAtExit(function() IO_kill(i,IO.SIGTERM); end);
+    od;    
+    
+    s := suckerror();
+    if s<>"" then
+        Error("Node server error",s);
     fi;
-end;
-
-RSS.gobbleoutput := function()
-    local s;
-    repeat
-        s := IO_ReadLine(RSS.server.stdout);
-        Info(InfoIMG,2,StripBeginEnd(s,"\n"));
-    until s="";
+        
+    RSS.server := server;
+    
+    if debug>0 then # gobble all the debugging output from node
+        i := IO_fork();
+        if i=0 then
+            dumpoutput();
+        else
+            InstallAtExit(function() IO_kill(i,IO.SIGTERM); end);
+        fi;
+    fi;
 end;
 
 RSS.startclient := function(arg)
