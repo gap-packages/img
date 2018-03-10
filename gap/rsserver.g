@@ -91,6 +91,7 @@ RSS.startdaemon := function()
     fi;
 end;
 
+#!TODO: treat an extra argument "session" and append "?session=s1" to url
 RSS.startclient := function(arg)
     local status, url, cmd;
     if arg=[] then
@@ -415,3 +416,13 @@ RSS.samplewindow := function(map)
     RSS.populateobject(cid,[map]);
     RSS.putpoint(cid,P1Point(1.0,0.5));
 end;
+
+if false then # test
+    LoadPackage("img");
+    SetInfoLevel(InfoIMG,3);
+    RSS.open(:debugnode:=3);
+    c := RSS.newcanvas();
+    image := Base64String(StringFile("/Users/laurent/ownCloud/tex/math/v3/mandelbrot.png"));;
+    image := Base64String(StringFile("/Users/laurent/ownCloud/tex/math/mandelbrot/rabbit.png"));;
+    RSS.populateobject(c,[rec(name:="bitmap",attributes:=rec(name:="xxx"),content:=[rec(name:="data",attributes:=rec(),content:=[Concatenation("data:image/png;base64,",image)])])]);
+fi;

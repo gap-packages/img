@@ -950,7 +950,7 @@ BindGlobal("P1NORMALIZINGMAP@", function(points)
     # highly buggy! we should improve on the precision returned by the IEEE754 routine !!!
 
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
-    numiter := 50+10*Length(rpoints);
+    numiter := 200+100*Length(rpoints);
     barycenter := FIND_BARYCENTER(rpoints,numiter);
     while barycenter[3]=numiter do
 	Error("FIND_BARYCENTER did not converge");
