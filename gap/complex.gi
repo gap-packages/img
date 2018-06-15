@@ -103,7 +103,7 @@ InstallMethod(ComplexConjugate, [IsPMComplex],
         x->Objectify(TYPE_PMCOMPLEX, [x![1],-x![2]]));
 InstallMethod(Norm, [IsPMComplex], x->x![1]^2+x![2]^2);
 InstallMethod(AbsoluteValue, [IsPMComplex], x->Sqrt(x![1]^2+x![2]^2));
-InstallMethod(Argument, [IsPMComplex], x->ATAN2_MACFLOAT(x![2],x![1]));
+InstallOtherMethod(Argument, [IsPMComplex], x->ATAN2_MACFLOAT(x![2],x![1]));
 
 InstallMethod(SUM, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)

@@ -40,7 +40,7 @@ ReadPackage("img", "gap/examples.gd");
 CallFuncList(function()
     local dirs, dll, w;
     dirs := DirectoriesPackagePrograms("img");
-    dll := Filename(dirs,"img.so");
+    dll := Filename(dirs[1],"img.so");
     if dll=fail then
 	Info(InfoPackageLoading,1,"img.so not found -- you may want to compile it with './configure && make' in ",PackageInfo("img")[1].InstallationPath,"\n...");
 	dll := Filename(dirs[1],"img.so");
