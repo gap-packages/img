@@ -488,18 +488,10 @@ static Int InitLibrary ( StructInitInfo * module )
 }
 
 static StructInitInfo module = {
- /* type        = */ MODULE_DYNAMIC,
- /* name        = */ "img.c",
- /* revision_c  = */ 0,
- /* revision_h  = */ 0,
- /* version     = */ 0,
- /* crc         = */ 0,
- /* initKernel  = */ InitKernel,
- /* initLibrary = */ InitLibrary,
- /* checkInit   = */ 0,
- /* preSave     = */ 0,
- /* postSave    = */ 0,
- /* postRestore = */ 0
+    .type = MODULE_DYNAMIC,
+    .name = "img.c",
+    .initKernel = InitKernel,
+    .initLibrary = InitLibrary,
 };
 
 StructInitInfo * Init__Dynamic ( void )
