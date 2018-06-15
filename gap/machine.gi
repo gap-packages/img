@@ -783,7 +783,7 @@ end);
 ##
 #M  Post-critical machine
 ##
-BindGlobal("POSTCRITICALPOINTS@", function(f)
+BindGlobal("POSTCRITICALPOINTS@", function(f, maxpoints...)
     # return [poly,[critical points],[post-critical points],[transitions]]
     # where poly=true/false says if there is a fixed point of maximal degree;
     # it is then the last element of <post-critical points>
@@ -794,6 +794,8 @@ BindGlobal("POSTCRITICALPOINTS@", function(f)
 
     local c, i, j, cp, pcp, n, deg, newdeg, poly, polypos,
           transitions, src, dst;
+
+    if maxpoints=[] then maxpoints := infinity; else maxpoints := maxpoints[1]; fi;
 
     deg := DegreeOfP1Map(f);
     cp := CollectedP1Points(CriticalPointsOfP1Map(f));
@@ -818,6 +820,9 @@ BindGlobal("POSTCRITICALPOINTS@", function(f)
             fi;
             dst := PositionProperty(pcp,d->P1Distance(c,d)<@.p1eps);
             if dst=fail then
+                if Length(pcp) > maxpoints then
+                    Error("More post-critical points than limit. Restart with larger @img.p1eps");
+                fi;
                 if j=fail then
                     Add(pcp,c);
                 else
