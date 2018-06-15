@@ -31,7 +31,7 @@ Obj TYPE_P1POINT, TYPE_P1MAP, IsP1Point, IsP1Map,
 static Obj NEW_DATOBJ (size_t size, Obj type)
 {
   Obj obj = NewBag(T_DATOBJ,sizeof(Obj)+size);
-  TYPE_DATOBJ(obj) = type;
+  SET_TYPE_DATOBJ(obj, type);
   return obj;
 }
   
