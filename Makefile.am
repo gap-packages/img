@@ -9,9 +9,9 @@ LIBDOGLEG=extern/libdogleg-0.09
 lib_LTLIBRARIES = img.la
 img_la_DEPENDENCIES = liblevmar
 img_la_SOURCES = src/img.c src/p1.c src/rpoly.c
-img_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H -I$(LEVMAR)
-# Note that the latter is only for GAP 4.4.12
-img_la_LDFLAGS = -module -avoid-version -L$(BINARCHDIR)/lib -llevmar -llapack -lblas
+img_la_CPPFLAGS = $(GAP_CPPFLAGS) -I$(LEVMAR)
+img_la_CFLAGS = $(GAP_CFLAGS)
+img_la_LDFLAGS = $(GAP_LDFLAGS) -module -avoid-version -L$(BINARCHDIR)/lib -llevmar -llapack -lblas
 if SYS_IS_CYGWIN
 img_la_LDFLAGS += -no-undefined -version-info 0:0:0 -Wl,$(GAPROOT)/bin/$(GAPARCH)/gap.dll
 endif

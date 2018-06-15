@@ -41,7 +41,6 @@ AC_C_CONST
 AC_C_INLINE
 AC_CHECK_HEADERS(malloc/malloc.h)
 AC_CHECK_HEADERS(malloc.h)
-AC_CHECK_SIZEOF([void **])
 AC_CHECK_LIB(m,sincos,AC_DEFINE(HAVE_SINCOS,1,do we have sincos?))
 
 AC_CYGWIN
