@@ -6,10 +6,10 @@
   
   [1X6.1-1 IsPMComplex[101X
   
-  [29X[2XIsPMComplex[102X[32X filter
-  [29X[2XPMCOMPLEX_FAMILY[102X[32X family
-  [29X[2XPMCOMPLEX_PSEUDOFIELD[102X[32X global variable
-  [29X[2XPMCOMPLEX[102X[32X global variable
+  [33X[1;0Y[29X[2XIsPMComplex[102X[32X filter[133X
+  [33X[1;0Y[29X[2XPMCOMPLEX_FAMILY[102X[32X family[133X
+  [33X[1;0Y[29X[2XPMCOMPLEX_PSEUDOFIELD[102X[32X global variable[133X
+  [33X[1;0Y[29X[2XPMCOMPLEX[102X[32X global variable[133X
   
   [33X[0;0YA  "poor  man's"  implementation of complex numbers, based on the underlying
   64-bit floating-point numbers in [5XGAP[105X.[133X
@@ -66,12 +66,12 @@
   
   [1X6.2-1 Mandel[101X
   
-  [29X[2XMandel[102X( [[3Xmap[103X] ) [32X function
+  [33X[1;0Y[29X[2XMandel[102X( [[3Xmap[103X] ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YCalls the external program [11Xmandel[111X.[133X
   
   [33X[0;0YThis  function starts the external program [11Xmandel[111X, by Wolf Jung. The program
   is  searched for along the standard PATH; alternatively, its location can be
-  set in the string variable EXEC@fr.mandel.[133X
+  set in the string variable EXEC@FR.mandel.[133X
   
   [33X[0;0YWhen  called  with  no  arguments, this command returns starts [11Xmandel[111X in its
   default  mode. With a rational map as argument, it starts [11Xmandel[111X pointing at
@@ -83,7 +83,7 @@
   
   [1X6.2-2 NonContractingSubmatrix[101X
   
-  [29X[2XNonContractingSubmatrix[102X( [3Xmat[103X ) [32X operation
+  [33X[1;0Y[29X[2XNonContractingSubmatrix[102X( [3Xmat[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10Y[9Xfail[109X or a list of indices [10Xl[110X such that [10Xmat{l}{l}[110X is irreducible and
             non-contracting[133X
   
@@ -106,7 +106,7 @@
   
   [1X6.3-1 InfoIMG[101X
   
-  [29X[2XInfoIMG[102X[32X info class
+  [33X[1;0Y[29X[2XInfoIMG[102X[32X info class[133X
   
   [33X[0;0YThis    is    an   [9XInfo[109X   class   for   the   package   [5XIMG[105X.   The   command
   [10XSetInfoLevel(InfoIMG,1);[110X switches on the printing of some information during

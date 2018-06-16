@@ -2,13 +2,13 @@
   
   [1XReferences[101X
   
-  [[20XBGN03[120X]  [16XBartholdi, L., Grigorchuk, R. I. and Nekrashevych, V.[116X, [17XFrom fractal
-  groups  to fractal sets[117X, in Fractals in Graz 2001, Birkhäuser, Trends Math.,
-  Basel (2003), 25--118.
-  
   [[20XBFH92[120X]  [16XBielefeld,  B.,  Fisher,  Y. and Hubbard, J.[116X, [17XThe classification of
   critically  preperiodic  polynomials  as  dynamical  systems[117X, [18XJ. Amer. Math.
   Soc.[118X, [19X5[119X, 4 (1992), 721--762.
+  
+  [[20XBGN03[120X]  [16XBartholdi, L., Grigorchuk, R. I. and Nekrashevych, V.[116X, [17XFrom fractal
+  groups  to fractal sets[117X, in Fractals in Graz 2001, Birkhäuser, Trends Math.,
+  Basel (2003), 25--118.
   
   [[20XDH84[120X]  [16XDouady,  A.  and  Hubbard,  J.  H.[116X,  [17XÉtude  dynamique  des polynômes
   complexes.  Partie I[117X, Université de Paris-Sud, Département de Mathématiques,

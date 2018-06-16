@@ -25,11 +25,11 @@
   
   [1X4.1-1 IsP1Point[101X
   
-  [29X[2XIsP1Point[102X[32X filter
-  [29X[2XP1PointsFamily[102X[32X family
-  [29X[2XP1Point[102X( [3Xcomplex[103X ) [32X function
-  [29X[2XP1Point[102X( [3Xreal[103X, [3Ximag[103X ) [32X function
-  [29X[2XP1Point[102X( [3Xstring[103X ) [32X function
+  [33X[1;0Y[29X[2XIsP1Point[102X[32X filter[133X
+  [33X[1;0Y[29X[2XP1PointsFamily[102X[32X family[133X
+  [33X[1;0Y[29X[2XP1Point[102X( [3Xcomplex[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XP1Point[102X( [3Xreal[103X, [3Ximag[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XP1Point[102X( [3Xstring[103X ) [32X function[133X
   
   [33X[0;0YP1  points  are complex numbers or infinity; fast methods are implemented to
   compute with them, and to apply rational maps to them.[133X
@@ -41,7 +41,7 @@
   
   [1X4.1-2 P1Coordinate[101X
   
-  [29X[2XP1Coordinate[102X( [3Xp[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Coordinate[102X( [3Xp[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe complex number represented by [3Xp[103X.[133X
   
   [33X[0;0YDeclareOperation("CleanedP1Point",[IsP1Point,IsFloat]);
@@ -49,7 +49,7 @@
   
   [1X4.1-3 CleanedP1Point[101X
   
-  [29X[2XCleanedP1Point[102X( [3Xp[103X[, [3Xprec[103X] ) [32X function
+  [33X[1;0Y[29X[2XCleanedP1Point[102X( [3Xp[103X[, [3Xprec[103X] ) [32X function[133X
   [6XReturns:[106X  [33X[0;10Y[3Xp[103X, rounded towards 0/1/infinity/reals at precision [3Xprec[103X.[133X
   
   [33X[0;0YDeclareGlobalVariable("P1infinity");
@@ -58,9 +58,9 @@
   
   [1X4.1-4 P1infinity[101X
   
-  [29X[2XP1infinity[102X[32X global variable
-  [29X[2XP1one[102X[32X global variable
-  [29X[2XP1zero[102X[32X global variable
+  [33X[1;0Y[29X[2XP1infinity[102X[32X global variable[133X
+  [33X[1;0Y[29X[2XP1one[102X[32X global variable[133X
+  [33X[1;0Y[29X[2XP1zero[102X[32X global variable[133X
   
   [33X[0;0YThe south, north and 'east' poles of the Riemann sphere.[133X
   
@@ -68,7 +68,7 @@
   
   [1X4.1-5 P1Antipode[101X
   
-  [29X[2XP1Antipode[102X( [3Xp[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Antipode[102X( [3Xp[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe antipode of [3Xp[103X on the Riemann sphere.[133X
   
   [33X[0;0YDeclareOperation("P1Barycentre",[IsP1PointList]);
@@ -78,7 +78,7 @@
   
   [1X4.1-6 P1Barycentre[101X
   
-  [29X[2XP1Barycentre[102X( [3Xpoints[103X, [3X...[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Barycentre[102X( [3Xpoints[103X, [3X...[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe  barycentre  of  its arguments (which can also be a list of P1
             points).[133X
   
@@ -86,21 +86,21 @@
   
   [1X4.1-7 P1Circumcentre[101X
   
-  [29X[2XP1Circumcentre[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Circumcentre[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe centre of the smallest disk containing [3Xp,q,r[103X.[133X
   
   [33X[0;0YDeclareOperation("P1Distance",[IsP1Point,IsP1Point]);[133X
   
   [1X4.1-8 P1Distance[101X
   
-  [29X[2XP1Distance[102X( [3Xp[103X, [3Xq[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Distance[102X( [3Xp[103X, [3Xq[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe spherical distance from [3Xp[103X to [3Xq[103X.[133X
   
   [33X[0;0YDeclareOperation("P1Midpoint",[IsP1Point,IsP1Point]);[133X
   
   [1X4.1-9 P1Midpoint[101X
   
-  [29X[2XP1Midpoint[102X( [3Xp[103X, [3Xq[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Midpoint[102X( [3Xp[103X, [3Xq[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe  point between [3Xp[103X to [3Xq[103X (undefined if they are antipodes of each
             other).[133X
   
@@ -108,21 +108,21 @@
   
   [1X4.1-10 P1Sphere[101X
   
-  [29X[2XP1Sphere[102X( [3Xv[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Sphere[102X( [3Xv[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe P1 point corresponding to [3Xv[103X in [22XR^3[122X.[133X
   
   [33X[0;0YDeclareAttribute("SphereP1",IsP1Point);[133X
   
   [1X4.1-11 SphereP1[101X
   
-  [29X[2XSphereP1[102X( [3Xp[103X ) [32X function
+  [33X[1;0Y[29X[2XSphereP1[102X( [3Xp[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe coordinates in [22XR^3[122X of [3Xp[103X.[133X
   
   [33X[0;0YDeclareAttribute("SphereP1Y",IsP1Point);[133X
   
   [1X4.1-12 SphereP1Y[101X
   
-  [29X[2XSphereP1Y[102X( [3Xp[103X ) [32X function
+  [33X[1;0Y[29X[2XSphereP1Y[102X( [3Xp[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe Y coordinate in [22XR^3[122X of [3Xp[103X.[133X
   
   [33X[0;0YDeclareOperation("P1XRatio",[IsP1Point,IsP1Point,IsP1Point,IsP1Point]);
@@ -130,8 +130,8 @@
   
   [1X4.1-13 P1XRatio[101X
   
-  [29X[2XP1XRatio[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X ) [32X function
-  [29X[2XXRatio[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X ) [32X function
+  [33X[1;0Y[29X[2XP1XRatio[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XXRatio[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe cross ratio of [3Xp, q, r, s[103X.[133X
   
   [33X[0;0YThe  cross ratio of four points [3Xp,q,r,s[103X is defined as [10X(p-r)(q-s)/(p-s)(q-r)[110X.
@@ -146,7 +146,7 @@
   
   [1X4.1-14 CollectedP1Points[101X
   
-  [29X[2XCollectedP1Points[102X( [3Xp1points[103X[, [3Xprecision[103X] ) [32X operation
+  [33X[1;0Y[29X[2XCollectedP1Points[102X( [3Xp1points[103X[, [3Xprecision[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA list of pairs [10X[point,multiplicity][110X.[133X
   
   [33X[0;0YCollects  the  points  in [3Xp1points[103X; points at distance at most [3Xprecision[103X are
@@ -159,7 +159,7 @@
   
   [1X4.1-15 MatchP1Points[101X
   
-  [29X[2XMatchP1Points[102X( [3Xp1pointsA[103X, [3Xp1pointsB[103X[, [3Xseparation[103X] ) [32X operation
+  [33X[1;0Y[29X[2XMatchP1Points[102X( [3Xp1pointsA[103X, [3Xp1pointsB[103X[, [3Xseparation[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA  list  of  giving  closest  point  in  [3Xp1pointsB[103X  to  points  in
             [3Xp1pointsA[103X, or [9Xfail[109X.[133X
   
@@ -173,18 +173,18 @@
   
   [1X4.1-16 ClosestP1Point[101X
   
-  [29X[2XClosestP1Point[102X( [3Xp1points[103X, [3Xp1point[103X ) [32X operation
+  [33X[1;0Y[29X[2XClosestP1Point[102X( [3Xp1points[103X, [3Xp1point[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe point in [3Xp1points[103X closest to [3Xp1point[103X.[133X
   
-  [33X[0;0YDeclareSynonym("IsP1Map",IsUnivariateRationalFunction                    and
-  IsFloatRationalFunction);         DeclareCategory("IsIEEE754P1Map",IsP1Map);
-  BindGlobal("TYPE_IEEE754P1MAP",
+  [33X[0;0YDeclareSynonym("IsP1Map",HasIsUnivariateRationalFunction                 and
+  IsUnivariateRationalFunction          and          IsFloatRationalFunction);
+  DeclareCategory("IsIEEE754P1Map",IsP1Map);   BindGlobal("TYPE_IEEE754P1MAP",
   NewType(RationalFunctionsFamily(PMCOMPLEX_PSEUDOFIELD),  IsIEEE754P1Map  and
   IsDataObjectRep));[133X
   
   [1X4.1-17 IsP1Map[101X
   
-  [29X[2XIsP1Map[102X[32X filter
+  [33X[1;0Y[29X[2XIsP1Map[102X[32X filter[133X
   
   [33X[0;0YP1  maps  are  stored  more  efficiently  than  rational  functions, but are
   otherwise equivalent.[133X
@@ -198,11 +198,11 @@
   
   [1X4.1-18 MoebiusMap[101X
   
-  [29X[2XMoebiusMap[102X( [[3Xsourcelist[103X, ][3Xdestlist[103X ) [32X function
-  [29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X, [3Xt[103X, [3Xu[103X ) [32X function
-  [29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X ) [32X function
-  [29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X ) [32X function
-  [29X[2XMoebiusMap[102X( [3Xp[103X ) [32X function
+  [33X[1;0Y[29X[2XMoebiusMap[102X( [[3Xsourcelist[103X, ][3Xdestlist[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X, [3Xs[103X, [3Xt[103X, [3Xu[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X, [3Xr[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XMoebiusMap[102X( [3Xp[103X, [3Xq[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XMoebiusMap[102X( [3Xp[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YA new Möbius transformation.[133X
   
   [33X[0;0YIn  the first case, this is the Möbius transformation sending [3Xp,q,r[103X to [3XP,Q,R[103X
@@ -216,7 +216,7 @@
   
   [1X4.1-19 P1MapRotatingP1Points[101X
   
-  [29X[2XP1MapRotatingP1Points[102X( [3Xpoints[103X[, [3Xoldpoints[103X] ) [32X operation
+  [33X[1;0Y[29X[2XP1MapRotatingP1Points[102X( [3Xpoints[103X[, [3Xoldpoints[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA Möbius rotation sending the last of [3Xpoints[103X to P1infinity.[133X
   
   [33X[0;0YA  Möbius  rotation  is computed that sends the last of [3Xpoints[103X to [9XP1infinity[109X
@@ -228,7 +228,7 @@
   
   [1X4.1-20 P1MapNormalizingP1Points[101X
   
-  [29X[2XP1MapNormalizingP1Points[102X( [3Xpoints[103X[, [3Xoldpoints[103X] ) [32X operation
+  [33X[1;0Y[29X[2XP1MapNormalizingP1Points[102X( [3Xpoints[103X[, [3Xoldpoints[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA Möbius transformation sending the last of [3Xpoints[103X to P1infinity.[133X
   
   [33X[0;0YA  Möbius  transformation  is  computed  that  sends  the  last of [3Xpoints[103X to
@@ -242,7 +242,7 @@
   
   [1X4.1-21 P1z[101X
   
-  [29X[2XP1z[102X[32X global variable
+  [33X[1;0Y[29X[2XP1z[102X[32X global variable[133X
   
   [33X[0;0YThe identity Möbius transformation.[133X
   
@@ -250,7 +250,7 @@
   
   [1X4.1-22 P1Monomial[101X
   
-  [29X[2XP1Monomial[102X( [3Xn[103X ) [32X function
+  [33X[1;0Y[29X[2XP1Monomial[102X( [3Xn[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe rational function [22Xz^n[122X.[133X
   
   [33X[0;0YDeclareOperation("CleanedP1Map",[IsP1Map,IsFloat]);
@@ -258,14 +258,14 @@
   
   [1X4.1-23 CleanedP1Map[101X
   
-  [29X[2XCleanedP1Map[102X( [3Xmap[103X[, [3Xprec[103X] ) [32X operation
+  [33X[1;0Y[29X[2XCleanedP1Map[102X( [3Xmap[103X[, [3Xprec[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10Y[3Xmap[103X, with coefficients rounded using [3Xprec[103X.[133X
   
   [33X[0;0YDeclareSynonym("CompositionP1Map",CompositionMapping2);[133X
   
   [1X4.1-24 CompositionP1Map[101X
   
-  [29X[2XCompositionP1Map[102X( [3Xmap1[103X, [3X...[103X ) [32X operation
+  [33X[1;0Y[29X[2XCompositionP1Map[102X( [3Xmap1[103X, [3X...[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe composition of the maps passed as arguments, in the functional
             ([3Xmap1[103X last) order.[133X
   
@@ -273,7 +273,7 @@
   
   [1X4.1-25 InverseP1Map[101X
   
-  [29X[2XInverseP1Map[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XInverseP1Map[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe functional inverse of the Möbius transformation [3Xmap[103X.[133X
   
   [33X[0;0YDeclareAttribute("ComplexConjugate",IsP1Map);  # already there for numerical
@@ -281,21 +281,21 @@
   
   [1X4.1-26 ComplexConjugate[101X
   
-  [29X[2XComplexConjugate[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XComplexConjugate[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe complex conjugated map.[133X
   
   [33X[0;0YDeclareOperation("ConjugatedP1Map",[IsP1Map,IsP1Map]);[133X
   
   [1X4.1-27 ConjugatedP1Map[101X
   
-  [29X[2XConjugatedP1Map[102X( [3Xmap[103X, [3Xmobius[103X ) [32X operation
+  [33X[1;0Y[29X[2XConjugatedP1Map[102X( [3Xmap[103X, [3Xmobius[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe map [10XCompositionP1Map(InverseP1Map(mobius),map,mobius)[110X.[133X
   
   [33X[0;0YDeclareAttribute("CoefficientsOfP1Map",IsP1Map);[133X
   
   [1X4.1-28 CoefficientsOfP1Map[101X
   
-  [29X[2XCoefficientsOfP1Map[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XCoefficientsOfP1Map[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YCoefficients  of  numerator  and denominator of [3Xmap[103X, lowest degree
             first.[133X
   
@@ -304,7 +304,7 @@
   
   [1X4.1-29 P1MapByCoefficients[101X
   
-  [29X[2XP1MapByCoefficients[102X( [3Xnumer[103X, [3Xdenom[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1MapByCoefficients[102X( [3Xnumer[103X, [3Xdenom[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe  P1  map  with  numerator  coefficients  [3Xnumer[103X and denominator
             [3Xdenom[103X, lowest degree first.[133X
   
@@ -313,15 +313,15 @@
   
   [1X4.1-30 NumeratorP1Map[101X
   
-  [29X[2XNumeratorP1Map[102X( [3Xmap[103X ) [32X attribute
-  [29X[2XDenominatorP1Map[102X( [3Xmap[103X ) [32X attribute
+  [33X[1;0Y[29X[2XNumeratorP1Map[102X( [3Xmap[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XDenominatorP1Map[102X( [3Xmap[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe numerator/denominator of [3Xmap[103X.[133X
   
   [33X[0;0YDeclareOperation("P1MapByZerosPoles",[IsP1PointList,IsP1PointList,IsP1Point,IsP1Point]);[133X
   
   [1X4.1-31 P1MapByZerosPoles[101X
   
-  [29X[2XP1MapByZerosPoles[102X( [3Xzeros[103X, [3Xpoles[103X, [3Xsrc[103X, [3Xdest[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1MapByZerosPoles[102X( [3Xzeros[103X, [3Xpoles[103X, [3Xsrc[103X, [3Xdest[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe  P1  map  with  specified  zeros and poles, and sending [3Xsrc[103X to
             [3Xdest[103X.[133X
   
@@ -329,14 +329,14 @@
   
   [1X4.1-32 P1Path[101X
   
-  [29X[2XP1Path[102X( [3Xp[103X, [3Xq[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1Path[102X( [3Xp[103X, [3Xq[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe P1 map sending [10X0[110X to [3Xp[103X and [10X1[110X to [3Xq[103X.[133X
   
   [33X[0;0YDeclareAttribute("DegreeOfP1Map",IsP1Map);[133X
   
   [1X4.1-33 DegreeOfP1Map[101X
   
-  [29X[2XDegreeOfP1Map[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XDegreeOfP1Map[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe degree of [3Xmap[103X.[133X
   
   [33X[0;0YDeclareSynonym("P1Image",ImageElm);
@@ -344,7 +344,7 @@
   
   [1X4.1-34 P1Image[101X
   
-  [29X[2XP1Image[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1Image[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe image of [3Xp1point[103X under [3Xmap[103X.[133X
   
   [33X[0;0YDeclareSynonym("P1PreImage",PreImageElm);
@@ -352,7 +352,7 @@
   
   [1X4.1-35 P1PreImage[101X
   
-  [29X[2XP1PreImage[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1PreImage[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe preimage of [3Xp1point[103X under [3Xmap[103X.[133X
   
   [33X[0;0YDeclareSynonym("P1PreImages",PreImagesElm);
@@ -360,7 +360,7 @@
   
   [1X4.1-36 P1PreImages[101X
   
-  [29X[2XP1PreImages[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1PreImages[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe preimages of [3Xp1point[103X under [3Xmap[103X.[133X
   
   [33X[0;0YDeclareAttribute("Primitive",IsP1Map);
@@ -368,50 +368,50 @@
   
   [1X4.1-37 Primitive[101X
   
-  [29X[2XPrimitive[102X( [3Xmap[103X ) [32X operation
-  [29X[2XDerivative[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XPrimitive[102X( [3Xmap[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XDerivative[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe [anti]derivative of the rational map [3Xmap[103X.[133X
   
   [33X[0;0YDeclareOperation("P1MapScaling",[IsP1Map,IsP1Point]);[133X
   
   [1X4.1-38 P1MapScaling[101X
   
-  [29X[2XP1MapScaling[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1MapScaling[102X( [3Xmap[103X, [3Xp1point[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe scaling factor from [3Xpoint[103X to [3Xmap(point)[103X.[133X
   
   [33X[0;0YDeclareAttribute("CriticalPointsOfP1Map",IsP1Map);[133X
   
   [1X4.1-39 CriticalPointsOfP1Map[101X
   
-  [29X[2XCriticalPointsOfP1Map[102X( [3Xmap[103X ) [32X attribute
+  [33X[1;0Y[29X[2XCriticalPointsOfP1Map[102X( [3Xmap[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe critical points of [3Xmap[103X.[133X
   
   [33X[0;0YDeclareAttribute("AsP1Map",IsScalar);[133X
   
   [1X4.1-40 AsP1Map[101X
   
-  [29X[2XAsP1Map[102X( [3Xrat[103X ) [32X operation
+  [33X[1;0Y[29X[2XAsP1Map[102X( [3Xrat[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe P1 map given by the rational function [3Xrat[103X.[133X
   
   [33X[0;0YDeclareOperation("P1MapSL2",[IsMatrix]);[133X
   
   [1X4.1-41 P1MapSL2[101X
   
-  [29X[2XP1MapSL2[102X( [3Xmat[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1MapSL2[102X( [3Xmat[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe Möbius P1 map given by the 2x2 matrix [3Xmat[103X.[133X
   
   [33X[0;0YDeclareAttribute("SL2P1Map",IsP1Map);[133X
   
   [1X4.1-42 SL2P1Map[101X
   
-  [29X[2XSL2P1Map[102X( [3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XSL2P1Map[102X( [3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe matrix of the Möbius P1 map [3Xmap[103X.[133X
   
   [33X[0;0YDeclareGlobalFunction("SetP1Points");[133X
   
   [1X4.1-43 SetP1Points[101X
   
-  [29X[2XSetP1Points[102X( [3Xrecord[103X[, [3Xprec[103X] ) [32X function
+  [33X[1;0Y[29X[2XSetP1Points[102X( [3Xrecord[103X[, [3Xprec[103X] ) [32X function[133X
   
   [33X[0;0YInstalls  a  default implementation for P1 points. Fundamentally, a P1 point
   is  a  complex  number  or  infinity, with a few extra methods. The argument
@@ -479,112 +479,112 @@
   
   [1X4.2-1 IsSphereTriangulation[101X
   
-  [29X[2XIsSphereTriangulation[102X[32X filter
+  [33X[1;0Y[29X[2XIsSphereTriangulation[102X[32X filter[133X
   
   [33X[0;0YThe category of triangulated spheres (points in Moduli space).[133X
   
   [33X[0;0YThis  triangulation  is a collection of vertices, edges and faces. These are
   new GAP objects. The attributes for vertices are:[133X
   
-  [8X[10XNeighbour[110X[108X
+  [8X[10XNeighbour[110X[8X[108X
         [33X[0;6Yany edge starting at the vertex[133X
   
-  [8X[10XNeighbours[110X[108X
+  [8X[10XNeighbours[110X[8X[108X
         [33X[0;6Ya list of neighbours, in counterclockwise order (an optional adugument
         lets one specify the starting edge)[133X
   
-  [8X[10XValency[110X[108X
+  [8X[10XValency[110X[8X[108X
         [33X[0;6Ythe number of neighbours[133X
   
-  [8X[10XPos[110X[108X
+  [8X[10XPos[110X[8X[108X
         [33X[0;6YThe P1 point where the vertex is located[133X
   
-  [8X[10XClosestVertex[110X[108X
+  [8X[10XClosestVertex[110X[8X[108X
         [33X[0;6YThe vertex itself[133X
   
-  [8X[10XClosestVertices[110X[108X
+  [8X[10XClosestVertices[110X[8X[108X
         [33X[0;6YA list containing the vertex itself[133X
   
-  [8X[10XClosestFace[110X[108X
+  [8X[10XClosestFace[110X[8X[108X
         [33X[0;6YThe face left of the first neighbour[133X
   
-  [8X[10XClosestFaces[110X[108X
+  [8X[10XClosestFaces[110X[8X[108X
         [33X[0;6YThe faces that contain the vertex[133X
   
-  [8X[10XIsFake[110X[108X
+  [8X[10XIsFake[110X[8X[108X
         [33X[0;6Ywhether the vertex was added for refinement[133X
   
   [33X[0;0YThe  edges  come  in  opposite pairs, and are thought of as having a face on
   their left. Their possible attributes are:[133X
   
-  [8X[10XLeft[110X, [10XRight[110X[108X
+  [8X[10XLeft[110X[8X, [10XRight[110X[8X[108X
         [33X[0;6YThe adjacent faces[133X
   
-  [8X[10XTo[110X, [10XFrom[110X[108X
+  [8X[10XTo[110X[8X, [10XFrom[110X[8X[108X
         [33X[0;6YThe vertices that the edge goes to/from[133X
   
-  [8X[10XNext[110X[108X
+  [8X[10XNext[110X[8X[108X
         [33X[0;6YThe edge after on the left face (starting where the present edge ends)[133X
   
-  [8X[10XPrevopp[110X[108X
+  [8X[10XPrevopp[110X[8X[108X
         [33X[0;6YThe  opposite  of the edge before on the left face (starting where the
         present edge starts)[133X
   
-  [8X[10XOpposite[110X[108X
+  [8X[10XOpposite[110X[8X[108X
         [33X[0;6YThe opposite edge (with reversed orientation)[133X
   
-  [8X[10XPos[110X[108X
+  [8X[10XPos[110X[8X[108X
         [33X[0;6YThe position of the midpoint. [10XFromPos[110X and [10XToPos[110X are shortcuts[133X
   
-  [8X[10XLength[110X[108X
-  [8X[10XMap[110X[108X
+  [8X[10XLength[110X[8X[108X
+  [8X[10XMap[110X[8X[108X
         [33X[0;6YA P1 map sending [22X[0,1][122X to the edge[133X
   
-  [8X[10XGroupElement[110X[108X
+  [8X[10XGroupElement[110X[8X[108X
         [33X[0;6YA group element describing "crossing through the edge from the left to
         the right"[133X
   
-  [8X[10XClosestVertex[110X[108X
+  [8X[10XClosestVertex[110X[8X[108X
         [33X[0;6YThe from vertex[133X
   
-  [8X[10XClosestVertices[110X[108X
+  [8X[10XClosestVertices[110X[8X[108X
         [33X[0;6YThe two endpoints[133X
   
-  [8X[10XClosestFace[110X[108X
+  [8X[10XClosestFace[110X[8X[108X
         [33X[0;6YThe left neighbour[133X
   
-  [8X[10XClosestFaces[110X[108X
+  [8X[10XClosestFaces[110X[8X[108X
         [33X[0;6YThe two adjacent faces[133X
   
   [33X[0;0YThe faces have the following possible attributes:[133X
   
-  [8X[10XNeighbour[110X[108X
+  [8X[10XNeighbour[110X[8X[108X
         [33X[0;6YSome edge with this face on its left[133X
   
-  [8X[10XNeighbours[110X[108X
+  [8X[10XNeighbours[110X[8X[108X
         [33X[0;6YThe  neighbours of the face, in counterclockwise order around the face
         (an optional argument lets one specify the starting edge)[133X
   
-  [8X[10XPos[110X[108X
+  [8X[10XPos[110X[8X[108X
         [33X[0;6YThe position of the face's barycentre[133X
   
-  [8X[10XRadius[110X, [10XCentre[110X[108X
+  [8X[10XRadius[110X[8X, [10XCentre[110X[8X[108X
         [33X[0;6YThe  circumradius  and  circumcentre  of  the  face  (assumed  to be a
         triangle)[133X
   
-  [8X[10XValency[110X[108X
+  [8X[10XValency[110X[8X[108X
         [33X[0;6YThe number of neighbouring edges[133X
   
-  [8X[10XClosestVertex[110X[108X
+  [8X[10XClosestVertex[110X[8X[108X
         [33X[0;6YThe from of the first neighbour[133X
   
-  [8X[10XClosestVertices[110X[108X
+  [8X[10XClosestVertices[110X[8X[108X
         [33X[0;6YThe vertices that the face contains[133X
   
-  [8X[10XClosestFace[110X[108X
+  [8X[10XClosestFace[110X[8X[108X
         [33X[0;6YThe face itself[133X
   
-  [8X[10XClosestFaces[110X[108X
+  [8X[10XClosestFaces[110X[8X[108X
         [33X[0;6YA list containing the face itself[133X
   
   [33X[0;0YA  triangulation  may be plotted with [10XDraw[110X; this requires [5Xappletviewer[105X to be
@@ -597,7 +597,7 @@
   
   [1X4.2-2 EdgePath[101X
   
-  [29X[2XEdgePath[102X( [3Xt[103X, [3Xf0[103X, [3Xf1[103X ) [32X operation
+  [33X[1;0Y[29X[2XEdgePath[102X( [3Xt[103X, [3Xf0[103X, [3Xf1[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA sequence of edges taking [3Xf0[103X to [3Xf1[103X.[133X
   
   [33X[0;0YDeclareOperation("DelaunayTriangulation",                         [IsList]);
@@ -605,7 +605,7 @@
   
   [1X4.2-3 DelaunayTriangulation[101X
   
-  [29X[2XDelaunayTriangulation[102X( [3Xpoints[103X[, [3Xquality[103X] ) [32X operation
+  [33X[1;0Y[29X[2XDelaunayTriangulation[102X( [3Xpoints[103X[, [3Xquality[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA Delaunay triangulation of the sphere.[133X
   
   [33X[0;0YIf  [3Xpoints[103X  is  a list of points on the unit sphere, represented by their 3D
@@ -645,7 +645,7 @@
   
   [1X4.2-4 AddToTriangulation[101X
   
-  [29X[2XAddToTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X[, [3Xdelaunay[103X] ) [32X operation
+  [33X[1;0Y[29X[2XAddToTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X[, [3Xdelaunay[103X] ) [32X operation[133X
   
   [33X[0;0YThis  command adds the P1 point [3Xpoint[103X to the triangulation [3Xt[103X. If a face [3Xseed[103X
   is provided, it will speed up the search for the triangle in which the point
@@ -658,7 +658,7 @@
   
   [1X4.2-5 RemoveFromTriangulation[101X
   
-  [29X[2XRemoveFromTriangulation[102X( [3Xt[103X, [3Xvertex[103X ) [32X operation
+  [33X[1;0Y[29X[2XRemoveFromTriangulation[102X( [3Xt[103X, [3Xvertex[103X ) [32X operation[133X
   
   [33X[0;0YThis command removes the vertex [3Xvertex[103X from the triangulation [3Xt[103X.[133X
   
@@ -673,8 +673,8 @@
   
   [1X4.2-6 LocateFaceInTriangulation[101X
   
-  [29X[2XLocateFaceInTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X ) [32X operation
-  [29X[2XLocateInTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X ) [32X operation
+  [33X[1;0Y[29X[2XLocateFaceInTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XLocateInTriangulation[102X( [3Xt[103X[, [3Xseed[103X], [3Xpoint[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe face(t) in [3Xt[103X containing [3Xpoint[103X.[133X
   
   [33X[0;0YThis  command locates the face in [3Xt[103X that contains [3Xpoint[103X; in the second form,
@@ -698,8 +698,8 @@
   
   [1X4.2-7 WiggledTriangulation[101X
   
-  [29X[2XWiggledTriangulation[102X( [3Xt[103X, [3Xmoebiusmap[103X ) [32X operation
-  [29X[2XWiggledTriangulation[102X( [3Xt[103X, [3Xnewpoints[103X ) [32X operation
+  [33X[1;0Y[29X[2XWiggledTriangulation[102X( [3Xt[103X, [3Xmoebiusmap[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XWiggledTriangulation[102X( [3Xt[103X, [3Xnewpoints[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA new triangulation, with moved vertices.[133X
   
   [33X[0;0YThis  command  creates a new triangulation, in which only the P1 coordinates
@@ -712,7 +712,7 @@
   
   [1X4.2-8 EquidistributedP1Points[101X
   
-  [29X[2XEquidistributedP1Points[102X( [3XN[103X ) [32X function
+  [33X[1;0Y[29X[2XEquidistributedP1Points[102X( [3XN[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YA list of [3XN[103X P1 points that are reasonably well spaced.[133X
   
   
@@ -760,7 +760,7 @@
   
   [1X4.3-1 IsMarkedSphere[101X
   
-  [29X[2XIsMarkedSphere[102X[32X filter
+  [33X[1;0Y[29X[2XIsMarkedSphere[102X[32X filter[133X
   
   [33X[0;0YThe category of marked, triangulated spheres (points in Teichmüller space).[133X
   
@@ -769,7 +769,7 @@
   
   [1X4.3-2 NewMarkedSphere[101X
   
-  [29X[2XNewMarkedSphere[102X( [3Xpoints[103X[, [3Xgroup[103X] ) [32X operation
+  [33X[1;0Y[29X[2XNewMarkedSphere[102X( [3Xpoints[103X[, [3Xgroup[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA new marked sphere on points [3Xpoints[103X.[133X
   
   [33X[0;0YThis   function   creates  a  new  marked  sphere,  based  on  the  Delaunay
@@ -780,7 +780,7 @@
   
   [1X4.3-3 Draw[101X
   
-  [29X[2XDraw[102X( [3Xs[103X ) [32X operation
+  [33X[1;0Y[29X[2XDraw[102X( [3Xs[103X ) [32X operation[133X
   
   [33X[0;0YThis command plots the marked sphere [3Xs[103X in a separate window. It displays the
   complex  sphere, big dots at the post-critical set (feet of the spider), and
@@ -800,7 +800,7 @@
   
   [1X4.3-4 WiggledMarkedSphere[101X
   
-  [29X[2XWiggledMarkedSphere[102X( [3Xsphere[103X, [3Xm[103X ) [32X operation
+  [33X[1;0Y[29X[2XWiggledMarkedSphere[102X( [3Xsphere[103X, [3Xm[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA new marked sphere.[133X
   
   [33X[0;0YThis  operation  moves  the vertices of the marked sphere [3Xsphere[103X, preserving
@@ -819,8 +819,8 @@
   
   [1X4.3-5 SphereMachineOfBranchedCovering[101X
   
-  [29X[2XSphereMachineOfBranchedCovering[102X( [3Xdown[103X, [3Xup[103X, [3Xmap[103X[, [3Xpoly[103X] ) [32X operation
-  [29X[2XSphereMachineAndSphereOfBranchedCovering[102X( [3Xdown[103X, [3Xmap[103X[, [3Xpoly[103X] ) [32X operation
+  [33X[1;0Y[29X[2XSphereMachineOfBranchedCovering[102X( [3Xdown[103X, [3Xup[103X, [3Xmap[103X[, [3Xpoly[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XSphereMachineAndSphereOfBranchedCovering[102X( [3Xdown[103X, [3Xmap[103X[, [3Xpoly[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA sphere machine or [machine,marked sphere].[133X
   
   [33X[0;0YThe first function computes, out of a marked sphere [3Xdown[103X in the range of the
@@ -842,7 +842,7 @@
   
   [1X4.3-6 MonodromyOfP1Map[101X
   
-  [29X[2XMonodromyOfP1Map[102X( [[3Xmarking[103X, ][3Xmap[103X ) [32X operation
+  [33X[1;0Y[29X[2XMonodromyOfP1Map[102X( [[3Xmarking[103X, ][3Xmap[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe monodromy action of [3Xmap[103X.[133X
   
   [33X[0;0YThis  function  computes the monodromy of the P1 map [3Xmap[103X; this is simply the
@@ -858,7 +858,7 @@
   
   [1X4.3-7 SphereMachine[101X
   
-  [29X[2XSphereMachine[102X( [3Xf[103X ) [32X operation
+  [33X[1;0Y[29X[2XSphereMachine[102X( [3Xf[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA sphere machine.[133X
   
   [33X[0;0YThis  function  computes a triangulation of the sphere, on the post-critical
@@ -891,7 +891,7 @@
   
   [1X4.3-8 DistanceMarkedSpheres[101X
   
-  [29X[2XDistanceMarkedSpheres[102X( [3Xsphere1[103X, [3Xsphere2[103X[, [3Xfast[103X] ) [32X operation
+  [33X[1;0Y[29X[2XDistanceMarkedSpheres[102X( [3Xsphere1[103X, [3Xsphere2[103X[, [3Xfast[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe approximate distance between the marked spheres.[133X
   
   [33X[0;0YThis  function approximates coarsely the Teichmüller distance between marked
@@ -941,7 +941,7 @@
   
   [1X4.4-1 BranchedCoveringByMonodromy[101X
   
-  [29X[2XBranchedCoveringByMonodromy[102X( [3Xsphere[103X, [3Xmonodromy[103X[, [3Xlast[103X] ) [32X operation
+  [33X[1;0Y[29X[2XBranchedCoveringByMonodromy[102X( [3Xsphere[103X, [3Xmonodromy[103X[, [3Xlast[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA record describing a Hurwitz map.[133X
   
   [33X[0;0YIf  [3Xsphere[103X  is  a  marked  sphere,  marked  by a group [22XG[122X, and [3Xmonodromy[103X is a
@@ -1079,7 +1079,7 @@
   
   [1X4.4-2 DessinByPermutations[101X
   
-  [29X[2XDessinByPermutations[102X( [3Xs0[103X, [3Xs1[103X[, [3Xsinf[103X] ) [32X operation
+  [33X[1;0Y[29X[2XDessinByPermutations[102X( [3Xs0[103X, [3Xs1[103X[, [3Xsinf[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA  rational  map  (see  [2XBranchedCoveringByMonodromy[102X  ([14X4.4-1[114X)) with
             monodromies [3Xs,t[103X.[133X
   
@@ -1155,24 +1155,24 @@
   parameters  control the proper functioning of the algorithm. They are stored
   in a record, [10XIMG@[110X. Their meaning and default values are:[133X
   
-  [8X[10XEPS@fr.mesh := 10^-1[110X[108X
+  [8X[10XEPS@fr.mesh := 10^-1[110X[8X[108X
         [33X[0;6YIf  points  on  the unit sphere are that close, the triangulation mesh
         should be refined.[133X
   
-  [8X[10XEPS@fr.p1eps := 10^-8[110X[108X
+  [8X[10XEPS@fr.p1eps := 10^-8[110X[8X[108X
         [33X[0;6YIf  points  on  the  unit  sphere  are that close, they are considered
         equal.[133X
   
-  [8X[10XEPS@fr.obst := 10^-1[110X[108X
+  [8X[10XEPS@fr.obst := 10^-1[110X[8X[108X
         [33X[0;6YIf  points  on  the  unit sphere are that close, they are suspected to
         form a Thurston obstruction.[133X
   
-  [8X[10XEPS@fr.fast := 10^-1[110X[108X
+  [8X[10XEPS@fr.fast := 10^-1[110X[8X[108X
         [33X[0;6YIf  the  spider moved less than that amount in the last iteration, try
         speeding  up  by  only wiggling the spider's legs, without recomputing
         it.[133X
   
-  [8X[10XEPS@fr.ratprec := 10^-8[110X[108X
+  [8X[10XEPS@fr.ratprec := 10^-8[110X[8X[108X
         [33X[0;6YThe  minimal  acceptable precision on the coefficients of the rational
         function.[133X
   
@@ -1223,7 +1223,7 @@
   
   [1X4.5-1 NormalizedP1Map[101X
   
-  [29X[2XNormalizedP1Map[102X( [3Xf[103X, [3XM[103X, [3Xparam[103X ) [32X function
+  [33X[1;0Y[29X[2XNormalizedP1Map[102X( [3Xf[103X, [3XM[103X, [3Xparam[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10Y[A canonical conjugate of [3Xf[103X,the conjugator].[133X
   
   [33X[0;0YThe  last  argument [3Xparam[103X is either [10XIsPolynomial[110X, [10XIsBicritical[110X or a positive
@@ -1243,19 +1243,48 @@
   
   [1X4.5-2 ThurstonAlgorithm[101X
   
-  [29X[2XThurstonAlgorithm[102X( [3Xm[103X ) [32X operation
+  [33X[1;0Y[29X[2XThurstonAlgorithm[102X( [3Xm[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10Yrec(map := f, machine := M, markedsphere := s).[133X
   
   [33X[0;0YThis  command  runs  Thurston's algorithm on the sphere machine [3Xm[103X. It either
   returns a record with the P1 map [10Xf[110X to which the algorithm converged, as well
   as  the  marked  sphere  with [10Xf[110X's post-critical set and a simplified machine
-  equivalent to [3Xm[103X; or a record returned by [2XThurstonObstruction[102X ([14X4.5-5[114X).[133X
+  equivalent to [3Xm[103X; or a record returned by [2XThurstonObstruction[102X ([14X4.5-6[114X).[133X
+  
+  [33X[0;0YDeclareOperation("SpiderAlgorithm", [IsFRMachine]);[133X
+  
+  [1X4.5-3 SpiderAlgorithm[101X
+  
+  [33X[1;0Y[29X[2XSpiderAlgorithm[102X( [3Xm[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10Yrec(...) or [9Xfail[109X.[133X
+  
+  [33X[0;0YThis  command  runs  a symbolic algorithm on the FR machine [3Xm[103X, attempting to
+  interpret it as a polynomial sphere machine. It either returns[133X
+  
+  [8X[9Xfail[109X[108X
+        [33X[0;6Yif [3Xm[103X is not a sphere biset;[133X
+  
+  [8X[10Xrec(minimal := true, machine, supportingangles, rayperiod, ordering, niter, transformation)[110X[8X[108X
+        [33X[0;6Yif  [3Xm[103X  is  a  sphere  biset  with  no  obstruction;  then [10Xmachine[110X is a
+        polynomial  sphere machine equivalent to [3Xm[103X, [10Xsupportingangles[110X is a list
+        of  supporting  rays  in  the  sense  of  Poirier,  see [2XSupportingRays[102X
+        ([14X3.3-2[114X);  [10Xrayperiod[110X gives the periods of the rays, [10Xniter[110X is the number
+        of iterations needed to produce the machine, and [10Xtransformation[110X is the
+        isomorphism  between  the  fundamental  groups  of  the  old  and  new
+        machines;[133X
+  
+  [8X[10Xrec(minimal := false, machine, submachine, homomorphism, relation, niter, transformation)[110X[8X[108X
+        [33X[0;6Yif  [3Xm[103X  is  a  sphere biset with an obstruction; then [10Xsubmachine[110X is the
+        submachine  obtained  after  removing  the obstruction a sphere biset,
+        [10Xhomomorphism[110X  is  the inclusion of the submachine's stateset into that
+        of  [10Xmachine[110X,  [10Xrelation[110X  is  an  equivalence  relation describing which
+        points coalesce, and the other parameters are as above.[133X
   
   [33X[0;0YDeclareOperation("P1MapBySphereMachine", [IsSphereMachine]);[133X
   
-  [1X4.5-3 P1MapBySphereMachine[101X
+  [1X4.5-4 P1MapBySphereMachine[101X
   
-  [29X[2XP1MapBySphereMachine[102X( [3Xm[103X ) [32X operation
+  [33X[1;0Y[29X[2XP1MapBySphereMachine[102X( [3Xm[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YEither a map or an obstruction.[133X
   
   [33X[0;0YThis  command returs either the map computed by [2XThurstonAlgorithm[102X ([14X4.5-2[114X) or
@@ -1267,13 +1296,13 @@
   [33X[0;0YThe  command  accepts  the  following  options,  to  return a map in a given
   normalization:[133X
   
-  [8X[10XP1MapBySphereMachine(m:param:=IsPolynomial)[110X[108X
+  [8X[10XP1MapBySphereMachine(m:param:=IsPolynomial)[110X[8X[108X
         [33X[0;6Yreturns [22Xf=z^d+A_d-2z^d-2+⋯+A_0[122X;[133X
   
-  [8X[10XP1MapBySphereMachine(m:param:=IsBicritical)[110X[108X
+  [8X[10XP1MapBySphereMachine(m:param:=IsBicritical)[110X[8X[108X
         [33X[0;6Yreturns [22Xf=((pz+q)/(rz+s)^d[122X, with [22X1[122Xpostcritical;[133X
   
-  [8X[10XP1MapBySphereMachine(m:param:=n)[110X[108X
+  [8X[10XP1MapBySphereMachine(m:param:=n)[110X[8X[108X
         [33X[0;6Yreturns [22Xf=1+a/z+b/z^2[122X or [22Xf=a/(z^2+2z)[122X if [10Xn=2[110X.[133X
   
   [4X[32X  Example  [32X[104X
@@ -1285,9 +1314,9 @@
   
   [33X[0;0YDeclareOperation("ThurstonMatrix", [IsSphereMachine,IsMulticurve]);[133X
   
-  [1X4.5-4 ThurstonMatrix[101X
+  [1X4.5-5 ThurstonMatrix[101X
   
-  [29X[2XThurstonMatrix[102X( [3Xm[103X, [3Xmulticurve[103X ) [32X operation
+  [33X[1;0Y[29X[2XThurstonMatrix[102X( [3Xm[103X, [3Xmulticurve[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YThe transition matrix of the multicurve.[133X
   
   [33X[0;0YThis  command  computes  the iterated preimages of the multicurve [3Xmulticurve[103X
@@ -1309,9 +1338,9 @@
   
   [33X[0;0YDeclareOperation("ThurstonObstruction", [IsSphereMachine,IsMarkedSphere]);[133X
   
-  [1X4.5-5 ThurstonObstruction[101X
+  [1X4.5-6 ThurstonObstruction[101X
   
-  [29X[2XThurstonObstruction[102X( [3Xm[103X, [3Xsphere[103X ) [32X operation
+  [33X[1;0Y[29X[2XThurstonObstruction[102X( [3Xm[103X, [3Xsphere[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10Yrec(multicurve := mc, matrix := m) or [9Xfail[109X.[133X
   
   [33X[0;0YThis  command tries to find a Thurston obstruction (multicurve such that its
@@ -1321,5 +1350,5 @@
   [33X[0;0YThe obstruction is searched for by considering small subtrees of the minimal
   spanning  tree  of  [3Xsphere[103X,  computing loops surrounding these subtrees, and
   saturating  them  into  a multicurve by taking their iterated preimages, see
-  [2XThurstonMatrix[102X ([14X4.5-4[114X).[133X
+  [2XThurstonMatrix[102X ([14X4.5-5[114X).[133X
   

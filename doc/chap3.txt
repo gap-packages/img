@@ -11,7 +11,7 @@
   
   [1X3.1-1 IsSphereGroup[101X
   
-  [29X[2XIsSphereGroup[102X[32X filter
+  [33X[1;0Y[29X[2XIsSphereGroup[102X[32X filter[133X
   
   [33X[0;0YA  sphere  group  is  a  special  kind of finitely presented group, in which
   exactly one relation is a product, in some order, of all the generators, and
@@ -22,15 +22,15 @@
   
   [1X3.1-2 IsomorphismSphereGroup[101X
   
-  [29X[2XIsomorphismSphereGroup[102X( [3Xg[103X ) [32X attribute
-  [29X[2XAsSphereGroup[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XIsomorphismSphereGroup[102X( [3Xg[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XAsSphereGroup[102X( [3Xg[103X ) [32X attribute[133X
   
   [33X[0;0YThese  functions  compute an isomorphism from [3Xg[103X to a sphere group; the first
   form returns the isomorphism, while the second one returns its image.[133X
   
   [1X3.1-3 EulerCharacteristic[101X
   
-  [29X[2XEulerCharacteristic[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XEulerCharacteristic[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe Euler characteristic of [3Xg[103X.[133X
   
   [33X[0;0YThe Euler characteristic of a free group of rank [22Xn[122X is [22X1-n[122X; and it multiplies
@@ -40,12 +40,12 @@
   
   [1X3.1-4 RankOfSphereGroup[101X
   
-  [29X[2XRankOfSphereGroup[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XRankOfSphereGroup[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe number of generators of [3Xg[103X.[133X
   
   [1X3.1-5 OrderingOfSphereGroup[101X
   
-  [29X[2XOrderingOfSphereGroup[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XOrderingOfSphereGroup[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe list of the orders of the generators.[133X
   
   [33X[0;0YThis         attribute         has         the         property         that
@@ -53,7 +53,7 @@
   
   [1X3.1-6 ExponentsOfSphereGroup[101X
   
-  [29X[2XExponentsOfSphereGroup[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XExponentsOfSphereGroup[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe list of exponents of the generators.[133X
   
   [33X[0;0YThis         attribute         has         the         property         that
@@ -62,7 +62,7 @@
   
   [1X3.1-7 IsomorphismFreeGroup[101X
   
-  [29X[2XIsomorphismFreeGroup[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XIsomorphismFreeGroup[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YAn isomorphism to a free group, if it exists.[133X
   
   [33X[0;0YIf  [3Xg[103X  was  created as a sphere group with all exponents infinity, then [3Xg[103X is
@@ -71,7 +71,7 @@
   
   [1X3.1-8 SphereGroup[101X
   
-  [29X[2XSphereGroup[102X( [3Xordering[103X[, [3Xexponent[103X] ) [32X function
+  [33X[1;0Y[29X[2XSphereGroup[102X( [3Xordering[103X[, [3Xexponent[103X] ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YA new sphere group.[133X
   
   [33X[0;0Y[3Xordering[103X  is  either  a  list  of  integers,  describing  the  order  of the
@@ -84,7 +84,7 @@
   
   [1X3.1-9 IsSphereConjugacyClass[101X
   
-  [29X[2XIsSphereConjugacyClass[102X[32X filter
+  [33X[1;0Y[29X[2XIsSphereConjugacyClass[102X[32X filter[133X
   
   [33X[0;0YElements  of  a  sphere  group  represent based loops on a punctured sphere.
   Loops  (without specified basepoint) are represented by conjugacy classes. A
@@ -95,7 +95,7 @@
   
   [1X3.1-10 IsPeripheral[101X
   
-  [29X[2XIsPeripheral[102X( [3Xc[103X ) [32X property
+  [33X[1;0Y[29X[2XIsPeripheral[102X( [3Xc[103X ) [32X property[133X
   [6XReturns:[106X  [33X[0;10YWhether the conjugacy class [3Xc[103X is peripheral.[133X
   
   [33X[0;0YA  conjugacy  class  is  [13Xperipheral[113X if it contains a generator of the sphere
@@ -103,12 +103,12 @@
   
   [1X3.1-11 PeripheralClasses[101X
   
-  [29X[2XPeripheralClasses[102X( [3Xg[103X ) [32X attribute
+  [33X[1;0Y[29X[2XPeripheralClasses[102X( [3Xg[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe peripheral conjugacy classes of [3Xg[103X.[133X
   
   [1X3.1-12 IntersectionNumber[101X
   
-  [29X[2XIntersectionNumber[102X( [3Xc[103X, [3Xd[103X ) [32X attribute
+  [33X[1;0Y[29X[2XIntersectionNumber[102X( [3Xc[103X, [3Xd[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe intersection number of the conjugacy classes [3Xc[103X and [3Xd[103X.[133X
   
   [33X[0;0YThe  [13Xgeometric  intersection  number[113X  of  two loops is the minimal number of
@@ -117,8 +117,8 @@
   
   [1X3.1-13 AutomorphismGroup[101X
   
-  [29X[2XAutomorphismGroup[102X( [3Xg[103X ) [32X attribute
-  [29X[2XEpimorphismToOut[102X( [3Xa[103X ) [32X attribute
+  [33X[1;0Y[29X[2XAutomorphismGroup[102X( [3Xg[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XEpimorphismToOut[102X( [3Xa[103X ) [32X attribute[133X
   
   [33X[0;0YThis  function  computes  the [13Xpure[113X automorphism group of the sphere group [3Xg[103X,
   namely  the  group  of  automorphisms  that  preserves  all  the  peripheral
@@ -129,7 +129,7 @@
   
   [1X3.1-14 AmalgamateFreeProduct[101X
   
-  [29X[2XAmalgamateFreeProduct[102X( [3Xg[103X, [3Xh[103X, [3Xx[103X, [3Xy[103X ) [32X operation
+  [33X[1;0Y[29X[2XAmalgamateFreeProduct[102X( [3Xg[103X, [3Xh[103X, [3Xx[103X, [3Xy[103X ) [32X operation[133X
   
   [33X[0;0YThis  function  computes the amalgamated free product of two sphere groups [3Xg[103X
   and [3Xh[103X, along the cyclic subgroups [22X⟨ x⟩[122X of [3Xg[103X and [22X⟨ y⟩[122X of [3Xh[103X.[133X
@@ -141,14 +141,16 @@
   [1X3.2 [33X[0;0YSphere machines[133X[101X
   
   [33X[0;0YSphere  machines  are  simply group FR machines (see Section [14Xfr: FRMachineNC
-  (family,free,listlist,list)[114X)  whose  underlying  [2XStateSet[102X  ([14Xfr: StateSet (FR
-  machine)[114X)    is    a    sphere   group.   DeclareProperty("IsSphereMachine",
-  IsFRMachine);[133X
+  family,free,listlist,list[114X)   whose  underlying  [2XStateSet[102X  ([14Xfr:  StateSet  fr
+  machine[114X)    is    a    sphere    group.   DeclareProperty("IsSphereMachine",
+  IsGroupFRMachine);     InstallImmediateMethod(IsSphereMachine,IsFRMachine,0,
+  function(m)  local  g;  g  :=  StateSet(m);  return  HasIsSphereGroup(g) and
+  IsSphereGroup(g); end);[133X
   
   [1X3.2-1 IsSphereMachine[101X
   
-  [29X[2XIsSphereMachine[102X( [3Xm[103X ) [32X filter
-  [29X[2XIsPolynomialSphereMachine[102X( [3Xm[103X ) [32X filter
+  [33X[1;0Y[29X[2XIsSphereMachine[102X( [3Xm[103X ) [32X filter[133X
+  [33X[1;0Y[29X[2XIsPolynomialSphereMachine[102X( [3Xm[103X ) [32X filter[133X
   
   [33X[0;0YThe  categories of [13XSphere[113X and [13Xpolynomial[113X machines. Sphere machines are group
   FR  machines  whose  underlying  group  is  a  sphere group, see [2XSphereGroup[102X
@@ -171,7 +173,7 @@
   
   [1X3.2-2 AsSphereMachine[101X
   
-  [29X[2XAsSphereMachine[102X( [3Xm[103X[, [3Xw[103X] ) [32X operation
+  [33X[1;0Y[29X[2XAsSphereMachine[102X( [3Xm[103X[, [3Xw[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA sphere machine.[133X
   
   [33X[0;0YThis function creates a new sphere machine, starting from a group FR machine
@@ -202,22 +204,11 @@
     [4X[28XRelator: f1*f2*t[128X[104X
   [4X[32X[104X
   
-  [33X[0;0YDeclareAttribute("CleanedSphereMachine",IsSphereMachine);[133X
-  
-  [1X3.2-3 CleanedSphereMachine[101X
-  
-  [29X[2XCleanedSphereMachine[102X( [3Xm[103X ) [32X attribute
-  [6XReturns:[106X  [33X[0;10YA cleaned-up version of [3Xm[103X.[133X
-  
-  [33X[0;0YThis  command  attempts  to  shorten the length of the transitions in [3Xm[103X, and
-  ensure  (if  possible) that the product along every cycle of the states of a
-  generator is a conjugate of a generator. It returns the new machine.[133X
-  
   [33X[0;0YDeclareGlobalFunction("NewSphereMachine");[133X
   
-  [1X3.2-4 NewSphereMachine[101X
+  [1X3.2-3 NewSphereMachine[101X
   
-  [29X[2XNewSphereMachine[102X( [3X...[103X ) [32X attribute
+  [33X[1;0Y[29X[2XNewSphereMachine[102X( [3X...[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YA new sphere machine, based on string descriptions.[133X
   
   [33X[0;0YThis command constructs a new sphere machine, in a format similar to [2XFRGroup[102X
@@ -263,8 +254,8 @@
   
   [1X3.3-1 PolynomialSphereMachine[101X
   
-  [29X[2XPolynomialSphereMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X][, [3Xoptions[103X] ) [32X operation
-  [29X[2XPolynomialMealyMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X] ) [32X operation
+  [33X[1;0Y[29X[2XPolynomialSphereMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X][, [3Xoptions[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XPolynomialMealyMachine[102X( [3Xd[103X, [3Xper[103X[, [3Xpre[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA sphere or Mealy machine.[133X
   
   [33X[0;0YThis function creates a sphere or Mealy machine that describes a topological
@@ -384,7 +375,7 @@
   
   [1X3.3-2 SupportingRays[101X
   
-  [29X[2XSupportingRays[102X( [3Xm[103X ) [32X attribute
+  [33X[1;0Y[29X[2XSupportingRays[102X( [3Xm[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YA [10X[degree,fatou,julia][110X description of [3Xm[103X.[133X
   
   [33X[0;0YThis  operation  is  the  inverse  of  [2XPolynomialSphereMachine[102X  ([14X3.3-1[114X):  it
@@ -434,22 +425,24 @@
     [4X[28X  relation := <equivalence relation on <object> >, niter := 8 )[128X[104X
   [4X[32X[104X
   
-  [33X[0;0YDeclareAttribute("NormalizedPolynomialSphereMachine",IsSphereMachine);[133X
+  [33X[0;0YDeclareAttribute("FRMachineWithNormalizedAdder",IsGroupFRMachine);
+  DeclareOperation("FRMachineWithNormalizedAdder",[IsGroupFRMachine,IsAssocWord]);[133X
   
-  [1X3.3-3 NormalizedPolynomialSphereMachine[101X
+  [1X3.3-3 FRMachineWithNormalizedAdder[101X
   
-  [29X[2XNormalizedPolynomialSphereMachine[102X( [3Xm[103X ) [32X attribute
-  [6XReturns:[106X  [33X[0;10YA polynomial sphere machine.[133X
+  [33X[1;0Y[29X[2XFRMachineWithNormalizedAdder[102X( [3Xm[103X[, [3Xadder[103X] ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YA sphere machine.[133X
   
-  [33X[0;0YThis  function returns a new sphere machine, in which the adding element has
-  been  put into a standard form [22Xt=[t,1,dots,1]s[122X, where [22Xs[122X is the long cycle [22Xi↦
-  i-1[122X.[133X
+  [33X[0;0YThis function returns a new FR machine, in which the adding element has been
+  put  into a standard form [22Xt=[t,1,dots,1]s[122X, where [22Xs[122X is the long cycle [22Xi↦ i-1[122X.
+  If  the adding element [3Xadder[103X is not specified, then [3Xm[103X should be a polynomial
+  sphere machine, and [3Xadder[103X is its [10XAddingElement[110X.[133X
   
   [33X[0;0YDeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);[133X
   
   [1X3.3-4 SimplifiedSphereMachine[101X
   
-  [29X[2XSimplifiedSphereMachine[102X( [3Xm[103X ) [32X attribute
+  [33X[1;0Y[29X[2XSimplifiedSphereMachine[102X( [3Xm[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YA simpler sphere machine.[133X
   
   [33X[0;0YThis   function  returns  a  new  sphere  machine,  with  hopefully  simpler
@@ -495,9 +488,9 @@
   
   [1X3.3-5 Mating[101X
   
-  [29X[2XMating[102X( [3Xm1[103X, [3Xm2[103X[, [3Xformal[103X] ) [32X operation
-  [29X[2XEquatorElement[102X( [3Xm[103X ) [32X attribute
-  [29X[2XEquatorTwist[102X( [3Xm[103X ) [32X attribute
+  [33X[1;0Y[29X[2XMating[102X( [3Xm1[103X, [3Xm2[103X[, [3Xformal[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XEquatorElement[102X( [3Xm[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XEquatorTwist[102X( [3Xm[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YA sphere machine.[133X
   
   [33X[0;0YThis function "mates" two polynomial sphere machines.[133X
@@ -537,7 +530,7 @@
     [4X[28X((1.66408+I*0.668485)*z^3+(-2.59772+I*0.627498)*z^2+(-1.80694-I*0.833718)*z[128X[104X
     [4X[28X  +(1.14397-I*1.38991))/((-1.52357-I*1.27895)*z^3+(2.95502+I*0.234926)*z^2[128X[104X
     [4X[28X  +(1.61715+I*1.50244)*z+1)[128X[104X
-    [4X[25Xgap>[125X [27X# m[29] is obstructed, and is the original Tan-Shishikura map[127X[104X
+    [4X[25Xgap>[125X [27X# m[29] is obstructed, and has a Levy cycle[127X[104X
     [4X[25Xgap>[125X [27XP1MapBySphereMachine(m[29]);[127X[104X
     [4X[28Xrec([128X[104X
     [4X[28X  machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2,\[128X[104X
@@ -553,17 +546,27 @@
     [4X[28X((0.85917327990384307-0.8755042485587835i_z)*z^3+[128X[104X
     [4X[28X(0.9573881709899621-0.14875521653926685i_z)*z^2+[128X[104X
     [4X[28X(-0.68923589444039035+0.48120812618585479i_z)*z+1._z)>[128X[104X
+    [4X[25Xgap>[125X [27X# m[14] is the original Tan Lei-Shishikura example[127X[104X
+    [4X[25Xgap>[125X [27XThurstonAlgorithm(m[14]);[127X[104X
+    [4X[28Xrec([128X[104X
+    [4X[28X  machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] ) / [ f\[128X[104X
+    [4X[28X3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ],[128X[104X
+    [4X[28X  multicurve := [ f1^-1*f3*f2*f1*f3*f2*f1*g1^-1*g3*g2*g1*g3*g2*g1^G,[128X[104X
+    [4X[28X                  f1^-1*f2*f1*f3*f2*f1*f3*f2*f1*g2*g3*g2*g1*g3*g2*g1^G ] )[128X[104X
   [4X[32X[104X
   
   [33X[0;0YDeclareProperty("IsKneadingMachine",IsFRMachine);
-  DeclareProperty("IsPlanarKneadingMachine",IsFRMachine);
+  DeclareAttribute("PlanarEmbeddingOfKneadingMachine",IsFRMachine);
+  DeclareAttribute("PlanarEmbeddingsOfKneadingMachine",IsFRMachine);
+  DeclareSynonym("IsPlanarKneadingMachine",HasPlanarEmbeddingOfKneadingMachine);
   InstallTrueMethod(IsBoundedFRMachine,IsKneadingMachine);
   InstallTrueMethod(IsLevelTransitive,IsKneadingMachine);[133X
   
   [1X3.3-6 IsKneadingMachine[101X
   
-  [29X[2XIsKneadingMachine[102X( [3Xm[103X ) [32X property
-  [29X[2XIsPlanarKneadingMachine[102X( [3Xm[103X ) [32X property
+  [33X[1;0Y[29X[2XIsKneadingMachine[102X( [3Xm[103X ) [32X property[133X
+  [33X[1;0Y[29X[2XPlanarEmbeddingOfKneadingMachine[102X( [3Xm[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XIsPlanarKneadingMachine[102X( [3Xm[103X ) [32X property[133X
   [6XReturns:[106X  [33X[0;10YWhether [3Xm[103X is a (planar) kneading machine.[133X
   
   [33X[0;0YA  [13Xkneading  machine[113X  is  a  special kind of Mealy machine, used to describe
@@ -589,6 +592,8 @@
     [4X[28X---+-----+-----+[128X[104X
     [4X[25Xgap>[125X [27XIsPlanarKneadingMachine(M);[127X[104X
     [4X[28Xtrue[128X[104X
+    [4X[25Xgap>[125X [27XPlanarEmbeddingOfKneadingMachine(M);[127X[104X
+    [4X[28X[ 1, 2 ][128X[104X
     [4X[25Xgap>[125X [27XIsPlanarKneadingMachine(GrigorchukMachine);[127X[104X
     [4X[28Xfalse[128X[104X
   [4X[32X[104X
@@ -597,7 +602,7 @@
   
   [1X3.3-7 AddingElement[101X
   
-  [29X[2XAddingElement[102X( [3Xm[103X ) [32X attribute
+  [33X[1;0Y[29X[2XAddingElement[102X( [3Xm[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe element generating the adding submachine.[133X
   
   [33X[0;0YThis  attribute  stores the product of generators that is an adding machine.
@@ -607,8 +612,7 @@
   [33X[0;0YThe  following  example  illustrates Wittner's shared mating of the airplane
   and the rabbit. In the machine [10Xm[110X, an airplane is represented by [10XGroup(a,b,c)[110X
   and  a rabbit is represented by [10XGroup(x,y,z)[110X; in the machine [10Xnewm[110X, it is the
-  other   way   round.  The  effect  of  [10XCleanedSphereMachine[110X  was  to  remove
-  unnecessary instances of the IMG relator from [10Xnewm[110X's recursion.[133X
+  other way round.[133X
   
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27Xf := FreeGroup("a","b","c","x","y","z");;[127X[104X
@@ -627,7 +631,7 @@
     [4X[28X---+---------+-------------+[128X[104X
     [4X[28XRelator: z*y*x*c*b*a[128X[104X
     [4X[25Xgap>[125X [27Xiso := GroupHomomorphismByImages(f,f,[a,b^(y^-1),c^(x^-1*y^-1*a^-1),x^(b*a*z*a^-1),y,z^(a^-1)],[a,b,c,x,y,z]);;[127X[104X
-    [4X[25Xgap>[125X [27Xnewm := CleanedSphereMachine(ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]));;[127X[104X
+    [4X[25Xgap>[125X [27Xnewm := ChangeFRMachineBasis(m^iso,[a^-1*y^-1,y^-1*a^-1*c^-1]);;[127X[104X
     [4X[25Xgap>[125X [27XDisplay(newm);[127X[104X
     [4X[28X G |          1         2   [128X[104X
     [4X[28X---+-------------+---------+[128X[104X
@@ -648,7 +652,7 @@
   
   [1X3.3-8 AsPolynomialSphereMachine[101X
   
-  [29X[2XAsPolynomialSphereMachine[102X( [3Xm[103X[, [3Xadder[103X[, [3Xrelator[103X]] ) [32X operation
+  [33X[1;0Y[29X[2XAsPolynomialSphereMachine[102X( [3Xm[103X[, [3Xadder[103X[, [3Xrelator[103X]] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA polynomial sphere machine.[133X
   
   [33X[0;0YThe  first function creates a new polynomial sphere machine, starting from a
@@ -668,7 +672,7 @@
     [4X[25Xgap>[125X [27XM := PolynomialMealyMachine(2,[1/7],[]);[127X[104X
     [4X[28X<Mealy machine on alphabet [ 1 .. 2 ] with 4 states>[128X[104X
     [4X[25Xgap>[125X [27XMi := AsPolynomialSphereMachine(M);[127X[104X
-    [4X[28X!!![128X[104X
+    [4X[28X# (example still broken, have to fix spider algorithm)[128X[104X
   [4X[32X[104X
   
   [33X[0;0YDeclareOperation("LiftOfConjugacyClass",
@@ -676,7 +680,7 @@
   
   [1X3.3-9 LiftOfConjugacyClass[101X
   
-  [29X[2XLiftOfConjugacyClass[102X( [3Xm[103X, [3Xc[103X ) [32X operation
+  [33X[1;0Y[29X[2XLiftOfConjugacyClass[102X( [3Xm[103X, [3Xc[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA list of conjugacy classes and multiplicities.[133X
   
   [33X[0;0YThis  command  computes  the preimage of the conjugacy class [3Xc[103X by the sphere
@@ -690,7 +694,7 @@
   
   [1X3.3-10 ComplexConjugate[101X
   
-  [29X[2XComplexConjugate[102X( [3Xm[103X ) [32X operation
+  [33X[1;0Y[29X[2XComplexConjugate[102X( [3Xm[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YAn FR machine with inverted states.[133X
   
   [33X[0;0YThis  function  constructs  an  FR  machine  whose generating states are the
@@ -731,7 +735,7 @@
   
   [1X3.3-11 RotatedSpider[101X
   
-  [29X[2XRotatedSpider[102X( [3Xm[103X[, [3Xp[103X] ) [32X operation
+  [33X[1;0Y[29X[2XRotatedSpider[102X( [3Xm[103X[, [3Xp[103X] ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA polynomial FR machine with rotated spider at infinity.[133X
   
   [33X[0;0YThis  function  constructs  an  isomorphic polynomial FR machine, but with a
@@ -770,7 +774,7 @@
   
   [1X3.3-12 KneadingSequence[101X
   
-  [29X[2XKneadingSequence[102X( [3Xangle[103X ) [32X attribute
+  [33X[1;0Y[29X[2XKneadingSequence[102X( [3Xangle[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YThe kneading sequence associated with [3Xangle[103X.[133X
   
   [33X[0;0YThis  function converts a rational angle to a kneading sequence, to describe
@@ -790,7 +794,7 @@
   
   [1X3.3-13 AllInternalAddresses[101X
   
-  [29X[2XAllInternalAddresses[102X( [3Xn[103X ) [32X attribute
+  [33X[1;0Y[29X[2XAllInternalAddresses[102X( [3Xn[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YInternal addresses of maps with period up to [3Xn[103X.[133X
   
   [33X[0;0YThis  function  returns internal addresses for all periodic points of period
@@ -813,7 +817,7 @@
   
   [1X3.3-14 ExternalAnglesRelation[101X
   
-  [29X[2XExternalAnglesRelation[102X( [3Xdegree[103X, [3Xn[103X ) [32X function
+  [33X[1;0Y[29X[2XExternalAnglesRelation[102X( [3Xdegree[103X, [3Xn[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YAn equivalence relation on the rationals.[133X
   
   [33X[0;0YThis  function returns the equivalence relation on [10XRationals[110X identifying all
@@ -831,7 +835,7 @@
   
   [1X3.3-15 ExternalAngle[101X
   
-  [29X[2XExternalAngle[102X( [3Xmachine[103X ) [32X function
+  [33X[1;0Y[29X[2XExternalAngle[102X( [3Xmachine[103X ) [32X function[133X
   [6XReturns:[106X  [33X[0;10YThe external angle identifying [3Xmachine[103X.[133X
   
   [33X[0;0YIn  case  [3Xmachine[103X  is  the  sphere machine of a unicritical polynomial, this
@@ -858,8 +862,8 @@
   
   [1X3.4-1 AutomorphismVirtualEndomorphism[101X
   
-  [29X[2XAutomorphismVirtualEndomorphism[102X( [3Xv[103X ) [32X attribute
-  [29X[2XAutomorphismSphereMachine[102X( [3Xm[103X ) [32X attribute
+  [33X[1;0Y[29X[2XAutomorphismVirtualEndomorphism[102X( [3Xv[103X ) [32X attribute[133X
+  [33X[1;0Y[29X[2XAutomorphismSphereMachine[102X( [3Xm[103X ) [32X attribute[133X
   [6XReturns:[106X  [33X[0;10YA description of the pullback map on Teichmüller space.[133X
   
   [33X[0;0YLet [3Xm[103X be a sphere machine, thought of as a biset for the fundamental group [22XG[122X

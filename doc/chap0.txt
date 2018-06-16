@@ -3,10 +3,10 @@
                            [1XIterated monodromy groups[101X
   
   
-                                 Version 0.1.1
+                                 Version 0.2.1
   
   
-                                   02/01/2014
+                                   16/06/2018
   
   
                                Laurent Bartholdi
@@ -82,12 +82,11 @@
     3.2 [33X[0;0YSphere machines[133X
       3.2-1 IsSphereMachine
       3.2-2 AsSphereMachine
-      3.2-3 CleanedSphereMachine
-      3.2-4 NewSphereMachine
+      3.2-3 NewSphereMachine
     3.3 [33X[0;0YPolynomial sphere machines[133X
       3.3-1 PolynomialSphereMachine
       3.3-2 SupportingRays
-      3.3-3 NormalizedPolynomialSphereMachine
+      3.3-3 FRMachineWithNormalizedAdder
       3.3-4 SimplifiedSphereMachine
       3.3-5 Mating
       3.3-6 IsKneadingMachine
@@ -171,9 +170,10 @@
     4.5 [33X[0;0YThe spider algorithm[133X
       4.5-1 NormalizedP1Map
       4.5-2 ThurstonAlgorithm
-      4.5-3 P1MapBySphereMachine
-      4.5-4 ThurstonMatrix
-      4.5-5 ThurstonObstruction
+      4.5-3 SpiderAlgorithm
+      4.5-4 P1MapBySphereMachine
+      4.5-5 ThurstonMatrix
+      4.5-6 ThurstonObstruction
   5 [33X[0;0YExamples[133X
     5.1 [33X[0;0YExamples of groups[133X
       5.1-1 PoirierExamples

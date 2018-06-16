@@ -5,14 +5,12 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.1.1",
-Date := "02/01/2014",
+Version := "0.2.1",
+Date := "16/06/2018",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.1.1">
-## <!ENTITY Date "02/01/2014">
+## <!ENTITY Version "0.2.1">
+## <!ENTITY Date "16/06/2018">
 ## <#/GAPDoc>
-ArchiveURL := Concatenation("https://github.com/laurentbartholdi/img/archive/",~.Version),
-ArchiveFormats := ".tar.gz",
 Persons := [
   rec(
     LastName      := "Bartholdi",
@@ -35,17 +33,16 @@ Status := "deposited",
 CommunicatedBy := "Götz Pfeiffer (NUI Galway)",
 AcceptDate := "",
 
-README_URL := "http://laurentbartholdi.github.com/img/README.img",
-PackageInfoURL := "http://laurentbartholdi.github.com/img/PackageInfo.g",
 AbstractHTML := "The <span class=\"pkgname\">IMG</span> package allows \
    GAP to manipulate iterated monodromy groups",
-PackageWWWHome := "http://laurentbartholdi.github.com/img/",
 
-SourceRepository := rec( 
-  Type := "git", 
-  URL := "https://github.com/laurentbartholdi/img"
-),
+SourceRepository:= rec(Type := "git", URL := "https://github.com/gap-packages/img"),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+ArchiveURL      := Concatenation( ~.SourceRepository.URL, "/releases/download/v", ~.Version, "/", ~.PackageName, "-", ~.Version ),
+ArchiveFormats  := ".tar.gz",
+PackageWWWHome  := Concatenation( "https://gap-packages.github.io/", ~.PackageName ),
+README_URL      := Concatenation( ~.PackageWWWHome, "/README" ),
+PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
 PackageDoc := rec(
   BookName  := "IMG",
@@ -60,7 +57,8 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">=4.6.0",
   NeededOtherPackages := [["FR",">=2.0.0"],
-                      ["GAPDoc",">=1.0"]],
+                      ["GAPDoc",">=1.0"],
+		      ["IO",">=4.0"]],
   SuggestedOtherPackages := [["Float",">=0.4"]],
 
   # for compilation of the external module, one needs:
