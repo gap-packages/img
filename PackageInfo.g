@@ -5,11 +5,11 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.2.0",
-Date := "22/02/2017",
+Version := "0.2.1",
+Date := "16/06/2018",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.2.0">
-## <!ENTITY Date "22/02/2017">
+## <!ENTITY Version "0.2.1">
+## <!ENTITY Date "16/06/2018">
 ## <#/GAPDoc>
 Persons := [
   rec(
@@ -36,11 +36,11 @@ AcceptDate := "",
 AbstractHTML := "The <span class=\"pkgname\">IMG</span> package allows \
    GAP to manipulate iterated monodromy groups",
 
-SourceRepository:= rec(Type := "git", URL := "https://github.com/laurentbartholdi/img"),
+SourceRepository:= rec(Type := "git", URL := "https://github.com/gap-packages/img"),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL      := Concatenation( ~.SourceRepository.URL, "/releases/download/v", ~.Version, "/", ~.PackageName, "-", ~.Version ),
 ArchiveFormats  := ".tar.gz",
-PackageWWWHome  := Concatenation( "https://laurentbartholdi.github.io/", ~.PackageName ),
+PackageWWWHome  := Concatenation( "https://gap-packages.github.io/", ~.PackageName ),
 README_URL      := Concatenation( ~.PackageWWWHome, "/README" ),
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
