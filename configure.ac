@@ -8,7 +8,7 @@
 
 # autoconf
 AC_PREREQ(2.68)
-AC_INIT([img],m4_esyscmd([tr -d '\n' < VERSION]),[https://github.com/laurentbartholdi/img/issues],[https://laurentbartholdi.github.io/img])
+AC_INIT([img],m4_esyscmd([tr -d '\n' < VERSION]),[https://github.com/gap-packages/img/issues],[https://gap-packages.github.io/img])
 AC_CONFIG_SRCDIR([src/img.c])
 AC_CONFIG_AUX_DIR([cnf])
 AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])

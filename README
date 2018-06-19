@@ -13,7 +13,7 @@ for complex dynamics, etc.
 The package is distributed in source form, and does not require anything
 else than a running GAP 4.5 or later. For updates, check
 
-     https://github.com/laurentbartholdi/img/
+     https://github.com/gap-packages/img/
 
 To use the package, start GAP and type
 
