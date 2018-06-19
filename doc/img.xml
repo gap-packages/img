@@ -30,20 +30,19 @@
   <Alt Only="HTML">
   <P/>
   The computer algebra system &GAP; is available at
-  <URL>http://gap-system.org</URL>.
+  <URL>https://gap-system.org</URL>.
   <P/>
   This documentation for <Package>IMG</Package> is available at
-  <URL>http://laurentbartholdi.github.com/img/doc/manual.pdf</URL> in PDF
+  <URL>https://gap-packages.github.io/img/doc/manual.pdf</URL> in PDF
   format, and may be accessed online at
-  <URL>http://laurentbartholdi.github.com/img/</URL>.
+  <URL>https://gap-packages.github.io/img/</URL>.
   <P/>
   The latest release of the package may be downloaded as
-  <URL>https://github.com/laurentbartholdi/img/archive/&Version;.tar.gz</URL> (tar, gzipped) and
-  <URL>https://github.com/laurentbartholdi/img/archive/&Version;.zip</URL> (zip).
+  <URL>https://github.com/gap-packages/img/releases/download/v&Version;/IMG-&Version;.tar.gz</URL> (tar, gzipped).
   The latest repository version (possibly unstable) may be downloaded as
-  <URL>https://github.com/laurentbartholdi/img/tarball/master</URL> (tar, gzipped),
-  <URL>https://github.com/laurentbartholdi/img.git</URL> (git repository), or
-  explored at <URL>https://github.com/laurentbartholdi/img/tree/master/</URL>.
+  <URL>https://github.com/gap-packages/img/tarball/master</URL> (tar, gzipped),
+  <URL>https://github.com/gap-packages/img.git</URL> (git repository), or
+  explored at <URL>https://github.com/gap-packages/img/tree/master/</URL>.
   </Alt>
   <P/>
     For comments or questions on <Package>IMG</Package> please contact
