@@ -186,12 +186,13 @@ InstallMethod(Exp, [IsPMComplex],
     return Objectify(TYPE_PMCOMPLEX, [r*COS_MACFLOAT(z![2]),r*SIN_MACFLOAT(z![2])]);
 end);
 
-InstallOtherMethod(Random, [IsPMComplexCollection],
-        function(D)
+InstallMethodWithRandomSource(Random, "for a random source and a IsPMComplexCollection",
+        [IsRandomSource, IsPMComplexCollection],
+        function(rs, D)
     if D=PMCOMPLEX_PSEUDOFIELD then
         return NewFloat(IsPMComplex,
-                       Random(GlobalMersenneTwister, 0, 10^18)/10^18,
-                       Random(GlobalMersenneTwister, 0, 10^18)/10^18);
+                       Random(rs, 0, 10^18)/10^18,
+                       Random(rs, 0, 10^18)/10^18);
     else
         TryNextMethod();
     fi;
