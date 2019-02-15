@@ -3,10 +3,10 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or (at
 your opinion) any later version.
 
-img contains several external files:
-- cpoly.C, which was written by Henrik Vestermark <hve@hvks.com> and
-  is distributed with his permission;
- 
+img contains an external file "cpoly.C", a complex root finder, which
+is based on code written by Henrik Vestermark <hve@hvks.com> and is
+distributed with his permission.
+
 Version 2 of the GNU General Public License follows.
 
 =====================================================================
