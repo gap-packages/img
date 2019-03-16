@@ -38,8 +38,7 @@ static Obj NEW_DATOBJ (size_t size, Obj type)
 static void guarantee(Obj filter, const char *name, Obj obj)
 {
   while (!IS_DATOBJ(obj) || DoFilter(filter, obj) != True) {
-    obj = ErrorReturnObj("FR: object must be a %s, not a %s",
-			 (Int) name, (Int)(InfoBags[TNUM_OBJ(obj)].name),
+    obj = ErrorReturnObj("FR: object must be a %s", (Int) name, 0L,
 			 "You can return an appropriate object to continue");
   }
 }
@@ -114,9 +113,7 @@ static Obj P1POINT2STRING(Obj self, Obj objprec, Obj obj)
 static Obj STRINGS2P1POINT(Obj self, Obj gapre, Obj gapim)
 {
   while (!IsStringConv(gapre) || !IsStringConv(gapim)) {
-    ErrorQuit("STRINGS2POINT: Expected string, not %s,%s",
-	      (Int)(InfoBags[TNUM_OBJ(gapre)].name),
-	      (Int)(InfoBags[TNUM_OBJ(gapim)].name));
+    ErrorQuit("STRINGS2POINT: Expected 2 strings", 0L, 0L);
   }
   ldouble re, im;
   if (sscanf(CSTR_STRING(gapre),"%Lg", &re) != 1)
@@ -204,8 +201,8 @@ static Obj P1Sphere(Obj self, Obj obj)
 {
   while (!IS_PLIST(obj) || LEN_PLIST(obj)!=3 || !IS_MACFLOAT(ELM_PLIST(obj,1))
 	 || !IS_MACFLOAT(ELM_PLIST(obj,2)) || !IS_MACFLOAT(ELM_PLIST(obj,3))) {
-    obj = ErrorReturnObj("FR: object must be a floatean list of length 3, not a %s",
-                       (Int)(InfoBags[TNUM_OBJ(obj)].name),0,
+    obj = ErrorReturnObj("FR: object must be a floatean list of length 3",
+			 0L, 0L,
                        "You can return an appropriate object to continue");
   }
   ldouble v[3];
