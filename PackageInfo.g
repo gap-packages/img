@@ -5,11 +5,11 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.2.1",
-Date := "16/06/2018",
+Version := "0.2.2",
+Date := "16/03/2019",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.2.1">
-## <!ENTITY Date "16/06/2018">
+## <!ENTITY Version "0.2.2">
+## <!ENTITY Date "16/03/2019">
 ## <#/GAPDoc>
 Persons := [
   rec(

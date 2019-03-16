@@ -3,10 +3,10 @@
                            [1XIterated monodromy groups[101X
   
   
-                                 Version 0.2.1
+                                 Version 0.2.2
   
   
-                                   16/06/2018
+                                   16/03/2019
   
   
                                Laurent Bartholdi
