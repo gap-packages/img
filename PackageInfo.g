@@ -41,7 +41,7 @@ IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL      := Concatenation( ~.SourceRepository.URL, "/releases/download/v", ~.Version, "/", ~.PackageName, "-", ~.Version ),
 ArchiveFormats  := ".tar.gz",
 PackageWWWHome  := Concatenation( "https://gap-packages.github.io/", ~.PackageName ),
-README_URL      := Concatenation( ~.PackageWWWHome, "/README" ),
+README_URL      := Concatenation( ~.PackageWWWHome, "/README.md" ),
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
 PackageDoc := rec(
