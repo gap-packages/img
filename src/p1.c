@@ -776,8 +776,10 @@ static Obj P1PREIMAGES(Obj self, Obj map, Obj objp)
     return Fail;
 
   Obj obj = ALLOC_PLIST(deg);
-  for (i = 0; i < numroots; i++)
+  for (i = 0; i < numroots; i++) {
+    // clean?
     set_elm_plist(obj,i+1, NEW_P1POINT(zero[i]));
+  }
   for (i = numroots; i < deg; i++)
     set_elm_plist(obj,i+1, P1infinity);
   return obj;
@@ -796,8 +798,10 @@ static Obj P1CRITICAL(Obj self, Obj map)
   if (numroots < 0)
     return Fail;
   Obj obj = ALLOC_PLIST(2*deg-2);
-  for (i = 0; i < numroots; i++)
+  for (i = 0; i < numroots; i++) {
+    // clean?
     set_elm_plist(obj,i+1, NEW_P1POINT(zero[i]));
+  }
   for (i = numroots; i < 2*deg-2; i++)
     set_elm_plist(obj,i+1, P1infinity);
   return obj;

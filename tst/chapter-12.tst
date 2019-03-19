@@ -44,6 +44,6 @@ gap>
 gap> 
 gap> STOP_TEST( "chapter-12.tst", 3*10^8 );
 fr:chapter 12
-GAP4stones: 10000
+msecs: 0
 
 #E chapter-12.tst . . . . . . . . . . . . . . . . . . . . . . . . . ends here

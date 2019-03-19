@@ -72,7 +72,8 @@ static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
   Obj result;
   Int i, numroots, degree = LEN_PLIST(coeffs)-1;
   xcomplex op[degree+1], zero[degree];
-
+  bool real = true;
+  
   if (degree < 1)
     return Fail;
 
@@ -81,6 +82,8 @@ static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
     __imag__(op)[degree-i] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),2));
     if (isnan(__real__(op)[degree-i]) || isnan(__imag__(op)[degree-i]))
       return Fail;
+    if (__imag__(op)[degree-i] != 0.0)
+      real = false;
   }
 
 #ifdef DEBUG_COMPLEX_ROOTS
@@ -106,6 +109,8 @@ static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
   result = ALLOC_PLIST(numroots);
   for (i = 1; i <= numroots; i++) {
     Obj t = ALLOC_PLIST(2);
+    if (real && fabs(__imag__(zero)[i-1]) < 2*degree*DBL_EPSILON*fabs(__real__(zero)[i-1]))
+      __imag__(zero)[i-1] = 0.0;
     set_elm_plist(t,1, NEW_FLOAT(__real__(zero)[i-1]));
     set_elm_plist(t,2, NEW_FLOAT(__imag__(zero)[i-1]));
     set_elm_plist(result,i, t);
