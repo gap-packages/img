@@ -1,43 +1,46 @@
 gap> START_TEST("fr:p1");
-gap> SetP1Points(PMCOMPLEX);
-gap> SetFloats(PMCOMPLEX);
+gap> LoadPackage("float");
+true
+gap> SetP1Points(MPC);
+gap> SetFloats(MPC);
 gap> n := P1Point(0.0);
-<0+0i>
+<.0e0>
 gap> s := P1Antipode(n);
-<P1infinity>
+<∞>
 gap> e := P1Point(1.0);;
 gap> w := P1Point(-1.0);;
 gap> f := P1Point(1.0i);;
 gap> b := P1Point(-1.0i);;
 gap> pts := [n,s,e,w,f,b,P1Point(1.e-3),P1Point(1.e-3i),P1Point(1.e-3+1.e-3i),P1Point(1.e-6i)];
-[ <0+0i>, <P1infinity>, <1+0i>, <-1+0i>, <0+1i>, <-0-1i>, <0.001+0i>,
-  <0+0.001i>, <0.001+0.001i>, <0+1e-06i> ]
+[ <.0e0>, <∞>, <.1e1>, <-.1e1>, <.0e0+.1e1ⅈ>, <-.0e0-.1e1ⅈ>, <.1e-2>,
+  <.0e0+.1e-2ⅈ>, <.1e-2+.1e-2ⅈ>, <.0e0+.1e-5ⅈ> ]
 gap> P1Midpoint(s,n);
 fail
 gap> P1Midpoint(s,e);
-<2.4142+0i>
+<.241421e1>
 gap> P1Midpoint(n,w);
-<-0.41421+0i>
+<-.414214e0>
 gap> P1Midpoint(pts[9],pts[10]);
-<0.0005+0.0005005i>
+<.5e-3+.5005e-3ⅈ>
 gap> P1Midpoint(pts[10],pts[10]);
-<0+1e-06i>
+<.0e0+.1e-5ⅈ>
 gap> List(pts,SphereP1);
-[ [ 0., 0., 1. ], [ 0., 0., -1. ], [ 1., 0., 0. ], [ -1., 0., 0. ],
-  [ 0., 1., 0. ], [ -0., -1., 0. ], [ 0.002, 0., 0.999998 ],
-  [ 0., 0.002, 0.999998 ], [ 0.002, 0.002, 0.999996 ], [ 0., 2.e-06, 1. ] ]
+[ [ .0e0, .0e0, .1e1 ], [ .0e0, .0e0, -.1e1 ], [ .1e1, .0e0, .0e0 ],
+  [ -.1e1, -.0e0, .0e0 ], [ .0e0, .1e1, .0e0 ], [ -.0e0, -.1e1, .0e0 ],
+  [ .2e-2, .0e0, .999998e0 ], [ .0e0, .2e-2, .999998e0 ],
+  [ .2e-2, .2e-2, .999996e0 ], [ .0e0, .2e-5, .1e1 ] ]
 gap> List(pts,x->P1Distance(x,P1Sphere(SphereP1(x))));
-[ 0., 0., 0., 0., 0., 0., 1.32561e-19, 1.32561e-19, 2.42871e-19, 6.67948e-23 ]
+[ .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .300927e-35 ]
 gap> DelaunayTriangulation(pts);
 <triangulation with 10 vertices, 48 edges and 16 faces>
 gap> DelaunayTriangulation(pts,2.0);
 <triangulation with 90 vertices, 528 edges and 176 faces>
 gap> 
 
-gap> z := Indeterminate(PMCOMPLEX_PSEUDOFIELD,"z");
+gap> z := Indeterminate(MPC_PSEUDOFIELD,"z");
 z
 gap> (z^2-1)/(z-1);
-z+1._z
+z+.1e1+.0e0i
 gap> STOP_TEST("p1.tst", 10^8);
 fr:p1
-msecs: 14
+msecs: 68

@@ -426,8 +426,8 @@ InstallMethod(CoefficientsOfP1Map, "(IMG) generic P1 map", [IsP1Map],
         function(map)
     local c;
     map := CoefficientsOfUnivariateRationalFunction(map);
-    c := [Concatenation(ListWithIdenticalEntries(map[3],@.z),map[1]),
-          Concatenation(ListWithIdenticalEntries(-map[3],@.z),map[2])];
+    c := [Concatenation(ListWithIdenticalEntries(Maximum(0,map[3]),@.z),map[1]),
+          Concatenation(ListWithIdenticalEntries(Maximum(0,-map[3]),@.z),map[2])];
     c[3] := Maximum(Length(c[1]),Length(c[2]))-1;
     while Length(c[1])<=c[3] do Add(c[1],@.z); od;
     while Length(c[2])<=c[3] do Add(c[2],@.z); od;
