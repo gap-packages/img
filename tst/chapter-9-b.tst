@@ -28,35 +28,35 @@ gap> z := P1z;
 gap> a := RootsFloat((z-1)*(3*z^2-2*z^3)+1);
 [ 0.598631+0.565259i, -0.426536, 0.598631-0.565259i, 1.72927 ]
 gap> c := RootsFloat((z^3+z)^3+z);
-[ 0., 0.557573+0.540347i, -0.557573+0.540347i, -0.557573-0.540347i,
-  0.557573-0.540347i, 0.264425+1.26049i, -0.264425+1.26049i,
+[ 0., 0.557573+0.540347i, -0.557573+0.540347i, -0.557573-0.540347i, 
+  0.557573-0.540347i, 0.264425+1.26049i, -0.264425+1.26049i, 
   -0.264425-1.26049i, 0.264425-1.26049i ]
 gap> am := List(a,a->SphereMachine((a-1)*(3*z^2-2*z^3)+1));
 [ <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
 p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]> ]
 gap> cm := List(c,c->SphereMachine(z^3+c));
 [ <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f2) on Grou\
-p( [ f1, f2 ] )/[ f2*f1 ]>,
+p( [ f1, f2 ] )/[ f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
-p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
+p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>, 
   <sphere machine with alphabet [ 1 .. 3 ] and adder FRElement(...,f4) on Grou\
 p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]> ]
 gap> m := ListX(am,cm,Mating);;
@@ -72,11 +72,12 @@ gap>
 gap> Info(InfoFR,1,"An obstructed mating");
 #I  An obstructed mating
 gap> P1MapBySphereMachine(m[9+6]);
-rec(
-  machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] ) / [ f\
-3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ],
-  multicurve := [ f1*f3*f2*f1*f3*f2*f1*f3*f2*f1*g1*g3*g2*g1*g3*g2*g1*g3*g2*g1^G,
-      f1^-1*f2^-1*f1*f3*f2*f1*f3*f2*f1*f3*f2*f1*g2^-1*g3*g2*g1*g3*g2*g1*g3*g2*g1^G ] )
+rec( 
+  machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3,\
+ g1, g2, g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ]
+    , 
+  multicurve := [ (f1*f3*f2)^3*f1*(g1*g3*g2)^3*g1^G, 
+      f1^-1*f2^-1*(f1*f3*f2)^3*f1*g2^-1*(g3*g2*g1)^3^G ] )
 gap> 
 gap> Info(InfoFR,1,"Testing Triangulations");
 #I  Testing Triangulations
@@ -108,7 +109,7 @@ gap> M := FRMachine(F,[[c^-1,o,o,o,c],[o,o,o,d,d^-1],[a,o,o,a^-1,o],[b,o,d,a,c]]
 <sphere machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] ) / [ d*c*b*\
 a ]>
 gap> P1MapBySphereMachine(M);
-rec(
+rec( 
   machine := <sphere machine with alphabet [ 1, 2, 3, 4, 5 ] on Group( [ a, b,\
  c, d ] ) / [ d*c*b*a ]>, matrix := [ [ 1 ] ], multicurve := [ a*c^G ] )
 gap> 

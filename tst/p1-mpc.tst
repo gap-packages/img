@@ -1,4 +1,4 @@
-gap> START_TEST("fr:p1");
+gap> START_TEST("fr:p1-mpc");
 gap> LoadPackage("float");
 true
 gap> SetP1Points(MPC);
@@ -12,7 +12,7 @@ gap> w := P1Point(-1.0);;
 gap> f := P1Point(1.0i);;
 gap> b := P1Point(-1.0i);;
 gap> pts := [n,s,e,w,f,b,P1Point(1.e-3),P1Point(1.e-3i),P1Point(1.e-3+1.e-3i),P1Point(1.e-6i)];
-[ <.0e0>, <∞>, <.1e1>, <-.1e1>, <.0e0+.1e1ⅈ>, <-.0e0-.1e1ⅈ>, <.1e-2>,
+[ <.0e0>, <∞>, <.1e1>, <-.1e1>, <.0e0+.1e1ⅈ>, <-.0e0-.1e1ⅈ>, <.1e-2>, 
   <.0e0+.1e-2ⅈ>, <.1e-2+.1e-2ⅈ>, <.0e0+.1e-5ⅈ> ]
 gap> P1Midpoint(s,n);
 fail
@@ -25,9 +25,9 @@ gap> P1Midpoint(pts[9],pts[10]);
 gap> P1Midpoint(pts[10],pts[10]);
 <.0e0+.1e-5ⅈ>
 gap> List(pts,SphereP1);
-[ [ .0e0, .0e0, .1e1 ], [ .0e0, .0e0, -.1e1 ], [ .1e1, .0e0, .0e0 ],
-  [ -.1e1, -.0e0, .0e0 ], [ .0e0, .1e1, .0e0 ], [ -.0e0, -.1e1, .0e0 ],
-  [ .2e-2, .0e0, .999998e0 ], [ .0e0, .2e-2, .999998e0 ],
+[ [ .0e0, .0e0, .1e1 ], [ .0e0, .0e0, -.1e1 ], [ .1e1, .0e0, .0e0 ], 
+  [ -.1e1, -.0e0, .0e0 ], [ .0e0, .1e1, .0e0 ], [ -.0e0, -.1e1, .0e0 ], 
+  [ .2e-2, .0e0, .999998e0 ], [ .0e0, .2e-2, .999998e0 ], 
   [ .2e-2, .2e-2, .999996e0 ], [ .0e0, .2e-5, .1e1 ] ]
 gap> List(pts,x->P1Distance(x,P1Sphere(SphereP1(x))));
 [ .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .0e0, .300927e-35 ]
@@ -36,11 +36,10 @@ gap> DelaunayTriangulation(pts);
 gap> DelaunayTriangulation(pts,2.0);
 <triangulation with 90 vertices, 528 edges and 176 faces>
 gap> 
-
 gap> z := Indeterminate(MPC_PSEUDOFIELD,"z");
 z
 gap> (z^2-1)/(z-1);
 z+.1e1+.0e0i
 gap> STOP_TEST("p1.tst", 10^8);
-fr:p1
+fr:p1-mpc
 msecs: 68
