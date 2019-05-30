@@ -61,13 +61,11 @@ p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]>,
 p( [ f1, f2, f3, f4 ] )/[ f4*f3*f2*f1 ]> ]
 gap> m := ListX(am,cm,Mating);;
 gap> P1MapBySphereMachine(am[2]);
-<z^3+(-2.1398032727526402_z)*z+(-0.36023134081173841_z)>
+<z^3+(-2.1398)*z+(-0.360231)>
 gap> P1MapBySphereMachine(m[9+2]);
-<((1.4686858846983573-1.0290716144155767i_z)*z^3+(1.9850056687104112-1.7893204\
-8860004i_z)*z^2+(-1.8069445331386629-0.83371844877356505i_z)*z+(-1.66797918021\
-99766+0.67701449505226674i_z))/((1.3981038147796185-1.4150160285253968i_z)*z^3\
-+(1.8103784467122102-2.3473103431921412i_z)*z^2+(-2.1376242871497211-0.5505179\
-5026414962i_z)*z+1._z)>
+<((1.46869-1.02907i)*z^3+(1.98501-1.78932i)*z^2+(-1.80694-0.833718i)*z+(-1.667\
+98+0.677014i))/((1.3981-1.41502i)*z^3+(1.81038-2.34731i)*z^2+(-2.13762-0.55051\
+8i)*z+1.)>
 gap> 
 gap> Info(InfoFR,1,"An obstructed mating");
 #I  An obstructed mating
@@ -97,7 +95,7 @@ gap>
 gap> Info(InfoFR,1,"Testing RationalFunction");
 #I  Testing RationalFunction
 gap> f := P1MapBySphereMachine(PolynomialSphereMachine(2,[],[7/16]):param_unicritical);
-<z^2+(-1.771257023356245+0.066161509079844388i_z)>
+<z^2+(-1.77126+0.0661615i)>
 gap> 
 gap> Info(InfoFR,1,"Testing Pilgrim's obstructed blowup of the torus");
 #I  Testing Pilgrim's obstructed blowup of the torus
@@ -132,9 +130,8 @@ gap> m2 := SubFRMachine(tm,inj);
 <sphere machine with alphabet [ 1 .. 2 ] on Group( [ f1, f2, f3, g1, x ] ) / [\
  f1*g1*f3*f2*x ]>
 gap> P1MapBySphereMachine(m2);
-<((-1.1898473846113464+0.24902829777699695i_z)*z^2+(1.9648756079548171+1.99403\
-77105934426i_z)*z+(-0.65573526775326108-2.4418235808459454i_z))/((3.4179914358\
-760768+2.610275400738987i_z)*z+1._z)>
+<((-1.18985+0.249028i)*z^2+(1.96488+1.99404i)*z+(-0.655735-2.44182i))/((3.4179\
+9+2.61028i)*z+1.)>
 gap> 
 gap> STOP_TEST( "chapter-9-b.tst", 10^10 );
 fr:chapter 9 (2/2)

@@ -76,10 +76,101 @@ InstallMethod(P1Circumcentre, [IsIEEE754P1Point,IsIEEE754P1Point,IsIEEE754P1Poin
 ###############################################################################
 ### P1 maps
 ###############################################################################
+BindGlobal("ViewStringUnivariateLaurent", function ( fam, cofs, val, name )
+    local str, zero, one, mone, i, c, lc, s;
+    str := "";
+    zero := fam!.zeroCoefficient;
+    one := fam!.oneCoefficient;
+    mone := - one;
+    if IsInt( name ) then
+        if HasIndeterminateName( fam, name ) then
+            name := IndeterminateName( fam, name );
+        else
+            name := Concatenation( "x_", String( name ) );
+        fi;
+    fi;
+    if Length( cofs ) = 0 then
+        return ViewString( zero );
+    fi;
+    lc := Length( cofs );
+    if cofs[lc] = zero then
+        repeat
+            lc := lc - 1;
+        until cofs[lc] <> zero;
+    fi;
+    for i in [ lc, lc - 1 .. 1 ] do
+        if cofs[i] <> zero then
+            c := "*";
+            if i < lc then
+                if IsRat( cofs[i] ) then
+                    if cofs[i] = one then
+                        Append( str, "+" );
+                        c := "";
+                    elif cofs[i] > 0 then
+                        Append( str, "+" );
+                        Append( str, ViewString( cofs[i] ) );
+                    elif cofs[i] = mone then
+                        Append( str, "-" );
+                        c := "";
+                    else
+                        Append( str, ViewString( cofs[i] ) );
+                    fi;
+                elif cofs[i] = one then
+                    Append( str, "+" );
+                    c := "";
+                elif cofs[i] = mone then
+                    Append( str, "-" );
+                    c := "";
+                else
+                    Append( str, "+" );
+                    s := ViewString( cofs[i] );
+                    if '+' in s or '-' in s then
+                        s := Concatenation( "(", s, ")" );
+                    fi;
+                    Append( str, s );
+                fi;
+            elif cofs[i] = one then
+                c := "";
+            elif cofs[i] = mone then
+                Append( str, "-" );
+                c := "";
+            else
+                s := ViewString( cofs[i] );
+                if not IsRat( cofs[i] ) and ('+' in s or '-' in s) then
+                    s := Concatenation( "(", s, ")" );
+                fi;
+                Append( str, s );
+            fi;
+            if i + val <> 1 then
+                Append( str, c );
+                Append( str, name );
+                if i + val <> 2 then
+                    Append( str, "^" );
+                    Append( str, String( i + val - 1 ) );
+                fi;
+            elif cofs[i] = one then
+                Append( str, ViewString( one ) );
+            elif cofs[i] = mone then
+                Append( str, ViewString( one ) );
+            fi;
+        fi;
+    od;
+    return str;
+end);
+
 InstallMethod(ViewString, [IsIEEE754P1Map], function(map)
-    IsLaurentPolynomial(map);
+    local c, ind, fam;
+    ind := IndeterminateNumberOfLaurentPolynomial(map);
+    fam := FamilyObj(map);
+   
     IsPolynomial(map);
-    return Concatenation("<",String(map),">");
+    if IsLaurentPolynomial(map) then
+        c := CoefficientsOfLaurentPolynomial(map);
+        return Concatenation("<", ViewStringUnivariateLaurent(fam, c[1], c[2], ind), ">");
+    else
+        c := CoefficientsOfUnivariateRationalFunction(map);
+        return Concatenation("<(", ViewStringUnivariateLaurent(fam, c[1], Maximum(c[3],0), ind), ")/(", ViewStringUnivariateLaurent(fam, c[2], Maximum(-c[3],0), ind), ")>");
+    fi;
 end);
                    
 InstallMethod(P1MAPBYCOEFFICIENTS2@, [IsPMComplex,IsList,IsList],
