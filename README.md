@@ -7,7 +7,7 @@ This is the README file for the GAP package "IMG".
 
 This package implements Iterated Monodromy groups.
 
-This release (0.0) is the first containing the basic functionality,
+This release (0.2.3) contains basic functionality for computing with IMGs,
 though some rough edges will still need to be smoothed. In particular,
 the TODO file describes plans for future development, including
 computations of presentations for self-similar groups, interval
@@ -16,6 +16,17 @@ arithmetic for complex dynamics, etc.
 The package is distributed in source form, and does not require
 anything else than a running GAP 4.9 or later. For updates, check
 <https://github.com/gap-packages/img/>
+
+The package requires some compiled modules. For this, the commands
+'./configure' and 'make' in the package's main directory should create
+the required binary files.
+
+To visualize complex maps and marked spheres, a web-based interface
+may be installed. Again in the package's main directly, issue
+
+    git clone https://github.com/laurentbartholdi/rsserver.git
+
+This service will require a functional 'node' (javascript runtime).
 
 To use the package, start GAP and type
 
