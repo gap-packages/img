@@ -53,7 +53,11 @@ RSS.startdaemon := function()
         server := "rsserver.js";
     fi;
     CHECKEXEC@FR("node");
-    server := IO_Popen3(EXEC@FR.node,[Filename(Directory(PackageInfo("img")[1].InstallationPath),Concatenation("rsserver/",server))]);
+    s := Filename(Directory(PackageInfo("img")[1].InstallationPath),Concatenation("rsserver/",server));
+    while IO_stat(s)=fail do
+        Error("Can't find ",server,"; did you 'git clone https://github.com/laurentbartholdi/rsserver.git'?");
+    od;
+    server := IO_Popen3(EXEC@FR.node,[s]);
     
     for i in [1..3] do
         s := IO_ReadLine(server.stdout);
