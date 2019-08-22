@@ -88,7 +88,7 @@ gap> DelaunayTriangulation(cube);
 gap> DelaunayTriangulation(cube{[1,5]});
 <triangulation with 6 vertices, 24 edges and 8 faces>
 gap> p := List([[0.,0.,1.],[0.,0.,-1.],SphereP1(P1Point(1.e-4)),SphereP1(P1Point(0.,1.e4))],P1Sphere);
-[ <0+0i>, <P1infinity>, <0.0001+0i>, <0+10000i> ]
+[ <0+0i>, <P1infinity>, <0.0001+0i>, <-0+10000i> ]
 gap> DelaunayTriangulation(p,100.);
 <triangulation with 32 vertices, 180 edges and 60 faces>
 gap> 
@@ -133,8 +133,4 @@ gap> P1MapBySphereMachine(m2);
 <((-1.18985+0.249028i)*z^2+(1.96488+1.99404i)*z+(-0.655735-2.44182i))/((3.4179\
 9+2.61028i)*z+1.)>
 gap> 
-gap> STOP_TEST( "chapter-9-b.tst", 10^10 );
-fr:chapter 9 (2/2)
-msecs: 13604
-
-#E chapter-9-b.tst . . . . . . . . . . . . . . . . . . . . . . . . .ends here
+gap> STOP_TEST( "chapter-9-b.tst", 1 );

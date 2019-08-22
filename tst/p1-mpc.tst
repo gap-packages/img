@@ -40,6 +40,4 @@ gap> z := Indeterminate(MPC_PSEUDOFIELD,"z");
 z
 gap> (z^2-1)/(z-1);
 z+.1e1+.0e0i
-gap> STOP_TEST("p1.tst", 10^8);
-fr:p1-mpc
-msecs: 68
+gap> STOP_TEST("p1.tst", 1);
