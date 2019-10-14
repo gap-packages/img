@@ -74,7 +74,9 @@ InstallMethod(GroupElement, [IsTriangulationEdge], function(e)
         TryNextMethod();
     fi;
 end);
-InstallMethod(Opposite, [IsTriangulationEdge and HasNext], e->Prevopp(Next(e)));
+InstallMethod(Opposite, [IsTriangulationEdge and HasNextEdge], e->Prevopp(Next(e)));
+
+InstallMethod(Next, [IsTriangulationEdge], NextEdge);
 
 InstallMethod(Radius, [IsTriangulationFace], function(f)
     local p;
@@ -419,8 +421,8 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f0,p,delaunay)
         Opposite(e0)!.Right := f;
         SetPrevopp(e1, Opposite(e0));
         Next(e0)!.Prevopp := e1;
-        SetNext(e1, e2);
-        SetNext(e2, e0);
+        SetNextEdge(e1, e2);
+        SetNextEdge(e2, e0);
         e0!.Next := e1;
         
         if HasGroupElement(e0) then
@@ -582,7 +584,7 @@ InstallMethod(DelaunayTriangulation, "(IMG) for a list of points and a quality",
         SetNeighbour(t.v[i[2]],t.e[i[1]]);
         SetLeft(t.e[i[1]], t.f[i[3]]);
         SetNeighbour(t.f[i[3]],t.e[i[1]]);
-        SetNext(t.e[i[1]], t.e[i[4]]);
+        SetNextEdge(t.e[i[1]], t.e[i[4]]);
         SetPrevopp(t.e[i[4]], Opposite(t.e[i[1]]));
     od;
 

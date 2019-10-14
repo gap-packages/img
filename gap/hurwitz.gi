@@ -46,7 +46,7 @@ BindGlobal("LIFTBYMONODROMY@", function(spider,monodromy,d)
         od;
         j := Next(e)!.index;
         for i in [1..d] do
-            SetNext(edges[i][e!.index],edges[i][j]);
+            SetNextEdge(edges[i][e!.index],edges[i][j]);
         od;
         j := Prevopp(e)!.index;
         edgeperm := (GroupElement(Opposite(Prevopp(e)))^spider!.marking)^monodromy;
