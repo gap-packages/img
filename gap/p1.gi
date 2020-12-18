@@ -104,6 +104,18 @@ InstallMethod(P1Point, "(IMG) generic P1 point", [IsFloat,IsFloat],
     return Objectify(TYPE_P1POINT,[n/d]);
 end);
 
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsString],
+        function(s)
+    local comp;
+    comp := SplitString(s{[2..Length(s)-1]},",");
+    return P1Point(comp[1],comp[2]);
+end);
+
+InstallMethod(P1Point, "(IMG) generic P1 point", [IsString,IsString],
+        function(re,im)
+    return Objectify(TYPE_P1POINT,[NewFloat(@.isc,re,im)]);
+end);
+
 InstallMethod(P1INFINITY@, "(IMG) generic P1 point", [IsP1Point],
         x->P1Point(@.o/@.z));
 

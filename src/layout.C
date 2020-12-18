@@ -40,7 +40,7 @@ void inline sincos(double x, double *s, double *c)
 
 cholmod_common cholmod;
 
-#define MAXVERTICES 100000
+#define MAXVERTICES 1000000
 #define MAXFACES (2*(MAXVERTICES-2))
 #define maxiter 1000
 

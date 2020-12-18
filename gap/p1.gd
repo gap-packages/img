@@ -25,12 +25,15 @@ DeclareOperation("P1Point",[IsFloat]);
 DeclareOperation("P1Point",[IsRat]);
 DeclareOperation("P1Point",[IsInfinity]);
 DeclareOperation("P1Point",[IsFloat,IsFloat]);
+DeclareOperation("P1Point",[IsString]);
+DeclareOperation("P1Point",[IsString,IsString]);
 ## <ManSection>
 ##   <Filt Name="IsP1Point"/>
 ##   <Fam Name="P1PointsFamily"/>
 ##   <Func Name="P1Point" Arg="complex"/>
 ##   <Func Name="P1Point" Arg="real, imag" Label="ri"/>
 ##   <Func Name="P1Point" Arg="string" Label="s"/>
+##   <Func Name="P1Point" Arg="realstr, imagstr" Label="s,s"/>
 ##   <Description>
 ##     P1 points are complex numbers or infinity;
 ##     fast methods are implemented to compute with them, and to apply

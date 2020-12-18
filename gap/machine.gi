@@ -1375,41 +1375,32 @@ BindGlobal("DISTILLATE@", function(dict,M)
     # transition on each cycle; which is at the beginning of the cycle
     # and is a generator.
     # dict is a dictionary storing distillated machines, and a
-    # standard representative for each distillation.
-    # returns [standard machine,free group automorphism]
-    # such that M=standard*automorphism
-    local G, perm, trans, cc, zero, g, i, j, c, cg, aut;
-    
-    G := StateSet(M);
-    cc := List(GeneratorsOfFRMachine(M),g->ConjugacyClass(G,g));
-    zero := ConjugacyClass(G,One(G));
-    aut := [];
-    
-    perm := M!.output;
+    # standard representative machine for each distillation.
+    local G, perm, trans, g, i, j, c, distilled;
+
+    G := StateSet(M);    
+    perm := List(M!.output,PermList);
     trans := List(M!.transitions,ShallowCopy);
     for i in [1..Length(trans)] do
-        for c in Cycles(PermList(perm[i]),AlphabetOfFRObject(M)) do
+        for c in Cycles(perm[i],AlphabetOfFRObject(M)) do
             g := One(G);
             for j in c do
                 g := g*trans[i][j];
-                Unbind(trans[i][j]);
             od;
-            cg := ConjugacyClass(G,g);
-            if cg<>zero then
-                j := Position(cc,cg);
-                trans[i][c[1]] := cg;
-                aut[j] := g;
-            fi;
+            g := CyclicallyReducedWord(g);
+            for j in c do
+                trans[i][j] := g;
+            od;
         od;
     od;
-    c := LookupDictionary(dict,trans);
+    distilled := [trans,perm];
+                         
+    c := LookupDictionary(dict,distilled);
     if c=fail then
-        AddDictionary(dict,trans,[M,aut]);
-        return [M,IdentityMapping(G)];
+        AddDictionary(dict,distilled,M);
+        return M;
     else
-#j := GroupHomomorphismByImages(G,G,c[2],aut); if j=fail then
-#    Error("1"); fi; return [c[1],j];
-        return [c[1],GroupHomomorphismByImages(G,G,c[2],aut)];
+        return c;
     fi;
 end);
 
@@ -1430,12 +1421,22 @@ BindGlobal("MOTIONGROUP@", function(G)
     return Group(aut);
 end);
 
+BindGlobal("MATCHPERMS@", function(M,q)
+    # find a bijection of [1..n] that conjugates M!.output[i] to q[i] for all i
+    local c, g, p;
+    g := SymmetricGroup(Length(q[1]));
+    p := List(GeneratorsOfGroup(StateSet(M)),g->PermList(Output(M,g)));
+    q := List(q,PermList);
+    c := RepresentativeAction(g,q,p,OnTuples);
+    return c;
+end);
+
 BindGlobal("MATCHMARKINGS@", function(M1,M2)
     # return a homomorphism phi from StateSet(M) to <group> such that:
     # if g[i]^k lifts to a conjugate h of g[j] for some integer k, then
     # phi(g[i]^k) = corresponding expression obtained from <M2>.
     local src, dst, transM, transR, i, c, x, gens, g, h, group;
-
+    
     group := FamilyObj(Transition(M2,1,1))!.group;
     gens := GeneratorsOfGroup(StateSet(M1));
     transM := [One(StateSet(M1))];
@@ -1481,10 +1482,10 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
     
     states := StateSet(M);
     distillations := NewDictionary([],true);
-    act := function(machine,aut) return DISTILLATE@(distillations,aut^-1*machine)[1]; end;
-    inneract := function(machine,g) return DISTILLATE@(distillations,InnerAutomorphism(states,g^-1)*machine)[1]; end;
+    act := function(machine,aut) return DISTILLATE@(distillations,aut^-1*machine); end;
+    inneract := function(machine,g) return DISTILLATE@(distillations,InnerAutomorphism(states,g^-1)*machine); end;
     pmcg := AutomorphismGroup(states);
-    orbit := Orbit(pmcg,DISTILLATE@(distillations,M)[1],act);
+    orbit := Orbit(pmcg,DISTILLATE@(distillations,M),act);
 
     # sort orbit so that consecutive blocks are related by inner automorphisms
     oorbits := OrbitsDomain(states,orbit,inneract);
@@ -1493,31 +1494,6 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
     # now oorbits[i][j] is a distilled machine;
     # oorbits[i][j] and oorbits[i][k] are related by inner automorphisms
 
-if false then
-    epi := IsomorphismFpGroup(pmcg); # really to a free group (!!!)
-    
-    # todo:
-    # 1) fix bugs in MATCHMARKINGS that delete inner auts
-    # 2) construct machine for quotient, on smaller alphabet; construct embedding of original machine too
-    # 3) find irredundant gens of pure sphere braid group? i.e. giving correct abelianization rank?
-    
-    output := [];
-    transition := [];
-    
-    for g in GeneratorsOfGroup(Range(epi)) do
-        g := PreImagesRepresentative(epi,g)^-1;
-        o := [];
-        t := [];
-        for a in [1..Length(orbit)] do
-            newM := g*orbit[a];
-            b := Position(orbit,DISTILLATE@(distillations,newM)[1]);
-            Add(o,b);
-            Add(t,ImagesRepresentative(epi,MATCHMARKINGS@(newM,orbit[b])));
-        od;
-        Add(output,o);
-        Add(transition,t);
-    od;
-else
     iso := IsomorphismFpGroup(pmcg); # really to a free group
     epi := EpimorphismToOut(pmcg); # really to a free group
     isoepi := GroupHomomorphismByImages(Range(iso),Range(epi),List(GeneratorsOfGroup(pmcg),x->x^iso),List(GeneratorsOfGroup(pmcg),x->x^epi));
@@ -1531,8 +1507,8 @@ else
         for a in [1..Length(oorbits)] do
             newM := PreImagesRepresentative(epi,g)^-1*oorbits[a][1];
             d := DISTILLATE@(distillations,newM);
-            b := PositionProperty(oorbits,o->d[1] in o);
-            c := RepresentativeAction(states,d[1],oorbits[b][1],inneract);
+            b := PositionProperty(oorbits,o->d in o);
+            c := RepresentativeAction(states,d,oorbits[b][1],inneract);
             newM := InnerAutomorphism(states,c^-1)*newM;
             Add(o,b);
             Add(t,ImagesRepresentative(epi,MATCHMARKINGS@(newM,oorbits[b][1])));
@@ -1540,7 +1516,6 @@ else
         Add(output,o);
         Add(transition,t);
     od;
-fi;
 
     a := FRMachine(Range(epi),transition,output);
     SetCorrespondence(a,[oorbits,epi]);

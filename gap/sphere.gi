@@ -711,7 +711,7 @@ BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertibl
             t := Random([0..1000000000])/1000000000.0*Sum(try,x->x[4]);
             for i in [1..Length(try)] do
                 if t<try[i][4] then
-                    Print("Took ",i," with proba ",try[i][4],"/",Sum(try,x->x[4]),"...");
+                    Info(InfoIMG,3,"Took ",i," with proba ",try[i][4],"/",Sum(try,x->x[4]),"...");
                     w := LeftQuotient(try[i][1],w);
                     img := try[i][2];
                     n := try[i][3];
@@ -719,8 +719,9 @@ BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertibl
                 fi;
                 t := t-try[i][4];
             od;
-            Print("Current word ",w," n=",n,"\n");
+            Info(InfoIMG,3 "Current word ",w," n=",n,"\n");
         od;
+        Assert(0, MappedWord(w,srcggens,outergens)=x);
         return MappedWord(w,srcggens,extgens);
     end,invertible,w->MappedWord(w,gens,outergens));
 

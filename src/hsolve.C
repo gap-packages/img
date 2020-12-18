@@ -13,7 +13,7 @@ typedef complex<double> cdouble;
 
 #define MAXDEGREE 1000
 
-const int maxiter = 2000;
+const int maxiter = 10000;
 
 // rational maps are normalized so that 0 -> 0, 1 -> 1, infty -> infty;
 // so they have the form A\prod_{i=0}^numzero (z-p_i)^e_i for some e_i in Z\{0},

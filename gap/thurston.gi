@@ -14,16 +14,6 @@
 ##
 #M Sphere Machine to Function
 ##
-BindGlobal("MATCHPERMS@", function(M,q)
-    # find a bijection of [1..n] that conjugates M!.output[i] to q[i] for all i
-    local c, g, p;
-    g := SymmetricGroup(Length(q[1]));
-    p := List(GeneratorsOfGroup(StateSet(M)),g->PermList(Output(M,g)));
-    q := List(q,PermList);
-    c := RepresentativeAction(g,q,p,OnTuples);
-    return c;
-end);
-
 BindGlobal("PARABOLICQUOTIENT@", function(g,w)
     # returns the epimorphism from the sphere group g to the group on the parabolic elements
     # indexed by w.

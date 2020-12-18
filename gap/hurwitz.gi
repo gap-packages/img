@@ -204,13 +204,10 @@ BindGlobal("OPTIMIZELAYOUT@", function(cv, cp)
     
     printp1 := function(stream,z)
         z := P1Coordinate(z);
-        PrintTo(stream,"(", RealPart(z),",",ImaginaryPart(z),")");
+        PrintTo(stream,"(", NewFloat(IsIEEE754FloatRep,RealPart(z)),",",NewFloat(IsIEEE754FloatRep,ImaginaryPart(z)),")");
     end;
 
-    scanp1 := function(str)
-        str := SplitString(str{[2..Length(str)-1]},",");
-        return STRINGS2P1POINT(str[1],str[2]);
-    end;
+    scanp1 := P1Point;
     
     sin := "";
     stdin := OutputTextString(sin,false);
