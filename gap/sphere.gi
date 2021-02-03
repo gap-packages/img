@@ -719,9 +719,9 @@ BindGlobal("FACTORIZEAUT@", function(ggens,a,fp,gens,extgens,outergens,invertibl
                 fi;
                 t := t-try[i][4];
             od;
-            Info(InfoIMG,3 "Current word ",w," n=",n,"\n");
+            Info(InfoIMG,3,"Current word ",w," n=",n,"\n");
         od;
-        Assert(0, MappedWord(w,srcggens,outergens)=x);
+#        Assert(0, MappedWord(w,srcggens,outergens)=x);
         return MappedWord(w,srcggens,extgens);
     end,invertible,w->MappedWord(w,gens,outergens));
 

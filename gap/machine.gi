@@ -1478,7 +1478,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
         function(M)
     local orbit, oorbits, act, inneract, pmcg, states,
           output, transition, o, t,
-          iso, epi, isoepi, a, b, c, d, g, newM, distillations;
+          epi, a, b, c, d, g, newM, distillations;
     
     states := StateSet(M);
     distillations := NewDictionary([],true);
@@ -1494,9 +1494,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
     # now oorbits[i][j] is a distilled machine;
     # oorbits[i][j] and oorbits[i][k] are related by inner automorphisms
 
-    iso := IsomorphismFpGroup(pmcg); # really to a free group
     epi := EpimorphismToOut(pmcg); # really to a free group
-    isoepi := GroupHomomorphismByImages(Range(iso),Range(epi),List(GeneratorsOfGroup(pmcg),x->x^iso),List(GeneratorsOfGroup(pmcg),x->x^epi));
 
     output := [];
     transition := [];
