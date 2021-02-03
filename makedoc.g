@@ -9,6 +9,6 @@ MakeGAPDocDoc("doc","img",
          "../gap/p1.gd","../gap/sphere.gd","../gap/thurston.gd",
          "../gap/triangulations.gd","../PackageInfo.g"],"img","../../..");
 CopyHTMLStyleFiles("doc");
-#GAPDocManualLab("img");
+GAPDocManualLab("img");
 
 QUIT;
