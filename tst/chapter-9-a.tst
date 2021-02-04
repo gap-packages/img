@@ -63,9 +63,6 @@ gap> Info(InfoFR,1,"Testing a folding");
 gap> fold1 := NewSphereMachine("a=<,,b,,,B>(1,2,3)(4,5,6)","b=<,,b*a/b,,,B*A/B>","A=<,,(B*A)^-1,,,(b*a)^-1>(3,6)","B=(1,6,5,4,3,2)","A*b*a*B");
 <sphere machine with alphabet [ 1 .. 6 ] on Group( [ a, b, A, B ] ) / [ A*b*a*\
 B ]>
-gap> 
-gap> STOP_TEST( "chapter-9-a.tst", 10^10 );
-fr:chapter 9 (1/2)
-msecs: 503
 
-#E chapter-9-a.tst . . . . . . . . . . . . . . . . . . . . . . . . .ends here
+#
+gap> STOP_TEST( "chapter-9-a.tst", 1 );

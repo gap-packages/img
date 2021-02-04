@@ -37,6 +37,4 @@ gap> z := Indeterminate(PMCOMPLEX_PSEUDOFIELD,"z");
 z
 gap> (z^2-1)/(z-1);
 z+1._z
-gap> STOP_TEST("p1.tst", 10^8);
-fr:p1
-msecs: 14
+gap> STOP_TEST("p1.tst", 1);

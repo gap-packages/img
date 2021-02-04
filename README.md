@@ -53,9 +53,8 @@ your system has C and JAVA compilers. IMG needs some external
 libraries, but they are included in the subdirectory `extern`.
 If your system has them, their location can be specified using the
 arguments `--with-levmar` and `--with-libdogleg` to the `./configure`
-script. The options `--with-gaproot`, `--with-gaparch` and
-`CONFIGNAME` tell IMG where to look for the GAP installation; by 
-default, IMG searches for it in `../..` and `/usr/local/src/gap`.
+script. The option `--with-gaproot` tells IMG where to look for the
+GAP installation; by default, IMG searches for it in `../..`.
 The library `cholmod` is also required (often part of `suitesparse`),
 but is not provided.
 
