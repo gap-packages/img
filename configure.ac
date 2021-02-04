@@ -29,7 +29,6 @@ AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_CXX
 AX_CC_MAXOPT
-AC_PROG_JAVAC
 
 # gap
 AC_FIND_GAP
@@ -55,14 +54,6 @@ fi
 AC_CHECK_CHOLMOD
 # AX_BLAS # too heavy, requires F77
 # AC_CHECK_LIBDOGLEG
-
-# External programs configuration
-
-AC_PATH_PROG(APPLETVIEWER,[appletviewer])
-
-if test -z "$APPLETVIEWER"; then
-    AC_WARN([Could not find 'appletviewer' (debian package java-6-sdk)... you won't be able to draw spiders])
-fi
 
 ################################################################
 # generate files

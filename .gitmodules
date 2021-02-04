@@ -1,0 +1,3 @@
+[submodule "rsserver"]
+	path = rsserver
+	url = https://github.com/laurentbartholdi/rsserver.git
