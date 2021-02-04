@@ -37,9 +37,8 @@ static Obj NEW_DATOBJ (size_t size, Obj type)
   
 static void guarantee(Obj filter, const char *name, Obj obj)
 {
-  while (!IS_DATOBJ(obj) || DoFilter(filter, obj) != True) {
-    obj = ErrorReturnObj("FR: object must be a %s", (Int) name, 0L,
-			 "You can return an appropriate object to continue");
+  if (!IS_DATOBJ(obj) || DoFilter(filter, obj) != True) {
+    ErrorMayQuit("FR: object must be a %s", (Int)name, 0);
   }
 }
 
@@ -199,11 +198,9 @@ p1point p1point_sphere (ldouble u[3])
 
 static Obj P1Sphere(Obj self, Obj obj)
 {
-  while (!IS_PLIST(obj) || LEN_PLIST(obj)!=3 || !IS_MACFLOAT(ELM_PLIST(obj,1))
+  if (!IS_PLIST(obj) || LEN_PLIST(obj)!=3 || !IS_MACFLOAT(ELM_PLIST(obj,1))
 	 || !IS_MACFLOAT(ELM_PLIST(obj,2)) || !IS_MACFLOAT(ELM_PLIST(obj,3))) {
-    obj = ErrorReturnObj("FR: object must be a floatean list of length 3",
-			 0L, 0L,
-                       "You can return an appropriate object to continue");
+    ErrorMayQuit("FR: object must be a floatean list of length 3", 0, 0);
   }
   ldouble v[3];
   int i;
