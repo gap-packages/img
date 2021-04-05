@@ -7,6 +7,7 @@ PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
 Version := "0.2.4",
 Date := "03/02/2021",
+License := "GPL-2.0-or-later",
 ## <#GAPDoc Label="Version">
 ## <!ENTITY Version "0.2.4">
 ## <!ENTITY Date "03/02/2021">
