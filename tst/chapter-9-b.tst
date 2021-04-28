@@ -70,12 +70,12 @@ gap>
 gap> Info(InfoFR,1,"An obstructed mating");
 #I  An obstructed mating
 gap> P1MapBySphereMachine(m[9+6]);
-rec( 
-  machine := <sphere machine with alphabet [ 1, 2, 3 ] on Group( [ f1, f2, f3,\
- g1, g2, g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ]
-    , 
-  multicurve := [ (f1*f3*f2)^3*f1*(g1*g3*g2)^3*g1^G, 
+rec(
+  machine := <sphere machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2, f3, \
+g1, g2, g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ],
+  multicurve := [ (f1*f3*f2)^3*f1*(g1*g3*g2)^3*g1^G,
       f1^-1*f2^-1*(f1*f3*f2)^3*f1*g2^-1*(g3*g2*g1)^3^G ] )
+
 gap> 
 gap> Info(InfoFR,1,"Testing Triangulations");
 #I  Testing Triangulations
@@ -88,7 +88,7 @@ gap> DelaunayTriangulation(cube);
 gap> DelaunayTriangulation(cube{[1,5]});
 <triangulation with 6 vertices, 24 edges and 8 faces>
 gap> p := List([[0.,0.,1.],[0.,0.,-1.],SphereP1(P1Point(1.e-4)),SphereP1(P1Point(0.,1.e4))],P1Sphere);
-[ <0+0i>, <P1infinity>, <0.0001+0i>, <-0+10000i> ]
+[ <0+0i>, <P1infinity>, <0.0001+0i>, <0+10000i> ]
 gap> DelaunayTriangulation(p,100.);
 <triangulation with 32 vertices, 180 edges and 60 faces>
 gap> 
@@ -107,9 +107,9 @@ gap> M := FRMachine(F,[[c^-1,o,o,o,c],[o,o,o,d,d^-1],[a,o,o,a^-1,o],[b,o,d,a,c]]
 <sphere machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] ) / [ d*c*b*\
 a ]>
 gap> P1MapBySphereMachine(M);
-rec( 
-  machine := <sphere machine with alphabet [ 1, 2, 3, 4, 5 ] on Group( [ a, b,\
- c, d ] ) / [ d*c*b*a ]>, matrix := [ [ 1 ] ], multicurve := [ a*c^G ] )
+rec(
+  machine := <sphere machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ]\
+ ) / [ d*c*b*a ]>, matrix := [ [ 1 ] ], multicurve := [ a*c^G ] )
 gap> 
 gap> Info(InfoFR,1,"Testing mating of airplane with z^2+i");
 #I  Testing mating of airplane with z^2+i

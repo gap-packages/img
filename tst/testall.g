@@ -1,7 +1,7 @@
 LoadPackage("img");
 SetInfoLevel(InfoIMG,1);
 
-opts := rec(exitGAP := true);
+opts := rec(exitGAP := true, testOptions := rec(compareFunction := "uptowhitespace"));
 if not IsBound(MPC) then
   opts.exclude := ["p1-mpc.tst"];
 fi;
