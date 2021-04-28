@@ -4,7 +4,7 @@ BINARCHDIR = bin/$(GAPARCH)
 GAPINSTALLLIB = $(BINARCHDIR)/img.so
 
 LEVMAR=extern/levmar-2.6
-LIBDOGLEG=extern/libdogleg-0.09
+LIBDOGLEG=extern/libdogleg-0.15.4
 
 lib_LTLIBRARIES = img.la
 img_la_DEPENDENCIES = liblevmar
@@ -21,7 +21,7 @@ layout_DEPENDENCIES = libdogleg
 layout_SOURCES = src/layout.C
 layout_CPPFLAGS = -I$(LIBDOGLEG) $(CHOLMOD_CFLAGS)
 layout_LDFLAGS = -L$(BINARCHDIR)/lib
-layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig
+layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig -lblas
 
 hsolve_DEPENDENCIES = liblevmar
 hsolve_SOURCES = src/hsolve.C
@@ -35,7 +35,7 @@ liblevmar:
 	mkdir -p $(BINARCHDIR)/include $(BINARCHDIR)/lib
 	if [[ ! -f $(BINARCHDIR)/include/levmar.h ]]; then \
 		(cd $(LEVMAR) && cmake .) && \
-		$(MAKE) -B -C $(LEVMAR) levmar C_FLAGS=-fPIC && \
+		$(MAKE) -B -C $(LEVMAR) levmar C_DEFINES="-O3 -fPIC" && \
 		cp $(LEVMAR)/liblevmar.a $(BINARCHDIR)/lib/ && \
 		cp $(LEVMAR)/levmar.h $(BINARCHDIR)/include/; \
 	fi
@@ -43,7 +43,7 @@ liblevmar:
 libdogleg:
 	mkdir -p "$(BINARCHDIR)/include" "$(BINARCHDIR)/lib"
 	if [[ ! -f "$(BINARCHDIR)/include/dogleg.h" ]]; then \
-	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 $(CHOLMOD_CFLAGS)" && \
+	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 -O3 $(CHOLMOD_CFLAGS)" && \
 	    cp $(LIBDOGLEG)/libdogleg.a $(BINARCHDIR)/lib/ && \
 	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/; \
 	fi

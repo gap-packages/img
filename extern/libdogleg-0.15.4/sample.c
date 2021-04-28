@@ -1,3 +1,5 @@
+// -*- mode: C; c-basic-offset: 2 -*-
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,8 +13,8 @@
 // a*b * x**2 + b*c * y**2 + c * x*y + d * x + e * y * f = measurements
 //
 // here I'm trying to estimate the vector (a,b,c,d,e,f) to most closely fit the
-// data vector measurements. This problem is clearly non-sparse and libdogleg is
-// overkill to solve it, but it serves decently well as a demo
+// data vector measurements. This problem is clearly non-sparse, but both sparse
+// and dense versions of libdogleg are demonstrated here.
 //
 // First I generate some noise-corrupted data, and then use libdogleg to solve
 // the problem.
@@ -125,25 +127,141 @@ static void optimizerCallback(const double*   p,
   }
   Jrowptr[Nmeasurements] = iJacobian;
 
-
-  fprintf(stderr, "Callback finished. 2-norm is %f\n", norm2_x);
+#undef STORE_JACOBIAN
 }
 
-int main(void)
+static void optimizerCallback_dense(const double*   p,
+                                    double*         x,
+                                    double*         J,
+                                    void*           cookie __attribute__ ((unused)) )
 {
-  srandom( time(NULL) );
+  int iJacobian = 0;
+#define STORE_JACOBIAN(col, g) J[ iJacobian++ ] = g
+
+
+  double norm2_x = 0.0;
+
+  for(int i=0; i<Nmeasurements; i++)
+  {
+    x[i] =
+      p[0] * p[1] * allx[i]*allx[i] +
+      p[1] * p[2] * ally[i]*ally[i] +
+      p[2] *        allx[i]*ally[i] +
+      p[3] *        allx[i] +
+      p[4] *        ally[i] +
+      p[5]
+      - allm_simulated_noisy[i];
+
+    norm2_x += x[i]*x[i];
+
+    // In this sample problem, every measurement depends on every element of the
+    // state vector, so I loop through all the state vectors here. In practice
+    // libdogleg is meant to be applied to sparse problems, where this internal
+    // loop would be MUCH shorter than Nstate long
+    STORE_JACOBIAN( 0, p[1]*allx[i]*allx[i] );
+    STORE_JACOBIAN( 1, p[0]*allx[i]*allx[i] + p[2] * ally[i]*ally[i] );
+    STORE_JACOBIAN( 2, p[1] * ally[i]*ally[i] + allx[i]*ally[i] );
+    STORE_JACOBIAN( 3, allx[i] );
+    STORE_JACOBIAN( 4, ally[i] );
+    STORE_JACOBIAN( 5, 1.0  );
+  }
+
+#undef STORE_JACOBIAN
+}
+
+
+int main(int argc, char* argv[] )
+{
+  const char* usage = "Usage: %s [--diag-vnlog] [--diag-human] sparse|dense [test-gradients]\n";
+
+  int is_sparse;
+  int test_gradients = 0;
+  int debug          = 0;
+
+  {
+    // argument parsing
+    int iarg = 1;
+    for(int i=0; i<2; i++)
+    {
+      if(iarg >= argc)
+      {
+        fprintf(stderr, usage, argv[0]);
+        return 1;
+      }
+      if(0 == strcmp("--diag-vnlog", argv[iarg]))
+      {
+        debug |= DOGLEG_DEBUG_VNLOG;
+        iarg++;
+        continue;
+      }
+      if(0 == strcmp("--diag-human", argv[iarg]))
+      {
+        debug |= 1;
+        iarg++;
+        continue;
+      }
+      break;
+    }
+
+    if(iarg >= argc)
+    {
+      fprintf(stderr, usage, argv[0]);
+      return 1;
+    }
+    if( 0 == strcmp(argv[iarg], "dense") )
+    {
+      fprintf(stderr, "Using DENSE math\n");
+      is_sparse = 0;
+    }
+    else if( 0 == strcmp(argv[iarg], "sparse") )
+    {
+      fprintf(stderr, "Using SPARSE math\n");
+      is_sparse = 1;
+    }
+    else
+    {
+      fprintf(stderr, usage, argv[0]);
+      return 1;
+    }
+
+    iarg++;
+    if(iarg == argc-1)
+    {
+      if( 0 != strcmp("test-gradients", argv[iarg]))
+      {
+        fprintf(stderr, usage, argv[0]);
+        return 1;
+      }
+      fprintf(stderr, "Testing the gradients only\n");
+      test_gradients = 1;
+    }
+    else if(iarg == argc)
+    {
+      // not testing gradients. We're good
+    }
+    else
+    {
+      fprintf(stderr, usage, argv[0]);
+      return 1;
+    }
+  }
+
+
+
+  srandom( 0 ); // I want determinism here
 
   generateSimulationGrid();
   simulate();
 
-  dogleg_setDebug(1); // request debugging output from the solver
-
+  dogleg_parameters2_t dogleg_parameters;
+  dogleg_getDefaultParameters(&dogleg_parameters);
+  dogleg_parameters.dogleg_debug = debug;
 
   double p[Nstate];
 
   // I start solving with all my state variables set to some random noise
   for(int i=0; i<Nstate; i++)
-    p[i] = ((double)random() / (double)RAND_MAX - 0.5) * 1.0; // +- 0.5 units of uniformly-random noise
+    p[i] = ((double)random() / (double)RAND_MAX - 0.1) * 1.0; // +- 0.1 units of uniformly-random noise
 
   fprintf(stderr, "starting state:\n");
   for(int i=0; i<Nstate; i++)
@@ -160,16 +278,30 @@ int main(void)
   // sure that the reported and observed gradients match (the relative error is
   // low)
   fprintf(stderr, "have %d variables\n", Nstate);
-  for(int i=0; i<Nstate; i++)
+  if( test_gradients )
   {
-    fprintf(stderr, "checking gradients for variable %d\n", i);
-    dogleg_testGradient(i, p, Nstate, Nmeasurements, Jnnz, &optimizerCallback, NULL);
+    for(int i=0; i<Nstate; i++)
+    {
+      fprintf(stderr, "checking gradients for variable %d\n", i);
+      if( is_sparse )
+        dogleg_testGradient(i, p, Nstate, Nmeasurements, Jnnz, &optimizerCallback, NULL);
+      else
+        dogleg_testGradient_dense(i, p, Nstate, Nmeasurements, &optimizerCallback_dense, NULL);
+    }
+    return 0;
   }
-
 
   fprintf(stderr, "SOLVING:\n");
 
-  double optimum = dogleg_optimize(p, Nstate, Nmeasurements, Jnnz, &optimizerCallback, NULL, NULL);
+  double optimum;
+  if( is_sparse )
+    optimum = dogleg_optimize2(p, Nstate, Nmeasurements, Jnnz,
+                               &optimizerCallback, NULL,
+                               &dogleg_parameters, NULL);
+  else
+    optimum = dogleg_optimize_dense2(p, Nstate, Nmeasurements,
+                                     &optimizerCallback_dense, NULL,
+                                     &dogleg_parameters, NULL);
 
   fprintf(stderr, "Done. Optimum = %f\n", optimum);
 

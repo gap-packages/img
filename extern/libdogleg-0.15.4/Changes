@@ -1,3 +1,65 @@
+libdogleg (0.15.4) unstable; urgency=medium
+
+  * verbose output has a mode to output vnlog
+  * defragmented malloc() calls
+  * dogleg_operatingPoint_t stores the step vector we took to get here
+  * Added dogleg_optimize2() and dogleg_optimize_dense2() entry points
+    that use local parameters
+
+ -- Dima Kogan <dkogan@debian.org>  Fri, 11 Dec 2020 15:37:26 -0800
+
+libdogleg (0.15.1)
+
+  * Various updates to the experimental outlier-rejection logic. These
+    break the previous API/ABI, but those were experimental and unreleased
+    anyway
+
+ -- Dima Kogan <dima@secretsauce.net>  Tue, 02 Oct 2018 09:19:03 -0700
+
+ligdogleg (0.15)
+
+  * added experimental outlier-rejection logic.
+    This is not yet documented, and the API not yet fixed. Use at your own risk
+
+ -- Dima Kogan <dima@secretsauce.net>  Wed, 08 Aug 2018 16:04:38 -0700
+
+libdogleg (0.14)
+
+  * standardized CHOLMOD error messages
+  * gradient-testing reports are now printed in an easy-to-parse vnlog
+
+ -- Dima Kogan <dima@secretsauce.net>  Mon, 12 Feb 2018 10:55:44 -0800
+
+libdogleg (0.13)
+
+  * Updated cholmod #includes to work without any -I flags
+    This shouldn't break any existing code, since the -I flags become
+    unnecessary, but benign
+  * Clarified gradient reporting
+
+ -- Dima Kogan <dima@secretsauce.net>  Sun, 27 Aug 2017 16:03:49 -0700
+
+libdogleg (0.12)
+
+  * Exposed a function to compute the Cholesky factorization of JtJ
+
+ -- Dima Kogan <dima@secretsauce.net>  Mon, 01 May 2017 18:50:39 -0700
+
+libdogleg (0.11)
+
+  * I barf if factorization fails for with a way-too-huge lambda
+
+ -- Dima Kogan <dima@secretsauce.net>  Mon, 01 May 2017 18:50:20 -0700
+
+libdogleg (0.10)
+
+  * Improved diagnostic printing: no console output if no errors and if no
+    debug logging is requested
+  * Added support for solving DENSE optimization problems in addition to
+    sparse ones
+
+ -- Dima Kogan <dima@secretsauce.net>  Sun, 23 Apr 2017 01:06:15 -0700
+
 libdogleg (0.09)
 
   * Build now works with both suitesparse 2.2 and 2.4
