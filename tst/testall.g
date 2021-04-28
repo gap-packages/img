@@ -1,7 +1,11 @@
 LoadPackage("img");
 SetInfoLevel(InfoIMG,1);
-TestDirectory(DirectoriesPackageLibrary( "img", "tst" ),
-  rec(exitGAP     := true) );
+
+opts := rec(exitGAP := true);
+if not IsBound(MPC) then
+  opts.exclude := ["p1-mpc.tst"];
+fi;
+
+TestDirectory(DirectoriesPackageLibrary("img","tst"), opts);
 
 FORCE_QUIT_GAP(1); # if we ever get here, there was an error
-

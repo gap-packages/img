@@ -44,7 +44,7 @@ BindGlobal("LIFTBYMONODROMY@", function(spider,monodromy,d)
         for i in [1..d] do
             SetLeft(edges[i][e!.index],faces[i][j]);
         od;
-        j := Next(e)!.index;
+        j := NextEdge(e)!.index;
         for i in [1..d] do
             SetNextEdge(edges[i][e!.index],edges[i][j]);
         od;
@@ -148,7 +148,7 @@ BindGlobal("LAYOUTTRIANGULATION@", function(triangulation)
             PrintTo(stdin,From(e)!.index," ");
         od;
         for e in Neighbours(f) do
-            e := Next(e);
+            e := NextEdge(e);
             PrintTo(stdin,NewFloat(IsIEEE754FloatRep,Length(e)^(1/Maximum(To(e)!.degree,From(e)!.degree)))," ");
         od;
         PrintTo(stdin,"\n");

@@ -102,7 +102,7 @@ InstallMethod(SpanningTreeBoundary, [IsMarkedSphere],
         Add(edges,e);
         e := Opposite(e);
         repeat
-            e := Next(Opposite(e));
+            e := NextEdge(Opposite(e));
         until spider!.intree[e!.index];
     until IsIdenticalObj(e,edges[1]);
     return edges;

@@ -74,7 +74,7 @@ InstallMethod(GroupElement, [IsTriangulationEdge], function(e)
         TryNextMethod();
     fi;
 end);
-InstallMethod(Opposite, [IsTriangulationEdge and HasNextEdge], e->Prevopp(Next(e)));
+InstallMethod(Opposite, [IsTriangulationEdge and HasNextEdge], e->Prevopp(NextEdge(e)));
 
 InstallMethod(Next, [IsTriangulationEdge], NextEdge);
 
@@ -100,7 +100,7 @@ InstallMethod(Neighbours, [IsTriangulationFace, IsTriangulationEdge], function(f
     n := [];
     repeat
         Add(n,e);
-        e := Next(e);
+        e := NextEdge(e);
     until e=n[1];
     return n;
 end);
@@ -112,7 +112,7 @@ InstallMethod(Valency, [IsTriangulationFace], function(f)
     e := e0;
     repeat
         n := n+1;
-        e := Next(e);
+        e := NextEdge(e);
     until e=e0;
     while n<>3 do Error("I found a face with ",n,"<>3 adjacent edges."); od;
     
@@ -321,24 +321,24 @@ InstallGlobalFunction(FLIPEDGE@, function(e,multi)
 
     f := Opposite(e);
     a := From(e); b := From(f);
-    bp := Next(e); pa := Next(bp);
-    aq := Next(f); qb := Next(aq);
+    bp := NextEdge(e); pa := NextEdge(bp);
+    aq := NextEdge(f); qb := NextEdge(aq);
     p := From(pa); q := From(qb);
 
     if not multi or YRATIO@(Pos(p),Pos(q),Pos(a),Pos(b))>@.rz then
         paq := Left(f); RESETFACE@(paq);
         qbp := Left(e); RESETFACE@(qbp);
         opa := Opposite(pa); oqb := Opposite(qb);
-        e!.From := p; e!.To := q; e!.Next := qb; e!.Prevopp := Opposite(bp); RESETEDGE@(e);
-        f!.From := q; f!.To := p; f!.Next := pa; f!.Prevopp := Opposite(aq); RESETEDGE@(f);
+        e!.From := p; e!.To := q; e!.NextEdge := qb; e!.Prevopp := Opposite(bp); RESETEDGE@(e);
+        f!.From := q; f!.To := p; f!.NextEdge := pa; f!.Prevopp := Opposite(aq); RESETEDGE@(f);
         qbp!.Neighbour := e;
         paq!.Neighbour := f;
         a!.Neighbour := aq;
         b!.Neighbour := bp;
-        pa!.Prevopp := e; pa!.Next := aq; pa!.Left := paq; opa!.Right := paq;
-        qb!.Prevopp := f; qb!.Next := bp; qb!.Left := qbp; oqb!.Right := qbp;
-        aq!.Prevopp := opa; aq!.Next := f;
-        bp!.Prevopp := oqb; bp!.Next := e;
+        pa!.Prevopp := e; pa!.NextEdge := aq; pa!.Left := paq; opa!.Right := paq;
+        qb!.Prevopp := f; qb!.NextEdge := bp; qb!.Left := qbp; oqb!.Right := qbp;
+        aq!.Prevopp := opa; aq!.NextEdge := f;
+        bp!.Prevopp := oqb; bp!.NextEdge := e;
 
         if HasGroupElement(e) then
             pa!.GroupElement := GroupElement(e)^-1*GroupElement(pa);
@@ -360,14 +360,14 @@ BindGlobal("CHECKTRIANGULATION@", function(t)
     if x<>[] then return ["From(Neighbour(v)) <> v: ",x]; fi;
     x := Filtered(t!.e,e->not IsIdenticalObj(Opposite(Opposite(e)),e));
     if x<>[] then return ["Opposite(Opposite(e)) <> e: ",x]; fi;
-    x := Filtered(t!.e,e->not IsIdenticalObj(Opposite(e),Prevopp(Next(e))));
-    if x<>[] then return ["Opposite(e) <> Prevopp(Next(e)): ",x]; fi;
-    x := Filtered(t!.e,e->not IsIdenticalObj(e,Next(Next(Next(e)))));
-    if x<>[] then return ["Next(Next(Next(e))) <> e: ",x]; fi;
+    x := Filtered(t!.e,e->not IsIdenticalObj(Opposite(e),Prevopp(NextEdge(e))));
+    if x<>[] then return ["Opposite(e) <> Prevopp(NextEdge(e)): ",x]; fi;
+    x := Filtered(t!.e,e->not IsIdenticalObj(e,NextEdge(NextEdge(NextEdge(e)))));
+    if x<>[] then return ["NextEdge(NextEdge(NextEdge(e))) <> e: ",x]; fi;
     x := Filtered(t!.e,e->not IsIdenticalObj(From(e),From(Prevopp(e))));
     if x<>[] then return ["From(e) <> From(Prevopp(e)): ",x]; fi;
-    x := Filtered(t!.e,e->not IsIdenticalObj(Left(e),Left(Next(e))));
-    if x<>[] then return ["Left(e) <> Left(Next(e)): ",x]; fi;
+    x := Filtered(t!.e,e->not IsIdenticalObj(Left(e),Left(NextEdge(e))));
+    if x<>[] then return ["Left(e) <> Left(NextEdge(e)): ",x]; fi;
     x := Filtered(t!.e,e->not IsIdenticalObj(Left(e),Right(Opposite(e))));
     if x<>[] then return ["Left(e) <> Right(Opposite(e)): ",x]; fi;
     x := Filtered(t!.e,e->not IsIdenticalObj(From(e),To(Opposite(e))));
@@ -375,7 +375,7 @@ BindGlobal("CHECKTRIANGULATION@", function(t)
     x := Filtered(t!.f,f->not IsIdenticalObj(Left(Neighbour(f)),f));
     if x<>[] then return ["Left(Neighbour(f)) <> f: ",x]; fi;
     if ValueOption("nodelaunay")=fail then
-        x := Filtered(t!.e,e->YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.rz);
+        x := Filtered(t!.e,e->YRATIO@(ToPos(NextEdge(e)),ToPos(NextEdge(Opposite(e))),FromPos(e),ToPos(e))>@.rz);
         if x<>[] then return ["Delaunay condition fails: ",x]; fi;
         x := Filtered(t!.f,f->not IsIdenticalObj(LocateInTriangulation(t,f,Pos(f)),f));
         if x<>[] then return ["Locate(f,Pos(f)) <> f: ",x]; fi;
@@ -389,7 +389,7 @@ BindGlobal("FIXDELAUNAY@", function(t)
     repeat
         idle := true;
         for e in t!.e do
-            if YRATIO@(ToPos(Next(e)),ToPos(Next(Opposite(e))),FromPos(e),ToPos(e))>@.reps then
+            if YRATIO@(ToPos(NextEdge(e)),ToPos(NextEdge(Opposite(e))),FromPos(e),ToPos(e))>@.reps then
                 FLIPEDGE@(e,true);
                 fixes := fixes + 1;
                 Info(InfoIMG,3,"Flipping edge ",e);
@@ -420,10 +420,10 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f0,p,delaunay)
         e0!.Left := f;
         Opposite(e0)!.Right := f;
         SetPrevopp(e1, Opposite(e0));
-        Next(e0)!.Prevopp := e1;
+        NextEdge(e0)!.Prevopp := e1;
         SetNextEdge(e1, e2);
         SetNextEdge(e2, e0);
-        e0!.Next := e1;
+        e0!.NextEdge := e1;
         
         if HasGroupElement(e0) then
             SetGroupElement(e1, One(GroupElement(e0)));
@@ -433,11 +433,11 @@ BindGlobal("ADDTOTRIANGULATION@", function(t,f0,p,delaunay)
     SetNeighbour(v, e2);
     
     for e0 in oldn do
-        SetOpposite(Next(Next(e0)),Prevopp(e0));
-        SetOpposite(Prevopp(e0),Next(Next(e0)));
+        SetOpposite(NextEdge(NextEdge(e0)),Prevopp(e0));
+        SetOpposite(Prevopp(e0),NextEdge(NextEdge(e0)));
     od;
     for e0 in oldn do
-        SetPrevopp(Next(Next(e0)),Opposite(Next(e0)));
+        SetPrevopp(NextEdge(NextEdge(e0)),Opposite(NextEdge(e0)));
     od;
     
     t!.f[f0!.index] := Remove(t!.f);
@@ -510,13 +510,13 @@ InstallMethod(RemoveFromTriangulation, [IsSphereTriangulation, IsTriangulationVe
     v := Remove(t!.v);
     if j<= Length(t!.v) then t!.v[j] := v; t!.v[j]!.index := j; fi;
     
-    e0 := Next(e0); e1 := Next(e1); e2 := Next(e2);
+    e0 := NextEdge(e0); e1 := NextEdge(e1); e2 := NextEdge(e2);
     
     f := Left(e0); RESETFACE@(f);
     f!.Neighbour := e0;
-    From(e0)!.Neighbour := e0; e0!.Left := f; Opposite(e0)!.Right := f; e0!.Next := e1; e0!.Prevopp := Opposite(e2);
-    From(e1)!.Neighbour := e1; e1!.Left := f; Opposite(e1)!.Right := f; e1!.Next := e2; e1!.Prevopp := Opposite(e0);
-    From(e2)!.Neighbour := e2; e2!.Left := f; Opposite(e2)!.Right := f; e2!.Next := e0; e2!.Prevopp := Opposite(e1);
+    From(e0)!.Neighbour := e0; e0!.Left := f; Opposite(e0)!.Right := f; e0!.NextEdge := e1; e0!.Prevopp := Opposite(e2);
+    From(e1)!.Neighbour := e1; e1!.Left := f; Opposite(e1)!.Right := f; e1!.NextEdge := e2; e1!.Prevopp := Opposite(e0);
+    From(e2)!.Neighbour := e2; e2!.Left := f; Opposite(e2)!.Right := f; e2!.NextEdge := e0; e2!.Prevopp := Opposite(e1);
 end);
 
 InstallMethod(DelaunayTriangulation, "(IMG) for a list of points and a quality",
@@ -663,7 +663,7 @@ InstallMethod(WiggledTriangulation, [IsSphereTriangulation,IsObject],
     for i in [1..Length(t!.e)] do
         SetFrom(r.e[i], r.v[From(t!.e[i])!.index]);
         SetLeft(r.e[i], r.f[Left(t!.e[i])!.index]);
-        for j in [Next,Prevopp,Opposite] do
+        for j in [NextEdge,Prevopp,Opposite] do
             Setter(j)(r.e[i], r.e[j(t!.e[i])!.index]);
         od;
         if HasGroupElement(t!.e[i]) then
