@@ -209,7 +209,7 @@
 
 <h4>3.2 <span class="Heading">Sphere machines</span></h4>
 
-<p>Sphere machines are simply group FR machines (see Section <a href="../../../pkg/fr/doc/chap3.html#X80D310EF7FD5EA44"><span class="RefLink">fr: FRMachineNC family,free,listlist,list</span></a>) whose underlying <code class="func">StateSet</code> (<a href="../../../pkg/fr/doc/chap3.html#X8000470D7DA7FFBD"><span class="RefLink">fr: StateSet fr machine</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsGroupFRMachine); InstallImmediateMethod(IsSphereMachine,IsFRMachine,0, function(m) local g; g := StateSet(m); return HasIsSphereGroup(g) and IsSphereGroup(g); end);</p>
+<p>Sphere machines are simply group FR machines (see Section <a href="../../../pkg/fr/doc/chap3.html#X808F3BD97EDA8CE8"><span class="RefLink">fr: FRMachine [list,]list,list</span></a>) whose underlying <code class="func">StateSet</code> (<a href="../../../pkg/fr/doc/chap3.html#X8000470D7DA7FFBD"><span class="RefLink">fr: StateSet fr machine</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsGroupFRMachine); InstallImmediateMethod(IsSphereMachine,IsFRMachine,0, function(m) local g; g := StateSet(m); return HasIsSphereGroup(g) and IsSphereGroup(g); end);</p>
 
 <p><a id="X7A327CA47E574383" name="X7A327CA47E574383"></a></p>
 

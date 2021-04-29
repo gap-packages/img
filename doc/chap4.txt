@@ -21,7 +21,9 @@
   IsDataObjectRep));                    DeclareOperation("P1Point",[IsFloat]);
   DeclareOperation("P1Point",[IsRat]);
   DeclareOperation("P1Point",[IsInfinity]);
-  DeclareOperation("P1Point",[IsFloat,IsFloat]);[133X
+  DeclareOperation("P1Point",[IsFloat,IsFloat]);
+  DeclareOperation("P1Point",[IsString]);
+  DeclareOperation("P1Point",[IsString,IsString]);[133X
   
   [1X4.1-1 IsP1Point[101X
   
@@ -30,6 +32,7 @@
   [33X[1;0Y[29X[2XP1Point[102X( [3Xcomplex[103X ) [32X function[133X
   [33X[1;0Y[29X[2XP1Point[102X( [3Xreal[103X, [3Ximag[103X ) [32X function[133X
   [33X[1;0Y[29X[2XP1Point[102X( [3Xstring[103X ) [32X function[133X
+  [33X[1;0Y[29X[2XP1Point[102X( [3Xrealstr[103X, [3Ximagstr[103X ) [32X function[133X
   
   [33X[0;0YP1  points  are complex numbers or infinity; fast methods are implemented to
   compute with them, and to apply rational maps to them.[133X
@@ -462,14 +465,14 @@
   DeclareProperty("IsFake",  IsTriangulationVertex);  DeclareAttribute("Left",
   IsTriangulationEdge);     DeclareAttribute("Right",    IsTriangulationEdge);
   DeclareAttribute("To",     IsTriangulationEdge);    DeclareAttribute("From",
-  IsTriangulationEdge);     DeclareAttribute("Next",     IsTriangulationEdge);
-  DeclareAttribute("Prevopp",                            IsTriangulationEdge);
-  DeclareAttribute("Opposite",  IsTriangulationEdge);  DeclareAttribute("Pos",
-  IsTriangulationEdge);    DeclareAttribute("FromPos",   IsTriangulationEdge);
-  DeclareAttribute("ToPos",  IsTriangulationEdge);  DeclareAttribute("Length",
-  IsTriangulationEdge);      DeclareAttribute("Map",     IsTriangulationEdge);
-  DeclareAttribute("GroupElement",       IsTriangulationEdge,      "mutable");
-  DeclareAttribute("Neighbour",                          IsTriangulationFace);
+  IsTriangulationEdge);   DeclareAttribute("NextEdge",   IsTriangulationEdge);
+  DeclareOperation("Next", [IsTriangulationEdge]); DeclareAttribute("Prevopp",
+  IsTriangulationEdge);   DeclareAttribute("Opposite",   IsTriangulationEdge);
+  DeclareAttribute("Pos",   IsTriangulationEdge);  DeclareAttribute("FromPos",
+  IsTriangulationEdge);     DeclareAttribute("ToPos",    IsTriangulationEdge);
+  DeclareAttribute("Length",   IsTriangulationEdge);   DeclareAttribute("Map",
+  IsTriangulationEdge);  DeclareAttribute("GroupElement", IsTriangulationEdge,
+  "mutable");        DeclareAttribute("Neighbour",       IsTriangulationFace);
   DeclareOperation("Neighbours",                       [IsTriangulationFace]);
   DeclareOperation("Neighbours",   [IsTriangulationFace,IsTriangulationEdge]);
   DeclareAttribute("Pos",   IsTriangulationFace);   DeclareAttribute("Radius",

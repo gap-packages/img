@@ -1,6 +1,6 @@
 name: IMG
-version: 0.2.3
-date: 19/03/2019
+version: 0.3.0
+date: 04/02/2021
 description: Computations with iterated monodromy groups
 
 authors:
@@ -30,12 +30,12 @@ suggested-pkgs:
       url: "https://gap-packages.github.io/float/"
 
 www: https://gap-packages.github.io/IMG
-readme: README
+readme: README.md
 packageinfo: https://gap-packages.github.io/IMG/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-packages/img/releases/download/v0.2.3/IMG-0.2.3.tar.gz
+      url: https://github.com/gap-packages/img/releases/download/v0.3.0/IMG-0.3.0.tar.gz
 
 abstract: The <span class="pkgname">IMG</span> package allows    GAP to manipulate iterated monodromy groups
 

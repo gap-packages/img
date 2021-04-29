@@ -5,11 +5,12 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.2.3",
-Date := "19/03/2019",
+Version := "0.3.0",
+Date := "04/02/2021",
+License := "GPL-2.0-or-later",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.2.3">
-## <!ENTITY Date "19/03/2019">
+## <!ENTITY Version "0.3.0">
+## <!ENTITY Date "04/02/2021">
 ## <#/GAPDoc>
 Persons := [
   rec(
@@ -41,7 +42,7 @@ IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL      := Concatenation( ~.SourceRepository.URL, "/releases/download/v", ~.Version, "/", ~.PackageName, "-", ~.Version ),
 ArchiveFormats  := ".tar.gz",
 PackageWWWHome  := Concatenation( "https://gap-packages.github.io/", ~.PackageName ),
-README_URL      := Concatenation( ~.PackageWWWHome, "/README" ),
+README_URL      := Concatenation( ~.PackageWWWHome, "/README.md" ),
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
 PackageDoc := rec(

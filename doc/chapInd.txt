@@ -99,6 +99,7 @@
   [2XP1Point[102X 4.1-1 
       ri 4.1-1 
       s 4.1-1 
+      s,s 4.1-1 
   [2XP1PointsFamily[102X 4.1-1 
   [2XP1PreImage[102X 4.1-35 
   [2XP1PreImages[102X 4.1-36 

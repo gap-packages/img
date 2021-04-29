@@ -140,12 +140,11 @@
   
   [1X3.2 [33X[0;0YSphere machines[133X[101X
   
-  [33X[0;0YSphere  machines  are  simply group FR machines (see Section [14Xfr: FRMachineNC
-  family,free,listlist,list[114X)   whose  underlying  [2XStateSet[102X  ([14Xfr:  StateSet  fr
-  machine[114X)    is    a    sphere    group.   DeclareProperty("IsSphereMachine",
-  IsGroupFRMachine);     InstallImmediateMethod(IsSphereMachine,IsFRMachine,0,
-  function(m)  local  g;  g  :=  StateSet(m);  return  HasIsSphereGroup(g) and
-  IsSphereGroup(g); end);[133X
+  [33X[0;0YSphere  machines  are  simply  group  FR machines (see Section [14Xfr: FRMachine
+  [list,]list,list[114X)  whose  underlying [2XStateSet[102X ([14Xfr: StateSet fr machine[114X) is a
+  sphere    group.    DeclareProperty("IsSphereMachine",    IsGroupFRMachine);
+  InstallImmediateMethod(IsSphereMachine,IsFRMachine,0, function(m) local g; g
+  := StateSet(m); return HasIsSphereGroup(g) and IsSphereGroup(g); end);[133X
   
   [1X3.2-1 IsSphereMachine[101X
   
