@@ -15,6 +15,11 @@
 #endif
 #include "dogleg.h"
 
+#ifndef M_PI
+#warn Strange, I thought M_PI was defined in math.h
+#define M_PI 3.14159265358979323846264338327950288
+#endif
+
 #if (CHOLMOD_VERSION > (CHOLMOD_VER_CODE(2,2)))
 #include <cholmod_function.h>
 #endif
