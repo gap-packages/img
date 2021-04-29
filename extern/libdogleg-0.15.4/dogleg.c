@@ -16,7 +16,7 @@
 #include "dogleg.h"
 
 #ifndef M_PI
-#warn Strange, I thought M_PI was defined in math.h
+#warning Strange, I thought M_PI was defined in math.h
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
