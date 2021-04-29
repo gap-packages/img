@@ -21,7 +21,7 @@ layout_DEPENDENCIES = libdogleg
 layout_SOURCES = src/layout.C
 layout_CPPFLAGS = -I$(LIBDOGLEG) $(CHOLMOD_CFLAGS)
 layout_LDFLAGS = -L$(BINARCHDIR)/lib
-layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig -lblas
+layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig -llapack -lblas
 
 hsolve_DEPENDENCIES = liblevmar
 hsolve_SOURCES = src/hsolve.C
