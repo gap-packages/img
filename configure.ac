@@ -7,7 +7,7 @@
 #############################################################################
 
 # autoconf
-AC_PREREQ([2.71])
+AC_PREREQ([2.68])
 AC_INIT([img],[package],[https://github.com/gap-packages/img/issues],[io],[https://gap-packages.github.io/img])
 AC_CONFIG_SRCDIR([src/img.c])
 AC_CONFIG_AUX_DIR([cnf])
