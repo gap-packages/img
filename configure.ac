@@ -8,7 +8,7 @@
 
 # autoconf
 AC_PREREQ([2.68])
-AC_INIT([img],[package],[https://github.com/gap-packages/img/issues],[io],[https://gap-packages.github.io/img])
+AC_INIT([img],[package],[https://github.com/gap-packages/img/issues],[img],[https://gap-packages.github.io/img])
 AC_CONFIG_SRCDIR([src/img.c])
 AC_CONFIG_AUX_DIR([cnf])
 AC_CONFIG_HEADERS([src/pkgconfig.h:cnf/pkgconfig.h.in])
@@ -38,7 +38,6 @@ AM_CONDITIONAL([SYS_IS_CYGWIN], [test "$CYGWIN" = "yes"])
 # gap
 FIND_GAP
 
-AC_CHECK_HEADERS_ONCE([float.h stdlib.h malloc/malloc.h malloc.h])
 AC_CHECK_LIB(m,sincos,AC_DEFINE(HAVE_SINCOS,1,do we have sincos?))
 
 # AC_CHECK_LEVMAR
