@@ -84,7 +84,7 @@ gap> M := FRMachine(F,[[c^-1,o,o,o,c],[o,o,o,d,d^-1],[a,o,o,a^-1,o],[b,o,d,a,c]]
 >                   [(1,5)(2,4,3),(1,2)(4,5),(1,4)(2,3,5),()]);
 <sphere machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] ) / [ d*c*b*a ]>
 gap> P1MapBySphereMachine(M);
-rec( machine := <sphere machine with alphabet [ 1, 2, 3, 4, 5 ] on Group( [ a, b, c, d ] ) / [ d*c*b*a ]>, matrix := [ [ 1 ] ], multicurve := [ a*c^G ] )
+rec( machine := <sphere machine with alphabet [ 1 .. 5 ] on Group( [ a, b, c, d ] ) / [ d*c*b*a ]>, matrix := [ [ 1 ] ], multicurve := [ a*c^G ] )
 gap> 
 gap> Info(InfoFR,1,"Testing mating of airplane with z^2+i");
 #I  Testing mating of airplane with z^2+i
