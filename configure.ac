@@ -27,7 +27,6 @@ LT_INIT([disable-static dlopen win32-dll])
 # compilers
 AC_PROG_CC
 AC_PROG_CXX
-# AX_CC_MAXOPT
 AC_CANONICAL_HOST
 case $host_os in
   *cygwin* ) CYGWIN=yes;;
