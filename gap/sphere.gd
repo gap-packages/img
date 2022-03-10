@@ -39,7 +39,7 @@ DeclareSynonym("IsMulticurve", IsSphereConjugacyClassCollection);
 DeclareOperation("InverseMutable", [IsSphereConjugacyClass]);
 DeclareOperation("InverseSameMutability", [IsSphereConjugacyClass]);
 DeclareAttribute("InverseImmutable", IsSphereConjugacyClass);
-DeclareOperation("POW", [IsSphereConjugacyClass,IsInt]);
+DeclareOperation("^", [IsSphereConjugacyClass,IsInt]);
 
 DeclareProperty("IsPeripheral", IsElementOfSphereGroup);
 DeclareProperty("IsPeripheral", IsSphereConjugacyClass);
