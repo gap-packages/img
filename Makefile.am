@@ -20,7 +20,7 @@ bin_PROGRAMS = layout hsolve
 layout_DEPENDENCIES = libdogleg
 layout_SOURCES = src/layout.C
 layout_CPPFLAGS = -I$(LIBDOGLEG) $(CHOLMOD_CFLAGS)
-layout_LDFLAGS = -L$(BINARCHDIR)/lib
+layout_LDFLAGS = -L$(BINARCHDIR)/lib $(CHOLMOD_LDFLAGS)
 layout_LDADD = -ldogleg -lcholmod -lsuitesparseconfig -llapack -lblas
 
 hsolve_DEPENDENCIES = liblevmar
@@ -43,7 +43,7 @@ liblevmar:
 libdogleg:
 	mkdir -p "$(BINARCHDIR)/include" "$(BINARCHDIR)/lib"
 	if [[ ! -f "$(BINARCHDIR)/include/dogleg.h" ]]; then \
-	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 -O3 $(CHOLMOD_CFLAGS)" LDFLAGS="$(CHOLMOD_CFLAGS)" && \
+	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 -O3 $(CHOLMOD_CFLAGS)" LDFLAGS="$(CHOLMOD_LDFLAGS)" && \
 	    cp $(LIBDOGLEG)/libdogleg.a $(BINARCHDIR)/lib/ && \
 	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/; \
 	fi
