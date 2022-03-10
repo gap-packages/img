@@ -110,7 +110,7 @@ RSS.startclient := function(arg)
         Error("Use: RSS.startclient([url::string])");
     fi;
     
-    CHECKEXEC@FR("browser",["chrome"],["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"],["firefox"]);
+    CHECKEXEC@FR("browser",["firefox"],["/Applications/Firefox.app/Contents/MacOS/firefox"],["chrome"],["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]);
     
     status := IO_fork();
     if status=0 then

@@ -373,11 +373,14 @@ InstallMethod(AsPolynomialSphereMachine, "(IMG) for a Mealy machine",
     g := FreeGroup(Concatenation(List(GeneratorsOfGroup(g0),String),["f∞"]));
     iso := GroupHomomorphismByImages(g0,g,GeneratorsOfGroup(g){[1..rk]});
     g := AsSphereGroup(g/[Product(a,x->x^Correspondence(M))^iso*g.(rk+1)]);
+    iso := GroupHomomorphismByImages(g0,g,GeneratorsOfGroup(g){[1..rk]});
     N := M^iso;
     SetAddingElement(N,FRElement(N,g.(rk+1)));
     SetCorrespondence(N,Correspondence(M)*iso);
     return N;
 end);
+
+InstallOtherMethod(AsSphereMachine, "(IMG) for a Mealy machine", [IsMealyMachine], AsPolynomialSphereMachine);
 #############################################################################
 
 #############################################################################
@@ -1295,6 +1298,13 @@ end);
 ##
 #F Automorphisms of machines and virtual endomorphisms
 ##
+InstallMethod(VirtualEndomorphism, "(IMG) for a sphere machine and a coordinate",
+        [IsSphereMachine,IsPosInt],
+        function(m,i)
+    # define a sphere group for the cover
+    # Correspondence(vendo) will be the inclusion of the sub-sphere
+end);
+
 BindGlobal("PUREMCG@", function(arg)
     local r, i, j, m, ni, nj, gens, img, aut, relator, G, maker;
     

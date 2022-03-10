@@ -43,7 +43,7 @@ liblevmar:
 libdogleg:
 	mkdir -p "$(BINARCHDIR)/include" "$(BINARCHDIR)/lib"
 	if [[ ! -f "$(BINARCHDIR)/include/dogleg.h" ]]; then \
-	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 -O3 $(CHOLMOD_CFLAGS)" && \
+	    $(MAKE) -B -C $(LIBDOGLEG) CFLAGS="-std=c99 -O3 $(CHOLMOD_CFLAGS)" LDFLAGS="$(CHOLMOD_CFLAGS)" && \
 	    cp $(LIBDOGLEG)/libdogleg.a $(BINARCHDIR)/lib/ && \
 	    cp $(LIBDOGLEG)/dogleg.h $(BINARCHDIR)/include/; \
 	fi

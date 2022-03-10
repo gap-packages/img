@@ -75,7 +75,10 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
             if not IsOne(j) then 
                 Add(src,j);
                 Add(dst,k);
-                w[Position(ingens,CyclicallyReducedWord(j))] := Position(outgens2,CyclicallyReducedWord(k));
+                j := CyclicallyReducedWord(j);
+                k := CyclicallyReducedWord(k);
+                Assert(0,j in ingens and k in outgens2);
+                w[Position(ingens,j)] := Position(outgens2,k);
             fi;
         od;
     od;
@@ -87,7 +90,8 @@ BindGlobal("MATCHTRANS@", function(M1,M2)
 
     # get rid of the elements going to 1
     epi := PARABOLICQUOTIENT@(outstates2,w);
-    return [epi*GroupHomomorphismByImages(Range(epi),instates,List(dst,x->x^epi),src),w];
+    return [epi*GroupHomomorphismByImagesNC(Range(epi),instates,List(dst,x->x^epi),src),w];
+    #!!! the GroupHomomorphismByImages fails because GAP starts coset enumeration when testing "IsSubset( PreImagesRange( map ), Source( map ) )"
 end);
 
 InstallMethod(NonContractingSubmatrix, "(IMG) for an integer matrix",

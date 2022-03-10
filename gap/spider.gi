@@ -650,12 +650,20 @@ InstallMethod(SpiderAlgorithm, "(IMG) for a polynomial FR machine",
        return fail;
     fi;
     
-    suppangles := SUPPORTING_ANGLES@(machine, image, hyperbolic,addingelement, orbit, preimage, oldaddress, rayperiod, marked);
+    suppangles := SUPPORTING_ANGLES@(machine, image, hyperbolic, addingelement, orbit, preimage, oldaddress, rayperiod, marked);
     
-    if addingelement=false then
+    if suppangles=[[],[]] then # special case of z^d, where adder was deleted
+        suppangles := [[[0..degree-1]/degree],[]];
+        ordering := [2,1];
+        spheregroup := SphereGroup(2);
+        tau := GroupHomomorphismByImages(group,spheregroup,[spheregroup.1]);
+    elif addingelement=false then
         addingelement := m+1;
         spheregroup := SphereGroup(Concatenation(ordering,[addingelement]));
         tau := GroupHomomorphismByImages(group,spheregroup,GeneratorsOfGroup(spheregroup){[1..m]});
+    elif Length(ordering)<m then
+        spheregroup := group;
+        tau := IdentityMapping(group);
     else
         spheregroup := SphereGroup(ordering);
         tau := GroupHomomorphismByImages(group,spheregroup);

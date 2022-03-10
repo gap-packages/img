@@ -44,7 +44,7 @@ MAN_TARGET = libdogleg.$(MAN_SECTION)
 
 ALL_TARGETS = $(LIB_TARGETS) $(MAN_TARGET) sample
 
-all: $(ALL_TARGETS)
+all: $(LIB_TARGETS)
 
 libdogleg.a: dogleg.o
 	ar rcvu $@ $^

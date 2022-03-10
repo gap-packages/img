@@ -393,13 +393,24 @@ end);
 
 BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
     # returns [m,x] with m minimal representative such that m^x=g
-    local w, fam, length, i, gens, s, m, x, minm, minx;
+    local w, fam, length, i, gens, s, m, x0, x, minm, minx;
     
-    w := UnderlyingElement(g);
     fam := FamilyObj(g);
     gens := GeneratorsOfSemigroup(FreeGroupOfFpGroup(fam!.group));
+    w := UnderlyingElement(g);
     length := Length(w);
-    minm := g;
+    
+    # first shorten as much by looking at last letter
+    i := 1;
+    while i<=length-i and Subword(w,i,i)=Subword(w,length+1-i,length+1-i)^-1 do
+        i := i+1;
+    od;
+    x0 := Subword(w,length+2-i,length);
+    w := Subword(w,i,length+1-i);
+    length := length-2*(i-1);
+    
+    # then go through cyclic permutations
+    minm := ElementOfSphereGroup(fam,w);
     minx := One(w);
     for i in [1..length] do
         x := Subword(w,i+1,length);
@@ -408,7 +419,7 @@ BindGlobal("MAKECYCLICALLYREDUCED@", function(g)
             if m<minm then minm := m; minx := s*x; fi;
         od;
     od;
-    return [minm,ElementOfSphereGroup(fam,minx)];
+    return [minm,ElementOfSphereGroup(fam,minx*x0)];
     
 ##!!! TODO:
 ## optimize with the following python code [Kellogg S. Booth (1980). "Lexicographically least circular substrings". Information Processing Letters. Elsevier. 10 (4-5): 240–242. doi:10.1016/0020-0190(80)90149-0]
