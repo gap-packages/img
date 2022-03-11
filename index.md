@@ -20,6 +20,8 @@ The following GAP packages are needed:
 The following additional GAP packages are not required, but suggested:
 - [Float](https://gap-packages.github.io/float/), version at least 0.9.0. It is only necessary for high-precision (greater than 64-bit IEEE754) calculations
 
+Note also that IMG interacts with a GUI that displays interactively Julia sets on the sphere; it is included in the tarball, but has to be added manually if you clone the git IMG repository. Do this with `git clone https://github.com/laurentbartholdi/rsserver.git` in the root directory of IMG.
+
 ## Installation (MacOS)
 
 Installation has been tested with [homebrew](https://brew.sh/) and [macports](https://www.macports.org/). You definitely will need at least one of them. It is assumed that you already have a running installation of GAP, either packaged or self-compiled.
