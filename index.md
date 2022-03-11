@@ -4,25 +4,21 @@ layout: default
 
 # GAP Package {{site.data.package.name}}
 
-{{site.data.package.abstract}}
+{{site.data.package.abstract}}.
 
 The current version of this package is version {{site.data.package.version}}.
 For more information, please refer to [the package manual]({{site.data.package.doc-html}}).
-There is also a [README](README.html) file.
 
 ## Dependencies
 
 This package requires GAP version {{site.data.package.GAP}}
 {% if site.data.package.needed-pkgs %}
-The following other GAP packages are needed:
+The following GAP packages are needed:
 {% for pkg in site.data.package.needed-pkgs %}
-- {% if pkg.url %}<a href="{{ pkg.url }}">{{ pkg.name }}</a>{% else %}{{ pkg.name }}{% endif %} {{ pkg.version }}{% endfor %}
-{% endif %}
-{% if site.data.package.suggested-pkgs %}
+- [FR](https://gap-packages.github.io/fr), version at least 2.4.0.
+
 The following additional GAP packages are not required, but suggested:
-{% for pkg in site.data.package.suggested-pkgs %}
-- {% if pkg.url %}<a href="{{ pkg.url }}">{{ pkg.name }}</a>{% else %}{{ pkg.name }}{% endif %} {{ pkg.version }}{% endfor %}
-{% endif %}
+- [Float](https://gap-packages.github.io/float/), version at least 0.9.0. It is only necessary for high-precision (greater than 64-bit IEEE754) calculations
 
 ## Installation (MacOS)
 
