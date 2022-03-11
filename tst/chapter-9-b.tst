@@ -53,7 +53,7 @@ gap>
 gap> Info(InfoFR,1,"An obstructed mating");
 #I  An obstructed mating
 gap> P1MapBySphereMachine(m[9+7]);
-rec( machine := <sphere machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], multicurve := [ (f1*f3*f2)^3*f1*(g1*g3*g2)^3*g1^G, f1^-1*f2^-1*(f1*f3*f2)^3*f1*g2^-1*(g3*g2*g1)^3^G ] )
+rec( machine := <sphere machine with alphabet [ 1 .. 3 ] on Group( [ f1, f2, f3, g1, g2, g3 ] ) / [ f3*f2*f1*g3*g2*g1 ]>, matrix := [ [ 1/2, 1 ], [ 1/2, 0 ] ], multicurve := [ f1^-1*(f3*f2*f1)^2*g1^-1*(g3*g2*g1)^2^G, f1^-1*(f2*f1*f3)^2*f2*f1*g2*(g3*g2*g1)^2^G ] )
 gap> 
 gap> Info(InfoFR,1,"Testing Triangulations");
 #I  Testing Triangulations
