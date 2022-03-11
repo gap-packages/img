@@ -297,7 +297,7 @@ InstallMethod(DenominatorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPDEN
 InstallMethod(One, [IsIEEE754P1Map], f->P1MapByCoefficients([1.0_z],[1.0_z]));
 InstallMethod(Zero, [IsIEEE754P1Map], f->P1MapByCoefficients([0.0_z],[1.0_z]));
         
-InstallMethod(\-, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_SUM);
+InstallMethod(\+, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_SUM);
 InstallMethod(\-, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_DIFF);
 InstallMethod(\*, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_PROD);
 InstallMethod(\/, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_QUO);

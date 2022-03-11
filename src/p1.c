@@ -460,7 +460,7 @@ static Obj MAT2P1MAP(Obj self, Obj obj)
 
 static Obj P1MAP2MAT(Obj self, Obj map)
 {
-  Obj mat = ALLOC_PLIST(2);
+  Obj mat = ALLOC_PLIST(3);
   int deg = p1map_degree(map);
   Obj objnumer = ALLOC_PLIST(deg+1), objdenom = ALLOC_PLIST(deg+1);
   ldcomplex *numer = p1map_numer(map), *denom = p1map_denom(map);
@@ -471,6 +471,7 @@ static Obj P1MAP2MAT(Obj self, Obj map)
   }
   set_elm_plist(mat,1, objnumer);
   set_elm_plist(mat,2, objdenom);
+  set_elm_plist(mat,3, INTOBJ_INT(deg));
   return mat;
 }
 
