@@ -5,12 +5,12 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.3.0",
-Date := "04/02/2021",
+Version := "0.3.1",
+Date := "10/03/2022",
 License := "GPL-2.0-or-later",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.3.0">
-## <!ENTITY Date "04/02/2021">
+## <!ENTITY Version "0.3.1">
+## <!ENTITY Date "10/03/2022">
 ## <#/GAPDoc>
 Persons := [
   rec(
@@ -19,14 +19,14 @@ Persons := [
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "laurent.bartholdi@gmail.com",
-    WWWHome       := "http://www.uni-math.gwdg.de/laurent",
+    WWWHome       := "http://www.math.uni-sb.de/ag/bartholdi",
     PostalAddress := Concatenation( [
-                       "Mathematisches Institut\n",
-                       "Bunsenstraße 3-5\n",
-                       "D-37073 Göttingen\n",
+                       "FR Mathematik\n",
+		       "Universität des Saarlandes\n",
+                       "D-66041 Saabrücken\n",
                        "Germany" ] ),
-    Place         := "Göttingen",
-    Institution   := "Georg-August Universität zu Göttingen"
+    Place         := "Saarbrücken",
+    Institution   := "Universität des Saarlandes"
   )
 ],
 
