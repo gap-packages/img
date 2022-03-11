@@ -122,7 +122,7 @@ InstallOtherMethod(\*, IsIdenticalObj, [IsPMComplex, IsPMComplex],
     return Objectify(TYPE_PMCOMPLEX, [x![1]*y![1]-x![2]*y![2],x![1]*y![2]+x![2]*y![1]]);
 end);
 
-InstallOtherMethod(INV, [IsPMComplex], function(x)
+InstallOtherMethod(InverseMutable, [IsPMComplex], function(x)
     local r;
     r := x![1]^2+x![2]^2;
     if r=0.0_l then
@@ -136,7 +136,7 @@ InstallOtherMethod(\/, IsIdenticalObj, [IsPMComplex, IsPMComplex],
     if y=0.0_z then
         return PMCOMPLEX.constants.INFINITY;
     fi;
-    return x*INV(y);
+    return x*InverseMutable(y);
 end);
 
 InstallOtherMethod(\^, IsIdenticalObj, [IsPMComplex, IsPMComplex],
