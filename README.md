@@ -76,6 +76,6 @@ General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program, in the file COPYING.  If not, see
-<http://www.gnu.org/licenses/>.
+<https://www.gnu.org/licenses/>.
 
   Laurent Bartholdi, Göttingen, 19 November 2012

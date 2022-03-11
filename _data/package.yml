@@ -1,15 +1,15 @@
 name: IMG
-version: 0.3.0
-date: 04/02/2021
+version: 0.3.2
+date: 10/03/2022
 description: Computations with iterated monodromy groups
 
 authors:
     - name: Laurent Bartholdi
-      url: http://www.uni-math.gwdg.de/laurent
+      url: http://www.math.uni-sb.de/ag/bartholdi
 
 maintainers:
     - name: Laurent Bartholdi
-      url: http://www.uni-math.gwdg.de/laurent
+      url: http://www.math.uni-sb.de/ag/bartholdi
 
 GAP: ">=4.6.0"
 
@@ -35,7 +35,7 @@ packageinfo: https://gap-packages.github.io/IMG/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-packages/img/releases/download/v0.3.0/IMG-0.3.0.tar.gz
+      url: https://github.com/gap-packages/img/releases/download/v0.3.2/IMG-0.3.2.tar.gz
 
 abstract: The <span class="pkgname">IMG</span> package allows    GAP to manipulate iterated monodromy groups
 
