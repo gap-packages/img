@@ -86,11 +86,11 @@ end);
 
 InstallOtherMethod(IsZero, [IsPMComplex], x->IsZero(x![1]) and IsZero(x![2]));
 InstallOtherMethod(IsOne, [IsPMComplex], x->IsOne(x![1]) and IsZero(x![2]));
-InstallMethod(EQ, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallMethod(\=, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     return x![1]=y![1] and x![2]=y![2];
 end);
-InstallMethod(LT, "for complex numbers",
+InstallMethod(\<, "for complex numbers",
         [IsPMComplex,IsPMComplex],
         function(x,y)
     return x![1]<y![1] or (x![1]=y![1] and x![2]<y![2]);
@@ -105,19 +105,19 @@ InstallMethod(Norm, [IsPMComplex], x->x![1]^2+x![2]^2);
 InstallMethod(AbsoluteValue, [IsPMComplex], x->Sqrt(x![1]^2+x![2]^2));
 InstallOtherMethod(Argument, [IsPMComplex], x->ATAN2_MACFLOAT(x![2],x![1]));
 
-InstallMethod(SUM, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallMethod(\+, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     return Objectify(TYPE_PMCOMPLEX, [x![1]+y![1], x![2]+y![2]]);
 end);
 
-InstallMethod(DIFF, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallMethod(\-, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     return Objectify(TYPE_PMCOMPLEX, [x![1]-y![1], x![2]-y![2]]);
 end);
 
-InstallMethod(AINV_MUT, [IsPMComplex], x->Objectify(TYPE_PMCOMPLEX, [-x![1],-x![2]]));
+InstallMethod(AdditiveInverseMutable, [IsPMComplex], x->Objectify(TYPE_PMCOMPLEX, [-x![1],-x![2]]));
 
-InstallOtherMethod(PROD, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallOtherMethod(\*, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     return Objectify(TYPE_PMCOMPLEX, [x![1]*y![1]-x![2]*y![2],x![1]*y![2]+x![2]*y![1]]);
 end);
@@ -131,7 +131,7 @@ InstallOtherMethod(INV, [IsPMComplex], function(x)
     return Objectify(TYPE_PMCOMPLEX, [x![1]/r,-x![2]/r]);
 end);
 
-InstallOtherMethod(QUO, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallOtherMethod(\/, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     if y=0.0_z then
         return PMCOMPLEX.constants.INFINITY;
@@ -139,7 +139,7 @@ InstallOtherMethod(QUO, IsIdenticalObj, [IsPMComplex, IsPMComplex],
     return x*INV(y);
 end);
 
-InstallOtherMethod(POW, IsIdenticalObj, [IsPMComplex, IsPMComplex],
+InstallOtherMethod(\^, IsIdenticalObj, [IsPMComplex, IsPMComplex],
         function(x,y)
     local r, n, a;
     a := ATAN2_MACFLOAT(x![2],x![1]);
@@ -149,7 +149,7 @@ InstallOtherMethod(POW, IsIdenticalObj, [IsPMComplex, IsPMComplex],
     return Objectify(TYPE_PMCOMPLEX, [r*COS_MACFLOAT(a),r*SIN_MACFLOAT(a)]);
 end);
 
-InstallOtherMethod(POW, [IsPMComplex, IsScalar],
+InstallOtherMethod(\^, [IsPMComplex, IsScalar],
         function(x,y)
     local r, a;
     r := (x![1]^2+x![2]^2)^Float(y/2);
@@ -157,7 +157,7 @@ InstallOtherMethod(POW, [IsPMComplex, IsScalar],
     return Objectify(TYPE_PMCOMPLEX, [r*COS_MACFLOAT(a),r*SIN_MACFLOAT(a)]);
 end);
 
-InstallOtherMethod(POW, [IsPMComplex, IsInt],
+InstallOtherMethod(\^, [IsPMComplex, IsInt],
         function(x,n)
     local j, xpow, y;
     if n=0 then return NewFloat(IsPMComplex,1); elif n<0 then n := -n; x := INV(x); fi;

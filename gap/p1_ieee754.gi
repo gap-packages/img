@@ -297,13 +297,13 @@ InstallMethod(DenominatorP1Map, "(IMG) for a P1 map", [IsIEEE754P1Map], P1MAPDEN
 InstallMethod(One, [IsIEEE754P1Map], f->P1MapByCoefficients([1.0_z],[1.0_z]));
 InstallMethod(Zero, [IsIEEE754P1Map], f->P1MapByCoefficients([0.0_z],[1.0_z]));
         
-InstallMethod(SUM, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_SUM);
-InstallMethod(DIFF, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_DIFF);
-InstallMethod(PROD, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_PROD);
-InstallMethod(QUO, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_QUO);
-InstallMethod(INV, [IsIEEE754P1Map], P1MAP_INV);
-InstallMethod(AINV, [IsIEEE754P1Map], P1MAP_AINV);
-Apply([SUM,DIFF,PROD,QUO],function(op)
+InstallMethod(\-, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_SUM);
+InstallMethod(\-, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_DIFF);
+InstallMethod(\*, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_PROD);
+InstallMethod(\/, IsIdenticalObj, [IsIEEE754P1Map,IsIEEE754P1Map], P1MAP_QUO);
+InstallMethod(InverseMutable, [IsIEEE754P1Map], P1MAP_INV);
+InstallMethod(AdditiveInverseSameMutability, [IsIEEE754P1Map], P1MAP_AINV);
+Apply([\+,\-,\*,\/],function(op)
     local make;
     make := function(x)
         if IsRat(x) and not IsInt(x) then
