@@ -24,6 +24,18 @@ The following additional GAP packages are not required, but suggested:
 - {% if pkg.url %}<a href="{{ pkg.url }}">{{ pkg.name }}</a>{% else %}{{ pkg.name }}{% endif %} {{ pkg.version }}{% endfor %}
 {% endif %}
 
+## Installation (MacOS)
+
+Installation has been tested with [homebrew -> https://brew.sh/] and [macports -> https://www.macports.org/]. You definitely will need at least one of them. It is assumed that you already have a running installation of GAP, either packaged or self-compiled.
+
+* Download or clone the latest version of this package in $HOME/Library/Preferences/GAP/pkg (you may need to create the directory beforehand)
+* For homebrew: `brew install cmake suite-sparse imagemagick`; for macports: `port install cmake SuiteSparse ImageMagick`
+* `./configure --with-gaproot=<root> --with-cholmod=<cholmod-root>`; here `<root>` is typically `/opt/local/Cellar/gap/4.11.1/libexec` and `<cholmod-root>` is typically `/opt/local`
+* `make`
+
+## Installation (Linux)
+
+(to be inserted from Lukas Geyer's notes)
 
 ## Author{% if site.data.package.authors.size != 1 %}s{% endif %}
 {% for person in site.data.package.authors %}
