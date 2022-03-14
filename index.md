@@ -34,7 +34,7 @@ Installation has been tested with [homebrew](https://brew.sh/) and [macports](ht
 
 ## Installation (Linux)
 
-(to be inserted from Lukas Geyer's notes)
+Lukas Geyer has kindly contributed [detailed instructions](INSTALL-linux.md).
 
 ## Author{% if site.data.package.authors.size != 1 %}s{% endif %}
 {% for person in site.data.package.authors %}
