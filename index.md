@@ -14,7 +14,6 @@ For more information, please refer to [the package manual]({{site.data.package.d
 This package requires GAP version {{site.data.package.GAP}}
 {% if site.data.package.needed-pkgs %}
 The following GAP packages are needed:
-{% for pkg in site.data.package.needed-pkgs %}
 - [FR](https://gap-packages.github.io/fr), version at least 2.4.0.
 
 The following additional GAP packages are not required, but suggested:
