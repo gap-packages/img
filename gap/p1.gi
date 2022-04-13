@@ -964,9 +964,9 @@ BindGlobal("P1NORMALIZINGMAP@", function(points)
     rpoints := List(points,p->List(SphereP1(p),x->NewFloat(IsIEEE754FloatRep,x)));
     numiter := 200+100*Length(rpoints);
     barycenter := FIND_BARYCENTER(rpoints,numiter);
-    while barycenter[3]=numiter do
-	Error("FIND_BARYCENTER did not converge");
-    od;
+    if barycenter[3]=numiter then
+	Info(InfoIMG,1,"FIND_BARYCENTER did not converge");
+    fi;
     Info(InfoIMG,3,"Barycenter returned ",barycenter[2]," in ",barycenter[3]," iterations");
     
     barycenter := List(barycenter[1],x->NewFloat(@.isr,x));
