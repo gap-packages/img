@@ -41,13 +41,12 @@ BindGlobal("INID@", function(x,l)
 end);
 
 UTIME@ := function()
-    local v;
-    if not IsBoundGlobal("IO_gettimeofday") then return 0.0_l; fi;
-    v := ValueGlobal("IO_gettimeofday")(); # avoid warning if IO is not loaded
-    return v.tv_sec+1.e-6_l*v.tv_usec;
+    return NanosecondsSinceEpoch() / 10.e4;
 end;
 
-LASTTIME@ := 0; TIMES@ := []; MARKTIME@ := function(n) # crude time profiling
+LASTTIME@ := 0;
+TIMES@ := [];
+MARKTIME@ := function(n) # crude time profiling
     local t;
     t := UTIME@();
     if n=0 then LASTTIME@ := t; return; fi;
