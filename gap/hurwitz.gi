@@ -481,18 +481,18 @@ BindGlobal("BRANCHEDCOVERINGBYMONODROMY@", function(spider,monodromy,hint)
                 hint := hint.points;
             fi;
             layout := OPTIMIZELAYOUT@(VerticesOfMarkedSphere(spider),hint);
-            if t=fail then # check solution
+            if layout=fail then # panic
+                Error("Could not apply Newton's method to optimize the positions of the critical points.");
+            fi;
+            if t=fail then # we recycled the previous solution. check it.
                 for v in Concatenation(layout.cp,layout.zeros,layout.poles) do
                     if ForAll(hint[v.to],x->P1Distance(x[1],v.pos)>@.fast) then
-                        layout := fail; # moved too far
+                        hint := fail; # moved too far
                         break;
                     fi;
                 od;
-                hint := fail; # if we have to restart, discard the hint.
-            elif layout=fail then # panic
-                Error("Could not apply Newton's method to optimize the positions of the critical points.");
             fi;
-        until layout<>fail;
+        until hint<>fail;
         
         data := rec(map := CompositionP1Map(layout.post,P1MapByZerosPoles(Concatenation(List(layout.zeros,x->ListWithIdenticalEntries(x.degree,x.pos))),
                         Concatenation(List(layout.poles,x->ListWithIdenticalEntries(x.degree,x.pos))),
