@@ -165,7 +165,7 @@ end);
 
 InstallGlobalFunction(NewSphereMachine,
         function(arg)
-    local r, rr, relators, machine, states, data, len, adder;
+    local r, rr, relators, machine, states, len, adder;
     #!!! Guess the orders, the relator, and the adder if not supplied.
 
     len := Length(arg);
@@ -186,9 +186,7 @@ InstallGlobalFunction(NewSphereMachine,
 #    fi;
     
     machine := CallFuncList(NewGroupFRMachine,arg{[1..len]});
-    data := rec(holdername := RANDOMNAME@FR());
-    BindGlobal(data.holdername, StateSet(machine));
-    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),"GeneratorsOfGroup",data,w));
+    relators := List(arg{[len+1..Length(arg)]},w->STRING_WORD2GAP@FR(List(GeneratorsOfFRMachine(machine),String),GeneratorsOfFRMachine(machine),w));
     states := AsSphereGroup(StateSet(machine)/relators);
     
 #    if adder<>fail then
@@ -197,9 +195,6 @@ InstallGlobalFunction(NewSphereMachine,
 #        BindGlobal(data.holdername, states);
 #        adder := STRING_WORD2GAP@FR(List(GeneratorsOfGroup(states),String),"GeneratorsOfGroup",data,adder);
 #    fi;
-    
-    MakeReadWriteGlobal(data.holdername);
-    UnbindGlobal(data.holdername);
     
     for r in relators do
         rr := WreathRecursion(machine)(r);
