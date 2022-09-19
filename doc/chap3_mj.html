@@ -5,6 +5,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 <title>GAP (IMG) - Chapter 3: Sphere groups and machines</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="GAPDoc2HTML" />
@@ -15,61 +18,61 @@
 <body class="chap3"  onload="jscontent()">
 
 
-<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chap5_mj.html">5</a>  <a href="chap6_mj.html">6</a>  <a href="chapBib_mj.html">Bib</a>  <a href="chapInd_mj.html">Ind</a>  </div>
 
-<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4_mj.html">[Next Chapter]</a>&nbsp;  </div>
 
-<p id="mathjaxlink" class="pcenter"><a href="chap3_mj.html">[MathJax on]</a></p>
+<p id="mathjaxlink" class="pcenter"><a href="chap3.html">[MathJax off]</a></p>
 <p><a id="X87E6D4907EF8DC8F" name="X87E6D4907EF8DC8F"></a></p>
-<div class="ChapSects"><a href="chap3.html#X87E6D4907EF8DC8F">3 <span class="Heading">Sphere groups and machines</span></a>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X7BEB8F477B8569B4">3.1 <span class="Heading">Sphere groups</span></a>
+<div class="ChapSects"><a href="chap3_mj.html#X87E6D4907EF8DC8F">3 <span class="Heading">Sphere groups and machines</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3_mj.html#X7BEB8F477B8569B4">3.1 <span class="Heading">Sphere groups</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X834FE6AC798A520F">3.1-1 IsSphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X87E99FEC8598B845">3.1-2 IsomorphismSphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8307F8DB85F145AE">3.1-3 EulerCharacteristic</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X81B9BA1586981067">3.1-4 RankOfSphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X79A08D5C8532F976">3.1-5 OrderingOfSphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7D973ED3816A1CBD">3.1-6 ExponentsOfSphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7ECF53F97DC06E4C">3.1-7 IsomorphismFreeGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7DBBD32080770BD7">3.1-8 SphereGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8120094A7BFA9C48">3.1-9 IsSphereConjugacyClass</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X852B1E9C822D34B5">3.1-10 IsPeripheral</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X867DE11A7E9E02E7">3.1-11 PeripheralClasses</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X822BA8867B084B6C">3.1-12 IntersectionNumber</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X87677B0787B4461A">3.1-13 AutomorphismGroup</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7A205FFD86D128B9">3.1-14 AmalgamateFreeProduct</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X834FE6AC798A520F">3.1-1 IsSphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X87E99FEC8598B845">3.1-2 IsomorphismSphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8307F8DB85F145AE">3.1-3 EulerCharacteristic</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X81B9BA1586981067">3.1-4 RankOfSphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X79A08D5C8532F976">3.1-5 OrderingOfSphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7D973ED3816A1CBD">3.1-6 ExponentsOfSphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7ECF53F97DC06E4C">3.1-7 IsomorphismFreeGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7DBBD32080770BD7">3.1-8 SphereGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8120094A7BFA9C48">3.1-9 IsSphereConjugacyClass</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X852B1E9C822D34B5">3.1-10 IsPeripheral</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X867DE11A7E9E02E7">3.1-11 PeripheralClasses</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X822BA8867B084B6C">3.1-12 IntersectionNumber</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X87677B0787B4461A">3.1-13 AutomorphismGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7A205FFD86D128B9">3.1-14 AmalgamateFreeProduct</a></span>
 </div></div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X7AF2D874807E68BB">3.2 <span class="Heading">Sphere machines</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3_mj.html#X7AF2D874807E68BB">3.2 <span class="Heading">Sphere machines</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7A327CA47E574383">3.2-1 IsSphereMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86CAE06C7EBAFB00">3.2-2 AsSphereMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7B17531E7B058369">3.2-3 NewSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7A327CA47E574383">3.2-1 IsSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X86CAE06C7EBAFB00">3.2-2 AsSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7B17531E7B058369">3.2-3 NewSphereMachine</a></span>
 </div></div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X8231595E8113D281">3.3 <span class="Heading">Polynomial sphere machines</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3_mj.html#X8231595E8113D281">3.3 <span class="Heading">Polynomial sphere machines</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X80E689F38412EE20">3.3-1 PolynomialSphereMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X814E27317A6213D3">3.3-2 SupportingRays</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E6059D184A0F3B2">3.3-3 FRMachineWithNormalizedAdder</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X81B7D47D81212C4F">3.3-4 SimplifiedSphereMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7AB029AE8590964E">3.3-5 Mating</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X84C2881D87C1FB74">3.3-6 IsKneadingMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X82F34D5387FF4E57">3.3-7 AddingElement</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7BE171B879357604">3.3-8 AsPolynomialSphereMachine</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8692875A793FB66F">3.3-9 LiftOfConjugacyClass</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7BE001A0811CD599">3.3-10 ComplexConjugate</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E941D2185A1DF3B">3.3-11 RotatedSpider</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86C9E1938159FEE1">3.3-12 KneadingSequence</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X857FCD7678B12A0C">3.3-13 AllInternalAddresses</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X86C250907E09F399">3.3-14 ExternalAnglesRelation</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X84F962AF7D553DDA">3.3-15 ExternalAngle</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X80E689F38412EE20">3.3-1 PolynomialSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X814E27317A6213D3">3.3-2 SupportingRays</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7E6059D184A0F3B2">3.3-3 FRMachineWithNormalizedAdder</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X81B7D47D81212C4F">3.3-4 SimplifiedSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7AB029AE8590964E">3.3-5 Mating</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X84C2881D87C1FB74">3.3-6 IsKneadingMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X82F34D5387FF4E57">3.3-7 AddingElement</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7BE171B879357604">3.3-8 AsPolynomialSphereMachine</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8692875A793FB66F">3.3-9 LiftOfConjugacyClass</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7BE001A0811CD599">3.3-10 ComplexConjugate</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7E941D2185A1DF3B">3.3-11 RotatedSpider</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X86C9E1938159FEE1">3.3-12 KneadingSequence</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X857FCD7678B12A0C">3.3-13 AllInternalAddresses</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X86C250907E09F399">3.3-14 ExternalAnglesRelation</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X84F962AF7D553DDA">3.3-15 ExternalAngle</a></span>
 </div></div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X7C2EE46F7CFC2CD3">3.4 <span class="Heading">Automorphisms of sphere machines</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3_mj.html#X7C2EE46F7CFC2CD3">3.4 <span class="Heading">Automorphisms of sphere machines</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X8410869F8358A1AF">3.4-1 AutomorphismVirtualEndomorphism</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8410869F8358A1AF">3.4-1 AutomorphismVirtualEndomorphism</a></span>
 </div></div>
 </div>
 
@@ -105,7 +108,7 @@
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; EulerCharacteristic</code>( <var class="Arg">g</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: The Euler characteristic of <var class="Arg">g</var>.</p>
 
-<p>The Euler characteristic of a free group of rank <span class="SimpleMath">n</span> is <span class="SimpleMath">1-n</span>; and it multiplies by the index on subgroups. A sphere group is finite if and only if its Euler characteristic is positive, and is virtually abelian if and only if its Euler characteristic is <span class="SimpleMath">0</span>.</p>
+<p>The Euler characteristic of a free group of rank <span class="SimpleMath">\(n\)</span> is <span class="SimpleMath">\(1-n\)</span>; and it multiplies by the index on subgroups. A sphere group is finite if and only if its Euler characteristic is positive, and is virtually abelian if and only if its Euler characteristic is <span class="SimpleMath">\(0\)</span>.</p>
 
 <p><a id="X81B9BA1586981067" name="X81B9BA1586981067"></a></p>
 
@@ -159,7 +162,7 @@
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsSphereConjugacyClass</code></td><td class="tdright">(&nbsp;filter&nbsp;)</td></tr></table></div>
 <p>Elements of a sphere group represent based loops on a punctured sphere. Loops (without specified basepoint) are represented by conjugacy classes. A <em>multicurve</em> is a collection of non-intersecting loops.</p>
 
-<p>Conjugacy classes may be raised to integer powers; the <span class="SimpleMath">n</span>th power of a conjugacy class is the conjugacy class of the <span class="SimpleMath">n</span>th power of an element.</p>
+<p>Conjugacy classes may be raised to integer powers; the <span class="SimpleMath">\(n\)</span>th power of a conjugacy class is the conjugacy class of the <span class="SimpleMath">\(n\)</span>th power of an element.</p>
 
 <p><a id="X852B1E9C822D34B5" name="X852B1E9C822D34B5"></a></p>
 
@@ -201,7 +204,7 @@
 <h5>3.1-14 AmalgamateFreeProduct</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AmalgamateFreeProduct</code>( <var class="Arg">g</var>, <var class="Arg">h</var>, <var class="Arg">x</var>, <var class="Arg">y</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
-<p>This function computes the amalgamated free product of two sphere groups <var class="Arg">g</var> and <var class="Arg">h</var>, along the cyclic subgroups <span class="SimpleMath">⟨ x⟩</span> of <var class="Arg">g</var> and <span class="SimpleMath">⟨ y⟩</span> of <var class="Arg">h</var>.</p>
+<p>This function computes the amalgamated free product of two sphere groups <var class="Arg">g</var> and <var class="Arg">h</var>, along the cyclic subgroups <span class="SimpleMath">\(\langle x\rangle\)</span> of <var class="Arg">g</var> and <span class="SimpleMath">\(\langle y\rangle\)</span> of <var class="Arg">h</var>.</p>
 
 <p>The attribute <code class="code">EmbeddingsOfAmalgamatedFreeProduct</code> is a list of length two, storing the embeddings of <var class="Arg">g</var> and <var class="Arg">h</var> respectively into the amalgam.</p>
 
@@ -209,7 +212,7 @@
 
 <h4>3.2 <span class="Heading">Sphere machines</span></h4>
 
-<p>Sphere machines are simply group FR machines (see Section <a href="../../../pkg/fr/doc/chap3.html#X808F3BD97EDA8CE8"><span class="RefLink">fr: FRMachine [list,]list,list</span></a>) whose underlying <code class="func">StateSet</code> (<a href="../../../pkg/fr/doc/chap3.html#X8000470D7DA7FFBD"><span class="RefLink">fr: StateSet fr machine</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsGroupFRMachine); InstallImmediateMethod(IsSphereMachine,IsFRMachine,0, function(m) local g; g := StateSet(m); return HasIsSphereGroup(g) and IsSphereGroup(g); end);</p>
+<p>Sphere machines are simply group FR machines (see Section <a href="../../../pkg/fr/doc/chap3_mj.html#X808F3BD97EDA8CE8"><span class="RefLink">fr: FRMachine [list,]list,list</span></a>) whose underlying <code class="func">StateSet</code> (<a href="../../../pkg/fr/doc/chap3_mj.html#X8000470D7DA7FFBD"><span class="RefLink">fr: StateSet fr machine</span></a>) is a sphere group. DeclareProperty("IsSphereMachine", IsGroupFRMachine); InstallImmediateMethod(IsSphereMachine,IsFRMachine,0, function(m) local g; g := StateSet(m); return HasIsSphereGroup(g) and IsSphereGroup(g); end);</p>
 
 <p><a id="X7A327CA47E574383" name="X7A327CA47E574383"></a></p>
 
@@ -217,9 +220,9 @@
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsSphereMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;filter&nbsp;)</td></tr></table></div>
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPolynomialSphereMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;filter&nbsp;)</td></tr></table></div>
-<p>The categories of <em>Sphere</em> and <em>polynomial</em> machines. Sphere machines are group FR machines whose underlying group is a sphere group, see <code class="func">SphereGroup</code> (<a href="chap3.html#X7DBBD32080770BD7"><span class="RefLink">3.1-8</span></a>).</p>
+<p>The categories of <em>Sphere</em> and <em>polynomial</em> machines. Sphere machines are group FR machines whose underlying group is a sphere group, see <code class="func">SphereGroup</code> (<a href="chap3_mj.html#X7DBBD32080770BD7"><span class="RefLink">3.1-8</span></a>).</p>
 
-<p>A polynomial machine is a group FR machine with a distinguished state (which must be a generator of the stateset), stored as the attribute <code class="func">AddingElement</code> (<a href="chap3.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>); see <code class="func">AsPolynomialSphereMachine</code> (<a href="chap3.html#X7BE171B879357604"><span class="RefLink">3.3-8</span></a>). If it is normalized, in the sense that the wreath recursion of the adding element <code class="code">a</code> is <code class="code">[[a,1,...,1],[d,1,...,d-1]]</code>, then the basepoint is assumed to be at <span class="SimpleMath">+∞</span>; the element <code class="code">a</code> describes a clockwise loop around infinity; the <span class="SimpleMath">k</span>th preimage of the basepoint is at <span class="SimpleMath">exp(2iπ(k-1)/d)∞</span>, for <span class="SimpleMath">k=1,dots,d</span>; and there is a direct connection from basepoint <span class="SimpleMath">k</span> to <span class="SimpleMath">k+1</span> for all <span class="SimpleMath">k=1,dots,d-1</span>.</p>
+<p>A polynomial machine is a group FR machine with a distinguished state (which must be a generator of the stateset), stored as the attribute <code class="func">AddingElement</code> (<a href="chap3_mj.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>); see <code class="func">AsPolynomialSphereMachine</code> (<a href="chap3_mj.html#X7BE171B879357604"><span class="RefLink">3.3-8</span></a>). If it is normalized, in the sense that the wreath recursion of the adding element <code class="code">a</code> is <code class="code">[[a,1,...,1],[d,1,...,d-1]]</code>, then the basepoint is assumed to be at <span class="SimpleMath">\(+\infty\)</span>; the element <code class="code">a</code> describes a clockwise loop around infinity; the <span class="SimpleMath">\(k\)</span>th preimage of the basepoint is at <span class="SimpleMath">\(\exp(2i\pi(k-1)/d)\infty\)</span>, for <span class="SimpleMath">\(k=1,\dots,d\)</span>; and there is a direct connection from basepoint <span class="SimpleMath">\(k\)</span> to <span class="SimpleMath">\(k+1\)</span> for all <span class="SimpleMath">\(k=1,\dots,d-1\)</span>.</p>
 
 <p>The last category is the intersection of the first two.</p>
 
@@ -234,7 +237,7 @@
 
 <p>This function creates a new sphere machine, starting from a group FR machine <var class="Arg">m</var>. If a state <var class="Arg">w</var> is specified, and that state defines the trivial FR element, then it is used as relator; if <var class="Arg">w</var> is a sphere group, then it is used as the new stateset. Finally, if no relator and no group is specified, and the product (in some ordering) of the generators is trivial, then that product is used as relator. In other cases, the method returns <code class="keyw">fail</code>.</p>
 
-<p>A standard FR machine can be recovered from a sphere machine by <code class="func">AsGroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsGroupFRMachine</span></a>), <code class="func">AsMonoidFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsMonoidFRMachine</span></a>), and <code class="func">AsSemigroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsSemigroupFRMachine</span></a>).</p>
+<p>A standard FR machine can be recovered from a sphere machine by <code class="func">AsGroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3_mj.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsGroupFRMachine</span></a>), <code class="func">AsMonoidFRMachine</code> (<a href="../../../pkg/fr/doc/chap3_mj.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsMonoidFRMachine</span></a>), and <code class="func">AsSemigroupFRMachine</code> (<a href="../../../pkg/fr/doc/chap3_mj.html#X7BF186227C0ABE8D"><span class="RefLink">fr: AsSemigroupFRMachine</span></a>).</p>
 
 
 <div class="example"><pre>
@@ -263,13 +266,13 @@ Relator: f1*f2*t
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; NewSphereMachine</code>( <var class="Arg">...</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: A new sphere machine, based on string descriptions.</p>
 
-<p>This command constructs a new sphere machine, in a format similar to <code class="func">FRGroup</code> (<a href="../../../pkg/fr/doc/chap7.html#X7AE8F92383272329"><span class="RefLink">fr: FRGroup</span></a>); namely, the arguments are strings of the form "gen=&lt;word-1,...,word-d&gt;perm"; each <code class="code">word-i</code> is a word in the generators; and <code class="code">perm</code> is a transformation, either written in disjoint cycle or in images notation. The underlying group of the machine is a sphere group.</p>
+<p>This command constructs a new sphere machine, in a format similar to <code class="func">FRGroup</code> (<a href="../../../pkg/fr/doc/chap7_mj.html#X7AE8F92383272329"><span class="RefLink">fr: FRGroup</span></a>); namely, the arguments are strings of the form "gen=&lt;word-1,...,word-d&gt;perm"; each <code class="code">word-i</code> is a word in the generators; and <code class="code">perm</code> is a transformation, either written in disjoint cycle or in images notation. The underlying group of the machine is a sphere group.</p>
 
 <p><code class="code">word-i</code> is allowed to be the empty string; and the "&lt;...&gt;" may be skipped altogether. Each <code class="code">word-i</code> may also contain inverses.</p>
 
 <p>The extra final arguments describe relations in the underlying sphere group; at least one relation is required, the product of the generators in an appropriate order.</p>
 
-<p>The following examples construct realizable foldings of the polynomial <span class="SimpleMath">z^3+i</span>, following Cui's arguments.</p>
+<p>The following examples construct realizable foldings of the polynomial <span class="SimpleMath">\(z^3+i\)</span>, following Cui's arguments.</p>
 
 
 <div class="example"><pre>
@@ -286,7 +289,7 @@ Relator: f1*f2*t
 
 <h4>3.3 <span class="Heading">Polynomial sphere machines</span></h4>
 
-<p>Polynomial sphere machines have a special extra attribute, an <code class="func">AddingElement</code> (<a href="chap3.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>). This is an element of the underlying FR group, which acts as an adding element on the machine's alphabet. It represents a fixed point of a Thurston map of maximal ramification; typically, the point <span class="SimpleMath">∞</span> of a polynomial. DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]); DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);</p>
+<p>Polynomial sphere machines have a special extra attribute, an <code class="func">AddingElement</code> (<a href="chap3_mj.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>). This is an element of the underlying FR group, which acts as an adding element on the machine's alphabet. It represents a fixed point of a Thurston map of maximal ramification; typically, the point <span class="SimpleMath">\(\infty\)</span> of a polynomial. DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList,IsList]); DeclareOperation("PolynomialMealyMachine",[IsPosInt,IsList]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList,IsRecord]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsList]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList,IsRecord]); DeclareOperation("PolynomialSphereMachine",[IsPosInt,IsList]);</p>
 
 <p><a id="X80E689F38412EE20" name="X80E689F38412EE20"></a></p>
 
@@ -296,21 +299,21 @@ Relator: f1*f2*t
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; PolynomialMealyMachine</code>( <var class="Arg">d</var>, <var class="Arg">per</var>[, <var class="Arg">pre</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
 <p>Returns: A sphere or Mealy machine.</p>
 
-<p>This function creates a sphere or Mealy machine that describes a topological polynomial. The polynomial is described symbolically in the language of <em>external angles</em>. For more details, see <a href="chapBib.html#biBMR762431">[DH84]</a> and <a href="chapBib.html#biBMR812271">[DH85]</a> (in the quadratic case), <a href="chapBib.html#biBMR1149891">[BFH92]</a> (in the preperiodic case), and <a href="chapBib.html#biBmath.DS/9305207">[Poi]</a> (in the general case).</p>
+<p>This function creates a sphere or Mealy machine that describes a topological polynomial. The polynomial is described symbolically in the language of <em>external angles</em>. For more details, see <a href="chapBib_mj.html#biBMR762431">[DH84]</a> and <a href="chapBib_mj.html#biBMR812271">[DH85]</a> (in the quadratic case), <a href="chapBib_mj.html#biBMR1149891">[BFH92]</a> (in the preperiodic case), and <a href="chapBib_mj.html#biBmath.DS/9305207">[Poi]</a> (in the general case).</p>
 
-<p><var class="Arg">d</var> is the degree of the polynomial. <var class="Arg">per</var> and <var class="Arg">pre</var> are lists of angles or preangles. In what follows, angles are rational numbers, considered modulo 1. Each entry in <var class="Arg">per</var> or <var class="Arg">pre</var> is either a rational (interpreted as an angle), or a list of angles <span class="SimpleMath">[a_1,...,a_i]</span> such that <span class="SimpleMath">da_1=...=da_i</span>. The angles in <var class="Arg">per</var> are angles landing at the root of a Fatou component, and the angles in <var class="Arg">pre</var> land on the Julia set.</p>
+<p><var class="Arg">d</var> is the degree of the polynomial. <var class="Arg">per</var> and <var class="Arg">pre</var> are lists of angles or preangles. In what follows, angles are rational numbers, considered modulo 1. Each entry in <var class="Arg">per</var> or <var class="Arg">pre</var> is either a rational (interpreted as an angle), or a list of angles <span class="SimpleMath">\([a_1,\ldots,a_i]\)</span> such that <span class="SimpleMath">\(da_1=\ldots=da_i\)</span>. The angles in <var class="Arg">per</var> are angles landing at the root of a Fatou component, and the angles in <var class="Arg">pre</var> land on the Julia set.</p>
 
-<p>Note that, for sphere machines, the last generator of the machine produced is an adding machine, representing a loop going counterclockwise around infinity (in the compactification of <span class="SimpleMath">C</span> by a disk, this loop goes <em>clockwise</em> around that disk).</p>
+<p>Note that, for sphere machines, the last generator of the machine produced is an adding machine, representing a loop going counterclockwise around infinity (in the compactification of <span class="SimpleMath">\(\mathbb C\)</span> by a disk, this loop goes <em>clockwise</em> around that disk).</p>
 
 <p>In constructing a polynomial sphere machine, one may specify a record <var class="Arg">options</var>, which may contain the following fields: <code class="code">mealy</code> (boolean, default <code class="keyw">false</code>) specifies if a formal construction is required; <code class="code">adding</code> specifying that the adding machine should have the most compact representation; and <code class="code">orbispace</code> (boolean, default <code class="keyw">false</code>) asking the constructed group to have orbispace points of minimal degree.</p>
 
-<p>In a <em>formal</em> recursion, distinct angles give distinct generators; while in a non-formal recursion, distinct angles, which land at the same point in the Julia set, give a single generator. The simplest example where this occurs is angle <span class="SimpleMath">5/12</span> in the quadratic family, in which angles <span class="SimpleMath">1/3</span> and <span class="SimpleMath">2/3</span> land at the same point -- see the example below.</p>
+<p>In a <em>formal</em> recursion, distinct angles give distinct generators; while in a non-formal recursion, distinct angles, which land at the same point in the Julia set, give a single generator. The simplest example where this occurs is angle <span class="SimpleMath">\(5/12\)</span> in the quadratic family, in which angles <span class="SimpleMath">\(1/3\)</span> and <span class="SimpleMath">\(2/3\)</span> land at the same point -- see the example below.</p>
 
-<p>The attribute <code class="code">Correspondence(m)</code> records the angles landing on the generators: <code class="code">Correspondence(m)[i]</code> is a list <code class="code">[a,s]</code> where <span class="SimpleMath">a</span> is an angle landing on generator <code class="code">i</code> and <span class="SimpleMath">s</span> is <code class="keyw">"Julia"</code> or <code class="keyw">"Fatou"</code>.</p>
+<p>The attribute <code class="code">Correspondence(m)</code> records the angles landing on the generators: <code class="code">Correspondence(m)[i]</code> is a list <code class="code">[a,s]</code> where <span class="SimpleMath">\(a\)</span> is an angle landing on generator <code class="code">i</code> and <span class="SimpleMath">\(s\)</span> is <code class="keyw">"Julia"</code> or <code class="keyw">"Fatou"</code>.</p>
 
 <p>If only one list of angles is supplied, then <strong class="pkg">IMG</strong> guesses that all angles with denominator coprime to <var class="Arg">n</var> are Fatou, and all the others are Julia.</p>
 
-<p>The inverse operation, reconstructing the angles from the sphere machine, is <code class="func">SupportingRays</code> (<a href="chap3.html#X814E27317A6213D3"><span class="RefLink">3.3-2</span></a>).</p>
+<p>The inverse operation, reconstructing the angles from the sphere machine, is <code class="func">SupportingRays</code> (<a href="chap3_mj.html#X814E27317A6213D3"><span class="RefLink">3.3-2</span></a>).</p>
 
 
 <div class="example"><pre>
@@ -396,7 +399,7 @@ end;
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; SupportingRays</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: A <code class="code">[degree,fatou,julia]</code> description of <var class="Arg">m</var>.</p>
 
-<p>This operation is the inverse of <code class="func">PolynomialSphereMachine</code> (<a href="chap3.html#X80E689F38412EE20"><span class="RefLink">3.3-1</span></a>): it computes a choice of angles, describing landing rays on Fatou/Julia critical points.</p>
+<p>This operation is the inverse of <code class="func">PolynomialSphereMachine</code> (<a href="chap3_mj.html#X80E689F38412EE20"><span class="RefLink">3.3-1</span></a>): it computes a choice of angles, describing landing rays on Fatou/Julia critical points.</p>
 
 <p>If there does not exist a complex realization, namely if the machine is obstructed, then this command returns an obstruction, as a record. The field <code class="keyw">minimal</code> is set to false, and a proper sub-machine is set as the field <code class="keyw">submachine</code>. The field <code class="keyw">homomorphism</code> gives an embedding of the stateset of <code class="keyw">submachine</code> into the original machine, and <code class="keyw">relation</code> is the equivalence relation on the set of generators of <var class="Arg">m</var> that describes the pinching.</p>
 
@@ -446,7 +449,7 @@ rec(
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; FRMachineWithNormalizedAdder</code>( <var class="Arg">m</var>[, <var class="Arg">adder</var>] )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: A sphere machine.</p>
 
-<p>This function returns a new FR machine, in which the adding element has been put into a standard form <span class="SimpleMath">t=[t,1,dots,1]s</span>, where <span class="SimpleMath">s</span> is the long cycle <span class="SimpleMath">i↦ i-1</span>. If the adding element <var class="Arg">adder</var> is not specified, then <var class="Arg">m</var> should be a polynomial sphere machine, and <var class="Arg">adder</var> is its <code class="code">AddingElement</code>.</p>
+<p>This function returns a new FR machine, in which the adding element has been put into a standard form <span class="SimpleMath">\(t=[t,1,\dots,1]s\)</span>, where <span class="SimpleMath">\(s\)</span> is the long cycle <span class="SimpleMath">\(i\mapsto i-1\)</span>. If the adding element <var class="Arg">adder</var> is not specified, then <var class="Arg">m</var> should be a polynomial sphere machine, and <var class="Arg">adder</var> is its <code class="code">AddingElement</code>.</p>
 
 <p>DeclareAttribute("SimplifiedSphereMachine",IsSphereMachine);</p>
 
@@ -505,13 +508,13 @@ true
 
 <p>The mating is defined as follows: one removes a disc around the adding machine in <var class="Arg">m1</var> and <var class="Arg">m2</var>; one applies complex conjugation to <var class="Arg">m2</var>; and one glues the hollowed spheres along their boundary circle.</p>
 
-<p>The optional argument <var class="Arg">formal</var>, which defaults to <code class="keyw">true</code>, specifies whether a <em>formal</em> mating should be done; in a non-formal mating, generators of <var class="Arg">m1</var> and <var class="Arg">m2</var> which have identical angle should be treated as a single generator. A non-formal mating is of course possible only if the machines are realizable -- see <code class="func">SupportingRays</code> (<a href="chap3.html#X814E27317A6213D3"><span class="RefLink">3.3-2</span></a>).</p>
+<p>The optional argument <var class="Arg">formal</var>, which defaults to <code class="keyw">true</code>, specifies whether a <em>formal</em> mating should be done; in a non-formal mating, generators of <var class="Arg">m1</var> and <var class="Arg">m2</var> which have identical angle should be treated as a single generator. A non-formal mating is of course possible only if the machines are realizable -- see <code class="func">SupportingRays</code> (<a href="chap3_mj.html#X814E27317A6213D3"><span class="RefLink">3.3-2</span></a>).</p>
 
 <p>The attribute <code class="code">Correspondence</code> is a pair of homomorphisms, from the statesets of <var class="Arg">m1,m2</var> respectively to the stateset of the mating.</p>
 
 <p>The attribute <code class="code">EquatorElement</code> is set, and records the original adding elements of <var class="Arg">m1,m2</var>, which have become the equator of the mating.</p>
 
-<p>Note that there are <span class="SimpleMath">d-1</span> different matings between polynomials of degree <span class="SimpleMath">d</span>: each has <span class="SimpleMath">d-1</span> fixed rays at angles <span class="SimpleMath">2π ik/(d-1)</span>. This command constructs the mating in which rays at angle <span class="SimpleMath">0</span> are matched to each other. To obtain the other matings, multiply the machine by a power of its <code class="code">EquatorTwist</code>.</p>
+<p>Note that there are <span class="SimpleMath">\(d-1\)</span> different matings between polynomials of degree <span class="SimpleMath">\(d\)</span>: each has <span class="SimpleMath">\(d-1\)</span> fixed rays at angles <span class="SimpleMath">\(2\pi ik/(d-1)\)</span>. This command constructs the mating in which rays at angle <span class="SimpleMath">\(0\)</span> are matched to each other. To obtain the other matings, multiply the machine by a power of its <code class="code">EquatorTwist</code>.</p>
 
 
 <div class="example"><pre>
@@ -564,9 +567,9 @@ rec(
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsPlanarKneadingMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
 <p>Returns: Whether <var class="Arg">m</var> is a (planar) kneading machine.</p>
 
-<p>A <em>kneading machine</em> is a special kind of Mealy machine, used to describe postcritically finite complex polynomials. It is a machine such that its set of permutations is "treelike" (see <a href="chapBib.html#biBMR2162164">[Nek05, §6.7]</a>) and such that each non-trivial state occurs exactly once among the outputs.</p>
+<p>A <em>kneading machine</em> is a special kind of Mealy machine, used to describe postcritically finite complex polynomials. It is a machine such that its set of permutations is "treelike" (see <a href="chapBib_mj.html#biBMR2162164">[Nek05, §6.7]</a>) and such that each non-trivial state occurs exactly once among the outputs.</p>
 
-<p>Furthermore, this set of permutations is <em>treelike</em> if there exists an ordering of the states that their product in that order <span class="SimpleMath">t</span> is an adding machine; i.e. such that <span class="SimpleMath">t</span>'s activity is a full cycle, and the product of its states along that cycle is conjugate to <span class="SimpleMath">t</span>. This element <span class="SimpleMath">t</span> represents the Carathéodory loop around infinity.</p>
+<p>Furthermore, this set of permutations is <em>treelike</em> if there exists an ordering of the states that their product in that order <span class="SimpleMath">\(t\)</span> is an adding machine; i.e. such that <span class="SimpleMath">\(t\)</span>'s activity is a full cycle, and the product of its states along that cycle is conjugate to <span class="SimpleMath">\(t\)</span>. This element <span class="SimpleMath">\(t\)</span> represents the Carathéodory loop around infinity.</p>
 
 
 <div class="example"><pre>
@@ -641,9 +644,9 @@ Relator: c*a*b*y*z*x
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AsPolynomialSphereMachine</code>( <var class="Arg">m</var>[, <var class="Arg">adder</var>[, <var class="Arg">relator</var>]] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
 <p>Returns: A polynomial sphere machine.</p>
 
-<p>The first function creates a new polynomial sphere machine, starting from a group or Mealy machine. A <em>polynomial</em> machine is one that has a distinguished adding element, <code class="func">AddingElement</code> (<a href="chap3.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>).</p>
+<p>The first function creates a new polynomial sphere machine, starting from a group or Mealy machine. A <em>polynomial</em> machine is one that has a distinguished adding element, <code class="func">AddingElement</code> (<a href="chap3_mj.html#X82F34D5387FF4E57"><span class="RefLink">3.3-7</span></a>).</p>
 
-<p>If the argument is a Mealy machine, it must be planar (see <code class="func">IsPlanarKneadingMachine</code> (<a href="chap3.html#X84C2881D87C1FB74"><span class="RefLink">3.3-6</span></a>)). If the argument is a group machine, its permutations must be treelike, and its outputs must be such that, up to conjugation, each non-trivial state appears exactly once as the product along all cycles of all states.</p>
+<p>If the argument is a Mealy machine, it must be planar (see <code class="func">IsPlanarKneadingMachine</code> (<a href="chap3_mj.html#X84C2881D87C1FB74"><span class="RefLink">3.3-6</span></a>)). If the argument is a group machine, its permutations must be treelike, and its outputs must be such that, up to conjugation, each non-trivial state appears exactly once as the product along all cycles of all states.</p>
 
 <p>If a second argument <var class="Arg">adder</var> is supplied, it is checked to represent an adding element, and is used as such.</p>
 
@@ -675,7 +678,7 @@ Relator: c*a*b*y*z*x
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ComplexConjugate</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
 <p>Returns: An FR machine with inverted states.</p>
 
-<p>This function constructs an FR machine whose generating states are the inverses of the original states. If <var class="Arg">m</var> came from a complex rational map <span class="SimpleMath">f(z)</span>, this would construct the machine of the conjugate map <span class="SimpleMath">overlinef(overline z)</span>.</p>
+<p>This function constructs an FR machine whose generating states are the inverses of the original states. If <var class="Arg">m</var> came from a complex rational map <span class="SimpleMath">\(f(z)\)</span>, this would construct the machine of the conjugate map <span class="SimpleMath">\(\overline{f(\overline z)}\)</span>.</p>
 
 
 <div class="example"><pre>
@@ -716,7 +719,7 @@ Relator: f1*f2*f3*f4
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RotatedSpider</code>( <var class="Arg">m</var>[, <var class="Arg">p</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
 <p>Returns: A polynomial FR machine with rotated spider at infinity.</p>
 
-<p>This function constructs an isomorphic polynomial FR machine, but with a different numbering of the spider legs at infinity. This rotation is accomplished by conjugating by <code class="code">adder^p</code>, where <code class="code">adder</code> is the adding element of <var class="Arg">m</var>, and <var class="Arg">p</var>, the rotation parameter, is <span class="SimpleMath">1</span> by default.</p>
+<p>This function constructs an isomorphic polynomial FR machine, but with a different numbering of the spider legs at infinity. This rotation is accomplished by conjugating by <code class="code">adder^p</code>, where <code class="code">adder</code> is the adding element of <var class="Arg">m</var>, and <var class="Arg">p</var>, the rotation parameter, is <span class="SimpleMath">\(1\)</span> by default.</p>
 
 
 <div class="example"><pre>
@@ -757,7 +760,7 @@ Relator: f3*f2*f1
 
 <p>This function converts a rational angle to a kneading sequence, to describe a quadratic polynomial.</p>
 
-<p>If <var class="Arg">angle</var> is in <span class="SimpleMath">[1/7,2/7]</span> and the option <code class="code">marked</code> is set, the kneading sequence is decorated with markings in A,B,C.</p>
+<p>If <var class="Arg">angle</var> is in <span class="SimpleMath">\([1/7,2/7]\)</span> and the option <code class="code">marked</code> is set, the kneading sequence is decorated with markings in A,B,C.</p>
 
 
 <div class="example"><pre>
@@ -776,7 +779,7 @@ Relator: f3*f2*f1
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AllInternalAddresses</code>( <var class="Arg">n</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: Internal addresses of maps with period up to <var class="Arg">n</var>.</p>
 
-<p>This function returns internal addresses for all periodic points of period up to <var class="Arg">n</var> under angle doubling. These internal addresses describe the prominent hyperbolic components along the path from the landing point to the main cardioid in the Mandelbrot set; this is a list of length <code class="code">3k</code>, with at position <code class="code">3i+1,3i+2</code> the left and right angles, respectively, and at position <code class="code">3i+3</code> the period of that component. For example, <code class="code">[ 3/7, 4/7, 3, 1/3, 2/3, 2 ]</code> describes the airplane: a polynomial with landing angles <span class="SimpleMath">[3/7,4/7]</span> of period <span class="SimpleMath">3</span>; and such that there is a polynomial with landing angles <span class="SimpleMath">[1/3,2/3]</span> and period <span class="SimpleMath">2</span>.</p>
+<p>This function returns internal addresses for all periodic points of period up to <var class="Arg">n</var> under angle doubling. These internal addresses describe the prominent hyperbolic components along the path from the landing point to the main cardioid in the Mandelbrot set; this is a list of length <code class="code">3k</code>, with at position <code class="code">3i+1,3i+2</code> the left and right angles, respectively, and at position <code class="code">3i+3</code> the period of that component. For example, <code class="code">[ 3/7, 4/7, 3, 1/3, 2/3, 2 ]</code> describes the airplane: a polynomial with landing angles <span class="SimpleMath">\([3/7,4/7]\)</span> of period <span class="SimpleMath">\(3\)</span>; and such that there is a polynomial with landing angles <span class="SimpleMath">\([1/3,2/3]\)</span> and period <span class="SimpleMath">\(2\)</span>.</p>
 
 
 <div class="example"><pre>
@@ -813,7 +816,7 @@ Relator: f3*f2*f1
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ExternalAngle</code>( <var class="Arg">machine</var> )</td><td class="tdright">(&nbsp;function&nbsp;)</td></tr></table></div>
 <p>Returns: The external angle identifying <var class="Arg">machine</var>.</p>
 
-<p>In case <var class="Arg">machine</var> is the sphere machine of a unicritical polynomial, this function computes the external angle landing at the critical value. More precisely, it computes the equivalence class of that external angle under <code class="func">ExternalAnglesRelation</code> (<a href="chap3.html#X86C250907E09F399"><span class="RefLink">3.3-14</span></a>).</p>
+<p>In case <var class="Arg">machine</var> is the sphere machine of a unicritical polynomial, this function computes the external angle landing at the critical value. More precisely, it computes the equivalence class of that external angle under <code class="func">ExternalAnglesRelation</code> (<a href="chap3_mj.html#X86C250907E09F399"><span class="RefLink">3.3-14</span></a>).</p>
 
 
 <div class="example"><pre>
@@ -827,7 +830,7 @@ Relator: f3*f2*f1
 
 <h4>3.4 <span class="Heading">Automorphisms of sphere machines</span></h4>
 
-<p>Consider a sphere group <span class="SimpleMath">G</span> and its automorphism group <span class="SimpleMath">A</span>. If <span class="SimpleMath">M</span> is a sphere machine for the group <span class="SimpleMath">G</span>, then pre- and post-composition by automorphisms in <span class="SimpleMath">A</span> gives new sphere machines. The set of such sphere machines is naturally described by a machine for the group <span class="SimpleMath">A</span>. DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]); DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);</p>
+<p>Consider a sphere group <span class="SimpleMath">\(G\)</span> and its automorphism group <span class="SimpleMath">\(A\)</span>. If <span class="SimpleMath">\(M\)</span> is a sphere machine for the group <span class="SimpleMath">\(G\)</span>, then pre- and post-composition by automorphisms in <span class="SimpleMath">\(A\)</span> gives new sphere machines. The set of such sphere machines is naturally described by a machine for the group <span class="SimpleMath">\(A\)</span>. DeclareOperation("AutomorphismVirtualEndomorphism",[IsGroupHomomorphism]); DeclareOperation("AutomorphismSphereMachine",[IsSphereMachine]);</p>
 
 <p><a id="X8410869F8358A1AF" name="X8410869F8358A1AF"></a></p>
 
@@ -837,9 +840,9 @@ Relator: f3*f2*f1
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AutomorphismSphereMachine</code>( <var class="Arg">m</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
 <p>Returns: A description of the pullback map on Teichmüller space.</p>
 
-<p>Let <var class="Arg">m</var> be a sphere machine, thought of as a biset for the fundamental group <span class="SimpleMath">G</span> of a punctured sphere. Let <span class="SimpleMath">M</span> denote the automorphism of the surface, seen as a group of outer automorphisms of <span class="SimpleMath">G</span> that fixes the conjugacy classes of punctures.</p>
+<p>Let <var class="Arg">m</var> be a sphere machine, thought of as a biset for the fundamental group <span class="SimpleMath">\(G\)</span> of a punctured sphere. Let <span class="SimpleMath">\(M\)</span> denote the automorphism of the surface, seen as a group of outer automorphisms of <span class="SimpleMath">\(G\)</span> that fixes the conjugacy classes of punctures.</p>
 
-<p>Choose an alphabet letter <var class="Arg">a</var>, and consider the virtual endomorphism <span class="SimpleMath">v:G_a-&gt; G</span>. Let <span class="SimpleMath">H</span> denote the subgroup of <span class="SimpleMath">M</span> that fixes all conjugacy classes of <span class="SimpleMath">G_a</span>. then there is an induced virtual endomorphism <span class="SimpleMath">α:H-&gt; M</span>, defined by <span class="SimpleMath">t^α=v^-1tv</span>. This is the homomorphism computed by the first command. Its source and range are in fact groups of automorphisms of range of <var class="Arg">v</var>.</p>
+<p>Choose an alphabet letter <var class="Arg">a</var>, and consider the virtual endomorphism <span class="SimpleMath">\(v:G_a\to G\)</span>. Let <span class="SimpleMath">\(H\)</span> denote the subgroup of <span class="SimpleMath">\(M\)</span> that fixes all conjugacy classes of <span class="SimpleMath">\(G_a\)</span>. then there is an induced virtual endomorphism <span class="SimpleMath">\(\alpha:H\to M\)</span>, defined by <span class="SimpleMath">\(t^\alpha=v^{-1}tv\)</span>. This is the homomorphism computed by the first command. Its source and range are in fact groups of automorphisms of range of <var class="Arg">v</var>.</p>
 
 <p>The second command constructs an FR machine associated with <var class="Arg">\alpha</var>. Its stateset is a free group generated by elementary Dehn twists of the generators of <var class="Arg">G</var>.</p>
 
@@ -875,10 +878,10 @@ MappingByFunction( &lt;group with 20 generators&gt;, &lt;group with 6 generators
 </pre></div>
 
 
-<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4_mj.html">[Next Chapter]</a>&nbsp;  </div>
 
 
-<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chap5_mj.html">5</a>  <a href="chap6_mj.html">6</a>  <a href="chapBib_mj.html">Bib</a>  <a href="chapInd_mj.html">Ind</a>  </div>
 
 <hr />
 <p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>

@@ -5,12 +5,12 @@
 SetPackageInfo( rec(
 PackageName := "IMG",
 Subtitle := "Computations with iterated monodromy groups",
-Version := "0.3.2",
-Date := "10/03/2022",
+Version := "0.3.3",
+Date := "19/09/2022",
 License := "GPL-2.0-or-later",
 ## <#GAPDoc Label="Version">
-## <!ENTITY Version "0.3.2">
-## <!ENTITY Date "10/03/2022">
+## <!ENTITY Version "0.3.3">
+## <!ENTITY Date "19/09/2022">
 ## <#/GAPDoc>
 Persons := [
   rec(
@@ -47,7 +47,7 @@ PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
 PackageDoc := rec(
   BookName  := "IMG",
-  HTMLStart := "doc/chap0.html",
+  HTMLStart := "doc/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Iterated monodromy groups",
