@@ -47,7 +47,7 @@ PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 
 PackageDoc := rec(
   BookName  := "IMG",
-  HTMLStart := "doc/chap0.html",
+  HTMLStart := "doc/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Iterated monodromy groups",
