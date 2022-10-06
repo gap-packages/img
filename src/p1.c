@@ -87,8 +87,8 @@ static Obj NEW_P1POINT2 (ldcomplex n, ldcomplex d)
 }
 
 static Obj NEW_COMPLEX (ldcomplex c) {
-  Obj r = NEW_FLOAT(creal(c));
-  Obj i = NEW_FLOAT(cimag(c));
+  Obj r = NEW_MACFLOAT(creal(c));
+  Obj i = NEW_MACFLOAT(cimag(c));
   return CALL_3ARGS(NewFloat,IsPMComplex,r,i);
 }
 
@@ -153,7 +153,7 @@ static Obj P1POINT2C2(Obj self, Obj obj)
 
 static ldcomplex VAL_COMPLEX(Obj obj)
 {
-  return VAL_FLOAT(ELM_PLIST(obj,1)) + 1.0i*VAL_FLOAT(ELM_PLIST(obj,2));
+  return VAL_MACFLOAT(ELM_PLIST(obj,1)) + 1.0i*VAL_MACFLOAT(ELM_PLIST(obj,2));
 }
 
 static Obj C22P1POINT(Obj self, Obj num, Obj den)
@@ -205,7 +205,7 @@ static Obj P1Sphere(Obj self, Obj obj)
   ldouble v[3];
   int i;
   for (i = 0; i < 3; i++)
-    v[i] = VAL_FLOAT(ELM_PLIST(obj,i+1));
+    v[i] = VAL_MACFLOAT(ELM_PLIST(obj,i+1));
   return NEW_P1POINT(p1point_sphere(v));
 }
 
@@ -227,7 +227,7 @@ static Obj SphereP1(Obj self, Obj obj)
   sphere_p1point (GET_P1POINT(obj), s);
   obj = ALLOC_PLIST(3);
   for (i = 0; i < 3; i++)
-    set_elm_plist(obj,i+1, NEW_FLOAT((Double)s[i]));
+    set_elm_plist(obj,i+1, NEW_MACFLOAT((Double)s[i]));
   return obj;
 }
 
@@ -235,9 +235,9 @@ static Obj SphereP1Y(Obj self, Obj obj)
 {
   p1point p = GET_P1POINT(obj);
   if (cisfinite(p))
-    return NEW_FLOAT((Double)2.0*cimagl(p)/(1.0+cnorm(p)));
+    return NEW_MACFLOAT((Double)2.0*cimagl(p)/(1.0+cnorm(p)));
   else
-    return NEW_FLOAT(0.0);
+    return NEW_MACFLOAT(0.0);
 }
 
 static Obj P1Antipode(Obj self, Obj obj)
@@ -277,7 +277,7 @@ void clean_complex (ldcomplex *v, ldouble prec)
 static Obj CLEANEDP1POINT(Obj self, Obj objp, Obj objprec)
 {
   ldcomplex p = GET_P1POINT(objp);
-  ldouble prec = VAL_FLOAT(objprec);
+  ldouble prec = VAL_MACFLOAT(objprec);
   clean_complex(&p, prec);
   ldouble n = cnorm(p);
   if (n > 0.5/(prec*prec))
@@ -325,7 +325,7 @@ static Obj P1Distance(Obj self, Obj objp, Obj objq)
   ldouble v;
 
   if (p == q || (!cisfinite(p) && !cisfinite(q)))
-    return NEW_FLOAT(0.0);
+    return NEW_MACFLOAT(0.0);
   else if (!cisfinite(p)) {
     v = 1.0/cabsl(q);
   } else if (!cisfinite(q))
@@ -337,7 +337,7 @@ static Obj P1Distance(Obj self, Obj objp, Obj objq)
     else
       v = cabsl((p-q)/d);
   }
-  return NEW_FLOAT((Double)2.0*atan(v));
+  return NEW_MACFLOAT((Double)2.0*atan(v));
 }
 
 static Obj XRatio(Obj self, Obj p1, Obj p2, Obj p3, Obj p4)
@@ -409,7 +409,7 @@ static Obj P1Circumcentre(Obj self, Obj obja, Obj objb, Obj objc)
 
   Obj result = ALLOC_PLIST(2);
   set_elm_plist(result,1, NEW_P1POINT(centre));
-  set_elm_plist(result,2, NEW_FLOAT((Double)2.0*atan(d)));
+  set_elm_plist(result,2, NEW_MACFLOAT((Double)2.0*atan(d)));
 
   return result;
 }
@@ -616,7 +616,7 @@ static ldcomplex eval_d_ylop (int deg, ldcomplex *coeff, ldcomplex x)
 static Obj CLEANUPP1MAP(Obj self, Obj map, Obj objprec)
 {
   int deg = p1map_degree(map), i, j;
-  ldouble prec = VAL_FLOAT(objprec);
+  ldouble prec = VAL_MACFLOAT(objprec);
   ldcomplex coeff[2][deg+1];
 
   copy_poly (deg, coeff[0], deg, p1map_numer(map));
@@ -908,7 +908,7 @@ static Obj P1MAPSCALING(Obj self, Obj map, Obj objp)
     diff = numer[deg]*denom[deg-1] - numer[deg-1]*denom[deg];
     diff /= (cnorm(numer[deg]) + cnorm(denom[deg]));
   }
-  return NEW_FLOAT(cabsl(diff));
+  return NEW_MACFLOAT(cabsl(diff));
 }
 
 static Obj P1NUMERATOR(Obj self, Obj map)
@@ -1063,8 +1063,8 @@ static Obj P1INTERSECT(Obj self, Obj gamma, Obj ratmap, Obj delta)
       
       if (cisfinite(t) && cimagl(t) >= -1.0 && cimagl(t) <= 1.0 && creall(t) >= -eps && creall(t) <= 1.0+eps) { /* in fact, cimag(t) is microscopic; just avoid infinity */
 	Obj tu = ALLOC_PLIST(5);
-	set_elm_plist(tu,1, NEW_FLOAT(creal(t))); /* t */
-	set_elm_plist(tu,2, NEW_FLOAT(creal(zero[i]))); /* u */
+	set_elm_plist(tu,1, NEW_MACFLOAT(creal(t))); /* t */
+	set_elm_plist(tu,2, NEW_MACFLOAT(creal(zero[i]))); /* u */
 	ldcomplex d = eval_d_poly(2*deg, poly, zero[i]);
 	ldouble y = cimagl(d) / cabsl(d); /* direction of approach */
 	set_elm_plist(tu,3, INTOBJ_INT(y < -eps ? -1 : (y > eps ? 1 : 0)));

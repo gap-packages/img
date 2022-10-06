@@ -13,35 +13,15 @@
 #undef VERY_LONG_DOUBLES
 
 #define _GNU_SOURCE
-#include "src/compiled.h"
+#include "compiled.h"
 
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
-#include "src/macfloat.h"
 #include "poly.h"
-
-#ifdef MALLOC_HACK
-#include <malloc.h>
-#endif
 
 void InitP1Kernel(void);
 void InitP1Library(void);
-
-/****************************************************************************
- * stolen from src/float.c
- ****************************************************************************/
-#define VAL_FLOAT(obj) (*(Double *)ADDR_OBJ(obj))
-#define SIZE_FLOAT   sizeof(Double)
-#ifndef T_FLOAT
-#define T_FLOAT T_MACFLOAT
-#endif
-static inline Obj NEW_FLOAT (Double val)
-{
-  Obj f = NewBag(T_FLOAT, SIZE_FLOAT);
-  *(Double *)ADDR_OBJ(f) = val;
-  return f;
-}
 
 static inline Obj ALLOC_PLIST (UInt len)
 {

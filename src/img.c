@@ -78,8 +78,8 @@ static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
     return Fail;
 
   for (i = 0; i <= degree; i++) {
-    __real__(op)[degree-i] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),1));
-    __imag__(op)[degree-i] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),2));
+    __real__(op)[degree-i] = VAL_MACFLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),1));
+    __imag__(op)[degree-i] = VAL_MACFLOAT(ELM_PLIST(ELM_PLIST(coeffs,i+1),2));
     if (isnan(__real__(op)[degree-i]) || isnan(__imag__(op)[degree-i]))
       return Fail;
     if (__imag__(op)[degree-i] != 0.0)
@@ -111,8 +111,8 @@ static Obj COMPLEX_ROOTS (Obj self, Obj coeffs)
     Obj t = ALLOC_PLIST(2);
     if (real && fabs(__imag__(zero)[i-1]) < 2*degree*DBL_EPSILON*fabs(__real__(zero)[i-1]))
       __imag__(zero)[i-1] = 0.0;
-    set_elm_plist(t,1, NEW_FLOAT(__real__(zero)[i-1]));
-    set_elm_plist(t,2, NEW_FLOAT(__imag__(zero)[i-1]));
+    set_elm_plist(t,1, NEW_MACFLOAT(__real__(zero)[i-1]));
+    set_elm_plist(t,2, NEW_MACFLOAT(__imag__(zero)[i-1]));
     set_elm_plist(result,i, t);
   }
   return result;
@@ -132,7 +132,7 @@ static Obj REAL_ROOTS (Obj self, Obj coeffs)
     return Fail;
 
   for (i = 0; i <= degree; i++) {
-    opr[degree-i] = VAL_FLOAT(ELM_PLIST(coeffs,i+1));
+    opr[degree-i] = VAL_MACFLOAT(ELM_PLIST(coeffs,i+1));
     if (isnan(opr[degree-i]))
       return Fail;
   }
@@ -146,11 +146,11 @@ static Obj REAL_ROOTS (Obj self, Obj coeffs)
   result = ALLOC_PLIST(numroots);
   for (i = 1; i <= numroots; i++) {
     if (zeroi[i-1] == 0.0)
-      set_elm_plist(result,i, NEW_FLOAT(zeror[i-1]));
+      set_elm_plist(result,i, NEW_MACFLOAT(zeror[i-1]));
     else {
       Obj t = ALLOC_PLIST(2);
-      set_elm_plist(t,1, NEW_FLOAT(zeror[i-1]));
-      set_elm_plist(t,2, NEW_FLOAT(zeroi[i-1]));
+      set_elm_plist(t,1, NEW_MACFLOAT(zeror[i-1]));
+      set_elm_plist(t,2, NEW_MACFLOAT(zeroi[i-1]));
       set_elm_plist(result,i, t);
     }
   }
@@ -433,7 +433,7 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_iter)
   
   for (int i = 0; i < n; i++)
     for (int j = 0; j < 3; j++)
-      param.points[i][j] = VAL_FLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),j+1));
+      param.points[i][j] = VAL_MACFLOAT(ELM_PLIST(ELM_PLIST(gap_points,i+1),j+1));
 
   int iter, max_iter = INT_INTOBJ(gap_iter);
   double info[LM_INFO_SZ];
@@ -449,10 +449,10 @@ static Obj FIND_BARYCENTER (Obj self, Obj gap_points, Obj gap_iter)
   Obj result = ALLOC_PLIST(3);
   Obj list = ALLOC_PLIST(3); set_elm_plist(result, 1, list);
   for (int i = 0; i < 3; i++)
-    set_elm_plist(list, i+1, NEW_FLOAT(x[i]));
+    set_elm_plist(list, i+1, NEW_MACFLOAT(x[i]));
   list = ALLOC_PLIST(LM_INFO_SZ); set_elm_plist(result, 2, list);
   for (int i = 0; i < LM_INFO_SZ; i++)
-    set_elm_plist(list, i+1, NEW_FLOAT(info[i]));
+    set_elm_plist(list, i+1, NEW_MACFLOAT(info[i]));
   set_elm_plist(result, 3, INTOBJ_INT(iter));
 
 #ifdef MALLOC_HACK
