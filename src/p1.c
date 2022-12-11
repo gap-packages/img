@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <complex.h>
+#include <stdio.h>
 #include "img.h"
 #define IS_MACFLOAT(obj) (TNUM_OBJ(obj) == T_MACFLOAT)
 
