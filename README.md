@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gap-packages/img.svg?branch=master)](https://travis-ci.org/gap-packages/img)
+[![Build Status](https://github.com/gap-packages/img/workflows/CI/badge.svg?branch=master)](https://github.com/gap-packages/img/actions?query=workflow%3ACI+branch%3Amaster)
 [![Code Coverage](https://codecov.io/github/gap-packages/img/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/img)
 
 # The IMG package
