@@ -1,7 +1,9 @@
 name: IMG
-version: 0.3.3
-date: 19/09/2022
-description: Computations with iterated monodromy groups
+version: "0.3.3"
+license: "GPL-2.0-or-later"
+date: 2022-09-19
+description: |
+    Computations with iterated monodromy groups
 
 authors:
     - name: Laurent Bartholdi
@@ -37,8 +39,37 @@ downloads:
     - name: .tar.gz
       url: https://github.com/gap-packages/img/releases/download/v0.3.3/IMG-0.3.3.tar.gz
 
-abstract: The <span class="pkgname">IMG</span> package allows    GAP to manipulate iterated monodromy groups
+abstract: |
+    The <span class="pkgname">IMG</span> package allows    GAP to manipulate iterated monodromy groups
 
 status: deposited
 doc-html: doc/chap0_mj.html
 doc-pdf: doc/manual.pdf
+keywords: |
+    iterated monodromy group.
+citeas: |
+    <p class='BibEntry'>
+    [<span class='BibKey'>Bar22</span>]   <b class='BibAuthor'>Bartholdi, L.</b>,
+     <i class='BibTitle'>IMG, Computations with iterated monodromy groups,
+             Version 0.3.3</i>
+     (<span class='BibYear'>2022</span>)<br />
+    (<span class='BibNote'>GAP package</span>),
+    <span class='BibHowpublished'><a href="https://gap-packages.github.io/IMG">https://gap-packages.github.io/IMG</a></span>.
+    </p>
+    
+
+bibtex: |
+    @misc{ IMG0.3.3,
+      author =           {Bartholdi, L.},
+      title =            {{IMG},  Computations  with  iterated monodromy groups,
+                          {V}ersion 0.3.3},
+      month =            {Sep},
+      year =             {2022},
+      note =             {GAP package},
+      howpublished =     {\href             {https://gap-packages.github.io/IMG}
+                          {\texttt{https://gap-packages.github.io/}\discretionary
+                          {}{}{}\texttt{IMG}}},
+      keywords =         {iterated monodromy group},
+      printedkey =       {Bar22}
+    }
+
