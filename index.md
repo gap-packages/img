@@ -4,10 +4,15 @@ layout: default
 
 # GAP Package {{site.data.package.name}}
 
-{{site.data.package.abstract}}.
+{{site.data.package.abstract}}
 
-The current version of this package is version {{site.data.package.version}}.
+The current version of this package is version {{site.data.package.version}}, released on {{site.data.package.date}}.
 For more information, please refer to [the package manual]({{site.data.package.doc-html}}).
+There is also a [README](README.html) file.
+
+{% if site.data.package.license %}
+  License: [{{ site.data.package.license }}](https://spdx.org/licenses/{{ site.data.package.license }})
+{% endif %}
 
 ## Dependencies
 
