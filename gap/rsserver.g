@@ -163,7 +163,7 @@ RSS.open := function(arg)
     RSS.queue := []; # messages waiting to be delivered
     
     RSS.readhookslot := Length(OnCharReadHookInFuncs)+1;
-    Add(OnCharReadHookInFuncs, function(slotindex) RSS.enqueue(); end);
+#!!!    Add(OnCharReadHookInFuncs, function(slotindex) RSS.enqueue(); end);
     Add(OnCharReadHookInFds, t);
 
     s := RSS.recv(true);
@@ -248,9 +248,11 @@ RSS.ack := function(status, message)
             if RSS.queue[i].attributes.status=status then
                 Info(InfoIMG,3,"Got ack ",RSS.queue[i]," for ",message);
                 return Remove(RSS.queue,i);
-            fi;
+else Info(InfoIMG,3,"WRONG ACK",RSS.queue[i].attributes.status); #!!!
+fi;
         od;
         # queue exhausted, wait.
+Info(InfoIMG,3,"ENQUEUE"); #!!!
         RSS.enqueue();
     od;
 end;
@@ -426,7 +428,7 @@ if false then # test
     SetInfoLevel(InfoIMG,3);
     RSS.open(:debugnode:=3);
     c := RSS.newcanvas();
-    image := Base64String(StringFile("/Users/laurent/ownCloud/tex/math/v3/mandelbrot.png"));;
-    image := Base64String(StringFile("/Users/laurent/ownCloud/tex/math/mandelbrot/rabbit.png"));;
+    image := Base64String(StringFile("/Users/laurent/tex/math/v3/mandelbrot.png"));;
+    image := Base64String(StringFile("/Users/laurent/tex/math/mandelbrot/rabbit.png"));;
     RSS.populateobject(c,[rec(name:="bitmap",attributes:=rec(name:="xxx"),content:=[rec(name:="data",attributes:=rec(),content:=[Concatenation("data:image/png;base64,",image)])])]);
 fi;

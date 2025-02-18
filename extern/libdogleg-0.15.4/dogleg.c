@@ -20,10 +20,9 @@
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
-#if (CHOLMOD_VERSION > (CHOLMOD_VER_CODE(2,2)))
-#include <cholmod_function.h>
+#if (CHOLMOD_VERSION >= (CHOLMOD_VER_CODE(2,2)))
+#include "SuiteSparse_config.h"
 #endif
-
 
 // Any non-vnlog bit mask
 #define DOGLEG_DEBUG_OTHER_THAN_VNLOG (~DOGLEG_DEBUG_VNLOG)
@@ -1135,11 +1134,11 @@ static void set_cholmod_options(cholmod_common* cc)
 
 
   // I want all output to go to STDERR, not STDOUT
-#if (CHOLMOD_VERSION <= (CHOLMOD_VER_CODE(2,2)))
+#if (CHOLMOD_VERSION < (CHOLMOD_VER_CODE(2,2)))
   cc->print_function = cholmod_error_callback;
 #else
-  CHOLMOD_FUNCTION_DEFAULTS ;
-  CHOLMOD_FUNCTION_PRINTF(cc) = cholmod_error_callback;
+  cc->print = 0; // disable all error printing
+//  SuiteSparse_config.printf_func = cholmod_error_callback;
 #endif
 }
 

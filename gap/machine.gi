@@ -1296,8 +1296,15 @@ end);
 InstallMethod(VirtualEndomorphism, "(IMG) for a sphere machine and a coordinate",
         [IsSphereMachine,IsPosInt],
         function(m,i)
+    local g, sg, sgens, f;
+    g := StateSet(m);
+    sg := Stabilizer(g,i,function(pnt,g) return Output(m,g)[pnt]; end); # but we would like to take peripheral generators...
+    sgens := GeneratorsOfGroup(sg);
+    f := GroupHomomorphismByImages(sg,g,sgens,List(sgens,g->Transition(m,g,i)));
     # define a sphere group for the cover
-    # Correspondence(vendo) will be the inclusion of the sub-sphere
+    SetCorrespondence(f,"the inclusion of the sub-sphere");
+
+    return f;
 end);
 
 BindGlobal("PUREMCG@", function(arg)
