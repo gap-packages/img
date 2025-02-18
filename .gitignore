@@ -15,6 +15,7 @@ bin
 *.dSYM
 *~
 *.dylib
+*.a
 imgbib.xml.bib
 autom4te.cache
 .DS_Store
