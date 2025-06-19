@@ -13,7 +13,7 @@
 #undef VERY_LONG_DOUBLES
 
 #define _GNU_SOURCE
-#include "compiled.h"
+#include "gap_all.h"
 
 #include <stdlib.h>
 #include <math.h>
