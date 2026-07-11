@@ -61,6 +61,10 @@ Dependencies := rec(
 		      ["IO",">=4.0"]],
   SuggestedOtherPackages := [["Float",">=0.4"]],
 
+  NeededSystemPackages := rec(
+    Ubuntu   := [["libsuitesparse-dev"]],
+    Homebrew := [["suite-sparse"]],
+  ),
   # for compilation of the external module, one needs:
   # gcc, libcblas, javac, appletviewer.
   ExternalConditions := []

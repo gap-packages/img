@@ -31,10 +31,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - name: 'Install additional dependencies'
-        run: |
-          sudo apt-get update
-          sudo apt-get install libmpfr-dev libmpfi-dev libmpc-dev libsuitesparse-dev
       - uses: gap-actions/setup-gap@v3
         with:
           gap-version: ${{ matrix.gap-version }}
