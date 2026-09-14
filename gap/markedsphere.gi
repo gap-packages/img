@@ -739,7 +739,7 @@ InstallMethod(DistanceMarkedSpheres, "(IMG) for two marked spheres and a bool",
     dist := spiderB!.cut!.wiggled;
     
     if dist>@.fast then # crude estimate
-        return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentative(spiderB!.marking,x^spiderA!.marking)))/Length(points);
+        return @.ro*Sum(GeneratorsOfGroup(spiderA!.group),x->Length(PreImagesRepresentativeNC(spiderB!.marking,x^spiderA!.marking)))/Length(points);
     fi;
     
     if fast then # we just wiggled the points, the combinatorics didn't change
