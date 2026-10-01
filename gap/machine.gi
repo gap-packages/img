@@ -123,14 +123,14 @@ InstallMethod(SubFRMachine, "(IMG) for a sphere machine and a map",
     for gen in GeneratorsOfGroup(Source(f)) do
         decomp := pi(gen^f);
         Add(out,decomp[2]);
-        decomp := List(decomp[1],x->PreImagesRepresentative(f,x));
+        decomp := List(decomp[1],x->PreImagesRepresentativeNC(f,x));
         if fail in decomp then return fail; fi;
         Add(trans,decomp);
     od;
     machine := FRMachineNC(FamilyObj(M),Source(f),trans,out);
 
     if HasAddingElement(M) then
-        adder := PreImagesRepresentative(f,InitialState(AddingElement(M)));
+        adder := PreImagesRepresentativeNC(f,InitialState(AddingElement(M)));
         if adder<>fail then
             SetAddingElement(machine,FRElement(machine,adder));
         fi;
@@ -581,7 +581,7 @@ BindGlobal("COMPOSERECURSION@", function(trans,out,pre,post)
         psi := GroupHomomorphismByImagesNC(source,Source(post),gens,List([1..Length(gens)],i->trans[i][1]));
         for i in GeneratorsOfGroup(Range(pre)) do
             Add(newout,[1]);
-            Add(newtrans,[ImagesRepresentative(post,PreImagesRepresentative(pre,i)^psi)]);
+            Add(newtrans,[ImagesRepresentative(post,PreImagesRepresentativeNC(pre,i)^psi)]);
         od;
         return [newtrans,newout];
     fi;
@@ -590,7 +590,7 @@ BindGlobal("COMPOSERECURSION@", function(trans,out,pre,post)
     psi := GroupHomomorphismByImagesNC(source,w,gens,List([1..Length(gens)],i->Product([1..deg],j->trans[i][j]^Embedding(w,j))*PermList(out[i])^Embedding(w,deg+1)));
 
     for i in GeneratorsOfGroup(Range(pre)) do
-        w := PreImagesRepresentative(pre,i)^psi;
+        w := PreImagesRepresentativeNC(pre,i)^psi;
         Add(newout,ListPerm(w![deg+1],deg));
         Add(newtrans,List([1..deg],j->ImagesRepresentative(post,w![j])));
     od;
@@ -1515,7 +1515,7 @@ InstallMethod(AutomorphismSphereMachine, "(IMG) for an IMG machine",
         o := [];
         t := [];
         for a in [1..Length(oorbits)] do
-            newM := PreImagesRepresentative(epi,g)^-1*oorbits[a][1];
+            newM := PreImagesRepresentativeNC(epi,g)^-1*oorbits[a][1];
             d := DISTILLATE@(distillations,newM);
             b := PositionProperty(oorbits,o->d in o);
             c := RepresentativeAction(states,d,oorbits[b][1],inneract);
